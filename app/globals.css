@@ -1393,6 +1393,12 @@ button {
   text-transform: uppercase;
 }
 
+button:disabled,
+input:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
 .form-note {
   margin: 16px auto 0;
   color: rgba(237, 227, 204, 0.58);
@@ -1406,7 +1412,13 @@ button {
   color: rgba(201, 162, 39, 0.88);
 }
 
-.form-note.invalid {
+.form-note.loading,
+.form-note.unconfigured {
+  color: rgba(95, 183, 196, 0.82);
+}
+
+.form-note.invalid,
+.form-note.error {
   color: #f0c5b8;
 }
 
