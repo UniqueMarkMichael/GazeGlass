@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Gaze Glass Icon</title>
+  <desc id="desc">A gold eye inside a sacred glass orb on an ink indigo field.</desc>
+  <rect width="512" height="512" rx="96" fill="#1A1733"/>
+  <circle cx="256" cy="256" r="178" fill="none" stroke="#C9A227" stroke-opacity=".52" stroke-width="8"/>
+  <ellipse cx="256" cy="256" rx="146" ry="58" fill="none" stroke="#EDE3CC" stroke-opacity=".72" stroke-width="12"/>
+  <ellipse cx="256" cy="256" rx="104" ry="42" fill="none" stroke="#EDE3CC" stroke-opacity=".38" stroke-width="8" transform="rotate(-11 256 256)"/>
+  <ellipse cx="256" cy="256" rx="104" ry="42" fill="none" stroke="#EDE3CC" stroke-opacity=".28" stroke-width="8" transform="rotate(11 256 256)"/>
+  <circle cx="256" cy="256" r="42" fill="#C9A227"/>
+  <circle cx="256" cy="256" r="20" fill="#1A1733" fill-opacity=".82"/>
+  <circle cx="274" cy="238" r="10" fill="#EDE3CC" fill-opacity=".76"/>
+</svg>

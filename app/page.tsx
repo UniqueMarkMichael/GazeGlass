@@ -1,4 +1,65 @@
+import type { Metadata } from "next";
+import { JsonLd } from "./components/JsonLd";
 import { GlassMenu } from "./components/GlassMenu";
+import { SeerCircleForm } from "./components/SeerCircleForm";
+
+export const metadata: Metadata = {
+  title: "Gaze Glass | Fantasy Stories of Gods, Spirits, and Mortals",
+  description:
+    "Enter Gaze Glass, a mythic fantasy story world for readers who love gods, fox spirits, mortal blessings, sacred trials, and cinematic fantasy lore.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Gaze Glass | Fantasy Stories of Gods, Spirits, and Mortals",
+    description:
+      "A cinematic fantasy observatory where readers witness gods, fox spirits, mortal blessings, and sacred consequences.",
+    url: "/",
+    images: [
+      {
+        url: "/og/gaze-glass.png",
+        width: 1672,
+        height: 941,
+        alt: "A sacred mirror opening into the fantasy world of Gaze Glass",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Gaze Glass | Fantasy Stories of Gods, Spirits, and Mortals",
+    description:
+      "A mythic fantasy story world for readers who love gods, spirits, mortal blessings, and sacred trials.",
+    images: ["/og/gaze-glass.png"],
+  },
+};
+
+const homePageData = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://www.gazeglass.com/#webpage",
+  url: "https://www.gazeglass.com",
+  name: "Gaze Glass",
+  description:
+    "A cinematic fantasy story world where readers witness gods, fox spirits, mortals, blessings, and sacred consequences.",
+  isPartOf: {
+    "@id": "https://www.gazeglass.com/#website",
+  },
+  about: [
+    "fantasy stories",
+    "mythic fantasy",
+    "fantasy novels",
+    "gods and mortals",
+    "divine blessings",
+    "fox spirits",
+  ],
+  mainEntity: {
+    "@type": "CreativeWorkSeries",
+    name: "Gaze Glass",
+    genre: ["Fantasy", "Mythic Fantasy", "Speculative Fiction"],
+    description:
+      "A fantasy universe told through divine archives, mortal case files, spirits, and sacred observations.",
+  },
+};
 
 const gods = [
   {
@@ -20,25 +81,29 @@ const spirits = [
     name: "Kitsu",
     role: "Assistant to the God of Justice",
     image: "/spirits/kitsu.webp",
-    text: "The dutiful fox who sits beside the God of Justice at every divine briefing, Kitsu embodies the quiet authority of a deity who once wore yellow diamond armor to a meeting just to survive a bad day. Where others posture, Kitsu watches — and in the space between accusation and verdict, the truth always finds its way to the light.",
+    text: "The dutiful fox sits beside the God of Justice at every divine briefing. Kitsu does not posture. Kitsu watches, and in the space between accusation and verdict, truth finds its way to the light.",
+    note: "Field Note: The quietest witness is often the one the room should fear.",
   },
   {
     name: "Marok",
     role: "Assistant to the God of War",
     image: "/spirits/marok.webp",
-    text: "A top graduate of the Academy of Fate and Destiny, Marok is the architect of Judgements — the brilliant, chaotic little fox who designs the trials that bring mortals to their knees while sneezing green fire and spinning in concentric circles. He serves one of the most feared forces in all dimensions, and does it with a wagging tail.",
+    text: "A top graduate of the Academy of Fate and Destiny, Marok designs the trials that bring mortals to their knees while sneezing green fire and spinning in concentric circles.",
+    note: "Field Note: He designs the trials that break mortals, and wags his tail doing it.",
   },
   {
     name: "Jem",
     role: "Assistant to the God of Beauty",
     image: "/spirits/jem.webp",
-    text: "Jem moves through the divine courts wrapped in the warmth of a goddess who measures worth in ways mortals can't yet see, offering counsel that stings like a claw and heals like a kiss. In the presence of beauty that destroys and creates in the same breath, Jem has learned that the most sacred thing is knowing which one the moment calls for.",
+    text: "Jem moves through the divine courts wrapped in the warmth of a goddess who measures worth in ways mortals cannot yet see, offering counsel that stings and heals.",
+    note: "Field Note: Beauty can destroy or create. Jem knows which one the moment requires.",
   },
   {
     name: "Sindren",
     role: "Assistant to the God of Love",
     image: "/spirits/sindren.webp",
-    text: "Cobalt-furred and unshakably composed, Sindren has watched enough divine briefings to know when a fox is lying about being petrified — and is polite enough to say so anyway. Perched beside the goddess of larimar, Sindren is proof that the gentlest god keeps the sharpest company.",
+    text: "Cobalt-furred and unshakably composed, Sindren has watched enough divine briefings to know when fear is theater and when it is prophecy.",
+    note: "Field Note: The gentlest god keeps the sharpest company.",
   },
 ];
 
@@ -63,9 +128,19 @@ const sacredViews = [
   },
 ];
 
+const chapters = [
+  { number: "01", label: "The Glass Opens", href: "#glass-opens" },
+  { number: "02", label: "Mortals Pray", href: "#the-mortals" },
+  { number: "03", label: "Gods Watch", href: "#featured-gods" },
+  { number: "04", label: "Assistants Remember", href: "#the-spirits" },
+  { number: "05", label: "The Seer Records", href: "#the-seer" },
+  { number: "06", label: "The Circle Listens", href: "#the-seer-circle" },
+];
+
 export default function Home() {
   return (
     <main>
+      <JsonLd data={homePageData} />
       <header className="site-header" aria-label="Primary navigation">
         <a className="brand" href="/#home" aria-label="Gaze Glass home">
           <img className="brand-mark" src="/brand/gaze-glass-mark-transparent.png" alt="" />
@@ -73,6 +148,21 @@ export default function Home() {
         </a>
         <GlassMenu />
       </header>
+
+      <div className="opening-rite" aria-hidden="true">
+        <span>Behold.</span>
+        <span>The glass wakes.</span>
+        <span>A soul appears.</span>
+      </div>
+
+      <aside className="chapter-rail" aria-label="Observatory chapters">
+        {chapters.map((chapter) => (
+          <a key={chapter.number} href={chapter.href}>
+            <span>{chapter.number}</span>
+            {chapter.label}
+          </a>
+        ))}
+      </aside>
 
       <section className="hero" id="home">
         <div className="stars" aria-hidden="true" />
@@ -85,12 +175,17 @@ export default function Home() {
           </div>
         </div>
         <div className="hero-copy reveal">
-          <p className="eyebrow">Look through the glass, into the divine</p>
-          <h1>Peer Through the Glass.</h1>
-          <p className="subhead">Every soul leaves a story behind.</p>
+          <p className="eyebrow">Gaze into the glass</p>
+          <h1>To Divine,</h1>
+          <p className="subhead">For every mortal soul leaves a story behind.</p>
+          <div className="hero-vow" aria-hidden="true">
+            <span>Gods Watch.</span>
+            <span>Mortals Pray.</span>
+            <span>Spirits Remember.</span>
+          </div>
         </div>
-        <a className="scroll-cue" href="#featured-gods" aria-label="Scroll to featured gods">
-          Observe
+        <a className="scroll-cue" href="#the-mortals" aria-label="Begin observing the latest mortal case file">
+          Begin observing
         </a>
       </section>
 
@@ -101,11 +196,12 @@ export default function Home() {
         </p>
       </section>
 
-      <section className="glass-threshold reveal" aria-label="Sacred glass threshold">
+      <section className="glass-threshold reveal" id="glass-opens" aria-label="Sacred glass threshold">
         <figure>
           <img src="/brand/sacred-mirror.webp" alt="A sacred golden mirror glowing inside a cosmic observatory" />
         </figure>
         <div>
+          <span className="chapter-stamp">01 / The Glass Opens</span>
           <p className="eyebrow">The Glass Opens</p>
           <h2>Observation Begins at the Threshold.</h2>
           <p>
@@ -132,8 +228,28 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="observation reveal" id="the-mortals">
+        <div className="observation-glass" aria-hidden="true" />
+        <div className="observation-copy">
+          <span className="chapter-stamp">02 / Mortals Pray</span>
+          <p className="eyebrow">Latest Observation</p>
+          <h2>Marcella, Blessed by Justice.</h2>
+          <p>
+            A creative worker loses credit for the work she carried alone. In the
+            hallway between humiliation and surrender, she asks Justice to witness.
+          </p>
+          <p className="observation-note">Newly opened: Malika, Blessed by Love.</p>
+          <a href="/the-mortals">Enter the mortal archive</a>
+        </div>
+        <figure className="observation-portrait">
+          <img src="/mortals/marcella/portrait.webp" alt="Marcella reflected in a sacred golden mirror" />
+          <figcaption>Witnessed by Justice</figcaption>
+        </figure>
+      </section>
+
       <section className="section split reveal" id="featured-gods">
         <div>
+          <span className="chapter-stamp">03 / Gods Watch</span>
           <p className="eyebrow">Featured Gods</p>
           <h2>The Immortal Lives Are Not Still.</h2>
         </div>
@@ -157,8 +273,9 @@ export default function Home() {
       </section>
 
       <section className="section spirits reveal" id="the-spirits">
-        <p className="eyebrow">Assistant of The Month</p>
-        <h2>The Foxes Who Sit Beside Power.</h2>
+        <span className="chapter-stamp">04 / Assistants Remember</span>
+        <p className="eyebrow">The Court of Foxes</p>
+        <h2>Those Who Sit Beside Power.</h2>
         <div className="spirit-grid">
           {spirits.map((spirit) => (
             <article className="spirit-record" key={spirit.name}>
@@ -169,21 +286,14 @@ export default function Home() {
                 <p>{spirit.role}</p>
                 <h3>{spirit.name}</h3>
                 <span>{spirit.text}</span>
+                <small>{spirit.note}</small>
               </div>
             </article>
           ))}
         </div>
-      </section>
-
-      <section className="observation reveal" id="the-mortals">
-        <div className="observation-glass" aria-hidden="true" />
-        <p className="eyebrow">Latest Observation</p>
-        <h2>Marcella, Blessed by Justice.</h2>
-        <p>
-          A creative worker loses credit for the work she carried alone. In the
-          hallway between humiliation and surrender, she asks Justice to witness.
-        </p>
-        <a href="/the-mortals">Enter the mortal archive</a>
+        <a className="text-link" href="/the-spirits">
+          Enter the spirit archive
+        </a>
       </section>
 
       <section className="section seer reveal" id="the-seer">
@@ -191,6 +301,7 @@ export default function Home() {
           <img src="/seer/seer-and-marok.webp" alt="The Seer and Marok observing a sacred glass orb" />
         </figure>
         <div className="seer-copy">
+          <span className="chapter-stamp">05 / The Seer Records</span>
           <p className="eyebrow">The Seer</p>
           <h2>The Keeper Behind the Glass.</h2>
           <p>
@@ -202,26 +313,31 @@ export default function Home() {
             <span>Records mortal consequence.</span>
             <span>Sends prayers through Marok.</span>
           </div>
-          <a className="text-link" href="https://www.tiktok.com/@gazeglass" target="_blank" rel="noreferrer">
-            Visit the living observations
-          </a>
+          <div className="seer-links">
+            <a className="text-link" href="mailto:behold@gazeglass.com">
+              Send a message through the glass
+            </a>
+            <a className="text-link" href="https://www.tiktok.com/@gazeglass" target="_blank" rel="noreferrer">
+              Watch the living observations on TikTok
+            </a>
+          </div>
         </div>
       </section>
 
       <section className="signup reveal" id="the-seer-circle">
+        <span className="chapter-stamp">06 / The Circle Listens</span>
         <p className="eyebrow">The Seer Circle</p>
         <h2>Receive New Observations.</h2>
         <p>
-          Enter the private circle for letters on gods, spirits, mortals, and the
-          hidden cosmology behind Gaze Glass.
+          Join the Seer&apos;s private circle for free. You&apos;ll receive letters and
+          blessings from the gods, mortal observations from the spirits, and the
+          cosmology behind the glass.
         </p>
-        <form>
-          <label htmlFor="email">Email address</label>
-          <div>
-            <input id="email" type="email" placeholder="you@example.com" />
-            <button type="submit">Join the Circle</button>
-          </div>
-        </form>
+        <p className="direct-prayer">
+          For prayers, invitations, and earthly messages:
+          <a href="mailto:behold@gazeglass.com">behold@gazeglass.com</a>
+        </p>
+        <SeerCircleForm />
       </section>
 
       <footer className="site-footer" aria-label="Gaze Glass ritual line">

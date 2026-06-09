@@ -5,14 +5,14 @@ import { useEffect, useState } from "react";
 const menuItems = [
   { label: "Home", href: "/#home", detail: "Return to the first glass.", action: "Open Home" },
   { label: "The Gods", href: "/the-gods", detail: "Enter the divine archive.", action: "Open The Gods" },
-  { label: "The Spirits", href: "/#the-spirits", detail: "Find what waits at the edge.", action: "Open The Spirits" },
+  { label: "The Spirits", href: "/the-spirits", detail: "Find what waits at the edge.", action: "Open The Spirits" },
   {
     label: "The Mortals",
     href: "/the-mortals",
     detail: "Witness the blessed and changed.",
     action: "Open The Mortals",
   },
-  { label: "The Seer", href: "/#the-seer", detail: "Meet the keeper of the glass.", action: "Meet The Seer" },
+  { label: "The Seer", href: "/the-seer", detail: "Meet the keeper of the glass.", action: "Meet The Seer" },
   {
     label: "The Seer Circle",
     href: "/#the-seer-circle",

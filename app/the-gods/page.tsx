@@ -1,10 +1,43 @@
 import type { Metadata } from "next";
+import { JsonLd } from "../components/JsonLd";
 import { GlassMenu } from "../components/GlassMenu";
 
 export const metadata: Metadata = {
-  title: "The Gods | Gaze Glass",
+  title: "The Gods",
   description:
-    "Enter the divine archive of Gaze Glass and witness gods whose lives still bend the mortal world.",
+    "Meet the gods of Gaze Glass: Love, War, Justice, Beauty, Death, Fortune, Story, Wisdom, Mercy, and Chaos in a mythic fantasy archive for readers.",
+  alternates: {
+    canonical: "/the-gods",
+  },
+  keywords: [
+    "fantasy gods",
+    "mythic fantasy gods",
+    "fantasy pantheon",
+    "divine fantasy characters",
+    "gods in fantasy novels",
+    "Gaze Glass gods",
+  ],
+  openGraph: {
+    title: "The Gods | Gaze Glass",
+    description:
+      "Enter the divine archive of Gaze Glass and witness a fantasy pantheon of gods whose choices bend mortal lives.",
+    url: "/the-gods",
+    images: [
+      {
+        url: "/og/gaze-glass-gods.png",
+        width: 1254,
+        height: 1254,
+        alt: "The God of Justice from the Gaze Glass fantasy pantheon",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Gods | Gaze Glass",
+    description:
+      "Meet the gods of Gaze Glass: a mythic fantasy pantheon of love, war, justice, beauty, death, fortune, story, wisdom, mercy, and chaos.",
+    images: ["/og/gaze-glass-gods.png"],
+  },
 };
 
 const gods = [
@@ -68,8 +101,8 @@ const gods = [
     image: "/gods/death.webp",
     station: "Receiver and guide of souls, weighing what every life tried to bury.",
     observation:
-      "Every soul that has ever drawn breath will eventually arrive at my scales — not with fear, but with the weight of every choice they buried, every truth they refused to carry. The God of Death does not take the living. They receive and guide the sorting of souls.",
-    note: "Death is sorting, witness, and passage rather than simple ending.",
+      "Every soul that has ever drawn breath arrives, in time, at the scales of the God of Death — weighed not in fear, but by the choices it tried to bury and the truths it refused to carry. Death does not take the living. Death receives them, and guides the sorting of souls.",
+    note: "Death is sorting, witness, and passage — never simple ending.",
   },
   {
     name: "The God of Wisdom",
@@ -95,7 +128,7 @@ const gods = [
     image: "/gods/chaos.webp",
     station: "The primordial origin from which creation itself was born.",
     observation:
-      "Hooded, six-eyed, and enthroned in a cracked onyx castle at the edge of Oblivion, the God of Chaos is the oldest force in the cosmos — the primordial from which all creation was born, and the only deity capable of spontaneous creation. Absent from every judgment briefing for reasons no one will say aloud, Chaos does not command mortals; they waits for them to find their way to the void.",
+      "Hooded, six-eyed, and enthroned in a cracked onyx castle at the edge of Oblivion, the God of Chaos is the oldest force in the cosmos — the primordial from which all creation was born, and the only deity capable of spontaneous creation. Absent from every judgment briefing for reasons no one will say aloud, Chaos does not command mortals; they wait for mortals to find their way to the void.",
     note: "Chaos waits at the edge of Oblivion, outside the ordinary order of judgment.",
   },
 ];
@@ -106,9 +139,38 @@ const rites = [
   "The Judgment asks whether a world deserves salvation, damnation, or rebirth.",
 ];
 
+const godsPageData = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": "https://www.gazeglass.com/the-gods#webpage",
+  url: "https://www.gazeglass.com/the-gods",
+  name: "The Gods | Gaze Glass",
+  description:
+    "A mythic fantasy archive of the gods in Gaze Glass, including Love, War, Justice, Beauty, Death, Fortune, Story, Wisdom, Mercy, and Chaos.",
+  isPartOf: {
+    "@id": "https://www.gazeglass.com/#website",
+  },
+  about: ["fantasy gods", "mythic fantasy", "fantasy pantheon", "divine characters"],
+  mainEntity: {
+    "@type": "ItemList",
+    name: "Gaze Glass Pantheon",
+    itemListElement: gods.map((god, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Thing",
+        name: god.name,
+        description: god.station,
+        image: `https://www.gazeglass.com${god.image}`,
+      },
+    })),
+  },
+};
+
 export default function TheGods() {
   return (
     <main>
+      <JsonLd data={godsPageData} />
       <header className="site-header" aria-label="Primary navigation">
         <a className="brand" href="/#home" aria-label="Gaze Glass home">
           <img className="brand-mark" src="/brand/gaze-glass-mark-transparent.png" alt="" />
@@ -189,6 +251,9 @@ export default function TheGods() {
             <p key={rite}>{rite}</p>
           ))}
         </div>
+        <a className="text-link return-link" href="/#home">
+          Return to the first glass
+        </a>
       </section>
 
       <footer className="site-footer" aria-label="Gaze Glass ritual line">
