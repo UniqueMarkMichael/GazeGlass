@@ -96,6 +96,33 @@ const malikaObservations = [
   },
 ];
 
+const mortalCases = [
+  {
+    id: "marcella-case",
+    number: "Observation 001",
+    name: "Marcella",
+    title: "Blessed by Justice",
+    force: "Justice",
+    image: "/mortals/marcella/portrait.webp",
+    summary:
+      "A creative worker asks to be witnessed after her labor is stolen and renamed.",
+    evidence: "Stolen credit, hidden labor, restored authorship.",
+    href: "#marcella-case",
+  },
+  {
+    id: "malika-case",
+    number: "Observation 002",
+    name: "Malika",
+    title: "Blessed by Love",
+    force: "Love",
+    image: "/mortals/malika/portrait.png",
+    summary:
+      "A future cosmetologist asks for help after control is disguised as devotion.",
+    evidence: "Forbidden beauty, self-return, a mirror remade as freedom.",
+    href: "#malika-case",
+  },
+];
+
 const mortalsPageData = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
@@ -155,25 +182,56 @@ export default function TheMortals() {
 
       <section className="mortal-hero">
         <div className="stars" aria-hidden="true" />
-        <figure className="mortal-portrait reveal">
-          <img src="/mortals/marcella/portrait.webp" alt="Marcella reflected in a sacred gold mirror" />
-        </figure>
         <div className="mortal-hero-copy reveal">
           <p className="eyebrow">The Mortal Archive</p>
-          <h1>Marcella</h1>
+          <h1>Divine Incidents, Human Lives.</h1>
           <p>
-            Blessed by the God of Justice after her labor was stolen, her silence
-            mistaken for consent, and her worth filed under another man&apos;s name.
+            These are not character profiles. They are witnessed incidents:
+            ordinary mortals recorded at the moment a god answered, a spirit
+            remembered, and a life changed shape.
           </p>
+        </div>
+        <div className="incident-index reveal" aria-label="Observed mortal incidents">
+          {mortalCases.map((mortalCase) => (
+            <a className="incident-card" href={mortalCase.href} key={mortalCase.id}>
+              <figure>
+                <img src={mortalCase.image} alt={`${mortalCase.name}, ${mortalCase.title}`} />
+              </figure>
+              <div>
+                <span>{mortalCase.number}</span>
+                <p>{mortalCase.force}</p>
+                <h2>
+                  {mortalCase.name}, <em>{mortalCase.title}</em>
+                </h2>
+                <small>{mortalCase.summary}</small>
+              </div>
+            </a>
+          ))}
         </div>
       </section>
 
-      <section className="mortal-dossier reveal" aria-label="Marcella dossier">
+      <section className="archive-threshold mortal-threshold reveal" aria-label="Mortal viewing threshold">
+        <p className="eyebrow">How The Glass Records Mortals</p>
+        <h2>The Viral Moment Is Only the Door.</h2>
+        <p>
+          TikTok may show the instant the blessing arrives. Here, the glass slows
+          the moment down until wound, witness, choice, and consequence can be seen
+          in the same reflection.
+        </p>
+        <p>
+          Each incident is preserved as evidence: what happened before the prayer,
+          what the god changed, and what the mortal chose after power entered the room.
+        </p>
+      </section>
+
+      <section className="mortal-dossier reveal" id="marcella-case" aria-label="Marcella dossier">
         <div>
           <p className="eyebrow">Observation 001</p>
-          <h2>The Case of Stolen Credit.</h2>
+          <h2>Marcella, Blessed by Justice.</h2>
         </div>
         <dl>
+          <dt>Incident</dt>
+          <dd>The Case of Stolen Credit</dd>
           <dt>Patron</dt>
           <dd>The God of Justice</dd>
           <dt>Blessing</dt>
@@ -181,20 +239,6 @@ export default function TheMortals() {
           <dt>Trial</dt>
           <dd>To receive recognition without becoming the kind of power that wounded her.</dd>
         </dl>
-      </section>
-
-      <section className="archive-threshold mortal-threshold reveal" aria-label="Mortal viewing threshold">
-        <p className="eyebrow">Human View</p>
-        <h2>The Mirror Refuses the Easy Version.</h2>
-        <p>
-          The mortal archive is not a repeat of the TikTok telling. Here, the
-          glass slows the moment down until motive, wound, witness, and aftermath
-          can be seen in the same reflection.
-        </p>
-        <p>
-          The Mortal Archive opens with Marcella and continues with Malika. Each
-          life is recorded by consequence, not by spectacle.
-        </p>
       </section>
 
       <section className="mortal-observations" aria-label="Marcella observations">
@@ -214,7 +258,7 @@ export default function TheMortals() {
         ))}
       </section>
 
-      <section className="case-threshold reveal" aria-label="Malika case file">
+      <section className="case-threshold reveal" id="malika-case" aria-label="Malika case file">
         <figure className="case-portrait">
           <img src="/mortals/malika/portrait.png" alt="Malika reflected in a blue sacred mirror" />
         </figure>

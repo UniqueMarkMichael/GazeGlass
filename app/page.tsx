@@ -129,12 +129,13 @@ const sacredViews = [
 ];
 
 const chapters = [
-  { number: "01", label: "The Glass Opens", href: "#glass-opens" },
-  { number: "02", label: "Mortals Pray", href: "#the-mortals" },
-  { number: "03", label: "Gods Watch", href: "#featured-gods" },
-  { number: "04", label: "Assistants Remember", href: "#the-spirits" },
-  { number: "05", label: "The Seer Records", href: "#the-seer" },
-  { number: "06", label: "The Circle Listens", href: "#the-seer-circle" },
+  { number: "01", label: "The Seer Records", href: "#the-seer" },
+  { number: "02", label: "The Glass Opens", href: "#glass-opens" },
+  { number: "03", label: "Mortals Pray", href: "#the-mortals" },
+  { number: "04", label: "Gods Watch", href: "#featured-gods" },
+  { number: "05", label: "Assistants Remember", href: "#the-spirits" },
+  { number: "06", label: "Behind the Glass", href: "#behind-the-glass" },
+  { number: "07", label: "The Circle Listens", href: "#the-seer-circle" },
 ];
 
 export default function Home() {
@@ -164,6 +165,16 @@ export default function Home() {
         ))}
       </aside>
 
+      <section className="welcome-plate" aria-label="Gaze Glass greeting">
+        <img
+          src="/brand/hello-mortal-banner.png"
+          alt="Gaze Glass greeting that reads Hello, Mortal."
+        />
+        <a href="#home" aria-label="Enter Gaze Glass">
+          Enter the glass
+        </a>
+      </section>
+
       <section className="hero" id="home">
         <div className="stars" aria-hidden="true" />
         <div className="sphere-wrap" aria-hidden="true">
@@ -184,16 +195,41 @@ export default function Home() {
             <span>Spirits Remember.</span>
           </div>
         </div>
-        <a className="scroll-cue" href="#the-mortals" aria-label="Begin observing the latest mortal case file">
+        <a className="scroll-cue" href="#gaze-into-glass" aria-label="Gaze into the glass">
           Begin observing
         </a>
       </section>
 
-      <section className="section intro reveal" aria-label="Gaze Glass introduction">
+      <section className="glass-portal reveal" id="gaze-into-glass" aria-label="Gaze into the glass">
+        <div className="glass-portal-stage">
+          <img
+            className="world-orb"
+            src="/brand/world-orb.png"
+            alt="A sacred glass orb revealing a golden city and stars inside"
+          />
+          <div className="glass-portal-copy" aria-hidden="true">
+            <span>Gaze Into The Glass</span>
+            <p>The first mortal incident comes into view.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section seer-prologue reveal" id="the-seer" aria-label="The Seer introduces Gaze Glass">
+        <span className="chapter-stamp">01 / The Seer Records</span>
+        <p className="eyebrow">Before the Observation</p>
+        <h2>The Seer Records What the Glass Reveals.</h2>
         <p>
-          Within Gaze Glass, myth is not archived. It is witnessed. Each page is a lens
-          turned toward a life still moving somewhere beyond ordinary sight.
+          Gaze Glass is a fantasy universe told through divine observations: gods who
+          shape fate, spirits who remember what mortals forget, and ordinary souls
+          changed by impossible blessings.
         </p>
+        <p>
+          The Seer is your guide through the glass. Begin with one mortal life, then
+          follow the light outward to the gods and spirits watching from beyond.
+        </p>
+        <a className="text-link" href="#the-mortals">
+          Begin the observation
+        </a>
       </section>
 
       <section className="glass-threshold reveal" id="glass-opens" aria-label="Sacred glass threshold">
@@ -201,7 +237,7 @@ export default function Home() {
           <img src="/brand/sacred-mirror.webp" alt="A sacred golden mirror glowing inside a cosmic observatory" />
         </figure>
         <div>
-          <span className="chapter-stamp">01 / The Glass Opens</span>
+          <span className="chapter-stamp">02 / The Glass Opens</span>
           <p className="eyebrow">The Glass Opens</p>
           <h2>Observation Begins at the Threshold.</h2>
           <p>
@@ -231,7 +267,7 @@ export default function Home() {
       <section className="observation reveal" id="the-mortals">
         <div className="observation-glass" aria-hidden="true" />
         <div className="observation-copy">
-          <span className="chapter-stamp">02 / Mortals Pray</span>
+          <span className="chapter-stamp">03 / Mortals Pray</span>
           <p className="eyebrow">Latest Observation</p>
           <h2>Marcella, Blessed by Justice.</h2>
           <p>
@@ -249,7 +285,7 @@ export default function Home() {
 
       <section className="section split reveal" id="featured-gods">
         <div>
-          <span className="chapter-stamp">03 / Gods Watch</span>
+          <span className="chapter-stamp">04 / Gods Watch</span>
           <p className="eyebrow">Featured Gods</p>
           <h2>The Immortal Lives Are Not Still.</h2>
         </div>
@@ -273,7 +309,7 @@ export default function Home() {
       </section>
 
       <section className="section spirits reveal" id="the-spirits">
-        <span className="chapter-stamp">04 / Assistants Remember</span>
+        <span className="chapter-stamp">05 / Assistants Remember</span>
         <p className="eyebrow">The Court of Foxes</p>
         <h2>Those Who Sit Beside Power.</h2>
         <div className="spirit-grid">
@@ -296,12 +332,12 @@ export default function Home() {
         </a>
       </section>
 
-      <section className="section seer reveal" id="the-seer">
+      <section className="section seer reveal" id="behind-the-glass">
         <figure className="seer-plate">
           <img src="/seer/seer-and-marok.webp" alt="The Seer and Marok observing a sacred glass orb" />
         </figure>
         <div className="seer-copy">
-          <span className="chapter-stamp">05 / The Seer Records</span>
+          <span className="chapter-stamp">06 / Behind the Glass</span>
           <p className="eyebrow">The Seer</p>
           <h2>The Keeper Behind the Glass.</h2>
           <p>
@@ -325,7 +361,7 @@ export default function Home() {
       </section>
 
       <section className="signup reveal" id="the-seer-circle">
-        <span className="chapter-stamp">06 / The Circle Listens</span>
+        <span className="chapter-stamp">07 / The Circle Listens</span>
         <p className="eyebrow">The Seer Circle</p>
         <h2>Receive New Observations.</h2>
         <p>
