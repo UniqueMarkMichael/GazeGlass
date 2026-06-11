@@ -2669,6 +2669,34 @@ dd {
     display: none;
   }
 
+  .welcome-plate {
+    background:
+      radial-gradient(circle at 50% 42%, rgba(201, 162, 39, 0.08), transparent 18rem),
+      linear-gradient(180deg, #0b0a18 0%, #15122c 52%, #0b0a18 100%);
+  }
+
+  .welcome-plate img {
+    inset: 50% auto auto 50%;
+    width: min(100vw, calc(100svh * 0.667));
+    height: auto;
+    max-height: 100svh;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+  }
+
+  .welcome-plate::after {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(10, 8, 24, 0.9) 0%,
+        rgba(10, 8, 24, 0.8) 26%,
+        rgba(10, 8, 24, 0.04) 42%,
+        rgba(10, 8, 24, 0.1) 76%,
+        rgba(10, 8, 24, 0.9) 100%
+      ),
+      radial-gradient(circle at 50% 58%, transparent 0 18rem, rgba(10, 8, 24, 0.28) 34rem);
+  }
+
   .hero {
     min-height: 100svh;
   }
