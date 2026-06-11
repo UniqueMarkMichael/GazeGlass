@@ -5,7 +5,7 @@ import { GlassMenu } from "../components/GlassMenu";
 export const metadata: Metadata = {
   title: "The Mortals",
   description:
-    "Read the mortal case files of Gaze Glass: Marcella blessed by Justice, Malika blessed by Love, and the fantasy stories changed by divine witness.",
+    "Read the mortal case files of Gaze Glass: Marcella blessed by Justice, Malika blessed by Love, Takeshi blessed by Fortune, and the fantasy stories changed by divine witness.",
   alternates: {
     canonical: "/the-mortals",
   },
@@ -17,11 +17,12 @@ export const metadata: Metadata = {
     "Gaze Glass mortals",
     "Marcella blessed by Justice",
     "Malika blessed by Love",
+    "Takeshi blessed by Fortune",
   ],
   openGraph: {
     title: "The Mortals | Gaze Glass",
     description:
-      "Enter the mortal archive: fantasy case files of Marcella, Malika, divine blessings, and the consequence of being witnessed.",
+      "Enter the mortal archive: fantasy case files of Marcella, Malika, Takeshi, divine blessings, and the consequence of being witnessed.",
     url: "/the-mortals",
     images: [
       {
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "The Mortals | Gaze Glass",
     description:
-      "Marcella and Malika enter the mortal archive through divine blessings from Justice and Love.",
+      "Marcella, Malika, and Takeshi enter the mortal archive through divine blessings from Justice, Love, and Fortune.",
     images: ["/og/gaze-glass-mortals.png"],
   },
 };
@@ -96,6 +97,44 @@ const malikaObservations = [
   },
 ];
 
+const takeshiObservations = [
+  {
+    label: "Before the Blessing",
+    title: "The Launch No One Saw",
+    text: "Takeshi built Untold Journey alone for three years. On launch night, the game entered the world with no audience, no momentum, and no proof that anyone would ever find it.",
+    image: "/mortals/takeshi/launch-eve.png",
+    note: "Verdict Note: Unseen work can still be worthy of a world.",
+  },
+  {
+    label: "The Sacred Appeal",
+    title: "One Chance Asked of Fortune",
+    text: "After three years of work and zero downloads, Takeshi returned to a prayer he thought childhood had outgrown. He did not ask to be famous. He asked for one chance.",
+    image: "/mortals/takeshi/zero-downloads.png",
+    note: "Verdict Note: Fortune does not replace labor. Sometimes it only opens the door labor earned.",
+  },
+  {
+    label: "The Intervention",
+    title: "Saroka Scatters a Little Luck",
+    text: "High above him, the God of Fortune watched. Saroka, the scarlet fox, carried the smallest possible blessing into the city, and one tired streamer clicked one last game.",
+    image: "/mortals/takeshi/saroka-luck.png",
+    note: "Verdict Note: A miracle can arrive disguised as one person deciding not to log off.",
+  },
+  {
+    label: "The Cascade",
+    title: "The World Finds the Game",
+    text: "The first player stayed. Then she told everyone. By morning, the quiet work that no algorithm had noticed became a shared world thousands of people wanted to enter.",
+    image: "/mortals/takeshi/world-playing.png",
+    note: "Verdict Note: Luck is not the reward. What a mortal does with luck becomes the record.",
+  },
+  {
+    label: "After Fortune",
+    title: "A Game Becomes a Door",
+    text: "Takeshi used what Fortune gave him to build places where more people could play. The blessing did not end at success. It became access.",
+    image: "/mortals/takeshi/game-cafe.png",
+    note: "Verdict Note: Fortune becomes sacred when it is shared.",
+  },
+];
+
 const mortalCases = [
   {
     id: "marcella-case",
@@ -121,6 +160,18 @@ const mortalCases = [
     evidence: "Forbidden beauty, self-return, a mirror remade as freedom.",
     href: "#malika-case",
   },
+  {
+    id: "takeshi-case",
+    number: "Observation 003",
+    name: "Takeshi",
+    title: "Blessed by Fortune",
+    force: "Fortune",
+    image: "/mortals/takeshi/portrait.png",
+    summary:
+      "A solo game developer asks for one chance after three years of unseen work.",
+    evidence: "Zero downloads, one streamer, a world suddenly playing.",
+    href: "#takeshi-case",
+  },
 ];
 
 const mortalsPageData = {
@@ -130,11 +181,11 @@ const mortalsPageData = {
   url: "https://www.gazeglass.com/the-mortals",
   name: "The Mortals | Gaze Glass",
   description:
-    "Observed mortal case files from Gaze Glass, including Marcella blessed by Justice and Malika blessed by Love.",
+    "Observed mortal case files from Gaze Glass, including Marcella blessed by Justice, Malika blessed by Love, and Takeshi blessed by Fortune.",
   isPartOf: {
     "@id": "https://www.gazeglass.com/#website",
   },
-  about: ["fantasy stories", "mortal blessings", "divine justice", "divine love", "mythic fantasy"],
+  about: ["fantasy stories", "mortal blessings", "divine justice", "divine love", "divine fortune", "mythic fantasy"],
   mainEntity: {
     "@type": "ItemList",
     itemListElement: [
@@ -162,6 +213,19 @@ const mortalsPageData = {
           "@type": "Person",
           name: "Malika",
           description: "A mortal blessed by the God of Love after control nearly erases her dream.",
+        },
+      },
+      {
+        "@type": "CreativeWork",
+        position: 3,
+        name: "Takeshi, Blessed by Fortune",
+        genre: ["Fantasy", "Mythic Fantasy"],
+        description:
+          "A mortal case file about Takeshi, a solo game developer whose unseen work is touched by the God of Fortune.",
+        character: {
+          "@type": "Person",
+          name: "Takeshi",
+          description: "A mortal blessed by the God of Fortune after his game launches unseen.",
         },
       },
     ],
@@ -283,6 +347,48 @@ export default function TheMortals() {
 
       <section className="mortal-observations" aria-label="Malika observations">
         {malikaObservations.map((item, index) => (
+          <article className="mortal-observation reveal" key={item.title}>
+            <figure>
+              <img src={item.image} alt={`${item.title} artwork`} />
+            </figure>
+            <div>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <p className="eyebrow">{item.label}</p>
+              <h2>{item.title}</h2>
+              <p>{item.text}</p>
+              <small>{item.note}</small>
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <section className="case-threshold fortune-case reveal" id="takeshi-case" aria-label="Takeshi case file">
+        <figure className="case-portrait">
+          <img src="/mortals/takeshi/portrait.png" alt="Takeshi reflected in a red triangular sacred glass" />
+        </figure>
+        <div>
+          <p className="eyebrow">Observation 003</p>
+          <h2>Takeshi, Blessed by Fortune.</h2>
+          <p>
+            A solo game developer spent three years building a world almost no one
+            saw. When the launch disappeared into silence, he begged the God of
+            Fortune for one chance. Saroka carried the answer.
+          </p>
+          <dl>
+            <dt>Patron</dt>
+            <dd>The God of Fortune</dd>
+            <dt>Spirit Witness</dt>
+            <dd>Saroka, the scarlet fox</dd>
+            <dt>Blessing</dt>
+            <dd>One impossible path from obscurity to discovery.</dd>
+            <dt>Trial</dt>
+            <dd>To turn sudden luck into access for others.</dd>
+          </dl>
+        </div>
+      </section>
+
+      <section className="mortal-observations" aria-label="Takeshi observations">
+        {takeshiObservations.map((item, index) => (
           <article className="mortal-observation reveal" key={item.title}>
             <figure>
               <img src={item.image} alt={`${item.title} artwork`} />
