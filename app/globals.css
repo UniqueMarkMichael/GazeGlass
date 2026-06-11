@@ -2716,8 +2716,7 @@ dd {
   }
 
   .glass-portal-copy p {
-    margin-top: clamp(62px, 12vh, 108px);
-    font-size: clamp(1.8rem, 11vw, 3.5rem);
+    display: none;
   }
 
   .hero-vow {
