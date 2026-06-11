@@ -709,7 +709,7 @@ h1 {
 
 .glass-portal {
   position: relative;
-  height: 128svh;
+  height: 168svh;
   margin-top: -1px;
   isolation: isolate;
 }
@@ -766,8 +766,8 @@ h1 {
 
 .glass-portal-copy {
   position: absolute;
+  top: calc(50% + clamp(190px, 21vw, 330px));
   left: 50%;
-  bottom: clamp(54px, 9vh, 86px);
   width: min(720px, calc(100% - var(--page-gutter) - var(--page-gutter)));
   transform: translateX(-50%);
   text-align: center;
@@ -788,11 +788,12 @@ h1 {
 }
 
 .glass-portal-copy p {
-  margin: 0;
+  margin: clamp(44px, 7vh, 84px) auto 0;
   color: var(--bone);
   font-family: "Playfair Display", Georgia, serif;
   font-size: clamp(1.9rem, 3.5vw, 3.9rem);
   line-height: 1;
+  max-width: 760px;
 }
 
 .seer-prologue {
@@ -2408,25 +2409,25 @@ dd {
   20% {
     opacity: 0.88;
     filter: saturate(0.9) brightness(0.82) blur(0);
-    transform: scale(0.82) translateY(0);
+    transform: scale(0.82) translateY(-3vh);
   }
 
   52% {
     opacity: 1;
     filter: saturate(1.04) brightness(0.96) blur(0);
-    transform: scale(1.22) translateY(-1vh);
+    transform: scale(1.22) translateY(-6vh);
   }
 
   74% {
     opacity: 0.92;
     filter: saturate(1.12) brightness(1.06) blur(1px);
-    transform: scale(1.62) translateY(-3vh);
+    transform: scale(1.62) translateY(-8vh);
   }
 
   100% {
     opacity: 0;
     filter: saturate(0.8) brightness(1.32) blur(22px);
-    transform: scale(2.35) translateY(-6vh);
+    transform: scale(2.35) translateY(-12vh);
   }
 }
 
@@ -2702,7 +2703,7 @@ dd {
   }
 
   .glass-portal {
-    height: 150svh;
+    height: 185svh;
   }
 
   .world-orb {
@@ -2710,10 +2711,12 @@ dd {
   }
 
   .glass-portal-copy {
-    bottom: 56px;
+    top: calc(50% + min(46vw, 230px));
+    width: min(88vw, 520px);
   }
 
   .glass-portal-copy p {
+    margin-top: clamp(62px, 12vh, 108px);
     font-size: clamp(1.8rem, 11vw, 3.5rem);
   }
 
