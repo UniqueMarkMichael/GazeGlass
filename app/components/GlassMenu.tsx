@@ -67,6 +67,10 @@ export function GlassMenu() {
     window.setTimeout(() => setIsPassing(false), 920);
   }
 
+  function closeMenu() {
+    setIsOpen(false);
+  }
+
   return (
     <>
       <button
@@ -83,8 +87,19 @@ export function GlassMenu() {
       </button>
 
       <div className={`glass-menu ${isOpen ? "is-open" : ""}`} id="glass-menu" aria-hidden={!isOpen}>
+        <button
+          className="glass-menu-backdrop"
+          type="button"
+          aria-label="Close navigation and return to the page"
+          tabIndex={isOpen ? 0 : -1}
+          onClick={closeMenu}
+        />
         <div className="glass-menu-lens" aria-hidden="true" />
         <div className="glass-menu-panel" role="dialog" aria-modal="true" aria-label="Gaze Glass navigation">
+          <button className="glass-menu-close" type="button" onClick={closeMenu}>
+            <span aria-hidden="true">×</span>
+            Close lens
+          </button>
           <p className="eyebrow">Choose a lens</p>
           <nav className="glass-menu-nav" aria-label="Gaze Glass sections">
             {menuItems.map((item, index) => (

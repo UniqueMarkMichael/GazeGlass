@@ -214,6 +214,16 @@ a {
   pointer-events: auto;
 }
 
+.glass-menu-backdrop {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: default;
+}
+
 .glass-menu-lens {
   position: absolute;
   width: min(82vw, 720px);
@@ -260,6 +270,45 @@ a {
 
 .glass-menu.is-open .glass-menu-panel {
   transform: translateY(0) scale(1);
+}
+
+.glass-menu-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: auto;
+  margin: 0 auto 20px;
+  padding: 10px 16px;
+  border: 1px solid rgba(201, 162, 39, 0.28);
+  border-radius: 999px;
+  color: rgba(237, 227, 204, 0.72);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(237, 227, 204, 0.08), transparent 68%),
+    rgba(10, 8, 24, 0.46);
+  font-family: "Mulish", system-ui, sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    border-color 240ms ease,
+    color 240ms ease,
+    transform 240ms ease;
+}
+
+.glass-menu-close span {
+  color: var(--gold);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 1.25rem;
+  line-height: 0.7;
+}
+
+.glass-menu-close:hover {
+  border-color: rgba(201, 162, 39, 0.64);
+  color: var(--bone);
+  transform: translateY(-2px);
 }
 
 .glass-menu-nav {
