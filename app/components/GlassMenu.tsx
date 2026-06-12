@@ -12,12 +12,18 @@ const menuItems = [
     detail: "Witness the blessed and changed.",
     action: "Open The Mortals",
   },
+  {
+    label: "Observations",
+    href: "/observations",
+    detail: "Enter the recorded sky.",
+    action: "Open Observations",
+  },
   { label: "The Seer", href: "/the-seer", detail: "Meet the keeper of the glass.", action: "Meet The Seer" },
   {
-    label: "The Seer Circle",
+    label: "Join the Circle",
     href: "/#the-seer-circle",
     detail: "Receive new observations.",
-    action: "Join The Seer Circle",
+    action: "Join the Circle",
   },
 ];
 

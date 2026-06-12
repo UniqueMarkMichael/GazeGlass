@@ -105,6 +105,13 @@ const spirits = [
     text: "Cobalt-furred and unshakably composed, Sindren has watched enough divine briefings to know when fear is theater and when it is prophecy.",
     note: "Field Note: The gentlest god keeps the sharpest company.",
   },
+  {
+    name: "Saroka",
+    role: "Assistant to the God of Fortune",
+    image: "/spirits/saroka.png",
+    text: "Scarlet-furred with a cream chest, white-tipped tail, gold-dipped paws, and ember eyes, Saroka serves Fortune with a calm smile and a devious little snicker whenever mortals confuse panic for prophecy.",
+    note: "Field Note: Luck has teeth, gold paws, and impeccable timing.",
+  },
 ];
 
 const sacredViews = [
@@ -362,7 +369,7 @@ export default function Home() {
 
       <section className="signup reveal" id="the-seer-circle">
         <span className="chapter-stamp">07 / The Circle Listens</span>
-        <p className="eyebrow">The Seer Circle</p>
+        <p className="eyebrow">Join the Circle</p>
         <h2>Receive New Observations.</h2>
         <p>
           Join the Seer&apos;s private circle for free. You&apos;ll receive letters and

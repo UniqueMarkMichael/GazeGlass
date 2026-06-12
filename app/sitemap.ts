@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
+import { observations } from "./observations/data";
 
 const baseUrl = "https://www.gazeglass.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date("2026-06-09");
+  const lastModified = new Date("2026-06-11");
 
   return [
     {
@@ -30,6 +31,36 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/observations`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/observations/gods`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.82,
+    },
+    {
+      url: `${baseUrl}/observations/spirits`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.82,
+    },
+    {
+      url: `${baseUrl}/observations/mortals`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.82,
+    },
+    ...observations.map((observation) => ({
+      url: `${baseUrl}/observations/${observation.slug}`,
+      lastModified: new Date(observation.dateObserved),
+      changeFrequency: "monthly" as const,
+      priority: 0.78,
+    })),
     {
       url: `${baseUrl}/the-seer`,
       lastModified,

@@ -5,7 +5,7 @@ import { JsonLd } from "../components/JsonLd";
 export const metadata: Metadata = {
   title: "The Spirits",
   description:
-    "Meet the fox spirits of Gaze Glass: Kitsu, Marok, Jem, and Sindren, divine assistants who carry truth, judgment, beauty, and love through a mythic fantasy world.",
+    "Meet the fox spirits of Gaze Glass: Kitsu, Marok, Jem, Sindren, and Saroka, divine assistants who carry truth, judgment, beauty, love, and fortune through a mythic fantasy world.",
   alternates: {
     canonical: "/the-spirits",
   },
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "The Spirits | Gaze Glass",
     description:
-      "Meet the fox spirits who sit beside divine power in Gaze Glass: Kitsu, Marok, Jem, and Sindren.",
+      "Meet the fox spirits who sit beside divine power in Gaze Glass: Kitsu, Marok, Jem, Sindren, and Saroka.",
     url: "/the-spirits",
     images: [
       {
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "The Spirits | Gaze Glass",
     description:
-      "Meet Kitsu, Marok, Jem, and Sindren, the fox spirits who serve beside the gods of Gaze Glass.",
+      "Meet Kitsu, Marok, Jem, Sindren, and Saroka, the fox spirits who serve beside the gods of Gaze Glass.",
     images: ["/og/gaze-glass.png"],
   },
 };
@@ -69,6 +69,13 @@ const spirits = [
     text: "Cobalt-furred and unshakably composed, Sindren is proof that the gentlest god keeps the sharpest company.",
     note: "Field Note: The gentlest god keeps the sharpest company.",
   },
+  {
+    name: "Saroka",
+    role: "Assistant to the God of Fortune",
+    image: "/spirits/saroka.png",
+    text: "Scarlet-furred with a cream chest, white-tipped bushy tail, gold-dipped paws, and ember eyes, Saroka serves Fortune with unnerving calm.",
+    note: "Field Note: He snickers at mortal panic, especially when the outcome was already turning in their favor.",
+  },
 ];
 
 const spiritsPageData = {
@@ -78,7 +85,7 @@ const spiritsPageData = {
   url: "https://www.gazeglass.com/the-spirits",
   name: "The Spirits | Gaze Glass",
   description:
-    "A fantasy character archive of the fox spirits in Gaze Glass: Kitsu, Marok, Jem, and Sindren.",
+    "A fantasy character archive of the fox spirits in Gaze Glass: Kitsu, Marok, Jem, Sindren, and Saroka.",
   isPartOf: {
     "@id": "https://www.gazeglass.com/#website",
   },
@@ -138,7 +145,7 @@ export default function TheSpirits() {
 
       <section className="section spirits reveal" aria-label="Fox spirit records">
         <p className="eyebrow">The Court of Foxes</p>
-        <h2>Four Spirits Beside the Divine.</h2>
+        <h2>Five Spirits Beside the Divine.</h2>
         <div className="spirit-grid">
           {spirits.map((spirit) => (
             <article className="spirit-record" key={spirit.name}>
