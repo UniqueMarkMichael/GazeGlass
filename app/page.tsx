@@ -140,7 +140,7 @@ const chapters = [
   { number: "02", label: "The Glass Opens", href: "#glass-opens" },
   { number: "03", label: "Mortals Pray", href: "#the-mortals" },
   { number: "04", label: "Gods Watch", href: "#featured-gods" },
-  { number: "05", label: "Assistants Remember", href: "#the-spirits" },
+  { number: "05", label: "Spirits Remember", href: "#the-spirits" },
   { number: "06", label: "Behind the Glass", href: "#behind-the-glass" },
   { number: "07", label: "The Circle Listens", href: "#the-seer-circle" },
 ];
@@ -194,16 +194,15 @@ export default function Home() {
         </div>
         <div className="hero-copy reveal">
           <p className="eyebrow">Gaze into the glass</p>
-          <h1>To Divine,</h1>
-          <p className="subhead">For every mortal soul leaves a story behind.</p>
+          <h1>Every mortal soul leaves a story behind.</h1>
           <div className="hero-vow" aria-hidden="true">
             <span>Gods Watch.</span>
             <span>Mortals Pray.</span>
             <span>Spirits Remember.</span>
           </div>
         </div>
-        <a className="scroll-cue" href="#gaze-into-glass" aria-label="Gaze into the glass">
-          Begin observing
+        <a className="scroll-cue" href="#the-mortals" aria-label="Meet the first mortal">
+          Meet the first mortal
         </a>
       </section>
 
@@ -281,7 +280,7 @@ export default function Home() {
             A creative worker loses credit for the work she carried alone. In the
             hallway between humiliation and surrender, she asks Justice to witness.
           </p>
-          <p className="observation-note">Newly opened: Malika, Blessed by Love.</p>
+          <p className="observation-note">Just witnessed: Malika, Blessed by Love.</p>
           <a href="/the-mortals">Enter the mortal archive</a>
         </div>
         <figure className="observation-portrait">
@@ -294,7 +293,7 @@ export default function Home() {
         <div>
           <span className="chapter-stamp">04 / Gods Watch</span>
           <p className="eyebrow">Featured Gods</p>
-          <h2>The Immortal Lives Are Not Still.</h2>
+          <h2>The Gods Do Not Sleep.</h2>
         </div>
         <div className="quiet-list">
           {gods.map((god) => (
@@ -316,7 +315,7 @@ export default function Home() {
       </section>
 
       <section className="section spirits reveal" id="the-spirits">
-        <span className="chapter-stamp">05 / Assistants Remember</span>
+        <span className="chapter-stamp">05 / Spirits Remember</span>
         <p className="eyebrow">The Court of Foxes</p>
         <h2>Those Who Sit Beside Power.</h2>
         <div className="spirit-grid">
@@ -361,7 +360,7 @@ export default function Home() {
               Send a message through the glass
             </a>
             <a className="text-link" href="https://www.tiktok.com/@gazeglass" target="_blank" rel="noreferrer">
-              Watch the living observations on TikTok
+              Watch the stories unfold on TikTok
             </a>
           </div>
         </div>
@@ -370,7 +369,7 @@ export default function Home() {
       <section className="signup reveal" id="the-seer-circle">
         <span className="chapter-stamp">07 / The Circle Listens</span>
         <p className="eyebrow">Join the Circle</p>
-        <h2>Receive New Observations.</h2>
+        <h2>Letters from the Seer.</h2>
         <p>
           Join the Seer&apos;s private circle for free. You&apos;ll receive letters and
           blessings from the gods, mortal observations from the spirits, and the

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { CopyLinkButton } from "../../components/CopyLinkButton";
 import { GlassMenu } from "../../components/GlassMenu";
 import { JsonLd } from "../../components/JsonLd";
-import { getObservation, getRelatedObservations, observations, regionMeta } from "../data";
+import { getObservation, getObservationHref, getRelatedObservations, observations, regionMeta } from "../data";
 
 type ObservationPageProps = {
   params: Promise<{
@@ -12,9 +12,11 @@ type ObservationPageProps = {
 };
 
 export function generateStaticParams() {
-  return observations.map((observation) => ({
-    slug: observation.slug,
-  }));
+  return observations
+    .filter((observation) => !observation.canonicalPath)
+    .map((observation) => ({
+      slug: observation.slug,
+    }));
 }
 
 export async function generateMetadata({ params }: ObservationPageProps): Promise<Metadata> {
@@ -29,12 +31,12 @@ export async function generateMetadata({ params }: ObservationPageProps): Promis
     title: observation.seoTitle,
     description: observation.seoDescription,
     alternates: {
-      canonical: `/observations/${observation.slug}`,
+      canonical: getObservationHref(observation),
     },
     openGraph: {
       title: `${observation.title} | Gaze Glass`,
       description: observation.seoDescription,
-      url: `/observations/${observation.slug}`,
+      url: getObservationHref(observation),
       type: "article",
       images: observation.image
         ? [
@@ -68,8 +70,8 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
   const storyData = {
     "@context": "https://schema.org",
     "@type": "ShortStory",
-    "@id": `https://www.gazeglass.com/observations/${observation.slug}/#story`,
-    url: `https://www.gazeglass.com/observations/${observation.slug}`,
+    "@id": `https://www.gazeglass.com${getObservationHref(observation)}/#story`,
+    url: `https://www.gazeglass.com${getObservationHref(observation)}`,
     name: observation.title,
     headline: observation.title,
     description: observation.seoDescription,
@@ -144,7 +146,7 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
           <aside className="related-panel" aria-label="More like this">
             <p className="eyebrow">More Like This</p>
             {related.map((item) => (
-              <a href={`/observations/${item.slug}`} key={item.slug}>
+              <a href={getObservationHref(item)} key={item.slug}>
                 <span>{item.number}</span>
                 <strong>{item.title}</strong>
                 <em>{item.readTime}</em>

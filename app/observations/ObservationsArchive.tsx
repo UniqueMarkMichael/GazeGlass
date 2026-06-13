@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { magnitudeMeta, observations, regionMeta, type ObservationMagnitude, type ObservationRegion } from "./data";
+import { getObservationHref, magnitudeMeta, observations, regionMeta, type ObservationMagnitude, type ObservationRegion } from "./data";
 
 type RegionFilter = "all" | ObservationRegion;
 type MagnitudeFilter = "all" | ObservationMagnitude;
@@ -98,7 +98,7 @@ export function ObservationsArchive() {
 
       <div className="observation-list" aria-live="polite">
         {filtered.map((observation) => (
-          <a className="observation-row" href={`/observations/${observation.slug}`} key={observation.slug}>
+          <a className="observation-row" href={getObservationHref(observation)} key={observation.slug}>
             <span className={`magnitude-mark magnitude-${observation.magnitude}`} aria-hidden="true" />
             <span className="observation-row-number">{observation.number}</span>
             <span>

@@ -3,57 +3,57 @@ import { GlassMenu } from "../components/GlassMenu";
 import { JsonLd } from "../components/JsonLd";
 import { SeerCircleForm } from "../components/SeerCircleForm";
 import { ObservationsArchive } from "./ObservationsArchive";
-import { featuredObservation, observations, regionMeta } from "./data";
+import { featuredObservation, regionMeta } from "./data";
 
 export const metadata: Metadata = {
-  title: "Observations",
+  title: "Patricia, Awakened by Wisdom",
   description:
-    "Enter the Gaze Glass Observations archive, a mythic collection of short fantasy stories recorded through the Glass.",
+    "Read Patricia, Awakened by Wisdom, the first Gaze Glass Observation about a former financier, the God of Wisdom, enlightenment, and the coming Judgment.",
   alternates: {
     canonical: "/observations",
   },
   openGraph: {
-    title: "Observations | Gaze Glass",
+    title: "Patricia, Awakened by Wisdom | Gaze Glass",
     description:
-      "Peer through the Glass and discover recorded fantasy stories of gods, spirits, and mortals.",
+      "The first Gaze Glass Observation: a mortal encounter with the God of Wisdom and the wall between self and world dissolving.",
     url: "/observations",
+    type: "article",
     images: [
       {
-        url: "/og/gaze-glass.png",
-        width: 1672,
-        height: 941,
-        alt: "The Gaze Glass observatory opening into sacred stories",
+        url: "/mortals/patricia/wisdom-appears.png",
+        width: 1024,
+        height: 1536,
+        alt: "Patricia seated on a city street as the God of Wisdom appears in celestial light",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Observations | Gaze Glass",
+    title: "Patricia, Awakened by Wisdom | Gaze Glass",
     description:
-      "A living archive of fantasy short stories witnessed through the sacred Glass.",
-    images: ["/og/gaze-glass.png"],
+      "Read the first Gaze Glass Observation, where Patricia is awakened by the God of Wisdom.",
+    images: ["/mortals/patricia/wisdom-appears.png"],
   },
 };
 
 const observationsData = {
   "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  "@id": "https://www.gazeglass.com/observations/#webpage",
+  "@type": "ShortStory",
+  "@id": "https://www.gazeglass.com/observations/#story",
   url: "https://www.gazeglass.com/observations",
-  name: "Observations",
-  description:
-    "A living archive of Gaze Glass fantasy short stories, flash fiction, and recorded fates.",
-  isPartOf: {
-    "@id": "https://www.gazeglass.com/#website",
+  name: featuredObservation.title,
+  headline: featuredObservation.title,
+  description: featuredObservation.seoDescription,
+  genre: ["Fantasy", "Mythic Fantasy", "Short Story"],
+  datePublished: featuredObservation.dateObserved,
+  author: {
+    "@type": "Organization",
+    name: "Gaze Glass",
   },
-  mainEntity: {
-    "@type": "ItemList",
-    itemListElement: observations.map((observation, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      url: `https://www.gazeglass.com/observations/${observation.slug}`,
-      name: observation.title,
-    })),
+  isPartOf: {
+    "@type": "CreativeWorkSeries",
+    name: "Gaze Glass Observations",
+    url: "https://www.gazeglass.com/observations",
   },
 };
 
@@ -82,6 +82,11 @@ const regionCards = [
 ];
 
 export default function ObservationsPage() {
+  const firstStoryPart = featuredObservation.story.slice(0, 6);
+  const secondStoryPart = featuredObservation.story.slice(6, 12);
+  const thirdStoryPart = featuredObservation.story.slice(12, 18);
+  const finalStoryPart = featuredObservation.story.slice(18);
+
   return (
     <main>
       <JsonLd data={observationsData} />
@@ -93,52 +98,108 @@ export default function ObservationsPage() {
         <GlassMenu />
       </header>
 
-      <section className="observations-hero" aria-label="Observations entry">
+      <article className="patricia-observation" aria-label="Patricia, Awakened by Wisdom">
+      <section className="patricia-hero" aria-label="Observation 001 entry">
         <div className="stars" aria-hidden="true" />
-        <div className="observatory-glass" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-        </div>
-        <div className="observations-hero-copy reveal">
-          <p className="eyebrow">The Observations Experience</p>
-          <h1>Peer Through the Glass.</h1>
-          <p>
-            The Seer presents recorded fates: gods, spirits, mortals, and the
-            moments the Glass refused to let vanish.
-          </p>
-          <a className="text-link" href="#newly-revealed">
-            See what is newly revealed
+        <figure className="patricia-hero-art reveal">
+          <img src="/mortals/patricia/wisdom-appears.png" alt={featuredObservation.imageAlt} />
+        </figure>
+        <div className="patricia-hero-copy reveal">
+          <p className="eyebrow">Gaze Glass / Observation {featuredObservation.number}</p>
+          <h1>{featuredObservation.title}.</h1>
+          <p>{featuredObservation.excerpt}</p>
+          <div className="story-actions" aria-label="Observation details">
+            <span>{featuredObservation.association}</span>
+            <span>{featuredObservation.readTime}</span>
+            <span>{featuredObservation.regionLabel}</span>
+          </div>
+          <a className="text-link" href="#patricia-reading">
+            Begin the Observation
           </a>
         </div>
-        <aside className="sky-ledger" aria-label="Archive status">
-          <span>Charted</span>
-          <strong>3%</strong>
-          <span>of the sky</span>
-          <span>Observations recovered</span>
-          <strong>{observations.length}</strong>
-        </aside>
       </section>
 
-      <section className="newly-revealed reveal" id="newly-revealed" aria-label="Newly revealed observation">
-        <p className="eyebrow">Newly Revealed</p>
-        <article>
-          {featuredObservation.image ? (
-            <img src={featuredObservation.image} alt={featuredObservation.imageAlt} />
-          ) : null}
-          <div>
-            <span>{featuredObservation.number}</span>
-            <h2>{featuredObservation.title}</h2>
+      <section className="patricia-reader" id="patricia-reading" aria-label="Read Patricia, Awakened by Wisdom">
+        <aside className="patricia-ledger reveal" aria-label="Observation metadata">
+          <span className="magnitude-mark magnitude-story" aria-hidden="true" />
+          <dl>
+            <dt>Archive</dt>
+            <dd>The Mortal Archive</dd>
+            <dt>Patron</dt>
+            <dd>The God of Wisdom</dd>
+            <dt>Blessing</dt>
+            <dd>The false wall between self and world dissolves.</dd>
+            <dt>Trial</dt>
+            <dd>To carry universal oneness back into mortal action without abandoning the world.</dd>
+          </dl>
+        </aside>
+
+        <div className="patricia-story-column">
+          <header className="observation-story-header reveal">
+            <p className="eyebrow">Before the Observation</p>
+            <h2>The Seer Records What the Glass Reveals.</h2>
             <p>{featuredObservation.description}</p>
-            <p className="observation-meta-line">
-              {featuredObservation.association} / {featuredObservation.readTime} / {featuredObservation.magnitudeLabel}
-            </p>
-            <a className="text-link" href={`/observations/${featuredObservation.slug}`}>
-              Read the Observation
-            </a>
+          </header>
+
+          <div className="story-body patricia-story-body">
+            {firstStoryPart.map((paragraph, index) => (
+              <p className="reveal" key={`patricia-a-${index}`}>{paragraph}</p>
+            ))}
           </div>
-        </article>
+
+          <figure className="story-break-figure reveal">
+            <img src="/mortals/patricia/office-crystal.png" alt="Patricia in her former office holding a crystal above a city of lit towers" />
+            <figcaption>The life she built before the question opened.</figcaption>
+          </figure>
+
+          <div className="story-body patricia-story-body">
+            {secondStoryPart.map((paragraph, index) => (
+              <p className="reveal" key={`patricia-b-${index}`}>{paragraph}</p>
+            ))}
+          </div>
+
+          <figure className="story-break-figure story-break-figure-wide reveal">
+            <img src="/mortals/patricia/judgment-vision.png" alt="Patricia before the God of Wisdom as celestial scales weigh humanity" />
+            <figcaption>The wall dissolves. The Judgment gathers.</figcaption>
+          </figure>
+
+          <div className="story-body patricia-story-body">
+            {thirdStoryPart.map((paragraph, index) => (
+              <p className="reveal" key={`patricia-c-${index}`}>{paragraph}</p>
+            ))}
+          </div>
+
+          <figure className="story-break-figure reveal">
+            <img src="/mortals/patricia/patricia-walking.png" alt="Patricia walking barefoot through a sunlit city after her encounter with Wisdom" />
+            <figcaption>Meaning was not beyond the world. It was inside the whole.</figcaption>
+          </figure>
+
+          <div className="story-body patricia-story-body">
+            {finalStoryPart.map((paragraph, index) => (
+              <p className="reveal" key={`patricia-d-${index}`}>{paragraph}</p>
+            ))}
+          </div>
+        </div>
       </section>
+
+      <section className="patricia-afterword reveal" aria-label="Continue after Patricia">
+        <p className="eyebrow">The Glass Remains Open</p>
+        <h2>Patricia is the first recorded mortal incident.</h2>
+        <p>
+          The archive will continue to gather the lives touched by gods, spirits,
+          and consequences too large for ordinary sight.
+        </p>
+        <div>
+          <a className="text-link" href="/#the-seer-circle">
+            Join the Circle
+          </a>
+          <a className="text-link" href="/the-mortals">
+            Enter the Mortal Archive
+          </a>
+        </div>
+        <SeerCircleForm />
+      </section>
+      </article>
 
       <section className="instrument-grid reveal" aria-label="Explore the sky by instrument">
         <p className="eyebrow">Explore the Sky</p>
@@ -157,16 +218,6 @@ export default function ObservationsPage() {
       </section>
 
       <ObservationsArchive />
-
-      <section className="observations-circle reveal" aria-label="Receive future observations">
-        <p className="eyebrow">The Circle Listens</p>
-        <h2>Receive Future Observations.</h2>
-        <p>
-          Join the Seer's private circle for free. New records, blessings, and
-          charted lights will arrive before the wider sky sees them.
-        </p>
-        <SeerCircleForm />
-      </section>
 
       <footer className="site-footer" aria-label="Gaze Glass ritual line">
         <span>Gods Watch.</span>

@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { GlassMenu } from "../components/GlassMenu";
 import { JsonLd } from "../components/JsonLd";
-import { getRegionObservations, magnitudeMeta, regionMeta, type ObservationRegion } from "./data";
+import { getObservationHref, getRegionObservations, magnitudeMeta, regionMeta, type ObservationRegion } from "./data";
 
 type RegionPageProps = {
   region: ObservationRegion;
@@ -58,7 +58,7 @@ export function RegionPage({ region }: RegionPageProps) {
 
       <section className="region-records reveal" aria-label={`${meta.title} observation records`}>
         {records.map((record) => (
-          <a className="region-record" href={`/observations/${record.slug}`} key={record.slug}>
+          <a className="region-record" href={getObservationHref(record)} key={record.slug}>
             <span className={`magnitude-mark magnitude-${record.magnitude}`} aria-hidden="true" />
             <span>{record.number}</span>
             <strong>{record.title}</strong>

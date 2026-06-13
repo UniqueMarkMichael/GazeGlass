@@ -2696,6 +2696,207 @@ dd {
   opacity: 0.42;
 }
 
+.patricia-observation {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.patricia-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.82fr) minmax(360px, 1fr);
+  gap: clamp(34px, 6vw, 90px);
+  align-items: center;
+  min-height: 100svh;
+  padding: 132px var(--page-gutter) 92px;
+  overflow: hidden;
+}
+
+.patricia-hero::before,
+.patricia-reader::before {
+  content: "";
+  position: absolute;
+  inset: 8% 6% auto auto;
+  width: min(54vw, 780px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(201, 162, 39, 0.16);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(201, 162, 39, 0.12), transparent 36%),
+    radial-gradient(circle, rgba(237, 227, 204, 0.05), transparent 62%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.patricia-hero-art {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  border: 1px solid rgba(201, 162, 39, 0.26);
+  background: rgba(10, 8, 24, 0.48);
+  box-shadow: 0 32px 120px rgba(4, 3, 12, 0.44);
+  overflow: hidden;
+}
+
+.patricia-hero-art::after,
+.story-break-figure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(4, 3, 12, 0.02), rgba(4, 3, 12, 0.3)),
+    radial-gradient(circle at 52% 30%, transparent 0 38%, rgba(4, 3, 12, 0.2) 72%);
+  pointer-events: none;
+}
+
+.patricia-hero-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+}
+
+.patricia-hero-copy h1 {
+  max-width: 780px;
+  font-size: clamp(4.1rem, 8.8vw, 9.6rem);
+  line-height: 0.9;
+}
+
+.patricia-hero-copy > p:not(.eyebrow),
+.patricia-afterword > p {
+  color: var(--dim-bone);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: clamp(1.25rem, 2vw, 1.72rem);
+  line-height: 1.5;
+}
+
+.patricia-hero-copy > p:not(.eyebrow) {
+  max-width: 600px;
+  margin: 28px 0 0;
+}
+
+.patricia-reader {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(180px, 0.28fr) minmax(0, 740px);
+  gap: clamp(34px, 7vw, 110px);
+  align-items: start;
+  width: min(1180px, calc(100% - var(--page-gutter) - var(--page-gutter)));
+  margin: 0 auto;
+  padding: clamp(76px, 12vw, 150px) 0;
+}
+
+.patricia-reader::before {
+  inset: 0 auto auto -24%;
+  width: min(46vw, 620px);
+  opacity: 0.65;
+}
+
+.patricia-ledger {
+  position: sticky;
+  top: 124px;
+  display: grid;
+  gap: 26px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(201, 162, 39, 0.22);
+}
+
+.patricia-ledger dl {
+  display: grid;
+  gap: 18px;
+  margin: 0;
+}
+
+.patricia-ledger dt {
+  color: rgba(201, 162, 39, 0.72);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.patricia-ledger dd {
+  margin: -10px 0 0;
+  color: rgba(237, 227, 204, 0.72);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 1.12rem;
+  line-height: 1.44;
+}
+
+.patricia-story-column {
+  min-width: 0;
+}
+
+.patricia-story-body {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.patricia-story-body p {
+  max-width: 690px;
+  color: rgba(237, 227, 204, 0.86);
+  font-size: clamp(1.34rem, 2.1vw, 1.86rem);
+}
+
+.story-break-figure {
+  position: relative;
+  margin: clamp(46px, 8vw, 88px) 0;
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  background: rgba(10, 8, 24, 0.42);
+  box-shadow: 0 28px 90px rgba(4, 3, 12, 0.36);
+  overflow: hidden;
+}
+
+.story-break-figure img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.story-break-figure-wide img {
+  aspect-ratio: 3 / 4;
+}
+
+.story-break-figure figcaption {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 18px;
+  z-index: 2;
+  color: rgba(237, 227, 204, 0.74);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  font-style: italic;
+  letter-spacing: 0.04em;
+}
+
+.patricia-afterword {
+  width: min(920px, calc(100% - var(--page-gutter) - var(--page-gutter)));
+  margin: 0 auto;
+  padding: clamp(68px, 10vw, 130px) 0;
+  text-align: center;
+}
+
+.patricia-afterword h2 {
+  max-width: 850px;
+  margin: 0 auto;
+  font-size: clamp(3.2rem, 6.8vw, 7.2rem);
+}
+
+.patricia-afterword > p {
+  max-width: 700px;
+  margin: 24px auto 0;
+}
+
+.patricia-afterword > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px 30px;
+  margin: 34px 0;
+}
+
 .observations-hero-copy {
   position: relative;
   z-index: 2;
@@ -3320,6 +3521,38 @@ dd {
 }
 
 @media (max-width: 1100px) {
+  .patricia-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    text-align: center;
+  }
+
+  .patricia-hero-art {
+    width: min(620px, 100%);
+    justify-self: center;
+  }
+
+  .patricia-hero-copy,
+  .patricia-hero-copy > p:not(.eyebrow) {
+    max-width: 780px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .patricia-hero-copy .story-actions {
+    justify-content: center;
+  }
+
+  .patricia-reader {
+    grid-template-columns: 1fr;
+  }
+
+  .patricia-ledger {
+    position: static;
+    width: min(720px, 100%);
+    margin: 0 auto;
+  }
+
   .observations-hero {
     grid-template-columns: 1fr;
     place-items: center;
@@ -3357,6 +3590,72 @@ dd {
 }
 
 @media (max-width: 820px) {
+  .patricia-hero {
+    padding: 118px var(--page-gutter) 62px;
+    gap: 28px;
+  }
+
+  .patricia-hero::before,
+  .patricia-reader::before {
+    width: 118vw;
+    inset: 6% auto auto -9%;
+  }
+
+  .patricia-hero-art {
+    width: min(100%, 430px);
+  }
+
+  .patricia-hero-copy h1 {
+    font-size: clamp(3.35rem, 17vw, 5.7rem);
+  }
+
+  .patricia-hero-copy > p:not(.eyebrow),
+  .patricia-afterword > p {
+    font-size: clamp(1.18rem, 5vw, 1.42rem);
+  }
+
+  .patricia-reader {
+    width: min(100% - 36px, 720px);
+    padding: 64px 0;
+  }
+
+  .patricia-ledger {
+    padding: 22px 0 0;
+  }
+
+  .patricia-ledger dl {
+    gap: 16px;
+  }
+
+  .patricia-story-body p {
+    font-size: clamp(1.24rem, 5.4vw, 1.48rem);
+    line-height: 1.68;
+  }
+
+  .story-break-figure {
+    margin: 44px 0;
+  }
+
+  .story-break-figure img,
+  .story-break-figure-wide img {
+    aspect-ratio: 3 / 4;
+  }
+
+  .story-break-figure figcaption {
+    left: 16px;
+    right: 16px;
+    bottom: 14px;
+  }
+
+  .patricia-afterword {
+    width: min(100% - 36px, 720px);
+    padding: 64px 0;
+  }
+
+  .patricia-afterword h2 {
+    font-size: clamp(3rem, 14vw, 4.8rem);
+  }
+
   .observations-hero {
     min-height: auto;
     padding: 118px var(--page-gutter) 64px;

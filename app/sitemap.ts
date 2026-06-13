@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { observations } from "./observations/data";
+import { getObservationHref, observations } from "./observations/data";
 
 const baseUrl = "https://www.gazeglass.com";
 
@@ -55,12 +55,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.82,
     },
-    ...observations.map((observation) => ({
-      url: `${baseUrl}/observations/${observation.slug}`,
-      lastModified: new Date(observation.dateObserved),
-      changeFrequency: "monthly" as const,
-      priority: 0.78,
-    })),
+    ...observations
+      .filter((observation) => getObservationHref(observation) !== "/observations")
+      .map((observation) => ({
+        url: `${baseUrl}${getObservationHref(observation)}`,
+        lastModified: new Date(observation.dateObserved),
+        changeFrequency: "monthly" as const,
+        priority: 0.78,
+      })),
     {
       url: `${baseUrl}/the-seer`,
       lastModified,

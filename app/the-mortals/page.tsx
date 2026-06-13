@@ -5,7 +5,7 @@ import { GlassMenu } from "../components/GlassMenu";
 export const metadata: Metadata = {
   title: "The Mortals",
   description:
-    "Read the mortal case files of Gaze Glass: Marcella blessed by Justice, Malika blessed by Love, Takeshi blessed by Fortune, and the fantasy stories changed by divine witness.",
+    "Read the mortal archive of Gaze Glass: Patricia awakened by Wisdom, Marcella blessed by Justice, Malika blessed by Love, Takeshi blessed by Fortune, and the fantasy stories changed by divine witness.",
   alternates: {
     canonical: "/the-mortals",
   },
@@ -18,11 +18,12 @@ export const metadata: Metadata = {
     "Marcella blessed by Justice",
     "Malika blessed by Love",
     "Takeshi blessed by Fortune",
+    "Patricia awakened by Wisdom",
   ],
   openGraph: {
     title: "The Mortals | Gaze Glass",
     description:
-      "Enter the mortal archive: fantasy case files of Marcella, Malika, Takeshi, divine blessings, and the consequence of being witnessed.",
+      "Enter the mortal archive: Patricia, Marcella, Malika, Takeshi, divine blessings, and the consequence of being witnessed.",
     url: "/the-mortals",
     images: [
       {
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "The Mortals | Gaze Glass",
     description:
-      "Marcella, Malika, and Takeshi enter the mortal archive through divine blessings from Justice, Love, and Fortune.",
+      "Patricia, Marcella, Malika, and Takeshi enter the mortal archive through divine blessings from Wisdom, Justice, Love, and Fortune.",
     images: ["/og/gaze-glass-mortals.png"],
   },
 };
@@ -137,8 +138,20 @@ const takeshiObservations = [
 
 const mortalCases = [
   {
-    id: "marcella-case",
+    id: "patricia-case",
     number: "Observation 001",
+    name: "Patricia",
+    title: "Awakened by Wisdom",
+    force: "Wisdom",
+    image: "/mortals/patricia/wisdom-appears.png",
+    summary:
+      "A former financier asks what life is for and sees the wall between self and world dissolve.",
+    evidence: "Renunciation, awakening, the Judgment, Rashid Shah.",
+    href: "/observations",
+  },
+  {
+    id: "marcella-case",
+    number: "Mortal Case 001",
     name: "Marcella",
     title: "Blessed by Justice",
     force: "Justice",
@@ -150,7 +163,7 @@ const mortalCases = [
   },
   {
     id: "malika-case",
-    number: "Observation 002",
+    number: "Mortal Case 002",
     name: "Malika",
     title: "Blessed by Love",
     force: "Love",
@@ -162,7 +175,7 @@ const mortalCases = [
   },
   {
     id: "takeshi-case",
-    number: "Observation 003",
+    number: "Mortal Case 003",
     name: "Takeshi",
     title: "Blessed by Fortune",
     force: "Fortune",
@@ -181,7 +194,7 @@ const mortalsPageData = {
   url: "https://www.gazeglass.com/the-mortals",
   name: "The Mortals | Gaze Glass",
   description:
-    "Observed mortal case files from Gaze Glass, including Marcella blessed by Justice, Malika blessed by Love, and Takeshi blessed by Fortune.",
+    "Observed mortal case files from Gaze Glass, including Patricia awakened by Wisdom, Marcella blessed by Justice, Malika blessed by Love, and Takeshi blessed by Fortune.",
   isPartOf: {
     "@id": "https://www.gazeglass.com/#website",
   },
@@ -192,6 +205,19 @@ const mortalsPageData = {
       {
         "@type": "CreativeWork",
         position: 1,
+        name: "Patricia, Awakened by Wisdom",
+        genre: ["Fantasy", "Mythic Fantasy"],
+        description:
+          "A Gaze Glass Observation about Patricia, a former financier awakened by the God of Wisdom.",
+        character: {
+          "@type": "Person",
+          name: "Patricia",
+          description: "A mortal awakened by the God of Wisdom after giving away the life she built.",
+        },
+      },
+      {
+        "@type": "CreativeWork",
+        position: 2,
         name: "Marcella, Blessed by Justice",
         genre: ["Fantasy", "Mythic Fantasy"],
         description:
@@ -204,7 +230,7 @@ const mortalsPageData = {
       },
       {
         "@type": "CreativeWork",
-        position: 2,
+        position: 3,
         name: "Malika, Blessed by Love",
         genre: ["Fantasy", "Mythic Fantasy"],
         description:
@@ -217,7 +243,7 @@ const mortalsPageData = {
       },
       {
         "@type": "CreativeWork",
-        position: 3,
+        position: 4,
         name: "Takeshi, Blessed by Fortune",
         genre: ["Fantasy", "Mythic Fantasy"],
         description:
@@ -290,7 +316,7 @@ export default function TheMortals() {
 
       <section className="mortal-dossier reveal" id="marcella-case" aria-label="Marcella dossier">
         <div>
-          <p className="eyebrow">Observation 001</p>
+          <p className="eyebrow">Mortal Case 001</p>
           <h2>Marcella, Blessed by Justice.</h2>
         </div>
         <dl>
@@ -327,7 +353,7 @@ export default function TheMortals() {
           <img src="/mortals/malika/portrait.png" alt="Malika reflected in a blue sacred mirror" />
         </figure>
         <div>
-          <p className="eyebrow">Observation 002</p>
+          <p className="eyebrow">Mortal Case 002</p>
           <h2>Malika, Blessed by Love.</h2>
           <p>
             A future cosmetologist nearly surrendered her own reflection to a man
@@ -367,7 +393,7 @@ export default function TheMortals() {
           <img src="/mortals/takeshi/portrait.png" alt="Takeshi reflected in a red triangular sacred glass" />
         </figure>
         <div>
-          <p className="eyebrow">Observation 003</p>
+          <p className="eyebrow">Mortal Case 003</p>
           <h2>Takeshi, Blessed by Fortune.</h2>
           <p>
             A solo game developer spent three years building a world almost no one

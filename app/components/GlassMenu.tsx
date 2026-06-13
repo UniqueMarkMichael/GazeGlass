@@ -22,7 +22,7 @@ const menuItems = [
   {
     label: "Join the Circle",
     href: "/#the-seer-circle",
-    detail: "Receive new observations.",
+    detail: "Letters from the Seer.",
     action: "Join the Circle",
   },
 ];
