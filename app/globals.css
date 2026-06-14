@@ -803,18 +803,79 @@ h1 {
 }
 
 .world-orb {
+  position: relative;
+  display: grid;
+  place-items: center;
   width: clamp(280px, 38vw, 560px);
   aspect-ratio: 1;
-  object-fit: cover;
+  overflow: hidden;
   border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 18%, rgba(255, 255, 255, 0.34), transparent 0 13%),
+    radial-gradient(circle at 55% 48%, rgba(201, 162, 39, 0.24), rgba(5, 4, 13, 0.94) 69%);
   box-shadow:
     0 0 0 1px rgba(237, 227, 204, 0.18),
+    inset 0 0 0 1px rgba(237, 227, 204, 0.12),
+    inset 0 0 42px rgba(255, 248, 220, 0.14),
+    inset 0 -42px 88px rgba(4, 3, 12, 0.58),
     0 0 42px rgba(201, 162, 39, 0.22),
     0 40px 150px rgba(4, 3, 12, 0.68);
   transform-origin: center;
   animation: orbPortal linear both;
   animation-timeline: view();
   animation-range: entry 0% exit 100%;
+}
+
+.world-orb::before,
+.world-orb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.world-orb::before {
+  z-index: 3;
+  background:
+    radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.34), transparent 0 12%),
+    radial-gradient(circle at 66% 24%, rgba(255, 239, 185, 0.16), transparent 0 15%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 22% 64%, rgba(255, 255, 255, 0.1));
+  mix-blend-mode: screen;
+  opacity: 0.74;
+}
+
+.world-orb::after {
+  z-index: 4;
+  inset: -16%;
+  background:
+    linear-gradient(116deg, transparent 0 36%, rgba(255, 255, 255, 0.2) 45%, transparent 54%),
+    radial-gradient(circle at 50% 50%, transparent 0 58%, rgba(237, 227, 204, 0.22) 61%, transparent 66%);
+  opacity: 0.36;
+  transform: translateX(-18%) rotate(8deg);
+  animation: glassGlint 9s ease-in-out infinite;
+}
+
+.world-orb-video,
+.world-orb-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+.world-orb-video {
+  z-index: 2;
+  clip-path: ellipse(33% 31% at 50% 42%);
+  filter: saturate(1.08) contrast(1.04) brightness(0.92);
+  transform: scale(1.08);
+}
+
+.world-orb-fallback {
+  z-index: 1;
+  filter: saturate(0.96) brightness(0.82);
 }
 
 .glass-portal-copy {
@@ -2484,6 +2545,24 @@ dd {
   }
 }
 
+@keyframes glassGlint {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: translateX(-28%) rotate(8deg);
+  }
+
+  42% {
+    opacity: 0.46;
+    transform: translateX(18%) rotate(8deg);
+  }
+
+  64% {
+    opacity: 0.18;
+    transform: translateX(30%) rotate(8deg);
+  }
+}
+
 @keyframes portalVeil {
   0%,
   18% {
@@ -3780,6 +3859,14 @@ dd {
   .glass-portal-copy {
     opacity: 1;
     transform: none;
+  }
+
+  .world-orb::after {
+    animation: none !important;
+  }
+
+  .world-orb-video {
+    display: none;
   }
 }
 
