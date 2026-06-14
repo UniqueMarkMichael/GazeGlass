@@ -768,7 +768,7 @@ h1 {
 
 .glass-portal {
   position: relative;
-  min-height: 132svh;
+  min-height: 150svh;
   margin-top: -1px;
   isolation: isolate;
 }
@@ -874,7 +874,7 @@ h1 {
 
 .glass-portal-copy {
   position: absolute;
-  top: calc(50% + clamp(250px, 30vw, 470px));
+  top: calc(50% + clamp(500px, 38vw, 600px));
   left: 50%;
   width: min(720px, calc(100% - var(--page-gutter) - var(--page-gutter)));
   transform: translateX(-50%);
@@ -3939,7 +3939,7 @@ dd {
   }
 
   .glass-portal {
-    min-height: 138svh;
+    min-height: 158svh;
   }
 
   .world-orb {
@@ -3947,7 +3947,7 @@ dd {
   }
 
   .glass-portal-copy {
-    top: calc(50% + min(58vw, 330px));
+    top: calc(50% + min(98vw, 430px));
     width: min(88vw, 520px);
   }
 
