@@ -768,7 +768,7 @@ h1 {
 
 .glass-portal {
   position: relative;
-  min-height: 150svh;
+  min-height: 134svh;
   margin-top: -1px;
   isolation: isolate;
 }
@@ -812,7 +812,8 @@ h1 {
   position: relative;
   display: grid;
   place-items: center;
-  width: clamp(500px, 70vw, 980px);
+  width: min(52vw, 70svh, 720px);
+  max-width: calc(100vw - (var(--page-gutter) * 2));
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: 50%;
@@ -874,7 +875,7 @@ h1 {
 
 .glass-portal-copy {
   position: absolute;
-  top: calc(50% + clamp(500px, 38vw, 600px));
+  top: calc(50% + min(29vw, 40svh, 390px));
   left: 50%;
   width: min(720px, calc(100% - var(--page-gutter) - var(--page-gutter)));
   transform: translateX(-50%);
@@ -3939,15 +3940,16 @@ dd {
   }
 
   .glass-portal {
-    min-height: 158svh;
+    min-height: 136svh;
   }
 
   .world-orb {
-    width: min(124vw, 620px);
+    width: min(82vw, 360px);
+    max-width: calc(100vw - 48px);
   }
 
   .glass-portal-copy {
-    top: calc(50% + min(98vw, 430px));
+    top: calc(50% + min(48vw, 210px));
     width: min(88vw, 520px);
   }
 
