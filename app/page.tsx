@@ -209,19 +209,16 @@ export default function Home() {
       <section className="glass-portal reveal" id="gaze-into-glass" aria-label="Gaze into the glass">
         <div className="glass-portal-stage">
           <div className="world-orb" role="img" aria-label="A sacred glass orb revealing a living golden world inside">
-            <img className="world-orb-fallback" src="/brand/world-orb.png" alt="" aria-hidden="true" />
-            <span className="world-orb-motion" aria-hidden="true">
-              <video
-                className="world-orb-video"
-                src="/brand/world-orb-living.mp4"
-                poster="/brand/world-orb.png"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-              />
-            </span>
+            <video
+              className="world-orb-video"
+              src="/brand/world-orb-living.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-hidden="true"
+            />
           </div>
           <div className="glass-portal-copy" aria-hidden="true">
             <span>Gaze Into The Glass</span>

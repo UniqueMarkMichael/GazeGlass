@@ -768,7 +768,7 @@ h1 {
 
 .glass-portal {
   position: relative;
-  height: 168svh;
+  min-height: 132svh;
   margin-top: -1px;
   isolation: isolate;
 }
@@ -812,7 +812,7 @@ h1 {
   position: relative;
   display: grid;
   place-items: center;
-  width: clamp(440px, 58vw, 820px);
+  width: clamp(500px, 70vw, 980px);
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: 50%;
@@ -827,9 +827,7 @@ h1 {
     0 0 42px rgba(201, 162, 39, 0.22),
     0 40px 150px rgba(4, 3, 12, 0.68);
   transform-origin: center;
-  animation: orbPortal linear both;
-  animation-timeline: view();
-  animation-range: entry 0% exit 100%;
+  animation: orbBreath 13s ease-in-out infinite;
 }
 
 .world-orb::before,
@@ -862,57 +860,26 @@ h1 {
   animation: glassGlint 9s ease-in-out infinite;
 }
 
-.world-orb-motion,
-.world-orb-video,
-.world-orb-fallback {
+.world-orb-video {
   position: absolute;
-  border-radius: inherit;
-}
-
-.world-orb-motion,
-.world-orb-fallback {
   inset: 0;
+  z-index: 1;
   width: 100%;
   height: 100%;
+  border-radius: inherit;
   object-fit: cover;
-}
-
-.world-orb-motion {
-  z-index: 2;
-  overflow: hidden;
-  opacity: 0.22;
-  mix-blend-mode: screen;
-  clip-path: ellipse(18% 15% at 50% 42%);
-  -webkit-mask-image: radial-gradient(ellipse 42% 36% at 50% 43%, #000 0 46%, transparent 70%);
-  mask-image: radial-gradient(ellipse 42% 36% at 50% 43%, #000 0 46%, transparent 70%);
-}
-
-.world-orb-video {
-  inset: -72%;
-  width: 244%;
-  height: 244%;
-  object-fit: cover;
-  object-position: 50% 41%;
-  filter: saturate(1.2) contrast(1.18) brightness(0.72);
-}
-
-.world-orb-fallback {
-  z-index: 1;
-  filter: saturate(0.98) contrast(1.02) brightness(0.78);
-  transform: scale(1.38);
+  object-position: center;
+  filter: saturate(1.06) contrast(1.04) brightness(0.88);
 }
 
 .glass-portal-copy {
   position: absolute;
-  top: calc(50% + clamp(230px, 26vw, 390px));
+  top: calc(50% + clamp(250px, 30vw, 470px));
   left: 50%;
   width: min(720px, calc(100% - var(--page-gutter) - var(--page-gutter)));
   transform: translateX(-50%);
   text-align: center;
   text-shadow: 0 18px 58px var(--shadow);
-  animation: portalWords linear both;
-  animation-timeline: view();
-  animation-range: entry 0% exit 100%;
 }
 
 .glass-portal-copy span {
@@ -2537,35 +2504,16 @@ dd {
   }
 }
 
-@keyframes orbPortal {
-  0% {
-    opacity: 0;
-    filter: saturate(0.78) brightness(0.66) blur(8px);
-    transform: scale(0.52) translateY(8vh);
-  }
-
-  20% {
-    opacity: 0.88;
-    filter: saturate(0.9) brightness(0.82) blur(0);
-    transform: scale(0.82) translateY(-3vh);
-  }
-
-  52% {
-    opacity: 1;
-    filter: saturate(1.04) brightness(0.96) blur(0);
-    transform: scale(1.22) translateY(-6vh);
-  }
-
-  74% {
-    opacity: 0.92;
-    filter: saturate(1.12) brightness(1.06) blur(1px);
-    transform: scale(1.62) translateY(-8vh);
-  }
-
+@keyframes orbBreath {
+  0%,
   100% {
-    opacity: 0;
-    filter: saturate(0.8) brightness(1.32) blur(22px);
-    transform: scale(2.35) translateY(-12vh);
+    filter: saturate(0.95) brightness(0.88);
+    transform: scale(0.985);
+  }
+
+  50% {
+    filter: saturate(1.08) brightness(1.02);
+    transform: scale(1.015);
   }
 }
 
@@ -2599,25 +2547,6 @@ dd {
 
   100% {
     opacity: 0.82;
-  }
-}
-
-@keyframes portalWords {
-  0%,
-  14% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(18px);
-  }
-
-  28%,
-  58% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-22px);
   }
 }
 
@@ -3889,9 +3818,8 @@ dd {
     animation: none !important;
   }
 
-  .world-orb-motion,
   .world-orb-video {
-    display: none;
+    animation: none !important;
   }
 }
 
@@ -4011,15 +3939,15 @@ dd {
   }
 
   .glass-portal {
-    height: 185svh;
+    min-height: 138svh;
   }
 
   .world-orb {
-    width: min(116vw, 560px);
+    width: min(124vw, 620px);
   }
 
   .glass-portal-copy {
-    top: calc(50% + min(54vw, 300px));
+    top: calc(50% + min(58vw, 330px));
     width: min(88vw, 520px);
   }
 
