@@ -3823,6 +3823,10 @@ dd {
 }
 
 @media (max-width: 820px) {
+  :root {
+    --page-gutter: 22px;
+  }
+
   .section {
     padding: 62px 0;
   }
@@ -3922,14 +3926,50 @@ dd {
 
   .split {
     grid-template-columns: 1fr;
+    gap: 34px;
   }
 
   .lineage {
     grid-template-columns: 1fr;
+    gap: 18px;
+    width: 100%;
+    min-width: 0;
+    text-align: left;
   }
 
   .lineage figure {
-    width: min(100%, 320px);
+    width: min(100%, 340px);
+    justify-self: center;
+  }
+
+  .lineage > div,
+  .spirit-record,
+  .god-record > div,
+  .record-body,
+  .mortal-observation > div,
+  .incident-card > div {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  .lineage span,
+  .spirit-record span,
+  .record-body p,
+  .record-body dd,
+  .mortal-observation p:not(.eyebrow),
+  .incident-card p {
+    display: block;
+    max-width: 100%;
+  }
+
+  .lineage h3,
+  .spirit-record h3,
+  .god-record h2,
+  .mortal-observation h2,
+  .incident-card h3 {
+    max-width: 100%;
+    overflow-wrap: break-word;
   }
 
   .spirit-grid {
@@ -3989,6 +4029,21 @@ dd {
   .god-index,
   .god-record {
     grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+
+  .god-index {
+    width: min(100% - var(--page-gutter) - var(--page-gutter), 560px);
+  }
+
+  .god-record {
+    display: block;
+    width: 100%;
+    justify-items: stretch;
+  }
+
+  .god-record > * {
+    width: 100%;
   }
 
   .mortal-hero,
@@ -4029,9 +4084,29 @@ dd {
   }
 
   .god-plate {
-    width: min(360px, calc(100vw - var(--page-gutter) - var(--page-gutter)));
+    width: min(100%, 360px);
     max-width: 100%;
+    margin: 0 auto 22px;
     justify-self: center;
+  }
+
+  .god-record {
+    gap: 22px;
+    padding: 46px 0;
+  }
+
+  .god-record .record-body {
+    grid-column: 1 / -1;
+  }
+
+  .god-record .eyebrow,
+  .god-record h2,
+  .record-body {
+    text-align: left;
+  }
+
+  .record-body .station {
+    margin-bottom: 18px;
   }
 
   .god-index a {
