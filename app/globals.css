@@ -471,29 +471,124 @@ a {
   min-height: 100svh;
   overflow: hidden;
   isolation: isolate;
-  background: var(--ink);
+  padding: 120px var(--page-gutter) 100px;
+  background:
+    radial-gradient(circle at 83% 10%, rgba(201, 162, 39, 0.28), transparent 18rem),
+    radial-gradient(circle at 15% 8%, rgba(237, 227, 204, 0.14), transparent 15rem),
+    radial-gradient(circle at 50% 53%, rgba(201, 162, 39, 0.1), transparent 32rem),
+    linear-gradient(180deg, #100d1f 0%, #211a27 48%, #0c0a1b 100%);
 }
 
-.welcome-plate img {
+.welcome-plate::before {
+  content: "";
   position: absolute;
   inset: 0;
-  z-index: -1;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  filter: saturate(0.92) contrast(1.03) brightness(0.9);
+  z-index: 0;
+  background:
+    radial-gradient(circle at 50% 54%, transparent 0 18rem, rgba(201, 162, 39, 0.18) calc(18rem + 1px), transparent calc(18rem + 2px)),
+    radial-gradient(circle at 50% 54%, transparent 0 30rem, rgba(237, 227, 204, 0.09) calc(30rem + 1px), transparent calc(30rem + 2px)),
+    linear-gradient(rgba(237, 227, 204, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(237, 227, 204, 0.035) 1px, transparent 1px);
+  background-size: auto, auto, 130px 130px, 130px 130px;
+  opacity: 0.62;
+  pointer-events: none;
 }
 
 .welcome-plate::after {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 1;
   background:
-    linear-gradient(180deg, rgba(10, 8, 24, 0.04), rgba(10, 8, 24, 0.18) 72%, rgba(10, 8, 24, 0.9)),
-    radial-gradient(circle at 50% 58%, transparent 0 24rem, rgba(10, 8, 24, 0.18) 58rem);
+    linear-gradient(180deg, rgba(10, 8, 24, 0.18), rgba(10, 8, 24, 0.06) 46%, rgba(10, 8, 24, 0.82)),
+    radial-gradient(circle at 50% 52%, rgba(10, 8, 24, 0.02), rgba(10, 8, 24, 0.4) 54rem);
   pointer-events: none;
+}
+
+.mortal-inscription {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  width: min(1080px, calc(100vw - (var(--page-gutter) * 2)));
+  transform: translateY(2vh);
+}
+
+.mortal-inscription-title {
+  display: flex;
+  justify-content: center;
+  gap: 0.28em;
+  margin: 0;
+  color: var(--bone);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(4.8rem, 6.8vw, 8.2rem);
+  line-height: 0.88;
+  letter-spacing: 0.07em;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 24px rgba(237, 227, 204, 0.22),
+    0 18px 80px rgba(201, 162, 39, 0.28),
+    0 42px 110px rgba(4, 3, 12, 0.74);
+}
+
+.mortal-inscription-title span {
+  display: inline-block;
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  transform: translateY(10px);
+  animation: inscriptionReveal 1800ms cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+.mortal-inscription-title span:nth-child(2) {
+  animation-delay: 520ms;
+}
+
+.signature-rule {
+  position: relative;
+  display: block;
+  width: min(640px, 52vw);
+  height: 34px;
+  margin-top: clamp(18px, 2.4vw, 32px);
+}
+
+.signature-rule::before,
+.signature-rule::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  width: calc(50% - 18px);
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.9));
+  transform: scaleX(0);
+  animation: lineWrite 1400ms cubic-bezier(0.19, 1, 0.22, 1) forwards 1100ms;
+}
+
+.signature-rule::before {
+  left: 0;
+  transform-origin: right;
+}
+
+.signature-rule::after {
+  right: 0;
+  transform-origin: left;
+  rotate: 180deg;
+}
+
+.signature-rule span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  border: 1px solid rgba(201, 162, 39, 0.92);
+  background: rgba(201, 162, 39, 0.74);
+  box-shadow:
+    0 0 16px rgba(201, 162, 39, 0.92),
+    0 0 42px rgba(237, 227, 204, 0.32);
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(45deg) scale(0.2);
+  animation: starIgnite 1200ms ease forwards 1380ms;
 }
 
 .welcome-plate a {
@@ -508,6 +603,8 @@ a {
   font-weight: 700;
   letter-spacing: 0.28em;
   text-transform: uppercase;
+  opacity: 0;
+  animation: enterCueIn 900ms ease forwards 2200ms;
 }
 
 .welcome-plate a::after {
@@ -2642,6 +2739,61 @@ dd {
   }
 }
 
+@keyframes inscriptionReveal {
+  0% {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    transform: translateY(10px);
+    filter: blur(5px);
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes lineWrite {
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes starIgnite {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(45deg) scale(0.2);
+  }
+  42% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(45deg) scale(1.45);
+  }
+  100% {
+    opacity: 0.92;
+    transform: translate(-50%, -50%) rotate(45deg) scale(1);
+  }
+}
+
+@keyframes enterCueIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
 .observations-hero {
   position: relative;
   display: grid;
@@ -3907,18 +4059,11 @@ dd {
   }
 
   .welcome-plate {
+    min-height: 100svh;
+    padding: 112px 22px 98px;
     background:
       radial-gradient(circle at 50% 42%, rgba(201, 162, 39, 0.08), transparent 18rem),
       linear-gradient(180deg, #0b0a18 0%, #15122c 52%, #0b0a18 100%);
-  }
-
-  .welcome-plate img {
-    inset: 50% auto auto 50%;
-    width: min(100vw, calc(100svh * 0.667));
-    height: auto;
-    max-height: 100svh;
-    object-fit: contain;
-    transform: translate(-50%, -50%);
   }
 
   .welcome-plate::after {
@@ -3932,6 +4077,24 @@ dd {
         rgba(10, 8, 24, 0.9) 100%
       ),
       radial-gradient(circle at 50% 58%, transparent 0 18rem, rgba(10, 8, 24, 0.28) 34rem);
+  }
+
+  .mortal-inscription {
+    width: 100%;
+    transform: translateY(1vh);
+  }
+
+  .mortal-inscription-title {
+    display: grid;
+    gap: 0.08em;
+    font-size: clamp(3.4rem, 15.2vw, 5.2rem);
+    line-height: 0.88;
+    letter-spacing: 0.045em;
+  }
+
+  .signature-rule {
+    width: min(78vw, 330px);
+    margin-top: 22px;
   }
 
   .hero {

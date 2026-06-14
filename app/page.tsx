@@ -173,10 +173,16 @@ export default function Home() {
       </aside>
 
       <section className="welcome-plate" aria-label="Gaze Glass greeting">
-        <img
-          src="/brand/hello-mortal-banner.png"
-          alt="Gaze Glass greeting that reads Hello, Mortal."
-        />
+        <div className="mortal-inscription">
+          <p className="mortal-inscription-title">
+            <span>Hello</span>
+            {" "}
+            <span>Mortal</span>
+          </p>
+          <span className="signature-rule" aria-hidden="true">
+            <span />
+          </span>
+        </div>
         <a href="#home" aria-label="Enter Gaze Glass">
           Enter the glass
         </a>
