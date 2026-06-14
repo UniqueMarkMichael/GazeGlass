@@ -632,7 +632,7 @@ a {
 .hero-copy {
   position: relative;
   z-index: 2;
-  max-width: 900px;
+  width: min(1120px, 86vw);
   text-align: center;
   text-shadow: 0 24px 60px var(--shadow);
 }
@@ -656,8 +656,9 @@ h3 {
 }
 
 h1 {
-  font-size: clamp(4rem, 11vw, 9.4rem);
-  max-width: 950px;
+  font-size: clamp(4rem, 8vw, 7.35rem);
+  max-width: min(1080px, 86vw);
+  margin-inline: auto;
 }
 
 .subhead {
@@ -671,7 +672,7 @@ h1 {
   display: flex;
   justify-content: center;
   gap: clamp(16px, 4vw, 42px);
-  margin-top: clamp(58px, 7vh, 86px);
+  margin-top: clamp(42px, 5vh, 64px);
   color: rgba(237, 227, 204, 0.52);
   font-family: "EB Garamond", Georgia, serif;
   font-size: clamp(0.95rem, 1.5vw, 1.24rem);
@@ -689,12 +690,17 @@ h1 {
 }
 
 .scroll-cue {
-  position: absolute;
-  bottom: 6px;
-  z-index: 3;
-  color: rgba(237, 227, 204, 0.64);
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  position: relative;
+  display: inline-block;
+  margin-top: clamp(34px, 4vh, 52px);
+  color: rgba(237, 227, 204, 0.78);
+  font-size: clamp(0.78rem, 0.88vw, 0.9rem);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-decoration-line: underline;
+  text-decoration-color: rgba(201, 162, 39, 0.72);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.55em;
   text-transform: uppercase;
 }
 
@@ -702,8 +708,8 @@ h1 {
   content: "";
   display: block;
   width: 1px;
-  height: clamp(76px, 9vh, 112px);
-  margin: 12px auto 0;
+  height: clamp(52px, 6vh, 72px);
+  margin: 20px auto 0;
   background: linear-gradient(var(--gold), rgba(201, 162, 39, 0.72), transparent);
   box-shadow: 0 0 18px rgba(201, 162, 39, 0.24);
 }
@@ -793,9 +799,9 @@ h1 {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 48%, transparent 0 18rem, rgba(10, 8, 24, 0.1) 32rem, rgba(10, 8, 24, 0.74) 76rem),
+    radial-gradient(circle at 50% 48%, rgba(201, 162, 39, 0.09) 0 16rem, transparent 31rem, rgba(10, 8, 24, 0.66) 72rem),
     linear-gradient(180deg, rgba(10, 8, 24, 0.1), rgba(10, 8, 24, 0.72));
-  opacity: 0.28;
+  opacity: 0.18;
   pointer-events: none;
   animation: portalVeil linear both;
   animation-timeline: view();
@@ -806,7 +812,7 @@ h1 {
   position: relative;
   display: grid;
   place-items: center;
-  width: clamp(280px, 38vw, 560px);
+  width: clamp(440px, 58vw, 820px);
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: 50%;
@@ -868,19 +874,20 @@ h1 {
 
 .world-orb-video {
   z-index: 2;
-  clip-path: ellipse(33% 31% at 50% 42%);
+  clip-path: ellipse(38% 36% at 50% 43%);
   filter: saturate(1.08) contrast(1.04) brightness(0.92);
-  transform: scale(1.08);
+  transform: scale(1.28);
 }
 
 .world-orb-fallback {
   z-index: 1;
   filter: saturate(0.96) brightness(0.82);
+  transform: scale(1.24);
 }
 
 .glass-portal-copy {
   position: absolute;
-  top: calc(50% + clamp(190px, 21vw, 330px));
+  top: calc(50% + clamp(230px, 26vw, 390px));
   left: 50%;
   width: min(720px, calc(100% - var(--page-gutter) - var(--page-gutter)));
   transform: translateX(-50%);
@@ -3982,6 +3989,7 @@ dd {
 
   .hero {
     min-height: 100svh;
+    padding: 112px 22px 128px;
   }
 
   .glass-portal {
@@ -3989,11 +3997,11 @@ dd {
   }
 
   .world-orb {
-    width: min(82vw, 390px);
+    width: min(116vw, 560px);
   }
 
   .glass-portal-copy {
-    top: calc(50% + min(46vw, 230px));
+    top: calc(50% + min(54vw, 300px));
     width: min(88vw, 520px);
   }
 
@@ -4003,12 +4011,23 @@ dd {
 
   .hero-vow {
     flex-direction: column;
-    gap: 8px;
-    margin-top: 42px;
+    gap: 9px;
+    margin-top: 30px;
   }
 
   h1 {
-    font-size: clamp(3.6rem, 18vw, 6rem);
+    font-size: clamp(3.2rem, 15.5vw, 4.8rem);
+  }
+
+  .scroll-cue {
+    margin-top: 34px;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+  }
+
+  .scroll-cue::after {
+    height: 44px;
+    margin-top: 16px;
   }
 
   .split {

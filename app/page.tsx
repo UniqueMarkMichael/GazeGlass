@@ -200,10 +200,10 @@ export default function Home() {
             <span>Mortals Pray.</span>
             <span>Spirits Remember.</span>
           </div>
+          <a className="scroll-cue" href="#the-mortals" aria-label="Meet the first mortal">
+            Meet the first mortal
+          </a>
         </div>
-        <a className="scroll-cue" href="#the-mortals" aria-label="Meet the first mortal">
-          Meet the first mortal
-        </a>
       </section>
 
       <section className="glass-portal reveal" id="gaze-into-glass" aria-label="Gaze into the glass">
