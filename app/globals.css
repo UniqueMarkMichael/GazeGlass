@@ -865,7 +865,7 @@ h1 {
 
 .glass-portal {
   position: relative;
-  min-height: 134svh;
+  min-height: 148svh;
   margin-top: -1px;
   isolation: isolate;
 }
@@ -887,8 +887,9 @@ h1 {
   top: 0;
   display: grid;
   place-items: center;
-  min-height: 100svh;
-  overflow: hidden;
+  min-height: 118svh;
+  overflow: visible;
+  padding: 0 0 clamp(120px, 16svh, 190px);
 }
 
 .glass-portal-stage::after {
@@ -972,12 +973,13 @@ h1 {
 
 .glass-portal-copy {
   position: absolute;
-  top: calc(50% + min(29vw, 40svh, 390px));
+  top: calc(50% + min(27vw, 34svh, 340px));
   left: 50%;
   width: min(720px, calc(100% - var(--page-gutter) - var(--page-gutter)));
   transform: translateX(-50%);
   text-align: center;
   text-shadow: 0 18px 58px var(--shadow);
+  z-index: 5;
 }
 
 .glass-portal-copy span {
@@ -991,17 +993,17 @@ h1 {
 }
 
 .glass-portal-copy p {
-  margin: clamp(44px, 7vh, 84px) auto 0;
+  margin: clamp(30px, 5vh, 58px) auto 0;
   color: var(--bone);
   font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(1.9rem, 3.5vw, 3.9rem);
-  line-height: 1;
+  font-size: clamp(2rem, 3.2vw, 3.7rem);
+  line-height: 0.98;
   max-width: 760px;
 }
 
 .seer-prologue {
   width: min(900px, calc(100% - var(--page-gutter) - var(--page-gutter)));
-  padding-top: clamp(66px, 8vw, 108px);
+  padding-top: clamp(92px, 10vw, 148px);
   padding-bottom: clamp(104px, 12vw, 164px);
   text-align: center;
 }
@@ -4104,7 +4106,12 @@ dd {
   }
 
   .glass-portal {
-    min-height: 136svh;
+    min-height: 146svh;
+  }
+
+  .glass-portal-stage {
+    min-height: 116svh;
+    padding-bottom: 150px;
   }
 
   .world-orb {
@@ -4113,12 +4120,16 @@ dd {
   }
 
   .glass-portal-copy {
-    top: calc(50% + min(48vw, 210px));
+    top: calc(50% + min(47vw, 205px));
     width: min(88vw, 520px);
   }
 
   .glass-portal-copy p {
-    display: none;
+    display: block;
+    margin-top: 28px;
+    max-width: 340px;
+    font-size: clamp(1.86rem, 10vw, 3rem);
+    line-height: 0.98;
   }
 
   .hero-vow {
