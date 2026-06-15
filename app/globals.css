@@ -910,7 +910,7 @@ h1 {
   position: relative;
   display: grid;
   place-items: center;
-  width: min(52vw, 70svh, 720px);
+  width: min(48vw, 62svh, 620px);
   max-width: calc(100vw - (var(--page-gutter) * 2));
   aspect-ratio: 1;
   overflow: hidden;
@@ -973,7 +973,7 @@ h1 {
 
 .glass-portal-copy {
   position: absolute;
-  top: calc(50% + min(27vw, 34svh, 340px));
+  top: calc(50% + min(23vw, 31svh, 285px));
   left: 50%;
   width: min(720px, calc(100% - var(--page-gutter) - var(--page-gutter)));
   transform: translateX(-50%);
@@ -993,12 +993,12 @@ h1 {
 }
 
 .glass-portal-copy p {
-  margin: clamp(30px, 5vh, 58px) auto 0;
+  margin: clamp(18px, 3vh, 34px) auto 0;
   color: var(--bone);
   font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(2rem, 3.2vw, 3.7rem);
-  line-height: 0.98;
-  max-width: 760px;
+  font-size: clamp(1.9rem, 2.9vw, 3.25rem);
+  line-height: 1.02;
+  max-width: 690px;
 }
 
 .seer-prologue {
@@ -2585,12 +2585,10 @@ dd {
   from {
     opacity: 0;
     transform: translateY(22px);
-    filter: blur(4px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
-    filter: blur(0);
   }
 }
 
@@ -3671,6 +3669,14 @@ dd {
   font-family: "EB Garamond", Georgia, serif;
   font-size: clamp(1.32rem, 2vw, 1.72rem);
   line-height: 1.72;
+}
+
+.story-body .reveal,
+.patricia-afterword.reveal {
+  animation: none;
+  opacity: 1;
+  transform: none;
+  filter: none;
 }
 
 .story-body p:first-child::first-letter {

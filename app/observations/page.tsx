@@ -143,7 +143,7 @@ export default function ObservationsPage() {
 
           <div className="story-body patricia-story-body">
             {firstStoryPart.map((paragraph, index) => (
-              <p className="reveal" key={`patricia-a-${index}`}>{paragraph}</p>
+              <p key={`patricia-a-${index}`}>{paragraph}</p>
             ))}
           </div>
 
@@ -154,7 +154,7 @@ export default function ObservationsPage() {
 
           <div className="story-body patricia-story-body">
             {secondStoryPart.map((paragraph, index) => (
-              <p className="reveal" key={`patricia-b-${index}`}>{paragraph}</p>
+              <p key={`patricia-b-${index}`}>{paragraph}</p>
             ))}
           </div>
 
@@ -165,7 +165,7 @@ export default function ObservationsPage() {
 
           <div className="story-body patricia-story-body">
             {thirdStoryPart.map((paragraph, index) => (
-              <p className="reveal" key={`patricia-c-${index}`}>{paragraph}</p>
+              <p key={`patricia-c-${index}`}>{paragraph}</p>
             ))}
           </div>
 
@@ -176,13 +176,13 @@ export default function ObservationsPage() {
 
           <div className="story-body patricia-story-body">
             {finalStoryPart.map((paragraph, index) => (
-              <p className="reveal" key={`patricia-d-${index}`}>{paragraph}</p>
+              <p key={`patricia-d-${index}`}>{paragraph}</p>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="patricia-afterword reveal" aria-label="Continue after Patricia">
+      <section className="patricia-afterword" aria-label="Continue after Patricia">
         <p className="eyebrow">The Glass Remains Open</p>
         <h2>Patricia is the first recorded mortal incident.</h2>
         <p>
