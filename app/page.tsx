@@ -238,9 +238,9 @@ export default function Home() {
         <p className="eyebrow">Before the Observation</p>
         <h2>The Seer Records What the Glass Reveals.</h2>
         <p>
-          Gaze Glass is a fantasy universe told through divine observations: gods who
-          shape fate, spirits who remember what mortals forget, and ordinary souls
-          changed by impossible blessings.
+          Gaze Glass is an immersive fantasy world brought to life through an
+          interactive website that gives mortals the power to conjure meaning from
+          moments shared between humans and the unseen forces shaping their lives.
         </p>
         <p>
           The Seer is your guide through the glass. Begin with one mortal life, then
