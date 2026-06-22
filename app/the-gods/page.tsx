@@ -101,7 +101,7 @@ const gods = [
     image: "/gods/death.webp",
     station: "Receiver and guide of souls, weighing what every life tried to bury.",
     observation:
-      "Every soul that has ever drawn breath arrives, in time, at the scales of the God of Death — weighed not in fear, but by the choices it tried to bury and the truths it refused to carry. Death does not take the living. Death receives them, and guides the sorting of souls.",
+      "Every soul that draws breath arrives, in time, at the scales of the God of Death — weighed not in fear, but by the choices it tries to bury and the truths it refuses to carry. Death does not take the living. Death receives them, and guides the sorting of souls.",
     note: "Death is sorting, witness, and passage — never simple ending.",
   },
   {
