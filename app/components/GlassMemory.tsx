@@ -289,6 +289,7 @@ function useGlassMemory() {
 
 export function GlassMemory() {
   const { entries, isReady, clearMemory } = useGlassMemory();
+  const [isExpanded, setIsExpanded] = useState(false);
   const latest = entries[0];
 
   const countText = useMemo(() => {
@@ -304,20 +305,48 @@ export function GlassMemory() {
   }
 
   return (
-    <aside className="glass-memory" aria-label="The Glass remembers your path" aria-live="polite">
-      <div className="glass-memory-stars" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </div>
-      <p>The Glass Remembers</p>
-      <strong>{countText}</strong>
-      <span>
-        Latest: <a href={latest.href}>{latest.label}</a>
-      </span>
-      <button type="button" onClick={clearMemory}>
-        Let the Glass Forget
+    <div className={`glass-memory-shell${isExpanded ? " is-expanded" : ""}`}>
+      <button
+        className="glass-memory-toggle"
+        type="button"
+        aria-expanded={isExpanded}
+        aria-controls="glass-memory-panel"
+        onClick={() => setIsExpanded((current) => !current)}
+      >
+        <span className="glass-memory-toggle-orb" aria-hidden="true" />
+        <span className="glass-memory-toggle-copy">
+          <span>The Glass Remembers</span>
+          <strong>
+            {entries.length} {entries.length === 1 ? "vision" : "visions"}
+          </strong>
+        </span>
       </button>
-    </aside>
+
+      {isExpanded ? (
+        <aside id="glass-memory-panel" className="glass-memory" aria-label="The Glass remembers your path" aria-live="polite">
+          <div className="glass-memory-stars" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+          <button
+            className="glass-memory-close"
+            type="button"
+            aria-label="Close the Glass Remembers panel"
+            onClick={() => setIsExpanded(false)}
+          >
+            Close
+          </button>
+          <p>The Glass Remembers</p>
+          <strong>{countText}</strong>
+          <span>
+            Latest: <a href={latest.href}>{latest.label}</a>
+          </span>
+          <button className="glass-memory-forget" type="button" onClick={clearMemory}>
+            Let the Glass Forget
+          </button>
+        </aside>
+      ) : null}
+    </div>
   );
 }
