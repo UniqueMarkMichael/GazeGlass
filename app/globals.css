@@ -3714,6 +3714,464 @@ dd {
   font-style: italic;
 }
 
+.codex-page {
+  position: relative;
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100svh;
+  overflow-x: hidden;
+  isolation: isolate;
+}
+
+.codex-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(201, 162, 39, 0.13), transparent 30rem),
+    radial-gradient(circle at 78% 42%, rgba(95, 183, 196, 0.08), transparent 28rem),
+    linear-gradient(180deg, rgba(10, 8, 24, 0.22), rgba(26, 23, 51, 0.88));
+}
+
+.codex-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.96fr) minmax(320px, 0.74fr);
+  gap: clamp(36px, 7vw, 96px);
+  align-items: center;
+  width: min(1180px, calc(100% - var(--page-gutter) - var(--page-gutter)));
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: clamp(136px, 13vw, 190px) 0 clamp(72px, 8vw, 116px);
+}
+
+.codex-hero::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: min(760px, 80vw);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.28), transparent);
+}
+
+.codex-hero-copy {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.codex-hero h1 {
+  max-width: 820px;
+  margin: 0;
+  color: var(--bone);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(4.4rem, 9vw, 9rem);
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: 0;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+.codex-invocation {
+  display: grid;
+  gap: 12px;
+  max-width: 640px;
+  margin-top: clamp(28px, 4vw, 46px);
+}
+
+.codex-invocation p,
+.codex-closing p,
+.codex-circle > p {
+  margin: 0;
+  color: var(--dim-bone);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: clamp(1.18rem, 1.6vw, 1.42rem);
+  line-height: 1.62;
+  overflow-wrap: break-word;
+}
+
+.codex-begin {
+  margin-top: clamp(28px, 4vw, 44px);
+}
+
+.codex-hero-sigil {
+  position: relative;
+  margin: 0;
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(201, 162, 39, 0.12), transparent 58%),
+    rgba(10, 8, 24, 0.36);
+  box-shadow:
+    0 34px 140px rgba(4, 3, 12, 0.58),
+    inset 0 0 44px rgba(237, 227, 204, 0.03);
+  overflow: hidden;
+}
+
+.codex-hero-sigil::before,
+.codex-hero-sigil::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.codex-hero-sigil::before {
+  z-index: 1;
+  background:
+    radial-gradient(circle at 50% 42%, transparent 0 38%, rgba(10, 8, 24, 0.34) 73%),
+    linear-gradient(180deg, transparent 44%, rgba(10, 8, 24, 0.82));
+}
+
+.codex-hero-sigil::after {
+  z-index: 2;
+  inset: 8%;
+  border: 1px solid rgba(237, 227, 204, 0.1);
+}
+
+.codex-hero-sigil img,
+.codex-law-sigil img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.codex-hero-sigil figcaption {
+  position: absolute;
+  right: clamp(18px, 3vw, 34px);
+  bottom: clamp(18px, 3vw, 34px);
+  z-index: 3;
+  width: min(310px, 72%);
+  color: rgba(237, 227, 204, 0.78);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: clamp(1rem, 1.4vw, 1.22rem);
+  font-style: italic;
+  line-height: 1.35;
+  text-align: right;
+}
+
+.codex-progress {
+  position: sticky;
+  top: 86px;
+  z-index: 7;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  width: min(1180px, calc(100% - var(--page-gutter) - var(--page-gutter)));
+  margin: 0 auto;
+  border-top: 1px solid rgba(201, 162, 39, 0.18);
+  border-bottom: 1px solid rgba(201, 162, 39, 0.18);
+  background: rgba(10, 8, 24, 0.72);
+  backdrop-filter: blur(18px);
+}
+
+.codex-progress a {
+  display: grid;
+  gap: 6px;
+  min-height: 72px;
+  padding: 16px 12px 14px;
+  border-right: 1px solid rgba(237, 227, 204, 0.08);
+  color: rgba(237, 227, 204, 0.66);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+  transition:
+    color 220ms ease,
+    background 220ms ease;
+}
+
+.codex-progress a:last-child {
+  border-right: 0;
+}
+
+.codex-progress a:hover,
+.codex-progress a:focus-visible {
+  color: var(--bone);
+  background: rgba(201, 162, 39, 0.08);
+  outline: none;
+}
+
+.codex-progress span {
+  color: var(--gold);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 0.98rem;
+  font-style: italic;
+  letter-spacing: 0.08em;
+}
+
+.codex-laws {
+  padding: clamp(22px, 4vw, 56px) 0 0;
+}
+
+.codex-law {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(300px, 0.92fr) minmax(0, 0.78fr);
+  gap: clamp(36px, 7vw, 104px);
+  align-items: center;
+  width: min(1180px, calc(100% - var(--page-gutter) - var(--page-gutter)));
+  margin: 0 auto;
+  padding: clamp(92px, 11vw, 162px) 0;
+  scroll-margin-top: 160px;
+}
+
+.codex-law::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: min(760px, 80vw);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.18), transparent);
+}
+
+.codex-law-sigil {
+  position: sticky;
+  top: 178px;
+  margin: 0;
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  background: rgba(10, 8, 24, 0.34);
+  box-shadow: 0 28px 110px rgba(4, 3, 12, 0.52);
+  overflow: hidden;
+}
+
+.codex-law-sigil::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 52%, rgba(10, 8, 24, 0.74));
+  pointer-events: none;
+}
+
+.codex-law-sigil figcaption {
+  position: absolute;
+  left: 22px;
+  bottom: 18px;
+  z-index: 1;
+  color: rgba(201, 162, 39, 0.86);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 1.08rem;
+  font-style: italic;
+  letter-spacing: 0.12em;
+}
+
+.codex-law-copy {
+  min-width: 0;
+}
+
+.codex-law-index {
+  margin: 0 0 22px;
+  color: rgba(201, 162, 39, 0.74);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: clamp(1.02rem, 1.5vw, 1.22rem);
+  font-style: italic;
+  letter-spacing: 0.18em;
+}
+
+.codex-law h2,
+.codex-closing h2,
+.codex-circle h2 {
+  margin: 0;
+  color: var(--bone);
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 600;
+  line-height: 0.98;
+}
+
+.codex-law h2 {
+  max-width: 760px;
+  font-size: clamp(2.7rem, 5.8vw, 6.2rem);
+}
+
+.codex-law-copy > p:not(.eyebrow, .codex-law-index) {
+  max-width: 650px;
+  margin: clamp(24px, 3vw, 34px) 0 0;
+  color: var(--dim-bone);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: clamp(1.22rem, 1.8vw, 1.56rem);
+  line-height: 1.62;
+}
+
+.codex-law blockquote {
+  position: relative;
+  max-width: 650px;
+  margin: clamp(30px, 4vw, 46px) 0 0;
+  padding: 22px 0 0 28px;
+  border-left: 1px solid rgba(201, 162, 39, 0.55);
+  color: rgba(237, 227, 204, 0.72);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: clamp(1.08rem, 1.45vw, 1.32rem);
+  font-style: italic;
+  line-height: 1.58;
+}
+
+.codex-law blockquote span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--gold);
+  font-family: "Mulish", system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.codex-related-link {
+  margin-top: 28px;
+}
+
+.codex-closing,
+.codex-circle {
+  width: min(940px, calc(100% - var(--page-gutter) - var(--page-gutter)));
+  margin: 0 auto;
+  padding: clamp(94px, 12vw, 160px) 0;
+  text-align: center;
+}
+
+.codex-closing {
+  display: grid;
+  gap: clamp(28px, 4vw, 48px);
+}
+
+.codex-closing h2,
+.codex-circle h2 {
+  font-size: clamp(3.6rem, 8vw, 8rem);
+}
+
+.codex-closing div {
+  display: grid;
+  gap: 12px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.codex-circle {
+  border-top: 1px solid rgba(201, 162, 39, 0.18);
+}
+
+.codex-circle > p {
+  max-width: 720px;
+  margin: clamp(22px, 3vw, 34px) auto clamp(34px, 5vw, 54px);
+}
+
+@media (max-width: 1100px) {
+  .codex-hero,
+  .codex-law {
+    grid-template-columns: 1fr;
+  }
+
+  .codex-hero {
+    min-height: auto;
+  }
+
+  .codex-hero-copy,
+  .codex-hero-copy h1,
+  .codex-invocation {
+    max-width: 820px;
+  }
+
+  .codex-hero-sigil {
+    width: min(100%, 760px);
+  }
+
+  .codex-law-sigil {
+    position: relative;
+    top: auto;
+    width: min(100%, 760px);
+  }
+
+  .codex-law h2 {
+    max-width: 880px;
+  }
+}
+
+@media (max-width: 820px) {
+  .codex-hero,
+  .codex-progress,
+  .codex-law,
+  .codex-closing,
+  .codex-circle {
+    width: calc(100vw - 44px);
+    max-width: calc(100vw - 44px);
+  }
+
+  .codex-hero {
+    gap: 32px;
+    padding-top: 132px;
+  }
+
+  .codex-hero h1 {
+    max-width: 100%;
+    font-size: clamp(3.05rem, 13.4vw, 4.25rem);
+    line-height: 0.94;
+  }
+
+  .codex-invocation {
+    max-width: 100%;
+  }
+
+  .codex-invocation p,
+  .codex-law-copy > p:not(.eyebrow, .codex-law-index),
+  .codex-law blockquote,
+  .codex-closing p,
+  .codex-circle > p {
+    font-size: clamp(1.05rem, 4.8vw, 1.22rem);
+  }
+
+  .codex-hero-sigil figcaption {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: auto;
+    padding: 18px 18px 20px;
+    text-align: left;
+  }
+
+  .codex-progress {
+    position: relative;
+    top: auto;
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scroll-snap-type: x proximity;
+  }
+
+  .codex-progress a {
+    min-width: 132px;
+    scroll-snap-align: start;
+  }
+
+  .codex-law {
+    padding: 74px 0;
+    scroll-margin-top: 110px;
+  }
+
+  .codex-law h2 {
+    font-size: clamp(2.7rem, 12vw, 4.5rem);
+  }
+
+  .codex-law blockquote {
+    padding-left: 20px;
+  }
+
+  .codex-closing,
+  .codex-circle {
+    padding: 78px 0;
+  }
+
+  .codex-closing h2,
+  .codex-circle h2 {
+    font-size: clamp(3.2rem, 14vw, 5.4rem);
+  }
+}
+
 @media (max-width: 1100px) {
   .patricia-hero {
     grid-template-columns: 1fr;
@@ -3982,6 +4440,12 @@ dd {
 
   .world-orb-video {
     animation: none !important;
+  }
+
+  .codex-page .reveal {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
   }
 }
 

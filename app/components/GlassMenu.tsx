@@ -18,6 +18,12 @@ const menuItems = [
     detail: "Enter the recorded sky.",
     action: "Open Observations",
   },
+  {
+    label: "The Celestial Codex",
+    href: "/celestial-codex",
+    detail: "Read the laws beneath the glass.",
+    action: "Open The Celestial Codex",
+  },
   { label: "The Seer", href: "/the-seer", detail: "Meet the keeper of the glass.", action: "Meet The Seer" },
   {
     label: "Join the Circle",

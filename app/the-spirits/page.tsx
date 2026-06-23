@@ -148,7 +148,7 @@ export default function TheSpirits() {
         <h2>Five Spirits Beside the Divine.</h2>
         <div className="spirit-grid">
           {spirits.map((spirit) => (
-            <article className="spirit-record" key={spirit.name}>
+            <article className="spirit-record" id={spirit.name.toLowerCase()} key={spirit.name}>
               <figure>
                 <img src={spirit.image} alt={`${spirit.name}, ${spirit.role}`} />
               </figure>
