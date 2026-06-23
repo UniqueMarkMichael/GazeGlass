@@ -260,8 +260,8 @@ export default function CelestialCodex() {
       </section>
 
       <section className="codex-circle signup reveal" id="codex-circle" aria-labelledby="codex-circle-title">
-        <p className="eyebrow">The Seer Circle</p>
-        <h2 id="codex-circle-title">Join the Seer Circle</h2>
+        <p className="eyebrow">Join the Circle</p>
+        <h2 id="codex-circle-title">Join the Circle</h2>
         <p>
           Receive future laws, observations, and transmissions from the Glass. The Codex is
           still revealing itself.

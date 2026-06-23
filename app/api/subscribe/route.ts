@@ -37,7 +37,7 @@ export async function POST(request: Request) {
 
   if (!apiKey || !audienceId || !serverPrefix) {
     return NextResponse.json(
-      { message: "The Seer Circle is not connected yet. Add the Mailchimp keys in Vercel." },
+      { message: "The Circle is not connected yet. Add the Mailchimp keys in Vercel." },
       { status: 503 },
     );
   }

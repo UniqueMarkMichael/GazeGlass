@@ -102,7 +102,7 @@ export default function TheSeer() {
           ))}
         </div>
         <a className="text-link return-link" href="/#the-seer-circle">
-          Join the Seer Circle
+          Join the Circle
         </a>
       </section>
 

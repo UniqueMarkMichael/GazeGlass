@@ -72,7 +72,7 @@ export function SeerCircleForm() {
       "The glass clouded before the name could be recorded. Please try again in a moment.",
     unconfigured:
       errorMessage ||
-      "The Seer Circle is ready, but Mailchimp still needs to be connected in Vercel.",
+      "The Circle is ready, but Mailchimp still needs to be connected in Vercel.",
   }[formState];
 
   const isBusy = formState === "loading";
