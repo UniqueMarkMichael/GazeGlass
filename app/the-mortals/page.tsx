@@ -555,7 +555,7 @@ export default function TheMortals() {
         </div>
       </section>
 
-      <section className="mortal-observations" aria-label="Walter observations">
+      <section className="mortal-observations poster-observations" aria-label="Walter observations">
         {walterObservations.map((item, index) => (
           <article className="mortal-observation reveal" key={item.title}>
             <figure>

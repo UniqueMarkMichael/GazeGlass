@@ -57,7 +57,7 @@ export function ObservationsArchive() {
       <div className="archive-toolbar">
         <div>
           <p className="eyebrow">The Archive</p>
-          <h2>Recorded Lights</h2>
+          <h2>Visions Captured</h2>
         </div>
         <label>
           Sort

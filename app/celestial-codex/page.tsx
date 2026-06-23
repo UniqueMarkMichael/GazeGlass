@@ -7,7 +7,7 @@ import { SeerCircleForm } from "../components/SeerCircleForm";
 export const metadata: Metadata = {
   title: "The Celestial Codex",
   description:
-    "Enter the Celestial Codex and discover the seven laws beneath the seen world: witness, consequence, surrender, pressure, memory, devotion, and return.",
+    "Enter the Celestial Codex and learn the laws behind mortal worlds: witness, consequence, surrender, pressure, memory, devotion, and return.",
   alternates: {
     canonical: "/celestial-codex",
   },
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "The Celestial Codex | Gaze Glass",
     description:
-      "Discover the seven laws beneath the seen world in the mythic archive of Gaze Glass.",
+      "Learn the laws behind mortal worlds in the mythic archive of Gaze Glass.",
     images: ["/codex/sigil-law-witness.webp"],
   },
 };
@@ -177,7 +177,7 @@ export default function CelestialCodex() {
         <div className="stars" aria-hidden="true" />
         <div className="codex-hero-copy reveal">
           <p className="eyebrow">The Celestial Codex</p>
-          <h1 id="codex-title">The laws beneath the seen world.</h1>
+          <h1 id="codex-title">Learn the laws behind mortal worlds.</h1>
           <div className="codex-invocation">
             <p>There are truths the Glass does not explain at first.</p>
             <p>It waits until the mortal has seen enough.</p>

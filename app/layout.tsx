@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { GlassMemory } from "./components/GlassMemory";
 import { JsonLd } from "./components/JsonLd";
 import "./globals.css";
@@ -102,6 +103,8 @@ const websiteData = {
   },
 };
 
+const googleAnalyticsId = "G-46V6ZS9F7K";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -111,6 +114,18 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <JsonLd data={websiteData} />
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){window.dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${googleAnalyticsId}');
+          `}
+        </Script>
         {children}
         <GlassMemory />
       </body>

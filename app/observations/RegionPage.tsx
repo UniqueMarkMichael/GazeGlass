@@ -50,8 +50,10 @@ export function RegionPage({ region }: RegionPageProps) {
           ))}
         </div>
         <div>
-          <p className="eyebrow">Recorded in this region</p>
-          <h2>{records.length} lights recovered.</h2>
+          <p className="eyebrow">Witnessed in this region</p>
+          <h2>
+            {records.length} {records.length === 1 ? "vision" : "visions"} captured.
+          </h2>
           <p>{meta.subtitle} The chart is still opening.</p>
         </div>
       </section>

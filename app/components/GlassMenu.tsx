@@ -4,32 +4,32 @@ import { useEffect, useState } from "react";
 import { GLASS_MEMORY_KEY, type GlassMemoryEntry } from "./GlassMemory";
 
 const menuItems = [
-  { label: "Home", href: "/#home", detail: "Return to the first glass.", action: "Open Home" },
-  { label: "The Gods", href: "/the-gods", detail: "Enter the divine archive.", action: "Open The Gods" },
-  { label: "The Spirits", href: "/the-spirits", detail: "Find what waits at the edge.", action: "Open The Spirits" },
+  { label: "Home", href: "/#home", detail: "Begin where the Glass first opens.", action: "Open Home" },
+  { label: "The Gods", href: "/the-gods", detail: "Meet the powers shaping mortal lives.", action: "Open The Gods" },
+  { label: "The Spirits", href: "/the-spirits", detail: "Meet the fox spirits between worlds.", action: "Open The Spirits" },
   {
     label: "The Mortals",
     href: "/the-mortals",
-    detail: "Witness the blessed and changed.",
+    detail: "Read the lives touched by the divine.",
     action: "Open The Mortals",
   },
   {
     label: "Observations",
     href: "/observations",
-    detail: "Enter the witnessed sky.",
+    detail: "Read short stories seen through the Glass.",
     action: "Open Observations",
   },
   {
     label: "The Celestial Codex",
     href: "/celestial-codex",
-    detail: "Read the laws beneath the glass.",
+    detail: "Discover the seven laws beneath the seen world.",
     action: "Open The Celestial Codex",
   },
-  { label: "The Seer", href: "/the-seer", detail: "Meet the keeper of the glass.", action: "Meet The Seer" },
+  { label: "The Seer", href: "/the-seer", detail: "Meet the voice recording what the Glass reveals.", action: "Meet The Seer" },
   {
     label: "Join the Circle",
     href: "/#the-seer-circle",
-    detail: "Letters from the Seer.",
+    detail: "Receive new stories, laws, and letters from the Seer.",
     action: "Join the Circle",
   },
 ];
@@ -164,17 +164,17 @@ export function GlassMenu() {
         />
         <div className="glass-menu-lens" aria-hidden="true" />
         <div className="glass-menu-panel" role="dialog" aria-modal="true" aria-label="Gaze Glass navigation">
-          <button className="glass-menu-close" type="button" onClick={closeMenu}>
+          <button className="glass-menu-close" type="button" aria-label="Close menu" onClick={closeMenu}>
             <span aria-hidden="true">×</span>
-            Close lens
+            Close menu
           </button>
-          <p className="eyebrow">Choose a lens</p>
-          <nav className="glass-menu-nav" aria-label="Gaze Glass sections">
+          <p className="eyebrow">Choose where to gaze</p>
+          <nav className="glass-menu-nav" aria-label="Primary navigation">
             {menuItems.map((item, index) => (
               <button
                 key={item.href}
                 type="button"
-                aria-label={item.action}
+                aria-label={`${item.label}. ${item.detail}`}
                 onClick={() => travel(item.href)}
               >
                 <span>{String(index + 1).padStart(2, "0")}</span>
