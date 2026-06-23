@@ -83,9 +83,11 @@ a {
 
 .brand-mark {
   display: block;
-  width: 42px;
-  height: auto;
-  opacity: 0.9;
+  width: clamp(34px, 3vw, 44px);
+  height: clamp(34px, 3vw, 44px);
+  border-radius: 999px;
+  object-fit: contain;
+  opacity: 0.96;
   filter:
     drop-shadow(0 0 12px rgba(201, 162, 39, 0.18))
     drop-shadow(0 0 22px rgba(237, 227, 204, 0.06));
@@ -4797,7 +4799,8 @@ dd {
   }
 
   .brand-mark {
-    width: 36px;
+    width: 34px;
+    height: 34px;
   }
 
   .glass-menu-trigger {

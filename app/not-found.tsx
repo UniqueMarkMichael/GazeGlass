@@ -5,7 +5,7 @@ export default function NotFound() {
     <main>
       <header className="site-header" aria-label="Primary navigation">
         <a className="brand" href="/#home" aria-label="Gaze Glass home">
-          <img className="brand-mark" src="/brand/gaze-glass-mark-transparent.png" alt="" />
+          <img className="brand-mark" src="/brand/gaze-glass-logo-color.png" alt="" />
           Gaze Glass
         </a>
         <GlassMenu />

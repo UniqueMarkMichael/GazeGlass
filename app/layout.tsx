@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/icon.svg",
     shortcut: "/icon.svg",
-    apple: "/brand/gaze-glass-mark.png",
+    apple: "/brand/gaze-glass-logo-color.png",
   },
   alternates: {
     canonical: "/",
@@ -98,7 +98,7 @@ const websiteData = {
     email: "behold@gazeglass.com",
     logo: {
       "@type": "ImageObject",
-      url: "https://www.gazeglass.com/brand/gaze-glass-mark.png",
+      url: "https://www.gazeglass.com/brand/gaze-glass-logo-color.png",
     },
   },
 };
