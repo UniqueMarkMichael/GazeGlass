@@ -5,7 +5,7 @@ import { GlassMenu } from "../components/GlassMenu";
 export const metadata: Metadata = {
   title: "The Mortals",
   description:
-    "Read the mortal archive of Gaze Glass: Patricia awakened by Wisdom, Marcella blessed by Justice, Malika blessed by Love, Takeshi blessed by Fortune, and the fantasy stories changed by divine witness.",
+    "Read the mortal archive of Gaze Glass: Patricia awakened by Wisdom, Marcella blessed by Justice, Malika blessed by Love, Takeshi blessed by Fortune, Walter blessed by War, and the fantasy stories changed by divine witness.",
   alternates: {
     canonical: "/the-mortals",
   },
@@ -18,12 +18,13 @@ export const metadata: Metadata = {
     "Marcella blessed by Justice",
     "Malika blessed by Love",
     "Takeshi blessed by Fortune",
+    "Walter blessed by War",
     "Patricia awakened by Wisdom",
   ],
   openGraph: {
     title: "The Mortals | Gaze Glass",
     description:
-      "Enter the mortal archive: Patricia, Marcella, Malika, Takeshi, divine blessings, and the consequence of being witnessed.",
+      "Enter the mortal archive: Patricia, Marcella, Malika, Takeshi, Walter, divine blessings, and the consequence of being witnessed.",
     url: "/the-mortals",
     images: [
       {
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "The Mortals | Gaze Glass",
     description:
-      "Patricia, Marcella, Malika, and Takeshi enter the mortal archive through divine blessings from Wisdom, Justice, Love, and Fortune.",
+      "Patricia, Marcella, Malika, Takeshi, and Walter enter the mortal archive through divine blessings from Wisdom, Justice, Love, Fortune, and War.",
     images: ["/og/gaze-glass-mortals.png"],
   },
 };
@@ -136,6 +137,79 @@ const takeshiObservations = [
   },
 ];
 
+const walterObservations = [
+  {
+    label: "Before the Blessing",
+    title: "The House That Held a Life",
+    text: "For fifty years, Walter's house kept the measure of his children, his grief, and every ordinary morning that made a life sacred. Then a developer reduced it to a parcel number and taped a notice to the door.",
+    image: "/mortals/walter/notice-to-vacate.png",
+    note: "Verdict Note: A home is not empty because someone powerful calls it land.",
+  },
+  {
+    label: "The Refusal",
+    title: "One Old Man Against the Machine",
+    text: "Walter refused to sell. Lawyers arrived with deadlines, signatures, and smiles sharp enough to cut through memory, but he would not trade the life in his walls for their polished version of progress.",
+    image: "/mortals/walter/refused-to-sell.png",
+    note: "Verdict Note: Refusal can be the first form of prayer.",
+  },
+  {
+    label: "The Sacred Appeal",
+    title: "Grant Me Glory",
+    text: "Walter had not prayed since the war. That night, kneeling before medals he rarely touched, he asked the God of War for the only weapon he trusted: the strength to fight without becoming cruel.",
+    image: "/mortals/walter/prayer-to-war.png",
+    note: "Verdict Note: Glory is not always conquest. Sometimes it is endurance with a plan.",
+  },
+  {
+    label: "The Divine Briefing",
+    title: "Arm Him",
+    text: "The God of War hated mortal weakness, until the mirror revealed a soldier still standing guard over the last thing he had sworn to protect. War did not pity Walter. War recognized him.",
+    image: "/mortals/walter/arm-him.png",
+    note: "Verdict Note: A god may answer when a mortal's wound resembles a battlefield.",
+  },
+  {
+    label: "The Answer",
+    title: "No Stronger. More Dangerous.",
+    text: "War did not rebuild Walter's body. It entered the room as counsel, teeth, and fire, then placed the real weapon where Walter could reach it: his mind.",
+    image: "/mortals/walter/war-blessing.png",
+    note: "Verdict Note: The deadliest blessing can be clarity.",
+  },
+  {
+    label: "The Blessing",
+    title: "A Five-Star Mind",
+    text: "Walter did not wake stronger. He woke strategic. Every threat became terrain, every document a map, every powerful man a piece that could be moved.",
+    image: "/mortals/walter/five-star-general.png",
+    note: "Verdict Note: War gave him no sword. War gave him command.",
+  },
+  {
+    label: "The Strategy",
+    title: "Every Empire Has a Weak Point",
+    text: "Walter followed permits, ownership shells, public hearings, and money until the development stopped looking inevitable and started looking vulnerable.",
+    image: "/mortals/walter/weak-point.png",
+    note: "Verdict Note: The largest machines still depend on small cracks.",
+  },
+  {
+    label: "The Army",
+    title: "The Block Learns to Stand",
+    text: "The developer believed Walter stood alone. Walter gave the neighborhood evidence, language, and a reason to gather. One old man became the place where courage organized itself.",
+    image: "/mortals/walter/block-army.png",
+    note: "Verdict Note: War multiplies when fear learns where to stand.",
+  },
+  {
+    label: "The Witness",
+    title: "You Cannot Bulldoze a Headline",
+    text: "Walter called the press. Cameras arrived. The story that had been handled in rooms without witnesses became public, and the machine lost its most useful darkness.",
+    image: "/mortals/walter/front-page.png",
+    note: "Verdict Note: Strategy becomes power when the right eyes arrive.",
+  },
+  {
+    label: "After War",
+    title: "Checkmate",
+    text: "The developer brought lawyers and money. Walter brought a plan three moves ahead. When the permit fell, the house remained, and the record named the victory correctly.",
+    image: "/mortals/walter/checkmate.png",
+    note: "Verdict Note: War is not the violence. War is the will to protect what must not be taken.",
+  },
+];
+
 const mortalCases = [
   {
     id: "patricia-case",
@@ -185,6 +259,18 @@ const mortalCases = [
     evidence: "Zero downloads, one streamer, a world suddenly playing.",
     href: "#takeshi-case",
   },
+  {
+    id: "walter-case",
+    number: "Mortal Case 004",
+    name: "Walter",
+    title: "Blessed by War",
+    force: "War",
+    image: "/mortals/walter/portrait.png",
+    summary:
+      "An old soldier asks for glory when a developer tries to take the home that held his life.",
+    evidence: "A notice to vacate, a neighborhood gathered, a permit defeated.",
+    href: "#walter-case",
+  },
 ];
 
 const mortalsPageData = {
@@ -194,11 +280,11 @@ const mortalsPageData = {
   url: "https://www.gazeglass.com/the-mortals",
   name: "The Mortals | Gaze Glass",
   description:
-    "Observed mortal case files from Gaze Glass, including Patricia awakened by Wisdom, Marcella blessed by Justice, Malika blessed by Love, and Takeshi blessed by Fortune.",
+    "Observed mortal case files from Gaze Glass, including Patricia awakened by Wisdom, Marcella blessed by Justice, Malika blessed by Love, Takeshi blessed by Fortune, and Walter blessed by War.",
   isPartOf: {
     "@id": "https://www.gazeglass.com/#website",
   },
-  about: ["fantasy stories", "mortal blessings", "divine justice", "divine love", "divine fortune", "mythic fantasy"],
+  about: ["fantasy stories", "mortal blessings", "divine justice", "divine love", "divine fortune", "divine war", "mythic fantasy"],
   mainEntity: {
     "@type": "ItemList",
     itemListElement: [
@@ -252,6 +338,19 @@ const mortalsPageData = {
           "@type": "Person",
           name: "Takeshi",
           description: "A mortal blessed by the God of Fortune after his game launches unseen.",
+        },
+      },
+      {
+        "@type": "CreativeWork",
+        position: 5,
+        name: "Walter, Blessed by War",
+        genre: ["Fantasy", "Mythic Fantasy"],
+        description:
+          "A mortal case file about Walter, an old soldier whose threatened home is answered by the God of War.",
+        character: {
+          "@type": "Person",
+          name: "Walter",
+          description: "A mortal blessed by the God of War when a developer tries to take his home.",
         },
       },
     ],
@@ -415,6 +514,49 @@ export default function TheMortals() {
 
       <section className="mortal-observations" aria-label="Takeshi observations">
         {takeshiObservations.map((item, index) => (
+          <article className="mortal-observation reveal" key={item.title}>
+            <figure>
+              <img src={item.image} alt={`${item.title} artwork`} />
+            </figure>
+            <div>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <p className="eyebrow">{item.label}</p>
+              <h2>{item.title}</h2>
+              <p>{item.text}</p>
+              <small>{item.note}</small>
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <section className="case-threshold war-case reveal" id="walter-case" aria-label="Walter case file">
+        <figure className="case-portrait">
+          <img src="/mortals/walter/portrait.png" alt="Walter reflected in a black and red sacred shield-glass" />
+        </figure>
+        <div>
+          <p className="eyebrow">Mortal Case 004</p>
+          <h2>Walter, Blessed by War.</h2>
+          <p>
+            An old soldier was told the home that held his life had become
+            someone else&apos;s opportunity. Walter did not pray for destruction.
+            He asked for glory: the strategy to protect what the powerful had
+            mistaken for something small.
+          </p>
+          <dl>
+            <dt>Patron</dt>
+            <dd>The God of War</dd>
+            <dt>Spirit Witness</dt>
+            <dd>Marok, architect of Judgments</dd>
+            <dt>Blessing</dt>
+            <dd>The mind of a five-star general.</dd>
+            <dt>Trial</dt>
+            <dd>To turn rage into strategy and defense into community.</dd>
+          </dl>
+        </div>
+      </section>
+
+      <section className="mortal-observations" aria-label="Walter observations">
+        {walterObservations.map((item, index) => (
           <article className="mortal-observation reveal" key={item.title}>
             <figure>
               <img src={item.image} alt={`${item.title} artwork`} />

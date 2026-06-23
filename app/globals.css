@@ -2633,6 +2633,23 @@ dd {
     0 0 70px rgba(201, 82, 32, 0.16);
 }
 
+.war-case::before {
+  background:
+    radial-gradient(circle at 24% 42%, rgba(168, 21, 21, 0.2), transparent 22rem),
+    radial-gradient(circle at 76% 42%, rgba(201, 162, 39, 0.12), transparent 24rem);
+}
+
+.war-case .case-portrait {
+  border-color: rgba(168, 21, 21, 0.48);
+  border-radius: 38% 38% 22% 22%;
+  background:
+    radial-gradient(circle at 50% 34%, rgba(168, 21, 21, 0.2), transparent 40%),
+    rgba(10, 8, 24, 0.58);
+  box-shadow:
+    0 34px 90px rgba(4, 3, 12, 0.52),
+    0 0 82px rgba(168, 21, 21, 0.18);
+}
+
 .case-portrait {
   position: relative;
   margin: 0;
