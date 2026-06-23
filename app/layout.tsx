@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { GlassMemory } from "./components/GlassMemory";
 import { JsonLd } from "./components/JsonLd";
 import "./globals.css";
@@ -113,6 +114,7 @@ export default function RootLayout({
         <JsonLd data={websiteData} />
         {children}
         <GlassMemory />
+        <Analytics />
       </body>
     </html>
   );
