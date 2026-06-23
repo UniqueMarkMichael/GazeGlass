@@ -228,7 +228,7 @@ export default function Home() {
           </div>
           <div className="glass-portal-copy" aria-hidden="true">
             <span>Gaze Into The Glass</span>
-            <p>The first mortal incident comes into view.</p>
+            <p>Scroll to receive visions and witness celestial transformations.</p>
           </div>
         </div>
       </section>

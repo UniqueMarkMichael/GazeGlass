@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { GLASS_MEMORY_KEY, type GlassMemoryEntry } from "./GlassMemory";
 
 const menuItems = [
   { label: "Home", href: "/#home", detail: "Return to the first glass.", action: "Open Home" },
@@ -15,7 +16,7 @@ const menuItems = [
   {
     label: "Observations",
     href: "/observations",
-    detail: "Enter the recorded sky.",
+    detail: "Enter the witnessed sky.",
     action: "Open Observations",
   },
   {
@@ -42,9 +43,42 @@ function isSamePath(href: string) {
   return url.pathname === window.location.pathname;
 }
 
+function readRecordedEntries() {
+  try {
+    const stored = window.localStorage.getItem(GLASS_MEMORY_KEY);
+    const parsed = stored ? JSON.parse(stored) : [];
+    return Array.isArray(parsed) ? (parsed as GlassMemoryEntry[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function isItemRecorded(href: string, entries: GlassMemoryEntry[]) {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  const destination = new URL(href, window.location.origin);
+
+  return entries.some((entry) => {
+    const recorded = new URL(entry.href, window.location.origin);
+
+    if (destination.hash) {
+      return recorded.pathname === destination.pathname && recorded.hash === destination.hash;
+    }
+
+    if (destination.pathname === "/observations") {
+      return recorded.pathname.startsWith("/observations");
+    }
+
+    return recorded.pathname === destination.pathname;
+  });
+}
+
 export function GlassMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPassing, setIsPassing] = useState(false);
+  const [recordedEntries, setRecordedEntries] = useState<GlassMemoryEntry[]>([]);
 
   useEffect(() => {
     document.body.classList.toggle("menu-open", isOpen);
@@ -60,6 +94,28 @@ export function GlassMenu() {
 
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
+  }, []);
+
+  useEffect(() => {
+    function refreshRecordedEntries(event?: Event) {
+      const detail = event instanceof CustomEvent ? event.detail : null;
+      setRecordedEntries(Array.isArray(detail) ? detail : readRecordedEntries());
+    }
+
+    function refreshFromStorage(event: StorageEvent) {
+      if (event.key === GLASS_MEMORY_KEY) {
+        setRecordedEntries(readRecordedEntries());
+      }
+    }
+
+    refreshRecordedEntries();
+    window.addEventListener("gaze-glass:memory-update", refreshRecordedEntries);
+    window.addEventListener("storage", refreshFromStorage);
+
+    return () => {
+      window.removeEventListener("gaze-glass:memory-update", refreshRecordedEntries);
+      window.removeEventListener("storage", refreshFromStorage);
+    };
   }, []);
 
   function travel(href: string) {
@@ -124,6 +180,7 @@ export function GlassMenu() {
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <strong>{item.label}</strong>
                 <em>{item.detail}</em>
+                {isItemRecorded(item.href, recordedEntries) ? <small>Witnessed</small> : null}
               </button>
             ))}
           </nav>
