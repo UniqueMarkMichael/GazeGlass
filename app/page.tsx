@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JsonLd } from "./components/JsonLd";
 import { GlassMenu } from "./components/GlassMenu";
+import { ReceiveVision } from "./components/ReceiveVision";
 import { SeerCircleForm } from "./components/SeerCircleForm";
 
 export const metadata: Metadata = {
@@ -232,6 +233,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <ReceiveVision />
 
       <section className="section seer-prologue reveal" id="the-seer" aria-label="The Seer introduces Gaze Glass">
         <span className="chapter-stamp">01 / The Seer Records</span>

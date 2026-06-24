@@ -122,7 +122,7 @@ export function ReceiveVision() {
               <span>
                 {vision.realm} / {vision.signal}
               </span>
-              <h3>The Glass has chosen...</h3>
+              <h3>The Glass has chosen.</h3>
               <p className="vision-result-title">{vision.title}</p>
               <p>{vision.description}</p>
               <a className="text-link" href={vision.href}>
