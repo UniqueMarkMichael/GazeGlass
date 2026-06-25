@@ -17,6 +17,7 @@ export class ObservationModeController {
   private state: MachineState = "idle";
   private readonly bus: EventBus;
   private readonly shadow: ShadowRoot;
+  private readonly entryMount: HTMLElement;
   private readonly root: HTMLElement;
   private readonly announce: (message: string) => void;
   private releaseTrap: (() => void) | null = null;
@@ -29,12 +30,14 @@ export class ObservationModeController {
   constructor(private readonly options: ObservationModeControllerOptions) {
     this.manifest = options.manifest ?? null;
     this.shadow = options.host.attachShadow({ mode: "open" });
+    this.entryMount = document.createElement("div");
+    this.entryMount.className = "om-entry-mount";
     this.root = document.createElement("div");
     this.root.className = "om-root";
     this.root.dataset.omTheme = "obsidian";
     this.root.tabIndex = -1;
     this.root.setAttribute("role", "dialog");
-    this.shadow.append(this.createStyleElement(), this.root);
+    this.shadow.append(this.createStyleElement(), this.entryMount, document.createElement("slot"), this.root);
     this.bus = new EventBus(this.root);
     this.announce = createAnnouncer(this.root);
   }
@@ -119,7 +122,7 @@ export class ObservationModeController {
   }
 
   private renderEntryButton(): void {
-    if (this.options.host.querySelector(".om-entry")) return;
+    if (this.entryMount.querySelector(".om-entry")) return;
 
     const button = document.createElement("button");
     button.className = "om-entry";
@@ -127,7 +130,7 @@ export class ObservationModeController {
     button.setAttribute("aria-label", COPY.openAria);
     button.innerHTML = `<strong>${COPY.open}</strong><span>Immersive reading · ${this.getReadingTime()} min</span>`;
     button.addEventListener("click", () => void this.open());
-    this.options.host.insertBefore(button, this.sourceArticle);
+    this.entryMount.append(button);
   }
 
   private renderThreshold(): void {
