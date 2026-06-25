@@ -15,17 +15,39 @@ export interface ObservationModeControllerOptions {
 
 type FocusMode = "off" | "spotlight" | "band" | "ruler";
 type FocusChangeSource = "dock" | "panel" | "restore";
+type ReadingTrackId = "reading-mode" | "reading-room";
 
 type ReaderPrefs = {
   focusMode?: FocusMode;
   generousSpacing?: boolean;
   showImages?: boolean;
   audioMuted?: boolean;
+  audioTrackId?: ReadingTrackId;
 };
 
 const PREFS_KEY = "gg.om.prefs";
 const SITE_SOUND_PREF_KEY = "gaze-glass.sound.v1";
 const FOCUS_MODES = new Set<FocusMode>(["off", "spotlight", "band", "ruler"]);
+const DEFAULT_READING_TRACK_ID: ReadingTrackId = "reading-mode";
+const READING_TRACKS: Array<{
+  id: ReadingTrackId;
+  label: string;
+  src: string;
+  gainDb: number;
+}> = [
+  {
+    id: "reading-mode",
+    label: "Reading Mode",
+    src: "/audio/focus/sacred-glass-reading-mode.mp3",
+    gainDb: -8,
+  },
+  {
+    id: "reading-room",
+    label: "Reading Room",
+    src: "/audio/focus/sacred-glass-reading-room.mp3",
+    gainDb: -8,
+  },
+];
 
 export class ObservationModeController {
   private state: MachineState = "idle";
@@ -56,6 +78,7 @@ export class ObservationModeController {
   private atmosphereOn = false;
   private narrationOn = false;
   private audioMuted = false;
+  private atmosphereTrackId: ReadingTrackId = DEFAULT_READING_TRACK_ID;
   private activeNarrationOid: string | null = null;
   private scrollLock:
     | {
@@ -350,6 +373,13 @@ export class ObservationModeController {
         <p class="om-panel-kicker">${COPY.sound}</p>
         <h2>${COPY.sound}</h2>
         <p>${this.getSoundPanelDescription()}</p>
+        <p class="om-panel-field-label">${COPY.focusTrack}</p>
+        <div class="om-panel-actions om-audio-track-options" role="radiogroup" aria-label="${COPY.focusTrackGroupAria}">
+          ${READING_TRACKS.map(
+            (track) =>
+              `<button type="button" role="radio" data-audio-track="${track.id}" aria-checked="${track.id === this.atmosphereTrackId}" aria-label="${track.label} focus track">${track.label}</button>`,
+          ).join("")}
+        </div>
         <div class="om-panel-actions">
           <button type="button" data-audio-action="atmosphere" aria-label="${COPY.atmosphereAria}" aria-pressed="${this.atmosphereOn}">${COPY.atmosphere}</button>
           <button type="button" data-audio-action="narration" aria-label="${narrationAvailable ? COPY.narrationAria : COPY.narrationUnavailableAria}" aria-disabled="${!narrationAvailable}" aria-pressed="${this.narrationOn}">${COPY.narration}</button>
@@ -398,6 +428,9 @@ export class ObservationModeController {
     panel.querySelector<HTMLButtonElement>(".om-panel-close")?.addEventListener("click", () => this.closePanel());
     panel.querySelectorAll<HTMLButtonElement>("[data-audio-action]").forEach((button) => {
       button.addEventListener("click", () => this.handleAudioAction(button.dataset.audioAction));
+    });
+    panel.querySelectorAll<HTMLButtonElement>("[data-audio-track]").forEach((button) => {
+      button.addEventListener("click", () => this.selectAtmosphereTrack(button.dataset.audioTrack));
     });
     panel.querySelectorAll<HTMLButtonElement>("[data-theme]").forEach((button) => {
       button.addEventListener("click", () => {
@@ -488,11 +521,13 @@ export class ObservationModeController {
       this.generousSpacing = Boolean(prefs.generousSpacing);
       this.showImages = Boolean(prefs.showImages);
       this.audioMuted = Boolean(prefs.audioMuted);
+      this.atmosphereTrackId = this.parseAtmosphereTrackId(prefs.audioTrackId);
     } catch {
       this.focusMode = "off";
       this.generousSpacing = false;
       this.showImages = false;
       this.audioMuted = false;
+      this.atmosphereTrackId = DEFAULT_READING_TRACK_ID;
     }
   }
 
@@ -505,6 +540,7 @@ export class ObservationModeController {
           generousSpacing: this.generousSpacing,
           showImages: this.showImages,
           audioMuted: this.audioMuted,
+          audioTrackId: this.atmosphereTrackId,
         } satisfies ReaderPrefs),
       );
     } catch {
@@ -517,6 +553,7 @@ export class ObservationModeController {
     this.root.dataset.spacingMode = this.generousSpacing ? "on" : "off";
     this.root.dataset.imagesMode = this.showImages ? "on" : "off";
     this.root.dataset.audioMode = this.audioMuted ? "muted" : "on";
+    this.root.dataset.audioTrackId = this.atmosphereTrackId;
     this.applyLanternClasses();
   }
 
@@ -578,6 +615,10 @@ export class ObservationModeController {
     const muteButton = this.root.querySelector<HTMLButtonElement>("[data-audio-action='mute']");
 
     atmosphereButton?.setAttribute("aria-pressed", String(this.atmosphereOn));
+    atmosphereButton?.setAttribute(
+      "aria-label",
+      this.atmosphereOn ? COPY.atmosphereStopAria : `${COPY.atmosphereAria}: ${this.getAtmosphereTrack().label}`,
+    );
 
     if (narrationButton) {
       narrationButton.setAttribute("aria-disabled", String(!narrationAvailable));
@@ -589,6 +630,13 @@ export class ObservationModeController {
     }
 
     muteButton?.setAttribute("aria-pressed", String(this.audioMuted));
+
+    this.root.querySelectorAll<HTMLButtonElement>("[data-audio-track]").forEach((button) => {
+      button.setAttribute(
+        "aria-checked",
+        String(this.parseAtmosphereTrackId(button.dataset.audioTrack) === this.atmosphereTrackId),
+      );
+    });
   }
 
   private handleAudioAction(action: string | undefined): void {
@@ -613,6 +661,37 @@ export class ObservationModeController {
     }
 
     return COPY.soundReadyNoNarration;
+  }
+
+  private parseAtmosphereTrackId(value: string | undefined): ReadingTrackId {
+    return READING_TRACKS.some((track) => track.id === value) ? (value as ReadingTrackId) : DEFAULT_READING_TRACK_ID;
+  }
+
+  private getAtmosphereTrack() {
+    return READING_TRACKS.find((track) => track.id === this.atmosphereTrackId) ?? READING_TRACKS[0];
+  }
+
+  private selectAtmosphereTrack(value: string | undefined): void {
+    const nextTrackId = this.parseAtmosphereTrackId(value);
+    const changed = nextTrackId !== this.atmosphereTrackId;
+    this.atmosphereTrackId = nextTrackId;
+    this.applyPrefsToRoot();
+    this.savePrefs();
+
+    const track = this.getAtmosphereTrack();
+
+    if (changed && this.atmosphereOn) {
+      this.stopAtmosphere();
+      if (this.startAtmosphere()) {
+        this.playInterfaceSound("success");
+        this.showToast(`${track.label} playing.`);
+      }
+    } else {
+      this.playInterfaceSound("select");
+      this.showToast(`${track.label} selected.`);
+    }
+
+    this.updateSoundControls();
   }
 
   private hasNarration(): boolean {
@@ -728,7 +807,7 @@ export class ObservationModeController {
 
     if (this.startAtmosphere()) {
       this.playInterfaceSound("success");
-      this.showToast(this.manifest?.ambientTrack ? COPY.atmosphereOnToast : COPY.generatedAtmosphereToast);
+      this.showToast(`${this.getAtmosphereTrack().label} playing.`);
     } else {
       this.playInterfaceSound("error");
       this.showToast(COPY.soundUnavailableToast);
@@ -743,6 +822,19 @@ export class ObservationModeController {
 
     this.stopAtmosphere();
     this.atmosphereOn = true;
+
+    const readingTrack = this.getAtmosphereTrack();
+    if (readingTrack) {
+      this.atmosphereAudio = new Audio(readingTrack.src);
+      this.atmosphereAudio.loop = true;
+      this.atmosphereAudio.volume = this.gainDbToVolume(readingTrack.gainDb);
+      void this.atmosphereAudio.play().catch(() => {
+        this.atmosphereOn = false;
+        this.updateSoundControls();
+        this.showToast(COPY.soundUnavailableToast);
+      });
+      return true;
+    }
 
     if (this.manifest?.ambientTrack?.src) {
       this.atmosphereAudio = new Audio(this.manifest.ambientTrack.src);

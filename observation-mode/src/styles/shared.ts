@@ -473,10 +473,24 @@ export const COMPONENT_STYLES = `
   line-height: 1.55;
 }
 
+.om-panel-field-label {
+  margin: 0 0 0.45rem;
+  color: var(--om-accent);
+  font-family: system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .om-panel-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+}
+
+.om-audio-track-options {
+  margin-bottom: 0.75rem;
 }
 
 .om-panel-field {
