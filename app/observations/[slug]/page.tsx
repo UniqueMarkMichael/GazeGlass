@@ -5,6 +5,7 @@ import { GlassMenu } from "../../components/GlassMenu";
 import { JsonLd } from "../../components/JsonLd";
 import { ObservationModeBoot } from "../../components/ObservationModeBoot";
 import {
+  formatObservationReadTime,
   getNextObservation,
   getObservation,
   getObservationHref,
@@ -157,7 +158,7 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
               <h1>{observation.title}</h1>
               <p>{observation.description}</p>
               <div className="story-actions" aria-label="Story actions">
-                <span>{observation.readTime}</span>
+                <span>{formatObservationReadTime(observation)}</span>
                 <span>{observation.magnitudeLabel}</span>
                 <CopyLinkButton />
               </div>
@@ -171,6 +172,7 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
 
             <observation-mode
               manifest-src={`/observations/${observation.slug}/manifest.json`}
+              reading-time-min={observation.readingTimeMin}
               data-flag-second-gaze="off"
               data-flag-change-lens="off"
             >
@@ -199,7 +201,7 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
               <a href={getObservationHref(item)} key={item.slug}>
                 <span>{item.number}</span>
                 <strong>{item.title}</strong>
-                <em>{item.readTime}</em>
+                <em>{formatObservationReadTime(item)}</em>
               </a>
             ))}
             <a className="text-link" href={`/observations/${observation.region}`}>

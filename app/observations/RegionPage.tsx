@@ -1,7 +1,14 @@
 import type { CSSProperties } from "react";
 import { GlassMenu } from "../components/GlassMenu";
 import { JsonLd } from "../components/JsonLd";
-import { getObservationHref, getRegionObservations, magnitudeMeta, regionMeta, type ObservationRegion } from "./data";
+import {
+  formatObservationReadTime,
+  getObservationHref,
+  getRegionObservations,
+  magnitudeMeta,
+  regionMeta,
+  type ObservationRegion,
+} from "./data";
 
 type RegionPageProps = {
   region: ObservationRegion;
@@ -66,7 +73,7 @@ export function RegionPage({ region }: RegionPageProps) {
             <strong>{record.title}</strong>
             <em>{record.association}</em>
             <small>
-              {record.readTime} / {magnitudeMeta[record.magnitude].label}
+              {formatObservationReadTime(record)} / {magnitudeMeta[record.magnitude].label}
             </small>
           </a>
         ))}

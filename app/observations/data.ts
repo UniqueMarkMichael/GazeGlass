@@ -18,7 +18,7 @@ export type Observation = {
   association: string;
   magnitude: ObservationMagnitude;
   magnitudeLabel: string;
-  readTime: string;
+  readingTimeMin: number;
   dateObserved: string;
   image?: string;
   imageAlt?: string;
@@ -105,7 +105,7 @@ export const observations: Observation[] = [
     association: "The God of Wisdom",
     magnitude: "story",
     magnitudeLabel: "Character Story",
-    readTime: "7 min read",
+    readingTimeMin: 7,
     dateObserved: "2026-06-13",
     image: "/mortals/patricia/wisdom-appears.png",
     imageAlt:
@@ -157,7 +157,7 @@ export const observations: Observation[] = [
     association: "The God of Justice",
     magnitude: "story",
     magnitudeLabel: "Character Story",
-    readTime: "4 min read",
+    readingTimeMin: 4,
     dateObserved: "2026-06-24",
     image: "/mortals/marcella/portrait.webp",
     imageAlt: "Marcella reflected in a sacred golden mirror after being witnessed by Justice",
@@ -198,7 +198,7 @@ export const observations: Observation[] = [
     association: "The God of Love",
     magnitude: "story",
     magnitudeLabel: "Character Story",
-    readTime: "4 min read",
+    readingTimeMin: 4,
     dateObserved: "2026-06-24",
     image: "/mortals/malika/portrait.png",
     imageAlt: "Malika reflected in a blue sacred mirror after being blessed by Love",
@@ -236,7 +236,7 @@ export const observations: Observation[] = [
     association: "The God of Fortune",
     magnitude: "story",
     magnitudeLabel: "Character Story",
-    readTime: "4 min read",
+    readingTimeMin: 4,
     dateObserved: "2026-06-24",
     image: "/mortals/takeshi/portrait.png",
     imageAlt: "Takeshi reflected in a red triangular sacred glass after being blessed by Fortune",
@@ -274,7 +274,7 @@ export const observations: Observation[] = [
     association: "The God of War",
     magnitude: "story",
     magnitudeLabel: "Character Story",
-    readTime: "5 min read",
+    readingTimeMin: 5,
     dateObserved: "2026-06-24",
     image: "/mortals/walter/portrait.png",
     imageAlt: "Walter reflected in a black and red sacred shield-glass after being blessed by War",
@@ -303,6 +303,10 @@ export const observations: Observation[] = [
 
 export const featuredObservation = observations[0];
 export const startHereObservation = observations.find((observation) => observation.startHere) ?? observations[0];
+
+export function formatObservationReadTime(observation: Pick<Observation, "readingTimeMin">) {
+  return `${observation.readingTimeMin} min read`;
+}
 
 export const godFilterLabels: Record<GodId, string> = {
   wisdom: "Wisdom",

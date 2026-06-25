@@ -53,7 +53,7 @@ export async function GET(_request: Request, { params }: ManifestRouteProps) {
     magnitude: "Story",
     deity,
     recordedBy: "The Seer",
-    readingTimeMin: Number.parseInt(observation.readTime, 10) || 5,
+    readingTimeMin: observation.readingTimeMin,
     wordCount,
     contentNote: null,
     body,

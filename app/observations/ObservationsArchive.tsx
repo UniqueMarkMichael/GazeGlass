@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import {
+  formatObservationReadTime,
   getObservationHref,
   godFilterLabels,
   observations,
@@ -124,7 +125,7 @@ export function ObservationsArchive() {
                   {observation.association} / {regionMeta[observation.region].title}
                 </em>
               </span>
-              <span>{observation.readTime}</span>
+              <span>{formatObservationReadTime(observation)}</span>
               <span>{observation.themeTags.slice(0, 2).join(" · ")}</span>
               <span aria-hidden="true">View</span>
             </a>

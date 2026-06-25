@@ -77,6 +77,7 @@ export class ObservationModeController {
 
   setManifest(manifest: ObservationManifest): void {
     this.manifest = manifest;
+    this.renderEntryButton();
   }
 
   on<T extends OMEventName>(name: T, cb: (event: OMEvent<T>) => void): () => void {
@@ -142,13 +143,30 @@ export class ObservationModeController {
   }
 
   private renderEntryButton(): void {
-    if (this.entryMount.querySelector(".om-entry")) return;
+    const label = `Immersive reading · ${this.getReadingTime()} min`;
+    const existingButton = this.entryMount.querySelector<HTMLButtonElement>(".om-entry");
+    if (existingButton) {
+      const labelNode = existingButton.querySelector<HTMLElement>("[data-om-entry-meta]");
+      if (labelNode) labelNode.textContent = label;
+      return;
+    }
 
     const button = document.createElement("button");
     button.className = "om-entry";
     button.type = "button";
     button.setAttribute("aria-label", COPY.openAria);
-    button.innerHTML = `<strong>${COPY.open}</strong><span>Immersive reading · ${this.getReadingTime()} min</span>`;
+    button.innerHTML = `
+      <span class="om-entry-glyph" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d="M3.4 12s3.1-5.1 8.6-5.1 8.6 5.1 8.6 5.1-3.1 5.1-8.6 5.1S3.4 12 3.4 12Z" />
+          <circle cx="12" cy="12" r="2.45" />
+        </svg>
+      </span>
+      <span class="om-entry-copy">
+        <strong>${COPY.open}</strong>
+        <span data-om-entry-meta>${label}</span>
+      </span>
+    `;
     button.addEventListener("click", () => void this.open());
     this.entryMount.append(button);
   }
@@ -330,7 +348,12 @@ export class ObservationModeController {
   }
 
   private getReadingTime(): number {
-    return this.manifest?.readingTimeMin ?? 5;
+    if (this.manifest?.readingTimeMin) {
+      return this.manifest.readingTimeMin;
+    }
+
+    const attributeValue = Number.parseFloat(this.options.host.getAttribute("reading-time-min") ?? "");
+    return Number.isFinite(attributeValue) && attributeValue > 0 ? attributeValue : 5;
   }
 
   private getObservationNumber(): string {

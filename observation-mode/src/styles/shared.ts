@@ -1,5 +1,11 @@
 export const COMPONENT_STYLES = `
 :host {
+  --om-entry-bg: #171524;
+  --om-entry-page-bg: #0b0a18;
+  --om-entry-text: #f7f0df;
+  --om-entry-subtext: #ded4bd;
+  --om-entry-border: #d6b64b;
+  --om-entry-focus: #f0d36b;
   display: block;
   position: relative;
   z-index: 0;
@@ -10,23 +16,93 @@ export const COMPONENT_STYLES = `
 }
 
 .om-entry {
-  display: inline-flex;
-  flex-direction: column;
-  gap: 0.2rem;
+  display: inline-grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.72rem;
   min-height: 44px;
   margin: 1rem 0;
-  padding: 0.72rem 1rem;
-  border: 1px solid #c9a227;
+  padding: 0.78rem 1.08rem 0.82rem 0.82rem;
+  border: 1px solid var(--om-entry-border);
   border-radius: 999px;
-  background: transparent;
-  color: inherit;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 226, 143, 0.2), transparent 55%),
+    linear-gradient(180deg, rgba(201, 162, 39, 0.18), rgba(201, 162, 39, 0.08)),
+    var(--om-entry-bg);
+  color: var(--om-entry-text);
   cursor: pointer;
-  font: inherit;
+  font-family: system-ui, sans-serif;
+  font-size: 1rem;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 166, 0.08),
+    0 12px 30px rgba(3, 2, 11, 0.24);
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
 }
 
-.om-entry span {
+.om-entry:hover {
+  border-color: #efd56e;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 230, 154, 0.28), transparent 58%),
+    linear-gradient(180deg, rgba(201, 162, 39, 0.25), rgba(201, 162, 39, 0.11)),
+    var(--om-entry-bg);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 166, 0.14),
+    0 16px 38px rgba(3, 2, 11, 0.3);
+  transform: translateY(-1px);
+}
+
+.om-entry:active {
+  transform: translateY(0);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 166, 0.1),
+    0 8px 22px rgba(3, 2, 11, 0.24);
+}
+
+.om-entry:focus-visible {
+  outline: 3px solid var(--om-entry-focus);
+  outline-offset: 4px;
+}
+
+.om-entry-glyph {
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--om-entry-border), transparent 32%);
+  border-radius: 50%;
+  background: rgba(11, 10, 24, 0.64);
+  color: var(--om-entry-focus);
+  box-shadow: inset 0 0 18px rgba(201, 162, 39, 0.16);
+}
+
+.om-entry-glyph svg {
+  width: 1.22rem;
+  height: 1.22rem;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+}
+
+.om-entry-copy {
+  display: grid;
+  gap: 0.08rem;
+  min-width: 0;
+  text-align: left;
+}
+
+.om-entry strong {
+  font-weight: 720;
+  line-height: 1.1;
+}
+
+.om-entry-copy span {
+  color: var(--om-entry-subtext);
   font-size: 0.78rem;
-  opacity: 0.72;
+  line-height: 1.15;
 }
 
 .om-source {
@@ -136,7 +212,8 @@ export const COMPONENT_STYLES = `
   background: var(--om-bg-elev);
   color: var(--om-text);
   cursor: pointer;
-  font: inherit;
+  font-family: system-ui, sans-serif;
+  font-size: inherit;
 }
 
 .om-actions button:disabled,
