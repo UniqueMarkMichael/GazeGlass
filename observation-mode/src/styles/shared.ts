@@ -326,6 +326,11 @@ export const COMPONENT_STYLES = `
   opacity: 1;
 }
 
+.om-block.is-narrating {
+  background-color: color-mix(in srgb, var(--om-accent) 13%, transparent);
+  box-shadow: 0 0 0 0.42rem color-mix(in srgb, var(--om-accent) 10%, transparent);
+}
+
 .om-s.is-spoken {
   background: var(--om-selection);
   border-radius: 3px;
@@ -501,10 +506,19 @@ export const COMPONENT_STYLES = `
 }
 
 .om-panel-actions button[role="radio"][aria-checked="true"],
-.om-panel-actions button[data-spacing-toggle][aria-pressed="true"] {
+.om-panel-actions button[data-spacing-toggle][aria-pressed="true"],
+.om-panel-actions button[data-audio-action][aria-pressed="true"] {
   border-color: color-mix(in srgb, var(--om-accent), transparent 22%);
   background: color-mix(in srgb, var(--om-accent), var(--om-bg-elev) 78%);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--om-accent), transparent 58%);
+}
+
+.om-panel-actions button[aria-disabled="true"] {
+  opacity: 0.58;
+}
+
+.om-panel-actions button[aria-disabled="true"]:hover {
+  border-color: color-mix(in srgb, var(--om-accent), transparent 45%);
 }
 
 .om-toast {
