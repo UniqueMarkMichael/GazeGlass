@@ -188,7 +188,6 @@ export class ObservationModeController {
         <button type="button" data-panel="sound" aria-label="Sound and narration settings">${COPY.hear}</button>
         <button type="button" data-panel="focus" aria-label="Reading focus aids">${COPY.focus}</button>
         <button type="button" data-panel="display" aria-label="Text appearance settings">${COPY.display}</button>
-        <button type="button" data-action="preserve" aria-label="Save this Observation">${COPY.preserve}</button>
       </div>
     `;
 
@@ -202,11 +201,6 @@ export class ObservationModeController {
     }
 
     shell.querySelector<HTMLButtonElement>("[data-action='exit']")?.addEventListener("click", () => void this.exit());
-    shell.querySelector<HTMLButtonElement>("[data-action='preserve']")?.addEventListener("click", () => {
-      this.bus.emit("preserve", { kind: "record" });
-      this.showToast("Preserved.");
-      this.announce("Preserved.");
-    });
     shell.querySelectorAll<HTMLButtonElement>("[data-panel]").forEach((button) => {
       button.addEventListener("click", () => this.openPanel(button.dataset.panel as PanelId));
     });

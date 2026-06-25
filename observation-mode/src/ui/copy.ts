@@ -7,7 +7,6 @@ export const COPY = {
   hear: "Hear the Glass",
   focus: "Focus the Glass",
   display: "Shape the Text",
-  preserve: "Preserve",
   plateObservation: "Observation",
   recordedBy: "Recorded by the Seer",
   sealed: "The Seer has sealed this record.",
