@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { GlassMemory } from "./components/GlassMemory";
+import { GlassSoundToggle } from "./components/GlassSoundToggle";
 import { JsonLd } from "./components/JsonLd";
 import "./globals.css";
 
@@ -128,6 +129,7 @@ export default function RootLayout({
         </Script>
         {children}
         <GlassMemory />
+        <GlassSoundToggle />
       </body>
     </html>
   );

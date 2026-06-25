@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CopyLinkButton } from "../../components/CopyLinkButton";
 import { GlassMenu } from "../../components/GlassMenu";
 import { JsonLd } from "../../components/JsonLd";
 import { ObservationModeBoot } from "../../components/ObservationModeBoot";
+import { ObservationStoryReader } from "../ObservationStoryReader";
 import {
   formatObservationReadTime,
   getNextObservation,
@@ -81,6 +81,7 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
   const related = getRelatedObservations(observation);
   const previousObservation = getPreviousObservation(observation.slug);
   const nextObservation = getNextObservation(observation.slug);
+  const storyImages = observation.storyImages ?? [];
   const storyData = {
     "@context": "https://schema.org",
     "@type": "ShortStory",
@@ -157,31 +158,19 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
               <p className="eyebrow">Observation {observation.number}</p>
               <h1>{observation.title}</h1>
               <p>{observation.description}</p>
-              <div className="story-actions" aria-label="Story actions">
-                <span>{formatObservationReadTime(observation)}</span>
-                <span>{observation.magnitudeLabel}</span>
-                <CopyLinkButton />
-              </div>
             </header>
 
-            {observation.image ? (
-              <figure className="observation-figure">
-                <img src={observation.image} alt={observation.imageAlt} />
-              </figure>
-            ) : null}
-
-            <observation-mode
-              manifest-src={`/observations/${observation.slug}/manifest.json`}
-              reading-time-min={observation.readingTimeMin}
-              data-flag-second-gaze="off"
-              data-flag-change-lens="off"
-            >
-              <article className="story-body om-source">
-                {observation.story.map((paragraph, index) => (
-                  <p key={`${observation.slug}-${index}`}>{paragraph}</p>
-                ))}
-              </article>
-            </observation-mode>
+            <ObservationStoryReader
+              slug={observation.slug}
+              story={observation.story}
+              storyImages={storyImages}
+              heroImage={storyImages.length ? undefined : observation.image}
+              heroImageAlt={observation.imageAlt}
+              readTimeLabel={formatObservationReadTime(observation)}
+              magnitudeLabel={observation.magnitudeLabel}
+              readingTimeMin={observation.readingTimeMin}
+              manifestSrc={`/observations/${observation.slug}/manifest.json`}
+            />
 
             <nav className="observation-path" aria-label="Observation reading path">
               <a href={previousObservation ? getObservationHref(previousObservation) : "/observations"}>

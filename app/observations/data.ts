@@ -3,6 +3,15 @@ export type ObservationMagnitude = "observation" | "story" | "novella" | "novel"
 export type GodId = "wisdom" | "justice" | "love" | "fortune" | "war";
 export type SpiritId = "saroka" | "marok";
 
+export type ObservationStoryImage = {
+  id: string;
+  src: string;
+  alt: string;
+  caption: string;
+  afterParagraph: number;
+  wide?: boolean;
+};
+
 export type Observation = {
   number: string;
   title: string;
@@ -22,6 +31,7 @@ export type Observation = {
   dateObserved: string;
   image?: string;
   imageAlt?: string;
+  storyImages?: ObservationStoryImage[];
   seoTitle: string;
   seoDescription: string;
   excerpt: string;
@@ -110,6 +120,58 @@ export const observations: Observation[] = [
     image: "/mortals/patricia/wisdom-appears.png",
     imageAlt:
       "Patricia seated on a city street as the indigo God of Wisdom appears above her in gold celestial light",
+    storyImages: [
+      {
+        id: "office-writing",
+        src: "/mortals/patricia/office-writing.png",
+        alt: "Patricia writing at a desk in a high office overlooking the city at night",
+        caption: "Before the street, Patricia had a corner office and a question wealth could not answer.",
+        afterParagraph: 3,
+      },
+      {
+        id: "wisdom-city",
+        src: "/mortals/patricia/wisdom-city.png",
+        alt: "Patricia in a dark office holding a crystal before the city skyline",
+        caption: "The towers kept their glitter, but the meaning underneath them had gone quiet.",
+        afterParagraph: 4,
+        wide: true,
+      },
+      {
+        id: "office-crystal",
+        src: "/mortals/patricia/office-crystal.png",
+        alt: "Patricia meditating on a city sidewalk while commuters pass by",
+        caption: "She sat beneath the same towers, waiting for the wall inside her to open.",
+        afterParagraph: 6,
+      },
+      {
+        id: "judgment-vision",
+        src: "/mortals/patricia/judgment-vision.png",
+        alt: "The indigo God of Wisdom towering above Patricia in a city street",
+        caption: "Wisdom arrived not to answer the question, but to dissolve it.",
+        afterParagraph: 8,
+      },
+      {
+        id: "street-meditation",
+        src: "/mortals/patricia/street-meditation.png",
+        alt: "Patricia meditating beneath a cosmic vision of Wisdom weighing humanity",
+        caption: "For one breath, the world was no longer outside her.",
+        afterParagraph: 15,
+      },
+      {
+        id: "patricia-walking",
+        src: "/mortals/patricia/patricia-walking.png",
+        alt: "Patricia surrounded by golden constellations as Wisdom watches over the city",
+        caption: "The going was already folded into the seeing.",
+        afterParagraph: 19,
+      },
+      {
+        id: "wisdom-appears",
+        src: "/mortals/patricia/wisdom-appears.png",
+        alt: "Patricia walking through a luminous city after Wisdom's appearance",
+        caption: "She rose with nothing left between herself and everything.",
+        afterParagraph: 22,
+      },
+    ],
     seoTitle: "Patricia, Awakened by Wisdom",
     seoDescription:
       "Patricia, Awakened by Wisdom is a Gaze Glass Observation about a former financier, the God of Wisdom, enlightenment, and the coming Judgment tied to Rashid Shah.",

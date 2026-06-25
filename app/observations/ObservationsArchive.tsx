@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { playGlassSound } from "../components/glassSound";
 import {
   formatObservationReadTime,
   getObservationHref,
@@ -67,7 +68,13 @@ export function ObservationsArchive() {
         </div>
         <label>
           Sort
-          <select value={sort} onChange={(event) => setSort(event.target.value as SortKey)}>
+          <select
+            value={sort}
+            onChange={(event) => {
+              setSort(event.target.value as SortKey);
+              playGlassSound("select");
+            }}
+          >
             <option value="order">Reading order</option>
             <option value="newest">Newest</option>
           </select>
@@ -80,7 +87,10 @@ export function ObservationsArchive() {
             className={god === filter.value ? "is-active" : ""}
             key={filter.value}
             type="button"
-            onClick={() => setGod(filter.value)}
+            onClick={() => {
+              setGod(filter.value);
+              playGlassSound("select");
+            }}
           >
             {filter.label}
           </button>
@@ -93,7 +103,10 @@ export function ObservationsArchive() {
             className={spirit === filter.value ? "is-active" : ""}
             key={filter.value}
             type="button"
-            onClick={() => setSpirit(filter.value)}
+            onClick={() => {
+              setSpirit(filter.value);
+              playGlassSound("select");
+            }}
           >
             {filter.label}
           </button>
@@ -106,7 +119,10 @@ export function ObservationsArchive() {
             className={theme === filter.value ? "is-active" : ""}
             key={filter.value}
             type="button"
-            onClick={() => setTheme(filter.value)}
+            onClick={() => {
+              setTheme(filter.value);
+              playGlassSound("select");
+            }}
           >
             {filter.label}
           </button>

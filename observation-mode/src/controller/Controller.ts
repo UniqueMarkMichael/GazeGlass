@@ -19,6 +19,7 @@ type FocusChangeSource = "dock" | "panel" | "restore";
 type ReaderPrefs = {
   focusMode?: FocusMode;
   generousSpacing?: boolean;
+  showImages?: boolean;
 };
 
 const PREFS_KEY = "gg.om.prefs";
@@ -39,6 +40,7 @@ export class ObservationModeController {
   private previousActiveElement: Element | null = null;
   private focusMode: FocusMode = "off";
   private generousSpacing = false;
+  private showImages = false;
   private activeBlockId: string | null = null;
   private activeBlockFrame: number | null = null;
   private releaseActiveBlockTracker: (() => void) | null = null;
@@ -266,6 +268,11 @@ export class ObservationModeController {
             </svg>
           </button>
         </span>
+        ${
+          this.hasImageBlocks()
+            ? `<button type="button" data-action="images" aria-label="${COPY.imagesAriaOff}" aria-pressed="false">${COPY.images}</button>`
+            : ""
+        }
         <button type="button" data-panel="display" aria-label="${COPY.textAria}" aria-haspopup="dialog" aria-expanded="false">${COPY.text}</button>
       </div>
     `;
@@ -282,6 +289,7 @@ export class ObservationModeController {
 
     shell.querySelector<HTMLButtonElement>("[data-action='exit']")?.addEventListener("click", () => void this.exit());
     shell.querySelector<HTMLButtonElement>("[data-action='lantern']")?.addEventListener("click", () => this.toggleLantern());
+    shell.querySelector<HTMLButtonElement>("[data-action='images']")?.addEventListener("click", () => this.toggleImages());
     shell.querySelectorAll<HTMLButtonElement>("[data-panel]").forEach((button) => {
       button.addEventListener("click", () => this.openPanel(button.dataset.panel as PanelId));
     });
@@ -297,6 +305,7 @@ export class ObservationModeController {
     this.root.append(shell);
     this.applyPrefsToRoot();
     this.updateFocusControls();
+    this.updateImageControls();
     this.startActiveBlockTracker();
     this.readingArticle?.focus();
   }
@@ -399,6 +408,15 @@ export class ObservationModeController {
     this.setFocusMode(this.focusMode === "spotlight" ? "off" : "spotlight", "dock");
   }
 
+  private toggleImages(): void {
+    this.showImages = !this.showImages;
+    this.applyPrefsToRoot();
+    this.updateImageControls();
+    this.savePrefs();
+    this.showToast(this.showImages ? COPY.imagesShownToast : COPY.imagesHiddenToast);
+    this.scheduleActiveBlockUpdate();
+  }
+
   private setFocusMode(mode: FocusMode, source: FocusChangeSource): void {
     const previousMode = this.focusMode;
     this.focusMode = mode;
@@ -439,9 +457,11 @@ export class ObservationModeController {
       const prefs = JSON.parse(window.localStorage.getItem(PREFS_KEY) ?? "{}") as ReaderPrefs;
       this.focusMode = this.parseFocusMode(prefs.focusMode);
       this.generousSpacing = Boolean(prefs.generousSpacing);
+      this.showImages = Boolean(prefs.showImages);
     } catch {
       this.focusMode = "off";
       this.generousSpacing = false;
+      this.showImages = false;
     }
   }
 
@@ -452,6 +472,7 @@ export class ObservationModeController {
         JSON.stringify({
           focusMode: this.focusMode,
           generousSpacing: this.generousSpacing,
+          showImages: this.showImages,
         } satisfies ReaderPrefs),
       );
     } catch {
@@ -462,7 +483,25 @@ export class ObservationModeController {
   private applyPrefsToRoot(): void {
     this.root.dataset.focusMode = this.focusMode;
     this.root.dataset.spacingMode = this.generousSpacing ? "on" : "off";
+    this.root.dataset.imagesMode = this.showImages ? "on" : "off";
     this.applyLanternClasses();
+  }
+
+  private hasImageBlocks(): boolean {
+    return Boolean(
+      this.manifest?.body?.some((block) => block.type === "image") ||
+        this.sourceArticle?.querySelector("figure, img"),
+    );
+  }
+
+  private updateImageControls(): void {
+    const imagesButton = this.root.querySelector<HTMLButtonElement>("[data-action='images']");
+    imagesButton?.setAttribute("aria-pressed", String(this.showImages));
+    imagesButton?.setAttribute("aria-label", this.showImages ? COPY.imagesAriaOn : COPY.imagesAriaOff);
+
+    this.root.querySelectorAll<HTMLElement>(".om-image-block").forEach((imageBlock) => {
+      imageBlock.hidden = !this.showImages;
+    });
   }
 
   private updateFocusControls(): void {

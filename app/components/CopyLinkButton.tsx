@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { playGlassSound } from "./glassSound";
 
 export function CopyLinkButton() {
   const [copied, setCopied] = useState(false);
@@ -12,6 +13,7 @@ export function CopyLinkButton() {
 
     await navigator.clipboard.writeText(window.location.href);
     setCopied(true);
+    playGlassSound("copy");
     window.setTimeout(() => setCopied(false), 1800);
   }
 

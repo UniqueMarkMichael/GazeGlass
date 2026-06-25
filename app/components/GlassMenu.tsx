@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { GLASS_MEMORY_KEY, type GlassMemoryEntry } from "./GlassMemory";
+import { playGlassSound } from "./glassSound";
 
 const menuItems = [
   { label: "Home", href: "/#home", detail: "Begin where the Glass first opens.", action: "Open Home" },
@@ -121,6 +122,7 @@ export function GlassMenu() {
   function travel(href: string) {
     const destination = new URL(href, window.location.origin);
     setIsPassing(true);
+    playGlassSound("travel");
 
     window.setTimeout(() => {
       if (destination.hash && isSamePath(href)) {
@@ -137,6 +139,7 @@ export function GlassMenu() {
 
   function closeMenu() {
     setIsOpen(false);
+    playGlassSound("close");
   }
 
   return (
@@ -147,7 +150,11 @@ export function GlassMenu() {
         aria-expanded={isOpen}
         aria-controls="glass-menu"
         aria-label={isOpen ? "Close navigation" : "Open navigation"}
-        onClick={() => setIsOpen((value) => !value)}
+        onClick={() => {
+          const nextValue = !isOpen;
+          setIsOpen(nextValue);
+          playGlassSound(nextValue ? "open" : "close");
+        }}
       >
         <span className="trigger-orbit" aria-hidden="true" />
         <span className="trigger-eye" aria-hidden="true" />

@@ -54,6 +54,29 @@ export function renderBlocks(blocks: Block[], target: HTMLElement, glossary: Glo
   target.replaceChildren();
 
   for (const block of blocks) {
+    if (block.type === "image") {
+      const element = document.createElement("figure");
+      element.id = block.id;
+      element.className = `om-block om-image-block${block.wide ? " om-image-block-wide" : ""}`;
+      element.dataset.blockId = block.id;
+
+      const image = document.createElement("img");
+      image.src = block.src;
+      image.alt = block.alt;
+      image.loading = "lazy";
+      element.append(image);
+
+      if (block.caption) {
+        const caption = document.createElement("figcaption");
+        caption.textContent = block.caption;
+        element.append(caption);
+      }
+
+      target.append(element);
+      models.push({ id: block.id, type: block.type, element, sentences: [] });
+      continue;
+    }
+
     if (block.type === "hr") {
       const element = document.createElement("hr");
       element.id = block.id;

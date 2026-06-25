@@ -118,6 +118,50 @@ export const COMPONENT_STYLES = `
     box-shadow var(--om-lantern-fade) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.om-image-block {
+  position: relative;
+  margin: clamp(2rem, 7vw, 4.8rem) 0;
+  border: 1px solid color-mix(in srgb, var(--om-accent), transparent 68%);
+  background: var(--om-bg-elev);
+  box-shadow: 0 1.4rem 4rem rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+}
+
+.om-image-block img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.om-image-block-wide img {
+  aspect-ratio: 3 / 4;
+}
+
+.om-image-block figcaption {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.9rem;
+  left: 1rem;
+  z-index: 1;
+  color: color-mix(in srgb, var(--om-text), transparent 18%);
+  font-family: Georgia, serif;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-style: italic;
+  line-height: 1.35;
+  text-shadow: 0 0.15rem 1rem rgba(0, 0, 0, 0.8);
+}
+
+.om-image-block::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent 46%, rgba(0, 0, 0, 0.5)),
+    radial-gradient(circle at 50% 28%, transparent 0 42%, rgba(0, 0, 0, 0.18) 74%);
+  pointer-events: none;
+}
+
 .om-root {
   --om-bg: #12131c;
   --om-bg-elev: #1b1c26;
@@ -562,7 +606,7 @@ export const COMPONENT_STYLES = `
     bottom: 0;
     left: 0;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.45rem;
     padding:
       0.7rem

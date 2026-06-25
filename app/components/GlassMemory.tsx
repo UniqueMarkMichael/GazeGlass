@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { playGlassSound } from "./glassSound";
 
 export const GLASS_MEMORY_KEY = "gaze-glass.memory.v1";
 
@@ -283,6 +284,7 @@ function useGlassMemory() {
     window.localStorage.removeItem(GLASS_MEMORY_KEY);
     window.dispatchEvent(new CustomEvent("gaze-glass:memory-update", { detail: [] }));
     setEntries([]);
+    playGlassSound("close");
   }
 
   return { entries, isReady, clearMemory };
@@ -312,7 +314,11 @@ export function GlassMemory() {
         type="button"
         aria-expanded={isExpanded}
         aria-controls="glass-memory-panel"
-        onClick={() => setIsExpanded((current) => !current)}
+        onClick={() => {
+          const nextValue = !isExpanded;
+          setIsExpanded(nextValue);
+          playGlassSound(nextValue ? "open" : "close");
+        }}
       >
         <span className="glass-memory-toggle-orb" aria-hidden="true" />
         <span className="glass-memory-toggle-copy">
@@ -334,7 +340,10 @@ export function GlassMemory() {
             className="glass-memory-close"
             type="button"
             aria-label="Close the Glass Remembers panel"
-            onClick={() => setIsExpanded(false)}
+            onClick={() => {
+              setIsExpanded(false);
+              playGlassSound("close");
+            }}
           >
             Close
           </button>

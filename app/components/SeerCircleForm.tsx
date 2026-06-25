@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { playGlassSound } from "./glassSound";
 
 type FormState = "idle" | "loading" | "success" | "invalid" | "duplicate" | "error" | "unconfigured";
 
@@ -18,16 +19,19 @@ export function SeerCircleForm() {
 
     if (!emailPattern.test(normalizedEmail)) {
       setFormState("invalid");
+      playGlassSound("error");
       return;
     }
 
     if (savedEmail === normalizedEmail) {
       setFormState("duplicate");
+      playGlassSound("select");
       return;
     }
 
     setFormState("loading");
     setErrorMessage("");
+    playGlassSound("travel");
 
     try {
       const response = await fetch("/api/subscribe", {
@@ -44,20 +48,24 @@ export function SeerCircleForm() {
         setSavedEmail(normalizedEmail);
         setEmail("");
         setFormState("success");
+        playGlassSound("success");
         return;
       }
 
       if (response.status === 503) {
         setErrorMessage(result.message || "");
         setFormState("unconfigured");
+        playGlassSound("error");
         return;
       }
 
       setErrorMessage(result.message || "");
       setFormState("error");
+      playGlassSound("error");
     } catch {
       setErrorMessage("");
       setFormState("error");
+      playGlassSound("error");
     }
   }
 

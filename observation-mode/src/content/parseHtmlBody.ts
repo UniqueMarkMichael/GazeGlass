@@ -1,11 +1,12 @@
 import { segmentSentences } from "./segmentSentences";
 import type { BlockModel } from "./types";
 
-const BLOCK_SELECTOR = "p, h2, h3, blockquote, aside, hr";
+const BLOCK_SELECTOR = "p, h2, h3, blockquote, aside, figure, hr";
 
 function blockTypeFor(element: Element): BlockModel["type"] {
   const tagName = element.tagName.toLowerCase();
   if (tagName === "hr") return "hr";
+  if (tagName === "figure") return "image";
   if (tagName === "h2" || tagName === "h3") return "h";
   if (tagName === "blockquote") return "blockquote";
   if (tagName === "aside") return "fieldnote";
@@ -47,6 +48,11 @@ export function parseHtmlBody(article: HTMLElement): BlockModel[] {
 
     if (element.tagName.toLowerCase() === "hr") {
       return { id: blockId, type: "hr", element, sentences: [] };
+    }
+
+    if (element.tagName.toLowerCase() === "figure") {
+      element.classList.add("om-image-block");
+      return { id: blockId, type: "image", element, sentences: [] };
     }
 
     return wrapTextSentences(element, blockId);

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { ObservationStoryImage } from "../../data";
 import {
   getNextObservation,
   getObservation,
@@ -21,6 +22,17 @@ const deityById = {
   war: "War",
 } as const;
 
+function imageBlock(image: ObservationStoryImage) {
+  return {
+    type: "image" as const,
+    id: `img-${image.id}`,
+    src: image.src,
+    alt: image.alt,
+    caption: image.caption,
+    wide: image.wide,
+  };
+}
+
 export function generateStaticParams() {
   return observations.map((observation) => ({
     slug: observation.slug,
@@ -36,11 +48,19 @@ export async function GET(_request: Request, { params }: ManifestRouteProps) {
   }
 
   const nextObservation = getNextObservation(observation.slug);
-  const body = observation.story.map((paragraph, index) => ({
-    type: "p" as const,
-    id: `b${index}`,
-    text: paragraph,
-  }));
+  const imagesByParagraph = new Map<number, ObservationStoryImage[]>();
+  for (const image of observation.storyImages ?? []) {
+    const key = image.afterParagraph;
+    imagesByParagraph.set(key, [...(imagesByParagraph.get(key) ?? []), image]);
+  }
+  const body = observation.story.flatMap((paragraph, index) => [
+    {
+      type: "p" as const,
+      id: `b${index}`,
+      text: paragraph,
+    },
+    ...(imagesByParagraph.get(index + 1) ?? []).map(imageBlock),
+  ]);
   const wordCount = observation.story.join(" ").split(/\s+/).filter(Boolean).length;
   const deity = deityById[observation.godId];
 

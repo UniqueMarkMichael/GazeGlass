@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { playGlassSound } from "./glassSound";
 
 type Vision = {
   title: string;
@@ -71,6 +72,7 @@ export function ReceiveVision() {
     }
 
     setIsChoosing(true);
+    playGlassSound("select");
 
     window.setTimeout(() => {
       setVision((current) => {
@@ -80,6 +82,7 @@ export function ReceiveVision() {
 
         return availableVisions[Math.floor(Math.random() * availableVisions.length)];
       });
+      playGlassSound("reveal");
       setIsChoosing(false);
     }, 420);
   }

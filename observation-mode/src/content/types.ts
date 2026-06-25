@@ -30,6 +30,7 @@ export interface ObservationManifest {
 export type Block =
   | { type: "p"; id: string; text: InlineText }
   | { type: "h"; id: string; level: 2 | 3; text: InlineText }
+  | { type: "image"; id: string; src: string; alt: string; caption?: string; wide?: boolean }
   | { type: "hr"; id: string }
   | { type: "blockquote"; id: string; text: InlineText }
   | { type: "fieldnote"; id: string; speaker?: string; text: InlineText };
