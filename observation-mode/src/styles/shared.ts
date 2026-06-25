@@ -430,6 +430,32 @@ export const COMPONENT_STYLES = `
   gap: 0.5rem;
 }
 
+.om-panel-field {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+
+.om-panel-field > span {
+  color: var(--om-text-dim);
+  font-family: system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.om-stepper {
+  display: inline-flex;
+  gap: 0.5rem;
+}
+
+.om-stepper button {
+  width: 2.75rem;
+  min-width: 2.75rem;
+  padding-right: 0.65rem;
+  padding-left: 0.65rem;
+}
+
 .om-panel-actions button[role="radio"][aria-checked="true"],
 .om-panel-actions button[data-spacing-toggle][aria-pressed="true"] {
   border-color: color-mix(in srgb, var(--om-accent), transparent 22%);
@@ -583,16 +609,7 @@ export const COMPONENT_STYLES = `
   }
 
   .om-lantern-toggle {
-    gap: 0;
-  }
-
-  .om-lantern-label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
+    gap: 0.22rem;
   }
 
   .om-dock button[data-action="exit"] {

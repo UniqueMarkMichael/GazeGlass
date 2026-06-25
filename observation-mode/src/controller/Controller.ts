@@ -207,7 +207,7 @@ export class ObservationModeController {
         <p>${COPY.recordedBy}</p>
         <div class="om-actions">
           <button type="button" data-action="skip" aria-label="${COPY.skipAria}">${COPY.skip}</button>
-          <button type="button" data-action="exit">${COPY.returnArchive}</button>
+          <button type="button" data-action="exit" aria-label="${COPY.leaveAria}">${COPY.leave}</button>
         </div>
       </div>
     `;
@@ -233,9 +233,9 @@ export class ObservationModeController {
         <h1>${this.getTitle()}</h1>
       </article>
       <div class="om-dock" role="toolbar" aria-label="Observation controls">
-        <button type="button" data-action="exit">${COPY.returnArchive}</button>
+        <button type="button" data-action="exit" aria-label="${COPY.leaveAria}">${COPY.leave}</button>
         <span class="om-status">${COPY.plateObservation} ${this.getObservationNumber()} · 0% witnessed</span>
-        <button type="button" data-panel="sound" aria-label="Sound and narration settings">${COPY.hear}</button>
+        <button type="button" data-panel="sound" aria-label="${COPY.soundAria}" aria-haspopup="dialog" aria-expanded="false">${COPY.sound}</button>
         <span class="om-split-control" role="group" aria-label="Focus controls">
           <button
             class="om-lantern-toggle"
@@ -266,7 +266,7 @@ export class ObservationModeController {
             </svg>
           </button>
         </span>
-        <button type="button" data-panel="display" aria-label="Text appearance settings">${COPY.display}</button>
+        <button type="button" data-panel="display" aria-label="${COPY.textAria}" aria-haspopup="dialog" aria-expanded="false">${COPY.text}</button>
       </div>
     `;
 
@@ -305,52 +305,59 @@ export class ObservationModeController {
     this.root.querySelector(".om-panel")?.remove();
     const panel = document.createElement("section");
     panel.className = "om-panel";
+    panel.dataset.panelId = panelId;
     panel.setAttribute("role", "dialog");
     panel.setAttribute("aria-modal", "false");
 
     if (panelId === "sound") {
-      panel.setAttribute("aria-label", "Sound and narration settings");
+      panel.setAttribute("aria-label", COPY.soundPanelAria);
       panel.innerHTML = `
-        <button class="om-panel-close" type="button" aria-label="Close panel">Close</button>
-        <p class="om-panel-kicker">${COPY.hear}</p>
-        <h2>Sound is paused until you turn it on.</h2>
-        <p>Narration is not available for this record yet. The text remains the transcript, and no audio will play unless you choose it in a later build.</p>
+        <button class="om-panel-close" type="button" aria-label="${COPY.closePanelAria}">${COPY.close}</button>
+        <p class="om-panel-kicker">${COPY.sound}</p>
+        <h2>${COPY.sound}</h2>
+        <p>${COPY.soundPaused}</p>
+        <p>${COPY.narrationUnavailable} The text remains the transcript.</p>
         <div class="om-panel-actions">
-          <button type="button" disabled>Atmosphere</button>
-          <button type="button" disabled>Hear the Seer</button>
-          <button type="button" disabled>Mute all</button>
+          <button type="button" aria-label="${COPY.atmosphereUnavailableAria}" disabled>${COPY.atmosphere}</button>
+          <button type="button" aria-label="${COPY.narrationUnavailableAria}" disabled>${COPY.narration}</button>
+          <button type="button" aria-label="${COPY.muteUnavailableAria}" disabled>${COPY.mute}</button>
         </div>
       `;
     } else if (panelId === "focus") {
-      panel.setAttribute("aria-label", "Reading focus aids");
+      panel.setAttribute("aria-label", COPY.focusPanelAria);
       panel.innerHTML = `
-        <button class="om-panel-close" type="button" aria-label="Close panel">Close</button>
+        <button class="om-panel-close" type="button" aria-label="${COPY.closePanelAria}">${COPY.close}</button>
         <p class="om-panel-kicker">${COPY.focus}</p>
-        <h2>Focus the Glass</h2>
-        <p>Choose how the Glass steadies the page while the text remains intact.</p>
-        <div class="om-panel-actions om-focus-options" role="radiogroup" aria-label="Reading focus mode">
-          <button type="button" role="radio" aria-checked="false" data-focus-mode="off">Off</button>
-          <button type="button" role="radio" aria-checked="false" data-focus-mode="spotlight">Paragraph spotlight</button>
-          <button type="button" role="radio" aria-checked="false" data-focus-mode="band">Line band</button>
-          <button type="button" role="radio" aria-checked="false" data-focus-mode="ruler">Reading ruler</button>
+        <h2>${COPY.focus}</h2>
+        <p>${COPY.focusDescription}</p>
+        <div class="om-panel-actions om-focus-options" role="radiogroup" aria-label="${COPY.focusModeAria}">
+          <button type="button" role="radio" aria-checked="false" data-focus-mode="off" aria-label="${COPY.offAria}">${COPY.off}</button>
+          <button type="button" role="radio" aria-checked="false" data-focus-mode="spotlight" aria-label="${COPY.lanternPanelAria}">${COPY.lantern}</button>
+          <button type="button" role="radio" aria-checked="false" data-focus-mode="band" aria-label="${COPY.bandAria}">${COPY.band}</button>
+          <button type="button" role="radio" aria-checked="false" data-focus-mode="ruler" aria-label="${COPY.rulerAria}">${COPY.ruler}</button>
         </div>
         <div class="om-panel-actions">
-          <button type="button" data-spacing-toggle aria-pressed="false">Generous spacing</button>
+          <button type="button" data-spacing-toggle aria-label="${COPY.spacingAriaOff}" aria-pressed="false">${COPY.spacing}</button>
         </div>
       `;
     } else {
-      panel.setAttribute("aria-label", "Text appearance settings");
+      panel.setAttribute("aria-label", COPY.textAria);
       panel.innerHTML = `
-        <button class="om-panel-close" type="button" aria-label="Close panel">Close</button>
-        <p class="om-panel-kicker">${COPY.display}</p>
-        <h2>Shape the Text</h2>
-        <p>Change the atmosphere without moving the prose out of reach.</p>
+        <button class="om-panel-close" type="button" aria-label="${COPY.closePanelAria}">${COPY.close}</button>
+        <p class="om-panel-kicker">${COPY.text}</p>
+        <h2>${COPY.text}</h2>
+        <p>${COPY.textDescription}</p>
         <div class="om-panel-actions">
-          <button type="button" data-theme="obsidian">Obsidian</button>
-          <button type="button" data-theme="parchment">Parchment</button>
-          <button type="button" data-theme="moonlight">Moonlight</button>
-          <button type="button" data-size="-1">A-</button>
-          <button type="button" data-size="1">A+</button>
+          <button type="button" data-theme="obsidian" aria-label="${COPY.obsidianAria}">${COPY.obsidian}</button>
+          <button type="button" data-theme="parchment" aria-label="${COPY.parchmentAria}">${COPY.parchment}</button>
+          <button type="button" data-theme="moonlight" aria-label="${COPY.moonlightAria}">${COPY.moonlight}</button>
+        </div>
+        <div class="om-panel-field">
+          <span>${COPY.size}</span>
+          <div class="om-stepper" role="group" aria-label="${COPY.sizeGroupAria}">
+            <button type="button" data-size="-1" aria-label="${COPY.decreaseTextSizeAria}">−</button>
+            <button type="button" data-size="1" aria-label="${COPY.increaseTextSizeAria}">+</button>
+          </div>
         </div>
       `;
     }
@@ -393,15 +400,17 @@ export class ObservationModeController {
   }
 
   private setFocusMode(mode: FocusMode, source: FocusChangeSource): void {
+    const previousMode = this.focusMode;
     this.focusMode = mode;
     this.applyPrefsToRoot();
     this.updateFocusControls();
     this.savePrefs();
 
     if (source !== "restore") {
+      const message = this.focusToast(mode, previousMode);
       this.trackFocusChange(source);
-      this.showToast(this.focusToast(mode));
-      this.announce(mode === "spotlight" ? "Lantern on." : "Lantern off.");
+      this.showToast(message);
+      this.announce(message);
     }
   }
 
@@ -410,18 +419,19 @@ export class ObservationModeController {
     this.applyPrefsToRoot();
     this.updateFocusControls();
     this.savePrefs();
-    this.showToast(enabled ? "Generous spacing on." : "Generous spacing off.");
+    this.showToast(enabled ? COPY.spacingOnToast : COPY.spacingOffToast);
   }
 
   private parseFocusMode(value: string | undefined): FocusMode {
     return FOCUS_MODES.has(value as FocusMode) ? (value as FocusMode) : "off";
   }
 
-  private focusToast(mode: FocusMode): string {
-    if (mode === "spotlight") return "Lantern on.";
-    if (mode === "band") return "Line band selected.";
-    if (mode === "ruler") return "Reading ruler selected.";
-    return "Focus reset.";
+  private focusToast(mode: FocusMode, previousMode: FocusMode): string {
+    if (mode === "spotlight") return COPY.lanternOnToast;
+    if (mode === "off" && previousMode === "spotlight") return COPY.lanternOffToast;
+    if (mode === "band") return COPY.bandToast;
+    if (mode === "ruler") return COPY.rulerToast;
+    return COPY.focusResetToast;
   }
 
   private loadPrefs(): void {
@@ -464,17 +474,28 @@ export class ObservationModeController {
     }
 
     const focusMore = this.root.querySelector<HTMLButtonElement>(".om-focus-more");
-    const focusPanelOpen = Boolean(this.root.querySelector(".om-panel[aria-label='Reading focus aids']"));
+    const focusPanelOpen = Boolean(this.root.querySelector(".om-panel[data-panel-id='focus']"));
     focusMore?.setAttribute("aria-expanded", String(focusPanelOpen));
+    focusMore?.setAttribute("aria-label", focusPanelOpen ? COPY.focusMoreCloseAria : COPY.focusMoreAria);
+
+    const soundButton = this.root.querySelector<HTMLButtonElement>("[data-panel='sound']");
+    const soundPanelOpen = Boolean(this.root.querySelector(".om-panel[data-panel-id='sound']"));
+    soundButton?.setAttribute("aria-expanded", String(soundPanelOpen));
+    soundButton?.setAttribute("aria-label", soundPanelOpen ? COPY.soundAriaOpen : COPY.soundAria);
+
+    const textButton = this.root.querySelector<HTMLButtonElement>("[data-panel='display']");
+    const textPanelOpen = Boolean(this.root.querySelector(".om-panel[data-panel-id='display']"));
+    textButton?.setAttribute("aria-expanded", String(textPanelOpen));
+    textButton?.setAttribute("aria-label", textPanelOpen ? COPY.textAriaOpen : COPY.textAria);
 
     this.root.querySelectorAll<HTMLButtonElement>("[data-focus-mode]").forEach((button) => {
       const selected = this.parseFocusMode(button.dataset.focusMode) === this.focusMode;
       button.setAttribute("aria-checked", String(selected));
     });
 
-    this.root
-      .querySelector<HTMLButtonElement>("[data-spacing-toggle]")
-      ?.setAttribute("aria-pressed", String(this.generousSpacing));
+    const spacingToggle = this.root.querySelector<HTMLButtonElement>("[data-spacing-toggle]");
+    spacingToggle?.setAttribute("aria-pressed", String(this.generousSpacing));
+    spacingToggle?.setAttribute("aria-label", this.generousSpacing ? COPY.spacingAriaOn : COPY.spacingAriaOff);
   }
 
   private startActiveBlockTracker(): void {
