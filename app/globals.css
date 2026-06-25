@@ -4960,6 +4960,10 @@ dd {
     width: auto;
   }
 
+  .observation-path {
+    grid-template-columns: 1fr;
+  }
+
   .observation-row,
   .region-record {
     grid-template-columns: 26px 44px 1fr;

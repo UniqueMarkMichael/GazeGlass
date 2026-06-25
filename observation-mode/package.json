@@ -1,0 +1,31 @@
+{
+  "name": "@gaze-glass/observation-mode",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/observation-mode.umd.cjs",
+  "module": "./dist/observation-mode.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/observation-mode.js",
+      "require": "./dist/observation-mode.umd.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest",
+    "vitest": "latest",
+    "typescript": "latest"
+  }
+}
