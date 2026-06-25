@@ -1,56 +1,61 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { getObservationHref, magnitudeMeta, observations, regionMeta, type ObservationMagnitude, type ObservationRegion } from "./data";
+import {
+  getObservationHref,
+  godFilterLabels,
+  observations,
+  regionMeta,
+  spiritFilterLabels,
+  type GodId,
+  type SpiritId,
+} from "./data";
 
-type RegionFilter = "all" | ObservationRegion;
-type MagnitudeFilter = "all" | ObservationMagnitude;
-type SortKey = "newest" | "oldest" | "readTime" | "magnitude";
+type GodFilter = "all" | GodId;
+type SpiritFilter = "all" | SpiritId;
+type ThemeFilter = "all" | string;
+type SortKey = "order" | "newest";
 
-const regionFilters: Array<{ label: string; value: RegionFilter }> = [
-  { label: "All", value: "all" },
-  { label: "Gods", value: "gods" },
-  { label: "Spirits", value: "spirits" },
-  { label: "Mortals", value: "mortals" },
+const godFilters: Array<{ label: string; value: GodFilter }> = [
+  { label: "All Gods", value: "all" },
+  ...Object.entries(godFilterLabels).map(([value, label]) => ({ label, value: value as GodId })),
 ];
 
-const magnitudeFilters: Array<{ label: string; value: MagnitudeFilter }> = [
-  { label: "All Scales", value: "all" },
-  { label: "Observations", value: "observation" },
-  { label: "Stories", value: "story" },
-  { label: "Novellas", value: "novella" },
-  { label: "Novels", value: "novel" },
+const spiritFilters: Array<{ label: string; value: SpiritFilter }> = [
+  { label: "All Foxes", value: "all" },
+  ...Object.entries(spiritFilterLabels).map(([value, label]) => ({ label, value: value as SpiritId })),
 ];
 
-function readMinutes(readTime: string) {
-  return Number.parseInt(readTime, 10) || 0;
-}
+const themeFilters: Array<{ label: string; value: ThemeFilter }> = [
+  { label: "All Themes", value: "all" },
+  ...Array.from(new Set(observations.flatMap((observation) => observation.themeTags))).map((tag) => ({
+    label: tag
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" "),
+    value: tag,
+  })),
+];
 
 export function ObservationsArchive() {
-  const [region, setRegion] = useState<RegionFilter>("all");
-  const [magnitude, setMagnitude] = useState<MagnitudeFilter>("all");
-  const [sort, setSort] = useState<SortKey>("newest");
+  const [god, setGod] = useState<GodFilter>("all");
+  const [spirit, setSpirit] = useState<SpiritFilter>("all");
+  const [theme, setTheme] = useState<ThemeFilter>("all");
+  const [sort, setSort] = useState<SortKey>("order");
 
   const filtered = useMemo(() => {
     return [...observations]
-      .filter((observation) => region === "all" || observation.region === region)
-      .filter((observation) => magnitude === "all" || observation.magnitude === magnitude)
+      .filter((observation) => god === "all" || observation.godId === god)
+      .filter((observation) => spirit === "all" || observation.spiritWitnessIds.includes(spirit))
+      .filter((observation) => theme === "all" || observation.themeTags.includes(theme))
       .sort((a, b) => {
-        if (sort === "oldest") {
-          return a.dateObserved.localeCompare(b.dateObserved);
+        if (sort === "newest") {
+          return b.dateObserved.localeCompare(a.dateObserved);
         }
 
-        if (sort === "readTime") {
-          return readMinutes(a.readTime) - readMinutes(b.readTime);
-        }
-
-        if (sort === "magnitude") {
-          return magnitudeMeta[b.magnitude].weight - magnitudeMeta[a.magnitude].weight;
-        }
-
-        return b.dateObserved.localeCompare(a.dateObserved);
+        return a.number.localeCompare(b.number);
       });
-  }, [magnitude, region, sort]);
+  }, [god, spirit, theme, sort]);
 
   return (
     <section className="observation-archive reveal" aria-label="Observation archive">
@@ -62,34 +67,45 @@ export function ObservationsArchive() {
         <label>
           Sort
           <select value={sort} onChange={(event) => setSort(event.target.value as SortKey)}>
+            <option value="order">Reading order</option>
             <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
-            <option value="readTime">Reading time</option>
-            <option value="magnitude">Magnitude</option>
           </select>
         </label>
       </div>
 
-      <div className="archive-filters" aria-label="Filter observations by region">
-        {regionFilters.map((filter) => (
+      <div className="archive-filters" aria-label="Filter observations by god">
+        {godFilters.map((filter) => (
           <button
-            className={region === filter.value ? "is-active" : ""}
+            className={god === filter.value ? "is-active" : ""}
             key={filter.value}
             type="button"
-            onClick={() => setRegion(filter.value)}
+            onClick={() => setGod(filter.value)}
           >
             {filter.label}
           </button>
         ))}
       </div>
 
-      <div className="archive-filters magnitude-filters" aria-label="Filter observations by magnitude">
-        {magnitudeFilters.map((filter) => (
+      <div className="archive-filters magnitude-filters" aria-label="Filter observations by fox spirit">
+        {spiritFilters.map((filter) => (
           <button
-            className={magnitude === filter.value ? "is-active" : ""}
+            className={spirit === filter.value ? "is-active" : ""}
             key={filter.value}
             type="button"
-            onClick={() => setMagnitude(filter.value)}
+            onClick={() => setSpirit(filter.value)}
+          >
+            {filter.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="archive-filters magnitude-filters" aria-label="Filter observations by theme">
+        {themeFilters.map((filter) => (
+          <button
+            className={theme === filter.value ? "is-active" : ""}
+            key={filter.value}
+            type="button"
+            onClick={() => setTheme(filter.value)}
           >
             {filter.label}
           </button>
@@ -97,21 +113,25 @@ export function ObservationsArchive() {
       </div>
 
       <div className="observation-list" aria-live="polite">
-        {filtered.map((observation) => (
-          <a className="observation-row" href={getObservationHref(observation)} key={observation.slug}>
-            <span className={`magnitude-mark magnitude-${observation.magnitude}`} aria-hidden="true" />
-            <span className="observation-row-number">{observation.number}</span>
-            <span>
-              <strong>{observation.title}</strong>
-              <em>
-                {observation.association} / {regionMeta[observation.region].title}
-              </em>
-            </span>
-            <span>{observation.readTime}</span>
-            <span>{observation.magnitudeLabel}</span>
-            <span aria-hidden="true">View</span>
-          </a>
-        ))}
+        {filtered.length ? (
+          filtered.map((observation) => (
+            <a className="observation-row" href={getObservationHref(observation)} key={observation.slug}>
+              <span className={`magnitude-mark magnitude-${observation.magnitude}`} aria-hidden="true" />
+              <span className="observation-row-number">{observation.number}</span>
+              <span>
+                <strong>{observation.title}</strong>
+                <em>
+                  {observation.association} / {regionMeta[observation.region].title}
+                </em>
+              </span>
+              <span>{observation.readTime}</span>
+              <span>{observation.themeTags.slice(0, 2).join(" · ")}</span>
+              <span aria-hidden="true">View</span>
+            </a>
+          ))
+        ) : (
+          <p className="observation-empty">The Glass has not yet recorded a vision here.</p>
+        )}
       </div>
     </section>
   );

@@ -89,7 +89,7 @@ const spirits = [
     name: "Marok",
     role: "Assistant to the God of War",
     image: "/spirits/marok.webp",
-    text: "A top graduate of the Academy of Fate and Destiny, Marok designs the trials that bring mortals to their knees while sneezing green fire and spinning in concentric circles.",
+    text: "A top graduate of the Academy of Fate and Destiny, Marok designs the trials that bring mortals to their knees while keeping a fox's unnerving joy at the edge of judgment.",
     note: "Field Note: He designs the trials that break mortals, and wags his tail doing it.",
   },
   {
@@ -207,8 +207,8 @@ export default function Home() {
             <span>Mortals Pray.</span>
             <span>Spirits Remember.</span>
           </div>
-          <a className="scroll-cue" href="/observations/marcella" aria-label="Begin witnessing Marcella">
-            Begin Witnessing
+          <a className="scroll-cue" href="/observations/marcella" aria-label="Start with Marcella's Observation">
+            New here? Start with this Observation
           </a>
         </div>
       </section>

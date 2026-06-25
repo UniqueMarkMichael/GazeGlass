@@ -3,7 +3,17 @@ import { notFound } from "next/navigation";
 import { CopyLinkButton } from "../../components/CopyLinkButton";
 import { GlassMenu } from "../../components/GlassMenu";
 import { JsonLd } from "../../components/JsonLd";
-import { getObservation, getObservationHref, getRelatedObservations, observations, regionMeta } from "../data";
+import {
+  getNextObservation,
+  getObservation,
+  getObservationHref,
+  getPreviousObservation,
+  getRelatedObservations,
+  godFilterLabels,
+  observations,
+  regionMeta,
+  spiritFilterLabels,
+} from "../data";
 
 type ObservationPageProps = {
   params: Promise<{
@@ -67,6 +77,8 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
   }
 
   const related = getRelatedObservations(observation);
+  const previousObservation = getPreviousObservation(observation.slug);
+  const nextObservation = getNextObservation(observation.slug);
   const storyData = {
     "@context": "https://schema.org",
     "@type": "ShortStory",
@@ -112,7 +124,26 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
               <dt>Region</dt>
               <dd>{regionMeta[observation.region].title}</dd>
               <dt>Associated With</dt>
-              <dd>{observation.association}</dd>
+              <dd>
+                <a href={`/the-gods#the-god-of-${observation.godId}`}>
+                  {godFilterLabels[observation.godId]}
+                </a>
+              </dd>
+              {observation.spiritWitnessIds.length ? (
+                <>
+                  <dt>Spirit Witness</dt>
+                  <dd>
+                    {observation.spiritWitnessIds.map((spiritId, index) => (
+                      <span key={spiritId}>
+                        <a href={`/the-spirits#${spiritId}`}>{spiritFilterLabels[spiritId]}</a>
+                        {index < observation.spiritWitnessIds.length - 1 ? ", " : ""}
+                      </span>
+                    ))}
+                  </dd>
+                </>
+              ) : null}
+              <dt>Themes</dt>
+              <dd>{observation.themeTags.join(", ")}</dd>
               <dt>Recorded</dt>
               <dd>{observation.dateObserved}</dd>
             </dl>
@@ -141,6 +172,17 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
                 <p key={`${observation.slug}-${index}`}>{paragraph}</p>
               ))}
             </div>
+
+            <nav className="observation-path" aria-label="Observation reading path">
+              <a href={previousObservation ? getObservationHref(previousObservation) : "/observations"}>
+                <span>Previous</span>
+                <strong>{previousObservation ? previousObservation.title : "Observation Archive"}</strong>
+              </a>
+              <a href={nextObservation ? getObservationHref(nextObservation) : "/observations"}>
+                <span>{nextObservation ? "Next Observation" : "Latest Vision"}</span>
+                <strong>{nextObservation ? nextObservation.title : "Browse the full archive"}</strong>
+              </a>
+            </nav>
           </div>
 
           <aside className="related-panel" aria-label="More like this">

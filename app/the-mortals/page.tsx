@@ -415,7 +415,7 @@ export default function TheMortals() {
 
       <section className="mortal-dossier reveal" id="marcella-case" aria-label="Marcella dossier">
         <div>
-          <p className="eyebrow">Mortal Case 001</p>
+          <p className="eyebrow">Observation 002</p>
           <h2>Marcella, Blessed by Justice.</h2>
         </div>
         <dl>
@@ -452,7 +452,7 @@ export default function TheMortals() {
           <img src="/mortals/malika/portrait.png" alt="Malika reflected in a blue sacred mirror" />
         </figure>
         <div>
-          <p className="eyebrow">Mortal Case 002</p>
+          <p className="eyebrow">Observation 003</p>
           <h2>Malika, Blessed by Love.</h2>
           <p>
             A future cosmetologist nearly surrendered her own reflection to a man
@@ -492,7 +492,7 @@ export default function TheMortals() {
           <img src="/mortals/takeshi/portrait.png" alt="Takeshi reflected in a red triangular sacred glass" />
         </figure>
         <div>
-          <p className="eyebrow">Mortal Case 003</p>
+          <p className="eyebrow">Observation 004</p>
           <h2>Takeshi, Blessed by Fortune.</h2>
           <p>
             A solo game developer spent three years building a world almost no one
@@ -534,7 +534,7 @@ export default function TheMortals() {
           <img src="/mortals/walter/portrait.png" alt="Walter reflected in a black and red sacred shield-glass" />
         </figure>
         <div>
-          <p className="eyebrow">Mortal Case 004</p>
+          <p className="eyebrow">Observation 005</p>
           <h2>Walter, Blessed by War.</h2>
           <p>
             An old soldier was told the home that held his life had become

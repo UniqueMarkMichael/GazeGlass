@@ -122,7 +122,7 @@ const codexLaws = [
       "There is a mortal who has prayed to Fortune for eleven years without answer. Fortune has never stopped watching. The waiting is the consecration.",
     image: "/codex/sigil-law-devotion.webp",
     alt: "A kneeling figure facing a glowing temple across a river of starlight",
-    linkHref: "/the-mortals#takeshi-case",
+    linkHref: "/observations/takeshi",
     linkLabel: "Witness Takeshi's case",
   },
   {
@@ -137,7 +137,7 @@ const codexLaws = [
       "Takeshi did not recognize what came back to him. That is the nature of Return. It does not announce itself. It simply appears, and something in the body knows before the mind does.",
     image: "/codex/sigil-law-return.webp",
     alt: "A golden river flowing from a glass sphere between sacred thresholds",
-    linkHref: "/the-mortals#takeshi-case",
+    linkHref: "/observations/takeshi",
     linkLabel: "Return to Takeshi's case",
   },
 ];

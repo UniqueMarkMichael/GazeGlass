@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { GlassMenu } from "../components/GlassMenu";
 import { JsonLd } from "../components/JsonLd";
+import { getCasesBySpirit, getObservationHref, type SpiritId } from "../observations/data";
 
 export const metadata: Metadata = {
   title: "The Spirits",
@@ -40,7 +41,16 @@ export const metadata: Metadata = {
   },
 };
 
-const spirits = [
+type SpiritRecord = {
+  name: string;
+  spiritId?: SpiritId;
+  role: string;
+  image: string;
+  text: string;
+  note: string;
+};
+
+const spirits: SpiritRecord[] = [
   {
     name: "Kitsu",
     role: "Assistant to the God of Justice",
@@ -50,9 +60,10 @@ const spirits = [
   },
   {
     name: "Marok",
+    spiritId: "marok" as SpiritId,
     role: "Assistant to the God of War",
     image: "/spirits/marok.webp",
-    text: "A top graduate of the Academy of Fate and Destiny, Marok designs the trials that bring mortals to their knees while sneezing green fire and spinning in concentric circles.",
+    text: "A top graduate of the Academy of Fate and Destiny, Marok designs the trials that bring mortals to their knees while keeping a fox's unnerving joy at the edge of judgment.",
     note: "Field Note: He designs the trials that break mortals, and wags his tail doing it.",
   },
   {
@@ -71,6 +82,7 @@ const spirits = [
   },
   {
     name: "Saroka",
+    spiritId: "saroka" as SpiritId,
     role: "Assistant to the God of Fortune",
     image: "/spirits/saroka.png",
     text: "Scarlet-furred with a cream chest, white-tipped bushy tail, gold-dipped paws, and ember eyes, Saroka serves Fortune with unnerving calm.",
@@ -157,6 +169,16 @@ export default function TheSpirits() {
                 <h3>{spirit.name}</h3>
                 <span>{spirit.text}</span>
                 <small>{spirit.note}</small>
+                {spirit.spiritId ? (
+                  <div className="record-cases spirit-cases" aria-label={`Observations involving ${spirit.name}`}>
+                    <span>Observed Cases</span>
+                    {getCasesBySpirit(spirit.spiritId).map((observation) => (
+                      <a href={getObservationHref(observation)} key={observation.slug}>
+                        {observation.title}
+                      </a>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             </article>
           ))}

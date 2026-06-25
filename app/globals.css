@@ -3918,6 +3918,17 @@ dd {
   border-top: 1px solid rgba(237, 227, 204, 0.12);
 }
 
+.observation-empty {
+  margin: 0;
+  padding: 30px 22px;
+  border-bottom: 1px solid rgba(237, 227, 204, 0.1);
+  color: rgba(237, 227, 204, 0.72);
+  background: rgba(10, 8, 24, 0.18);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-style: italic;
+}
+
 .observation-row,
 .region-record {
   display: grid;

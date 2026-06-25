@@ -1,11 +1,17 @@
 export type ObservationRegion = "gods" | "spirits" | "mortals";
 export type ObservationMagnitude = "observation" | "story" | "novella" | "novel";
+export type GodId = "wisdom" | "justice" | "love" | "fortune" | "war";
+export type SpiritId = "saroka" | "marok";
 
 export type Observation = {
   number: string;
   title: string;
   slug: string;
   canonicalPath?: string;
+  godId: GodId;
+  spiritWitnessIds: SpiritId[];
+  themeTags: string[];
+  startHere?: boolean;
   description: string;
   region: ObservationRegion;
   regionLabel: string;
@@ -89,6 +95,9 @@ export const observations: Observation[] = [
     number: "001",
     title: "Patricia, Awakened by Wisdom",
     slug: "patricia",
+    godId: "wisdom",
+    spiritWitnessIds: [],
+    themeTags: ["meaning", "awakening", "identity", "judgment"],
     description:
       "A former financier abandons wealth to seek enlightenment on a city street and learns there was never a wall between herself and the world.",
     region: "mortals",
@@ -137,6 +146,10 @@ export const observations: Observation[] = [
     number: "002",
     title: "Marcella, Blessed by Justice",
     slug: "marcella",
+    godId: "justice",
+    spiritWitnessIds: [],
+    themeTags: ["credit", "work", "injustice", "voice"],
+    startHere: true,
     description:
       "A creative worker asks to be witnessed after her labor is stolen and renamed, and the God of Justice makes the truth impossible to misattribute.",
     region: "mortals",
@@ -175,6 +188,9 @@ export const observations: Observation[] = [
     number: "003",
     title: "Malika, Blessed by Love",
     slug: "malika",
+    godId: "love",
+    spiritWitnessIds: [],
+    themeTags: ["love", "control", "beauty", "self-return"],
     description:
       "A future cosmetologist asks the God of Love for help after control is disguised as devotion, and the blessing returns her to herself first.",
     region: "mortals",
@@ -210,6 +226,9 @@ export const observations: Observation[] = [
     number: "004",
     title: "Takeshi, Blessed by Fortune",
     slug: "takeshi",
+    godId: "fortune",
+    spiritWitnessIds: ["saroka"],
+    themeTags: ["luck", "creative-work", "discovery", "access"],
     description:
       "A solo game developer asks the God of Fortune for one chance after three years of unseen work, and one small blessing opens a world.",
     region: "mortals",
@@ -245,6 +264,9 @@ export const observations: Observation[] = [
     number: "005",
     title: "Walter, Blessed by War",
     slug: "walter",
+    godId: "war",
+    spiritWitnessIds: ["marok"],
+    themeTags: ["home", "strategy", "community", "defense"],
     description:
       "An old soldier asks the God of War for glory when a developer tries to take the home that held his life, and strategy becomes his blessing.",
     region: "mortals",
@@ -280,6 +302,20 @@ export const observations: Observation[] = [
 ];
 
 export const featuredObservation = observations[0];
+export const startHereObservation = observations.find((observation) => observation.startHere) ?? observations[0];
+
+export const godFilterLabels: Record<GodId, string> = {
+  wisdom: "Wisdom",
+  justice: "Justice",
+  love: "Love",
+  fortune: "Fortune",
+  war: "War",
+};
+
+export const spiritFilterLabels: Record<SpiritId, string> = {
+  saroka: "Saroka",
+  marok: "Marok",
+};
 
 export function getObservationHref(observation: Observation) {
   return observation.canonicalPath ?? `/observations/${observation.slug}`;
@@ -297,4 +333,34 @@ export function getRelatedObservations(observation: Observation) {
 
 export function getRegionObservations(region: ObservationRegion) {
   return observations.filter((observation) => observation.region === region);
+}
+
+export function getCasesByGod(godId: GodId) {
+  return observations.filter((observation) => observation.godId === godId);
+}
+
+export function getCasesBySpirit(spiritId: SpiritId) {
+  return observations.filter((observation) => observation.spiritWitnessIds.includes(spiritId));
+}
+
+export function getNextObservation(currentSlug: string) {
+  const ordered = [...observations].sort((a, b) => a.number.localeCompare(b.number));
+  const currentIndex = ordered.findIndex((observation) => observation.slug === currentSlug);
+
+  if (currentIndex < 0) {
+    return null;
+  }
+
+  return ordered[currentIndex + 1] ?? null;
+}
+
+export function getPreviousObservation(currentSlug: string) {
+  const ordered = [...observations].sort((a, b) => a.number.localeCompare(b.number));
+  const currentIndex = ordered.findIndex((observation) => observation.slug === currentSlug);
+
+  if (currentIndex < 0) {
+    return null;
+  }
+
+  return ordered[currentIndex - 1] ?? null;
 }

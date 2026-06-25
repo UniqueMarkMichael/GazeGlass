@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { GlassMenu } from "../components/GlassMenu";
 import { JsonLd } from "../components/JsonLd";
 import { ObservationsArchive } from "./ObservationsArchive";
-import { getObservationHref, observations, regionMeta } from "./data";
+import { getObservationHref, observations, regionMeta, startHereObservation } from "./data";
 
 export const metadata: Metadata = {
   title: "Observations",
@@ -107,8 +107,8 @@ export default function ObservationsPage() {
             Observations are short fantasy stories from Gaze Glass: a mortal wound,
             a divine answer, and the consequence that follows once the glass has seen.
           </p>
-          <a className="text-link" href="/observations/marcella">
-            Begin with Marcella
+          <a className="text-link" href={getObservationHref(startHereObservation)}>
+            New here? Start with this Observation
           </a>
         </div>
       </section>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JsonLd } from "../components/JsonLd";
 import { GlassMenu } from "../components/GlassMenu";
+import { getCasesByGod, getObservationHref, type GodId } from "../observations/data";
 
 export const metadata: Metadata = {
   title: "The Gods",
@@ -40,9 +41,20 @@ export const metadata: Metadata = {
   },
 };
 
-const gods = [
+type GodRecord = {
+  name: string;
+  caseGodId?: GodId;
+  domain: string;
+  image: string;
+  station: string;
+  observation: string;
+  note: string;
+};
+
+const gods: GodRecord[] = [
   {
     name: "The God of Love",
+    caseGodId: "love" as GodId,
     domain: "Love",
     image: "/gods/love.webp",
     station: "A deity who believes love can reach a mortal even at the edge of chaos.",
@@ -52,6 +64,7 @@ const gods = [
   },
   {
     name: "The God of Fortune",
+    caseGodId: "fortune" as GodId,
     domain: "Fortune",
     image: "/gods/fortune.webp",
     station: "A long-game strategist whose mismatched eyes have seen every possible outcome.",
@@ -70,6 +83,7 @@ const gods = [
   },
   {
     name: "The God of War",
+    caseGodId: "war" as GodId,
     domain: "War",
     image: "/gods/war.webp",
     station: "Born from divine betrayal and bound to the judgment of civilizations.",
@@ -79,6 +93,7 @@ const gods = [
   },
   {
     name: "The God of Justice",
+    caseGodId: "justice" as GodId,
     domain: "Justice",
     image: "/gods/justice.webp",
     station: "The architect of the trials that force pledges to shed their egos.",
@@ -106,6 +121,7 @@ const gods = [
   },
   {
     name: "The God of Wisdom",
+    caseGodId: "wisdom" as GodId,
     domain: "Wisdom",
     image: "/gods/wisdom.webp",
     station: "Keeper of the cosmic record and the novel's opening divine correspondent.",
@@ -238,6 +254,16 @@ export default function TheGods() {
                 <dt>Archive Note</dt>
                 <dd>{god.note}</dd>
               </dl>
+              {god.caseGodId ? (
+                <div className="record-cases" aria-label={`Observations involving ${god.name}`}>
+                  <span>Observed Cases</span>
+                  {getCasesByGod(god.caseGodId).map((observation) => (
+                    <a href={getObservationHref(observation)} key={observation.slug}>
+                      {observation.title}
+                    </a>
+                  ))}
+                </div>
+              ) : null}
             </div>
           </article>
         ))}
