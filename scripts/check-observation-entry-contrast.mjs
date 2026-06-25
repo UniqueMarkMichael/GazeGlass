@@ -16,7 +16,7 @@ const requiredTokens = [
 ];
 
 function token(name) {
-  const match = styles.match(new RegExp(`--${name}:\\\\s*(#[0-9a-fA-F]{6})`));
+  const match = styles.match(new RegExp(`--${name}:\\s*(#[0-9a-fA-F]{6})`));
   if (!match) throw new Error(`Missing --${name} hex token in ${stylesPath}`);
   return match[1];
 }
