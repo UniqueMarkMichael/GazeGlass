@@ -23,7 +23,7 @@ const visions: Vision[] = [
     title: "Walter, Blessed by War",
     realm: "Mortal Vision",
     signal: "War",
-    href: "/the-mortals#walter-case",
+    href: "/observations/walter",
     description:
       "An old soldier protects the home that held his life by receiving a strategy sharper than strength.",
   },

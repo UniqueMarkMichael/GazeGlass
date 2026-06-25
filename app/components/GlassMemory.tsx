@@ -35,11 +35,11 @@ const homeSections = [
 ] as const;
 
 const mortalCases = [
-  { hash: "#patricia-case", id: "patricia", label: "Patricia, Awakened by Wisdom", href: "/the-mortals#patricia-case" },
+  { hash: "#patricia-case", id: "patricia", label: "Patricia, Awakened by Wisdom", href: "/observations/patricia" },
   { hash: "#marcella-case", id: "marcella", label: "Marcella, Blessed by Justice", href: "/observations/marcella" },
-  { hash: "#malika-case", id: "malika", label: "Malika, Blessed by Love", href: "/the-mortals#malika-case" },
-  { hash: "#takeshi-case", id: "takeshi", label: "Takeshi, Blessed by Fortune", href: "/the-mortals#takeshi-case" },
-  { hash: "#walter-case", id: "walter", label: "Walter, Blessed by War", href: "/the-mortals#walter-case" },
+  { hash: "#malika-case", id: "malika", label: "Malika, Blessed by Love", href: "/observations/malika" },
+  { hash: "#takeshi-case", id: "takeshi", label: "Takeshi, Blessed by Fortune", href: "/observations/takeshi" },
+  { hash: "#walter-case", id: "walter", label: "Walter, Blessed by War", href: "/observations/walter" },
 ] as const;
 
 const spirits = [
@@ -164,8 +164,8 @@ function getMemoryForLocation({ pathname, hash }: MemoryLocation): Omit<GlassMem
 
   if (pathname === "/observations") {
     return {
-      id: "patricia-observation",
-      label: "Patricia, Awakened by Wisdom",
+      id: "observation-archive",
+      label: "The Observation Archive",
       href: "/observations",
       realm: "observation",
     };

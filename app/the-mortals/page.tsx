@@ -221,11 +221,11 @@ const mortalCases = [
     summary:
       "A former financier asks what life is for and sees the wall between self and world dissolve.",
     evidence: "Renunciation, awakening, the Judgment, Rashid Shah.",
-    href: "/observations",
+    href: "/observations/patricia",
   },
   {
     id: "marcella-case",
-    number: "Mortal Case 001",
+    number: "Observation 002",
     name: "Marcella",
     title: "Blessed by Justice",
     force: "Justice",
@@ -237,7 +237,7 @@ const mortalCases = [
   },
   {
     id: "malika-case",
-    number: "Mortal Case 002",
+    number: "Observation 003",
     name: "Malika",
     title: "Blessed by Love",
     force: "Love",
@@ -245,11 +245,11 @@ const mortalCases = [
     summary:
       "A future cosmetologist asks for help after control is disguised as devotion.",
     evidence: "Forbidden beauty, self-return, a mirror remade as freedom.",
-    href: "#malika-case",
+    href: "/observations/malika",
   },
   {
     id: "takeshi-case",
-    number: "Mortal Case 003",
+    number: "Observation 004",
     name: "Takeshi",
     title: "Blessed by Fortune",
     force: "Fortune",
@@ -257,11 +257,11 @@ const mortalCases = [
     summary:
       "A solo game developer asks for one chance after three years of unseen work.",
     evidence: "Zero downloads, one streamer, a world suddenly playing.",
-    href: "#takeshi-case",
+    href: "/observations/takeshi",
   },
   {
     id: "walter-case",
-    number: "Mortal Case 004",
+    number: "Observation 005",
     name: "Walter",
     title: "Blessed by War",
     force: "War",
@@ -269,7 +269,7 @@ const mortalCases = [
     summary:
       "An old soldier asks for glory when a developer tries to take the home that held his life.",
     evidence: "A notice to vacate, a neighborhood gathered, a permit defeated.",
-    href: "#walter-case",
+    href: "/observations/walter",
   },
 ];
 

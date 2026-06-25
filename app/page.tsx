@@ -296,7 +296,7 @@ export default function Home() {
             A creative worker loses credit for the work she carried alone. In the
             hallway between humiliation and surrender, she asks Justice to witness.
           </p>
-          <p className="observation-note">Just witnessed: Malika, Blessed by Love.</p>
+          <p className="observation-note">Just witnessed: Walter, Blessed by War.</p>
           <a href="/observations/marcella">Begin Witnessing</a>
         </div>
         <figure className="observation-portrait">
