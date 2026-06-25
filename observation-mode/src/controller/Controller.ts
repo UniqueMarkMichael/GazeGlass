@@ -26,6 +26,17 @@ export class ObservationModeController {
   private models: BlockModel[] = [];
   private manifest: ObservationManifest | null;
   private previousActiveElement: Element | null = null;
+  private scrollLock:
+    | {
+        scrollY: number;
+        htmlOverflow: string;
+        htmlOverscrollBehavior: string;
+        bodyOverflow: string;
+        bodyPosition: string;
+        bodyTop: string;
+        bodyWidth: string;
+      }
+    | null = null;
 
   constructor(private readonly options: ObservationModeControllerOptions) {
     this.manifest = options.manifest ?? null;
@@ -57,6 +68,7 @@ export class ObservationModeController {
   disconnect(): void {
     this.releaseTrap?.();
     this.releaseTrap = null;
+    this.unlockHostExperience();
   }
 
   getState(): MachineState {
@@ -76,6 +88,7 @@ export class ObservationModeController {
     this.previousActiveElement = document.activeElement;
     this.dispatch({ type: "OPEN" });
     this.renderThreshold();
+    this.lockHostExperience();
     this.root.classList.add("is-open");
     this.sourceArticle?.setAttribute("aria-hidden", "true");
     this.releaseTrap = trapFocus(this.root);
@@ -89,6 +102,7 @@ export class ObservationModeController {
     this.dispatch({ type: "EXIT" });
     this.root.classList.remove("is-open");
     this.sourceArticle?.removeAttribute("aria-hidden");
+    this.unlockHostExperience();
     this.releaseTrap?.();
     this.releaseTrap = null;
     await this.delay(0);
@@ -332,6 +346,54 @@ export class ObservationModeController {
     const style = document.createElement("style");
     style.textContent = COMPONENT_STYLES;
     return style;
+  }
+
+  private lockHostExperience(): void {
+    document.documentElement.classList.add("observation-mode-active");
+    this.options.host.setAttribute("data-om-open", "");
+
+    if (this.scrollLock) return;
+
+    const htmlStyle = document.documentElement.style;
+    const bodyStyle = document.body.style;
+    const scrollY = window.scrollY;
+
+    this.scrollLock = {
+      scrollY,
+      htmlOverflow: htmlStyle.overflow,
+      htmlOverscrollBehavior: htmlStyle.overscrollBehavior,
+      bodyOverflow: bodyStyle.overflow,
+      bodyPosition: bodyStyle.position,
+      bodyTop: bodyStyle.top,
+      bodyWidth: bodyStyle.width,
+    };
+
+    htmlStyle.overflow = "hidden";
+    htmlStyle.overscrollBehavior = "none";
+    bodyStyle.overflow = "hidden";
+    bodyStyle.position = "fixed";
+    bodyStyle.top = `-${scrollY}px`;
+    bodyStyle.width = "100%";
+  }
+
+  private unlockHostExperience(): void {
+    document.documentElement.classList.remove("observation-mode-active");
+    this.options.host.removeAttribute("data-om-open");
+
+    if (!this.scrollLock) return;
+
+    const lock = this.scrollLock;
+    this.scrollLock = null;
+    const htmlStyle = document.documentElement.style;
+    const bodyStyle = document.body.style;
+
+    htmlStyle.overflow = lock.htmlOverflow;
+    htmlStyle.overscrollBehavior = lock.htmlOverscrollBehavior;
+    bodyStyle.overflow = lock.bodyOverflow;
+    bodyStyle.position = lock.bodyPosition;
+    bodyStyle.top = lock.bodyTop;
+    bodyStyle.width = lock.bodyWidth;
+    window.scrollTo(0, lock.scrollY);
   }
 
   private delay(ms: number): Promise<void> {

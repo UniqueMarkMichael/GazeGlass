@@ -40,6 +40,18 @@ body.menu-open {
   overflow: hidden;
 }
 
+html.observation-mode-active,
+html.observation-mode-active body {
+  overscroll-behavior: none;
+}
+
+html.observation-mode-active .site-header,
+html.observation-mode-active .glass-memory-shell {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 body::before {
   content: "";
   position: fixed;
