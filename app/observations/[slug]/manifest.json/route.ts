@@ -1,0 +1,91 @@
+import { NextResponse } from "next/server";
+import {
+  getNextObservation,
+  getObservation,
+  getObservationHref,
+  godFilterLabels,
+  observations,
+} from "../../data";
+
+type ManifestRouteProps = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
+
+const deityById = {
+  wisdom: "Wisdom",
+  justice: "Justice",
+  love: "Love",
+  fortune: "Fortune",
+  war: "War",
+} as const;
+
+export function generateStaticParams() {
+  return observations.map((observation) => ({
+    slug: observation.slug,
+  }));
+}
+
+export async function GET(_request: Request, { params }: ManifestRouteProps) {
+  const { slug } = await params;
+  const observation = getObservation(slug);
+
+  if (!observation) {
+    return NextResponse.json({ message: "Observation not found" }, { status: 404 });
+  }
+
+  const nextObservation = getNextObservation(observation.slug);
+  const body = observation.story.map((paragraph, index) => ({
+    type: "p" as const,
+    id: `b${index}`,
+    text: paragraph,
+  }));
+  const wordCount = observation.story.join(" ").split(/\s+/).filter(Boolean).length;
+  const deity = deityById[observation.godId];
+
+  return NextResponse.json({
+    schemaVersion: 1,
+    id: `obs-${observation.number}`,
+    number: Number.parseInt(observation.number, 10),
+    title: observation.title,
+    realm: observation.regionLabel,
+    magnitude: "Story",
+    deity,
+    recordedBy: "The Seer",
+    readingTimeMin: Number.parseInt(observation.readTime, 10) || 5,
+    wordCount,
+    contentNote: null,
+    body,
+    scenes: [
+      { id: "sc-opening", startBlockId: "b0", mood: "Neutral" },
+      {
+        id: "sc-witness",
+        startBlockId: body[Math.max(0, Math.floor(body.length / 2))]?.id ?? "b0",
+        mood: deity,
+      },
+    ],
+    glossary: [
+      {
+        key: observation.godId,
+        title: godFilterLabels[observation.godId],
+        kind: "god",
+        blurb: `${godFilterLabels[observation.godId]} is the divine force associated with this Observation.`,
+        href: `/the-gods#the-god-of-${observation.godId}`,
+      },
+    ],
+    keyQuotations: [],
+    nextPaths: [
+      { label: `Follow ${deity}`, href: `/the-gods#the-god-of-${observation.godId}`, kind: "follow-deity" },
+      {
+        label: "Let the Glass Choose",
+        href: nextObservation ? getObservationHref(nextObservation) : "/observations",
+        kind: "random",
+      },
+      { label: "Return to the Archive", href: "/observations", kind: "archive" },
+    ],
+    secondGaze: [],
+    lenses: {},
+    chapters: [],
+  });
+}

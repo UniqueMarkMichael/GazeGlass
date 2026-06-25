@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.gazeglass.com/schemas/observation-manifest.schema.json",
+  "title": "Gaze Glass Observation Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "number",
+    "title",
+    "realm",
+    "magnitude",
+    "deity",
+    "recordedBy",
+    "readingTimeMin",
+    "wordCount",
+    "scenes",
+    "glossary"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "number": { "type": "integer", "minimum": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "realm": { "enum": ["The Mortals", "The Gods", "The Spirits", "The Codex"] },
+    "magnitude": { "enum": ["Story", "Novella", "Novel"] },
+    "deity": { "anyOf": [{ "enum": ["Justice", "Love", "Beauty", "War", "Fortune", "Story", "Wisdom"] }, { "type": "null" }] },
+    "recordedBy": { "type": "string", "minLength": 1 },
+    "readingTimeMin": { "type": "number", "exclusiveMinimum": 0 },
+    "wordCount": { "type": "integer", "minimum": 0 },
+    "contentNote": { "type": ["string", "null"] },
+    "body": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/block" }
+    },
+    "scenes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/scene" }
+    },
+    "glossary": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/glossaryEntry" }
+    },
+    "narration": { "$ref": "#/$defs/narration" },
+    "ambientTrack": { "$ref": "#/$defs/audioRef" },
+    "keyQuotations": { "type": "array", "items": { "type": "string" } },
+    "nextPaths": { "type": "array", "items": { "$ref": "#/$defs/nextPath" } },
+    "secondGaze": { "type": "array", "items": { "$ref": "#/$defs/secondGazeNote" } },
+    "lenses": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mirror": { "$ref": "#/$defs/lensLayer" },
+        "orb": { "$ref": "#/$defs/lensLayer" },
+        "stained": { "$ref": "#/$defs/lensLayer" }
+      }
+    },
+    "chapters": { "type": "array", "items": { "$ref": "#/$defs/chapter" } }
+  },
+  "$defs": {
+    "block": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "id", "text"],
+          "properties": {
+            "type": { "const": "p" },
+            "id": { "type": "string", "minLength": 1 },
+            "text": { "type": "string" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "id", "level", "text"],
+          "properties": {
+            "type": { "const": "h" },
+            "id": { "type": "string", "minLength": 1 },
+            "level": { "enum": [2, 3] },
+            "text": { "type": "string" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "id"],
+          "properties": {
+            "type": { "const": "hr" },
+            "id": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "id", "text"],
+          "properties": {
+            "type": { "const": "blockquote" },
+            "id": { "type": "string", "minLength": 1 },
+            "text": { "type": "string" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "id", "text"],
+          "properties": {
+            "type": { "const": "fieldnote" },
+            "id": { "type": "string", "minLength": 1 },
+            "speaker": { "type": "string" },
+            "text": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "startBlockId", "mood"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "startBlockId": { "type": "string", "minLength": 1 },
+        "mood": { "enum": ["Justice", "Love", "Beauty", "War", "Fortune", "Story", "Wisdom", "Neutral"] },
+        "accentOverride": { "type": "string" },
+        "ambientCue": { "$ref": "#/$defs/audioRef" },
+        "lightOverride": { "type": "string" }
+      }
+    },
+    "glossaryEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "title", "kind", "blurb"],
+      "properties": {
+        "key": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["god", "spirit", "mortal", "law", "term"] },
+        "blurb": { "type": "string", "maxLength": 240 },
+        "portrait": { "type": "string" },
+        "href": { "type": "string" }
+      }
+    },
+    "narration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["audio", "durationMs", "cues"],
+      "properties": {
+        "audio": { "$ref": "#/$defs/audioRef" },
+        "durationMs": { "type": "integer", "minimum": 0 },
+        "cues": { "type": "array", "items": { "$ref": "#/$defs/narrationCue" } },
+        "words": { "type": "array", "items": { "$ref": "#/$defs/wordCue" } },
+        "voice": { "type": "string" }
+      }
+    },
+    "audioRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["src", "format"],
+      "properties": {
+        "src": { "type": "string", "minLength": 1 },
+        "format": { "enum": ["mp3", "ogg", "wav"] },
+        "loop": { "type": "boolean" },
+        "gainDb": { "type": "number" }
+      }
+    },
+    "narrationCue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["oid", "startMs", "endMs"],
+      "properties": {
+        "oid": { "type": "string", "minLength": 1 },
+        "startMs": { "type": "integer", "minimum": 0 },
+        "endMs": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "wordCue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["oid", "wordIndex", "startMs", "endMs"],
+      "properties": {
+        "oid": { "type": "string", "minLength": 1 },
+        "wordIndex": { "type": "integer", "minimum": 0 },
+        "startMs": { "type": "integer", "minimum": 0 },
+        "endMs": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "nextPath": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "href", "kind"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "href": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["preserve", "follow-deity", "random", "archive"] }
+      }
+    },
+    "chapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "startBlockId"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "startBlockId": { "type": "string", "minLength": 1 }
+      }
+    },
+    "secondGazeNote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["oid", "note"],
+      "properties": {
+        "oid": { "type": "string", "minLength": 1 },
+        "note": { "type": "string" }
+      }
+    },
+    "lensLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blocks"],
+      "properties": {
+        "blocks": { "type": "array", "items": { "$ref": "#/$defs/block" } }
+      }
+    }
+  }
+}

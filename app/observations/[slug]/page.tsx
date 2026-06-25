@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { CopyLinkButton } from "../../components/CopyLinkButton";
 import { GlassMenu } from "../../components/GlassMenu";
 import { JsonLd } from "../../components/JsonLd";
+import { ObservationModeBoot } from "../../components/ObservationModeBoot";
 import {
   getNextObservation,
   getObservation,
@@ -103,6 +104,7 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
   return (
     <main>
       <JsonLd data={storyData} />
+      <ObservationModeBoot />
       <header className="site-header" aria-label="Primary navigation">
         <a className="brand" href="/#home" aria-label="Gaze Glass home">
           <img className="brand-mark" src="/brand/gaze-glass-logo-color.png" alt="" />
@@ -167,11 +169,17 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
               </figure>
             ) : null}
 
-            <div className="story-body">
-              {observation.story.map((paragraph, index) => (
-                <p key={`${observation.slug}-${index}`}>{paragraph}</p>
-              ))}
-            </div>
+            <observation-mode
+              manifest-src={`/observations/${observation.slug}/manifest.json`}
+              data-flag-second-gaze="off"
+              data-flag-change-lens="off"
+            >
+              <article className="story-body om-source">
+                {observation.story.map((paragraph, index) => (
+                  <p key={`${observation.slug}-${index}`}>{paragraph}</p>
+                ))}
+              </article>
+            </observation-mode>
 
             <nav className="observation-path" aria-label="Observation reading path">
               <a href={previousObservation ? getObservationHref(previousObservation) : "/observations"}>

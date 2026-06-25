@@ -5,7 +5,7 @@ export default defineConfig({
     lib: {
       entry: "src/index.ts",
       name: "GazeGlassObservationMode",
-      fileName: (format) => `observation-mode.${format === "es" ? "js" : "umd.cjs"}`,
+      fileName: (format: string) => `observation-mode.${format === "es" ? "js" : "umd.cjs"}`,
       formats: ["es", "umd"],
     },
     cssCodeSplit: false,

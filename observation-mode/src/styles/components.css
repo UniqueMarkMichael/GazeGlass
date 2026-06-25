@@ -1,0 +1,170 @@
+:host {
+  display: block;
+}
+
+.om-entry {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-height: 44px;
+  margin: 1rem 0;
+  padding: 0.72rem 1rem;
+  border: 1px solid var(--om-gold, #c9a227);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.om-entry strong {
+  font-size: 0.9rem;
+}
+
+.om-entry span {
+  color: currentColor;
+  font-size: 0.78rem;
+  opacity: 0.72;
+}
+
+.om-source {
+  display: block;
+}
+
+.om-block {
+  scroll-margin-block: 24vh;
+}
+
+.om-root {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background: var(--om-bg);
+  color: var(--om-text);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--om-dur) var(--om-ease);
+}
+
+.om-root.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.om-threshold,
+.om-witnessing {
+  grid-row: 1 / -1;
+  display: grid;
+  place-items: center;
+  padding: max(2rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(2rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+}
+
+.om-plate {
+  width: min(34rem, 100%);
+  text-align: center;
+}
+
+.om-plate p,
+.om-plate h2 {
+  margin: 0;
+}
+
+.om-plate h2 {
+  margin: 0.4rem 0 0.8rem;
+  color: var(--om-text);
+  font-family: Georgia, serif;
+  font-size: clamp(2rem, 8vw, 4rem);
+  font-weight: 500;
+}
+
+.om-plate p {
+  color: var(--om-text-dim);
+  line-height: 1.6;
+}
+
+.om-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.om-actions button,
+.om-dock button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid color-mix(in srgb, var(--om-accent), transparent 55%);
+  border-radius: 999px;
+  background: var(--om-bg-elev);
+  color: var(--om-text);
+  cursor: pointer;
+  font: inherit;
+}
+
+.om-reading {
+  width: min(var(--om-measure), 100%);
+  max-height: 100%;
+  overflow: auto;
+  padding: 6rem 0;
+  font-family: Georgia, serif;
+  font-size: var(--om-fs-body);
+  line-height: var(--om-lh-body);
+}
+
+.om-reading h1 {
+  margin: 0 0 1.5rem;
+  font-size: clamp(2.4rem, 9vw, 5.4rem);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.om-reading p,
+.om-reading blockquote,
+.om-reading aside {
+  margin: 0 0 1.35em;
+}
+
+.om-s {
+  transition: background var(--om-dur) var(--om-ease);
+}
+
+.om-s.is-spoken {
+  background: var(--om-selection);
+  border-radius: 3px;
+  box-shadow: inset 0 -0.08em 0 var(--om-accent);
+}
+
+.om-dock {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  left: max(1rem, env(safe-area-inset-left));
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.om-status {
+  min-height: 44px;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--om-bg-elev), transparent 10%);
+  color: var(--om-text-dim);
+  font-family: system-ui, sans-serif;
+  font-size: 0.82rem;
+}
+
+.om-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
