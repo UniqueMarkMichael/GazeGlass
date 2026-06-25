@@ -381,7 +381,7 @@ export class ObservationModeController {
           ).join("")}
         </div>
         <div class="om-panel-actions">
-          <button type="button" data-audio-action="atmosphere" aria-label="${COPY.atmosphereAria}" aria-pressed="${this.atmosphereOn}">${COPY.atmosphere}</button>
+          <button type="button" data-audio-action="atmosphere" aria-label="${COPY.atmosphereAria}" aria-pressed="${this.atmosphereOn}">${this.atmosphereOn ? COPY.pauseMusic : COPY.playMusic}</button>
           <button type="button" data-audio-action="narration" aria-label="${narrationAvailable ? COPY.narrationAria : COPY.narrationUnavailableAria}" aria-disabled="${!narrationAvailable}" aria-pressed="${this.narrationOn}">${COPY.narration}</button>
           <button type="button" data-audio-action="mute" aria-label="${COPY.muteAria}" aria-pressed="${this.audioMuted}">${COPY.mute}</button>
         </div>
@@ -619,6 +619,9 @@ export class ObservationModeController {
       "aria-label",
       this.atmosphereOn ? COPY.atmosphereStopAria : `${COPY.atmosphereAria}: ${this.getAtmosphereTrack().label}`,
     );
+    if (atmosphereButton) {
+      atmosphereButton.textContent = this.atmosphereOn ? COPY.pauseMusic : COPY.playMusic;
+    }
 
     if (narrationButton) {
       narrationButton.setAttribute("aria-disabled", String(!narrationAvailable));
@@ -817,9 +820,6 @@ export class ObservationModeController {
   }
 
   private startAtmosphere(): boolean {
-    const context = this.ensureAudioContext();
-    if (!context || !this.masterGain) return false;
-
     this.stopAtmosphere();
     this.atmosphereOn = true;
 
@@ -828,6 +828,7 @@ export class ObservationModeController {
       this.atmosphereAudio = new Audio(readingTrack.src);
       this.atmosphereAudio.loop = true;
       this.atmosphereAudio.volume = this.gainDbToVolume(readingTrack.gainDb);
+      this.atmosphereAudio.muted = this.audioMuted;
       void this.atmosphereAudio.play().catch(() => {
         this.atmosphereOn = false;
         this.updateSoundControls();
@@ -840,6 +841,7 @@ export class ObservationModeController {
       this.atmosphereAudio = new Audio(this.manifest.ambientTrack.src);
       this.atmosphereAudio.loop = this.manifest.ambientTrack.loop ?? true;
       this.atmosphereAudio.volume = this.gainDbToVolume(this.manifest.ambientTrack.gainDb ?? -18);
+      this.atmosphereAudio.muted = this.audioMuted;
       void this.atmosphereAudio.play().catch(() => {
         this.atmosphereOn = false;
         this.updateSoundControls();
@@ -847,6 +849,9 @@ export class ObservationModeController {
       });
       return true;
     }
+
+    const context = this.ensureAudioContext();
+    if (!context || !this.masterGain) return false;
 
     this.atmosphereGain = context.createGain();
     this.atmosphereGain.gain.setValueAtTime(0.0001, context.currentTime);
@@ -1034,6 +1039,10 @@ export class ObservationModeController {
 
     if (this.narrationAudio) {
       this.narrationAudio.muted = this.audioMuted;
+    }
+
+    if (this.atmosphereAudio) {
+      this.atmosphereAudio.muted = this.audioMuted;
     }
 
     this.applyPrefsToRoot();
