@@ -31,6 +31,8 @@ export function GlassSoundToggle() {
     const stopFirstInteractionListener = startGlassMusicAfterFirstInteraction();
     const observer = new MutationObserver(syncGlassMusic);
 
+    void startGlassMusic();
+
     observer.observe(document.documentElement, {
       attributeFilter: ["class"],
       attributes: true,

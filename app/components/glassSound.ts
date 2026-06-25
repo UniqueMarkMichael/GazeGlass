@@ -13,7 +13,7 @@ export type GlassSound =
 export const GLASS_SOUND_KEY = "gaze-glass.sound.v1";
 export const GLASS_SOUND_EVENT = "gaze-glass:sound-change";
 const GLASS_MUSIC_SRC = "/audio/atmosphere/divine-sanctuary-observatory.mp3";
-const GLASS_MUSIC_VOLUME = 0.18;
+const GLASS_MUSIC_VOLUME = 0.42;
 
 type OscillatorShape = OscillatorType;
 
@@ -83,8 +83,8 @@ function fadeGlassMusic(targetVolume: number) {
   const duration = 700;
 
   function step(now: number) {
-    const progress = Math.min(1, (now - startedAt) / duration);
-    musicElement.volume = startVolume + (targetVolume - startVolume) * progress;
+    const progress = Math.min(1, Math.max(0, (now - startedAt) / duration));
+    musicElement.volume = Math.min(1, Math.max(0, startVolume + (targetVolume - startVolume) * progress));
 
     if (progress < 1) {
       ambientMusicFadeFrame = window.requestAnimationFrame(step);
@@ -113,6 +113,10 @@ export async function startGlassMusic() {
   ambientMusicUnlocked = true;
 
   try {
+    if (!music.paused && music.volume > 0) {
+      return;
+    }
+
     await music.play();
     fadeGlassMusic(GLASS_MUSIC_VOLUME);
   } catch {
@@ -152,11 +156,15 @@ export function startGlassMusicAfterFirstInteraction() {
     void startGlassMusic();
   };
 
-  window.addEventListener("pointerdown", start, { once: true, passive: true });
-  window.addEventListener("keydown", start, { once: true });
-  window.addEventListener("touchstart", start, { once: true, passive: true });
+  window.addEventListener("click", start, { passive: true });
+  window.addEventListener("mousedown", start, { passive: true });
+  window.addEventListener("pointerdown", start, { passive: true });
+  window.addEventListener("keydown", start);
+  window.addEventListener("touchstart", start, { passive: true });
 
   return () => {
+    window.removeEventListener("click", start);
+    window.removeEventListener("mousedown", start);
     window.removeEventListener("pointerdown", start);
     window.removeEventListener("keydown", start);
     window.removeEventListener("touchstart", start);
