@@ -1,8 +1,8 @@
 export const COPY = {
   open: "Open",
   openAria: "Open immersive reading",
-  skip: "Skip",
-  skipAria: "Skip the opening and begin reading",
+  skip: "View",
+  skipAria: "View this Observation and begin reading",
   leave: "Leave",
   leaveAria: "Leave immersive reading",
   sound: "Sound",
