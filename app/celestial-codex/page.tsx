@@ -47,7 +47,7 @@ const codexLaws = [
       "Marcella did not become free when Justice ruled in her favor. She became free in the hallway, when she asked to be seen.",
     image: "/codex/sigil-law-witness.webp",
     alt: "A gold-framed sacred glass revealing a lone figure beneath a radiant witnessing eye",
-    linkHref: "/the-mortals#marcella-case",
+    linkHref: "/observations/marcella",
     linkLabel: "Seen in Marcella's observation",
   },
   {

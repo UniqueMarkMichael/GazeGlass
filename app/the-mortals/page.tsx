@@ -233,7 +233,7 @@ const mortalCases = [
     summary:
       "A creative worker asks to be witnessed after her labor is stolen and renamed.",
     evidence: "Stolen credit, hidden labor, restored authorship.",
-    href: "#marcella-case",
+    href: "/observations/marcella",
   },
   {
     id: "malika-case",

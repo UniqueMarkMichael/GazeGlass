@@ -134,6 +134,44 @@ export const observations: Observation[] = [
     ],
     related: [],
   },
+  {
+    number: "002",
+    title: "Marcella, Blessed by Justice",
+    slug: "marcella",
+    description:
+      "A creative worker asks to be witnessed after her labor is stolen and renamed, and the God of Justice makes the truth impossible to misattribute.",
+    region: "mortals",
+    regionLabel: "The Mortals",
+    association: "The God of Justice",
+    magnitude: "story",
+    magnitudeLabel: "Character Story",
+    readTime: "4 min read",
+    dateObserved: "2026-06-24",
+    image: "/mortals/marcella/portrait.webp",
+    imageAlt: "Marcella reflected in a sacred golden mirror after being witnessed by Justice",
+    seoTitle: "Marcella, Blessed by Justice",
+    seoDescription:
+      "Marcella, Blessed by Justice is a Gaze Glass Observation about stolen credit, unseen creative labor, restored authorship, and the blessing of being witnessed.",
+    excerpt:
+      "Marcella kept the work moving while others learned to expect her generosity. When her labor was taken and renamed, she did not ask for spectacle. She asked to be witnessed.",
+    story: [
+      "Marcella knew how to make a room feel calmer without anyone noticing she had done it. She caught the missing details before they became emergencies. She softened the sentence that would have made a client pull away. She carried unfinished ideas across the threshold and handed them back polished enough for someone else to call them obvious.",
+      "At first, she mistook this for belonging. The team praised her generosity. They called her collaborative, dependable, gracious under pressure. No one called her the source.",
+      "The work gathered around her anyway. A campaign that had been failing began to breathe after Marcella rewrote its spine. A presentation that had collapsed into noise became clear because she named the actual story under the slides. By the end, everyone could feel the idea working. By the meeting after that, everyone had forgotten who made it work.",
+      "Her manager presented the campaign beneath another name. The room clapped. Marcella sat beneath fluorescent light with her hands folded in her lap and felt something inside her go very still.",
+      "It was not only anger. Anger would have been easier. It was the old wound of watching truth become furniture in someone else's house. Her labor had not disappeared. It had been moved, relabeled, and placed where power could admire itself.",
+      "In the hallway, away from the voices and the congratulation, Marcella pressed her palm to the wall. She did not ask to be rescued. She did not ask for revenge. She asked the question her mortal voice could barely carry: let someone see what happened here.",
+      "The glass opened without sound.",
+      "Gold entered the hallway first, a thin judicial light passing over the carpet, the door handles, the coffee stains, the printed agenda still warm from the machine. Then the God of Justice looked through.",
+      "Justice did not rage. Justice did not comfort her with softness that would leave the structure intact. The god regarded Marcella with a level gaze, and in that gaze every hidden hour became evidence. Every revision. Every quiet save. Every sentence carried out of panic and into shape.",
+      "The blessing was not thunder. It was accuracy. In the next meeting, the file history opened at the wrong time and told the truth. The phrasing no one remembered drafting returned to its author. The strategy map, the late-night notes, the source documents, the timestamps, the messages where Marcella had explained the whole thing before anyone else understood it: all of it rose like testimony.",
+      "No one was destroyed. That was the part Marcella remembered later. Justice did not need spectacle to be complete. It returned the credit to its proper name, then waited to see what Marcella would do with power once it had finally found her.",
+      "She spoke plainly. She accepted the correction without apology. She named the work and the people who had helped without becoming the kind of person who steals light because light had once been stolen from her.",
+      "The promotion came later, but the blessing had already arrived. It was in the way the room looked at her and could no longer misfile what it saw. It was in the way Marcella learned that being witnessed is not vanity. Sometimes it is survival.",
+      "The Seer records the case under Justice because the verdict did not make Marcella louder. It made her impossible to erase.",
+    ],
+    related: ["patricia-awakened-by-wisdom"],
+  },
 ];
 
 export const featuredObservation = observations[0];

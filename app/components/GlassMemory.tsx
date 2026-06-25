@@ -36,7 +36,7 @@ const homeSections = [
 
 const mortalCases = [
   { hash: "#patricia-case", id: "patricia", label: "Patricia, Awakened by Wisdom", href: "/the-mortals#patricia-case" },
-  { hash: "#marcella-case", id: "marcella", label: "Marcella, Blessed by Justice", href: "/the-mortals#marcella-case" },
+  { hash: "#marcella-case", id: "marcella", label: "Marcella, Blessed by Justice", href: "/observations/marcella" },
   { hash: "#malika-case", id: "malika", label: "Malika, Blessed by Love", href: "/the-mortals#malika-case" },
   { hash: "#takeshi-case", id: "takeshi", label: "Takeshi, Blessed by Fortune", href: "/the-mortals#takeshi-case" },
   { hash: "#walter-case", id: "walter", label: "Walter, Blessed by War", href: "/the-mortals#walter-case" },

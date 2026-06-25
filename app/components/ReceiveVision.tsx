@@ -12,12 +12,12 @@ type Vision = {
 
 const visions: Vision[] = [
   {
-    title: "Patricia, Awakened by Wisdom",
+    title: "Marcella, Blessed by Justice",
     realm: "Mortal Vision",
-    signal: "Wisdom",
-    href: "/observations",
+    signal: "Justice",
+    href: "/observations/marcella",
     description:
-      "A former financier follows the question of meaning until the wall between self and world dissolves.",
+      "A creative worker asks to be witnessed after her labor is stolen and renamed.",
   },
   {
     title: "Walter, Blessed by War",

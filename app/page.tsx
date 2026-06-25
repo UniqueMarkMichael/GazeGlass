@@ -207,8 +207,8 @@ export default function Home() {
             <span>Mortals Pray.</span>
             <span>Spirits Remember.</span>
           </div>
-          <a className="scroll-cue" href="#the-mortals" aria-label="Meet the first mortal">
-            Meet the first mortal
+          <a className="scroll-cue" href="/observations/marcella" aria-label="Begin witnessing Marcella">
+            Begin Witnessing
           </a>
         </div>
       </section>
@@ -249,8 +249,8 @@ export default function Home() {
           The Seer is your guide through the glass. Begin with one mortal life, then
           follow the light outward to the gods and spirits watching from beyond.
         </p>
-        <a className="text-link" href="#the-mortals">
-          Begin the observation
+        <a className="text-link" href="/observations/marcella">
+          Begin Witnessing
         </a>
       </section>
 
@@ -297,7 +297,7 @@ export default function Home() {
             hallway between humiliation and surrender, she asks Justice to witness.
           </p>
           <p className="observation-note">Just witnessed: Malika, Blessed by Love.</p>
-          <a href="/the-mortals">Enter the mortal archive</a>
+          <a href="/observations/marcella">Begin Witnessing</a>
         </div>
         <figure className="observation-portrait">
           <img src="/mortals/marcella/portrait.webp" alt="Marcella reflected in a sacred golden mirror" />
