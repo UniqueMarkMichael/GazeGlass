@@ -81,13 +81,6 @@ export class ObservationModeController {
     this.releaseTrap = trapFocus(this.root);
     this.root.focus();
     this.announce("Entering Observation Mode.");
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    await this.delay(reducedMotion ? 0 : 650);
-    if (this.isState("entering")) {
-      this.dispatch({ type: "THRESHOLD_DONE" });
-      this.renderWitnessing();
-    }
   }
 
   async exit(): Promise<void> {
@@ -171,7 +164,11 @@ export class ObservationModeController {
       this.renderWitnessing();
     });
     plate.querySelector<HTMLButtonElement>("[data-action='exit']")?.addEventListener("click", () => void this.exit());
+    plate.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") void this.exit();
+    });
     this.root.append(plate);
+    plate.querySelector<HTMLButtonElement>("[data-action='skip']")?.focus();
   }
 
   private renderWitnessing(): void {
