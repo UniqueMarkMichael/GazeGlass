@@ -92,6 +92,7 @@ export class ObservationModeController {
 
   async exit(): Promise<void> {
     if (this.state === "idle" || this.state === "exiting") return;
+    this.closePanel(false);
     this.dispatch({ type: "EXIT" });
     this.root.classList.remove("is-open");
     this.sourceArticle?.removeAttribute("aria-hidden");
@@ -106,8 +107,20 @@ export class ObservationModeController {
   }
 
   openPanel(panelId: PanelId): void {
-    this.dispatch({ type: "OPEN_PANEL", panelId });
+    if (this.state !== "panel") {
+      this.dispatch({ type: "OPEN_PANEL", panelId });
+    }
+    this.renderPanel(panelId);
     this.bus.emit("panelchange", { panelId });
+  }
+
+  closePanel(announce = true): void {
+    this.root.querySelector(".om-panel")?.remove();
+    if (this.state === "panel") {
+      this.dispatch({ type: "CLOSE_PANEL" });
+      this.bus.emit("panelchange", { panelId: null });
+      if (announce) this.announce("Panel closed.");
+    }
   }
 
   private dispatch(event: MachineEvent): void {
@@ -191,17 +204,112 @@ export class ObservationModeController {
     shell.querySelector<HTMLButtonElement>("[data-action='exit']")?.addEventListener("click", () => void this.exit());
     shell.querySelector<HTMLButtonElement>("[data-action='preserve']")?.addEventListener("click", () => {
       this.bus.emit("preserve", { kind: "record" });
+      this.showToast("Preserved.");
       this.announce("Preserved.");
     });
     shell.querySelectorAll<HTMLButtonElement>("[data-panel]").forEach((button) => {
       button.addEventListener("click", () => this.openPanel(button.dataset.panel as PanelId));
     });
     shell.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") void this.exit();
+      if (event.key !== "Escape") return;
+      if (this.state === "panel") {
+        this.closePanel();
+      } else {
+        void this.exit();
+      }
     });
 
     this.root.append(shell);
     this.readingArticle?.focus();
+  }
+
+  private renderPanel(panelId: PanelId): void {
+    this.root.querySelector(".om-panel")?.remove();
+    const panel = document.createElement("section");
+    panel.className = "om-panel";
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-modal", "false");
+
+    if (panelId === "sound") {
+      panel.setAttribute("aria-label", "Sound and narration settings");
+      panel.innerHTML = `
+        <button class="om-panel-close" type="button" aria-label="Close panel">Close</button>
+        <p class="om-panel-kicker">${COPY.hear}</p>
+        <h2>Sound is paused until you turn it on.</h2>
+        <p>Narration is not available for this record yet. The text remains the transcript, and no audio will play unless you choose it in a later build.</p>
+        <div class="om-panel-actions">
+          <button type="button" disabled>Atmosphere</button>
+          <button type="button" disabled>Hear the Seer</button>
+          <button type="button" disabled>Mute all</button>
+        </div>
+      `;
+    } else if (panelId === "focus") {
+      panel.setAttribute("aria-label", "Reading focus aids");
+      panel.innerHTML = `
+        <button class="om-panel-close" type="button" aria-label="Close panel">Close</button>
+        <p class="om-panel-kicker">${COPY.focus}</p>
+        <h2>Focus the Glass</h2>
+        <p>Use a calmer reading rhythm while the full focus engine is being built.</p>
+        <div class="om-panel-actions">
+          <button type="button" data-focus-mode="off">Off</button>
+          <button type="button" data-focus-mode="spacing">Generous spacing</button>
+        </div>
+      `;
+    } else {
+      panel.setAttribute("aria-label", "Text appearance settings");
+      panel.innerHTML = `
+        <button class="om-panel-close" type="button" aria-label="Close panel">Close</button>
+        <p class="om-panel-kicker">${COPY.display}</p>
+        <h2>Shape the Text</h2>
+        <p>Change the atmosphere without moving the prose out of reach.</p>
+        <div class="om-panel-actions">
+          <button type="button" data-theme="obsidian">Obsidian</button>
+          <button type="button" data-theme="parchment">Parchment</button>
+          <button type="button" data-theme="moonlight">Moonlight</button>
+          <button type="button" data-size="-1">A-</button>
+          <button type="button" data-size="1">A+</button>
+        </div>
+      `;
+    }
+
+    panel.querySelector<HTMLButtonElement>(".om-panel-close")?.addEventListener("click", () => this.closePanel());
+    panel.querySelectorAll<HTMLButtonElement>("[data-theme]").forEach((button) => {
+      button.addEventListener("click", () => {
+        this.root.dataset.omTheme = button.dataset.theme ?? "obsidian";
+        this.showToast(`${button.textContent ?? "Theme"} selected.`);
+      });
+    });
+    panel.querySelectorAll<HTMLButtonElement>("[data-size]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const current = Number.parseFloat(this.root.style.getPropertyValue("--om-fs-body")) || 1.18;
+        const direction = Number.parseInt(button.dataset.size ?? "0", 10);
+        const next = Math.min(1.6, Math.max(1, current + direction * 0.08));
+        this.root.style.setProperty("--om-fs-body", `${next.toFixed(2)}rem`);
+      });
+    });
+    panel.querySelectorAll<HTMLButtonElement>("[data-focus-mode]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const mode = button.dataset.focusMode ?? "off";
+        this.root.dataset.focusMode = mode;
+        this.showToast(mode === "spacing" ? "Generous spacing on." : "Focus reset.");
+      });
+    });
+    panel.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") this.closePanel();
+    });
+
+    this.root.append(panel);
+    panel.querySelector<HTMLElement>(".om-panel-close")?.focus();
+  }
+
+  private showToast(message: string): void {
+    this.root.querySelector(".om-toast")?.remove();
+    const toast = document.createElement("div");
+    toast.className = "om-toast";
+    toast.setAttribute("role", "status");
+    toast.textContent = message;
+    this.root.append(toast);
+    window.setTimeout(() => toast.remove(), 2400);
   }
 
   private getTitle(): string {
