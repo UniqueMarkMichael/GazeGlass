@@ -111,6 +111,11 @@ export const COMPONENT_STYLES = `
 
 .om-block {
   scroll-margin-block: 24vh;
+  border-radius: 8px;
+  transition:
+    opacity var(--om-lantern-fade) cubic-bezier(0.4, 0, 0.2, 1),
+    background-color var(--om-lantern-fade) cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow var(--om-lantern-fade) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .om-root {
@@ -123,6 +128,10 @@ export const COMPONENT_STYLES = `
   --om-measure: 38rem;
   --om-fs-body: 1.18rem;
   --om-lh-body: 1.7;
+  --om-dur: 280ms;
+  --om-lantern-dim: 0.42;
+  --om-lantern-wash: color-mix(in srgb, var(--om-accent) 10%, transparent);
+  --om-lantern-fade: var(--om-dur);
   position: fixed;
   inset: 0;
   z-index: 2147483647;
@@ -240,7 +249,7 @@ export const COMPONENT_STYLES = `
   outline: none;
 }
 
-.om-root[data-focus-mode="spacing"] .om-reading {
+.om-root[data-spacing-mode="on"] .om-reading {
   --om-lh-body: 1.95;
 }
 
@@ -257,10 +266,20 @@ export const COMPONENT_STYLES = `
   margin: 0 0 1.35em;
 }
 
-.om-root[data-focus-mode="spacing"] .om-reading p,
-.om-root[data-focus-mode="spacing"] .om-reading blockquote,
-.om-root[data-focus-mode="spacing"] .om-reading aside {
+.om-root[data-spacing-mode="on"] .om-reading p,
+.om-root[data-spacing-mode="on"] .om-reading blockquote,
+.om-root[data-spacing-mode="on"] .om-reading aside {
   margin-bottom: 1.75em;
+}
+
+.om-root[data-focus-mode="spotlight"] .om-block.om-dim {
+  opacity: var(--om-lantern-dim);
+}
+
+.om-root[data-focus-mode="spotlight"] .om-block.is-lit {
+  background-color: var(--om-lantern-wash);
+  box-shadow: 0 0 0 0.42rem var(--om-lantern-wash);
+  opacity: 1;
 }
 
 .om-s.is-spoken {
@@ -280,6 +299,79 @@ export const COMPONENT_STYLES = `
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+}
+
+.om-split-control {
+  display: inline-grid;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  min-height: 44px;
+  border: 1px solid color-mix(in srgb, var(--om-accent), transparent 55%);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--om-bg-elev);
+}
+
+.om-dock .om-split-control button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.om-lantern-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.68rem 0.78rem;
+}
+
+.om-lantern-toggle[aria-pressed="true"] {
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--om-accent), transparent 72%), transparent 70%),
+    color-mix(in srgb, var(--om-accent), var(--om-bg-elev) 76%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--om-accent), transparent 45%);
+}
+
+.om-lantern-icon,
+.om-focus-more svg {
+  width: 1.08rem;
+  height: 1.08rem;
+  flex: 0 0 auto;
+}
+
+.om-lantern-icon svg,
+.om-focus-more svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.75;
+}
+
+.om-lantern-fill {
+  fill: currentColor;
+  opacity: 0;
+  stroke: none;
+  transition: opacity var(--om-lantern-fade) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.om-lantern-toggle[aria-pressed="true"] .om-lantern-fill {
+  opacity: 1;
+}
+
+.om-focus-more {
+  display: grid;
+  place-items: center;
+  border-left: 1px solid color-mix(in srgb, var(--om-accent), transparent 65%) !important;
+}
+
+.om-focus-more[aria-expanded="true"] {
+  background: color-mix(in srgb, var(--om-accent), var(--om-bg-elev) 86%);
 }
 
 .om-status {
@@ -336,6 +428,13 @@ export const COMPONENT_STYLES = `
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+}
+
+.om-panel-actions button[role="radio"][aria-checked="true"],
+.om-panel-actions button[data-spacing-toggle][aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--om-accent), transparent 22%);
+  background: color-mix(in srgb, var(--om-accent), var(--om-bg-elev) 78%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--om-accent), transparent 58%);
 }
 
 .om-toast {
@@ -463,13 +562,37 @@ export const COMPONENT_STYLES = `
 
   .om-dock button {
     min-width: 0;
-    min-height: 42px;
+    min-height: 44px;
     padding: 0.55rem 0.35rem;
     border-radius: 14px;
     font-family: system-ui, sans-serif;
     font-size: clamp(0.68rem, 3vw, 0.78rem);
     line-height: 1.12;
     white-space: normal;
+  }
+
+  .om-split-control {
+    grid-template-columns: minmax(44px, 1fr) 44px;
+    min-width: 0;
+    border-radius: 14px;
+  }
+
+  .om-dock .om-split-control button {
+    min-height: 44px;
+    padding: 0.55rem 0.25rem;
+  }
+
+  .om-lantern-toggle {
+    gap: 0;
+  }
+
+  .om-lantern-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 
   .om-dock button[data-action="exit"] {
@@ -497,7 +620,19 @@ export const COMPONENT_STYLES = `
 
 @media (prefers-reduced-motion: reduce) {
   .om-root {
+    --om-lantern-fade: 0ms;
     transition: none;
+  }
+
+  .om-block,
+  .om-lantern-fill {
+    transition: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .om-root {
+    --om-lantern-dim: 0.5;
   }
 }
 `;

@@ -13,6 +13,17 @@ export interface ObservationModeControllerOptions {
   manifest?: ObservationManifest;
 }
 
+type FocusMode = "off" | "spotlight" | "band" | "ruler";
+type FocusChangeSource = "dock" | "panel" | "restore";
+
+type ReaderPrefs = {
+  focusMode?: FocusMode;
+  generousSpacing?: boolean;
+};
+
+const PREFS_KEY = "gg.om.prefs";
+const FOCUS_MODES = new Set<FocusMode>(["off", "spotlight", "band", "ruler"]);
+
 export class ObservationModeController {
   private state: MachineState = "idle";
   private readonly bus: EventBus;
@@ -26,6 +37,11 @@ export class ObservationModeController {
   private models: BlockModel[] = [];
   private manifest: ObservationManifest | null;
   private previousActiveElement: Element | null = null;
+  private focusMode: FocusMode = "off";
+  private generousSpacing = false;
+  private activeBlockId: string | null = null;
+  private activeBlockFrame: number | null = null;
+  private releaseActiveBlockTracker: (() => void) | null = null;
   private scrollLock:
     | {
         scrollY: number;
@@ -62,12 +78,15 @@ export class ObservationModeController {
 
     this.sourceArticle.classList.add("om-source");
     this.models = parseHtmlBody(this.sourceArticle);
+    this.loadPrefs();
+    this.applyPrefsToRoot();
     this.renderEntryButton();
   }
 
   disconnect(): void {
     this.releaseTrap?.();
     this.releaseTrap = null;
+    this.stopActiveBlockTracker();
     this.unlockHostExperience();
   }
 
@@ -103,6 +122,7 @@ export class ObservationModeController {
     this.dispatch({ type: "EXIT" });
     this.root.classList.remove("is-open");
     this.sourceArticle?.removeAttribute("aria-hidden");
+    this.stopActiveBlockTracker();
     this.unlockHostExperience();
     this.releaseTrap?.();
     this.releaseTrap = null;
@@ -129,6 +149,7 @@ export class ObservationModeController {
       this.bus.emit("panelchange", { panelId: null });
       if (announce) this.announce("Panel closed.");
     }
+    this.updateFocusControls();
   }
 
   private dispatch(event: MachineEvent): void {
@@ -215,7 +236,36 @@ export class ObservationModeController {
         <button type="button" data-action="exit">${COPY.returnArchive}</button>
         <span class="om-status">${COPY.plateObservation} ${this.getObservationNumber()} · 0% witnessed</span>
         <button type="button" data-panel="sound" aria-label="Sound and narration settings">${COPY.hear}</button>
-        <button type="button" data-panel="focus" aria-label="Reading focus aids">${COPY.focus}</button>
+        <span class="om-split-control" role="group" aria-label="Focus controls">
+          <button
+            class="om-lantern-toggle"
+            type="button"
+            data-action="lantern"
+            aria-label="${COPY.lanternAriaOff}"
+            aria-pressed="false"
+          >
+            <span class="om-lantern-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path class="om-lantern-shell" d="M9 3.7h6M10 6.1h4l1.6 3.1v6.8L12 20.3 8.4 16V9.2L10 6.1Z" />
+                <path class="om-lantern-fill" d="M12 9.1c1.35 1.4 2.05 2.65 2.05 3.77A2.05 2.05 0 0 1 12 14.97a2.05 2.05 0 0 1-2.05-2.1c0-1.12.7-2.37 2.05-3.77Z" />
+                <path d="M8.4 16h7.2" />
+              </svg>
+            </span>
+            <span class="om-lantern-label">${COPY.lantern}</span>
+          </button>
+          <button
+            class="om-focus-more"
+            type="button"
+            data-panel="focus"
+            aria-label="${COPY.focusMoreAria}"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+          >
+            <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+              <path d="M5.5 7.5 10 12l4.5-4.5" />
+            </svg>
+          </button>
+        </span>
         <button type="button" data-panel="display" aria-label="Text appearance settings">${COPY.display}</button>
       </div>
     `;
@@ -227,9 +277,11 @@ export class ObservationModeController {
       for (const node of Array.from(this.sourceArticle.children)) {
         this.readingArticle.append(node.cloneNode(true));
       }
+      this.models = parseHtmlBody(this.readingArticle);
     }
 
     shell.querySelector<HTMLButtonElement>("[data-action='exit']")?.addEventListener("click", () => void this.exit());
+    shell.querySelector<HTMLButtonElement>("[data-action='lantern']")?.addEventListener("click", () => this.toggleLantern());
     shell.querySelectorAll<HTMLButtonElement>("[data-panel]").forEach((button) => {
       button.addEventListener("click", () => this.openPanel(button.dataset.panel as PanelId));
     });
@@ -243,6 +295,9 @@ export class ObservationModeController {
     });
 
     this.root.append(shell);
+    this.applyPrefsToRoot();
+    this.updateFocusControls();
+    this.startActiveBlockTracker();
     this.readingArticle?.focus();
   }
 
@@ -272,10 +327,15 @@ export class ObservationModeController {
         <button class="om-panel-close" type="button" aria-label="Close panel">Close</button>
         <p class="om-panel-kicker">${COPY.focus}</p>
         <h2>Focus the Glass</h2>
-        <p>Use a calmer reading rhythm while the full focus engine is being built.</p>
+        <p>Choose how the Glass steadies the page while the text remains intact.</p>
+        <div class="om-panel-actions om-focus-options" role="radiogroup" aria-label="Reading focus mode">
+          <button type="button" role="radio" aria-checked="false" data-focus-mode="off">Off</button>
+          <button type="button" role="radio" aria-checked="false" data-focus-mode="spotlight">Paragraph spotlight</button>
+          <button type="button" role="radio" aria-checked="false" data-focus-mode="band">Line band</button>
+          <button type="button" role="radio" aria-checked="false" data-focus-mode="ruler">Reading ruler</button>
+        </div>
         <div class="om-panel-actions">
-          <button type="button" data-focus-mode="off">Off</button>
-          <button type="button" data-focus-mode="spacing">Generous spacing</button>
+          <button type="button" data-spacing-toggle aria-pressed="false">Generous spacing</button>
         </div>
       `;
     } else {
@@ -312,17 +372,207 @@ export class ObservationModeController {
     });
     panel.querySelectorAll<HTMLButtonElement>("[data-focus-mode]").forEach((button) => {
       button.addEventListener("click", () => {
-        const mode = button.dataset.focusMode ?? "off";
-        this.root.dataset.focusMode = mode;
-        this.showToast(mode === "spacing" ? "Generous spacing on." : "Focus reset.");
+        const mode = this.parseFocusMode(button.dataset.focusMode);
+        this.setFocusMode(mode, "panel");
       });
+    });
+    panel.querySelector<HTMLButtonElement>("[data-spacing-toggle]")?.addEventListener("click", () => {
+      this.setGenerousSpacing(!this.generousSpacing);
     });
     panel.addEventListener("keydown", (event) => {
       if (event.key === "Escape") this.closePanel();
     });
 
     this.root.append(panel);
+    this.updateFocusControls();
     panel.querySelector<HTMLElement>(".om-panel-close")?.focus();
+  }
+
+  private toggleLantern(): void {
+    this.setFocusMode(this.focusMode === "spotlight" ? "off" : "spotlight", "dock");
+  }
+
+  private setFocusMode(mode: FocusMode, source: FocusChangeSource): void {
+    this.focusMode = mode;
+    this.applyPrefsToRoot();
+    this.updateFocusControls();
+    this.savePrefs();
+
+    if (source !== "restore") {
+      this.trackFocusChange(source);
+      this.showToast(this.focusToast(mode));
+      this.announce(mode === "spotlight" ? "Lantern on." : "Lantern off.");
+    }
+  }
+
+  private setGenerousSpacing(enabled: boolean): void {
+    this.generousSpacing = enabled;
+    this.applyPrefsToRoot();
+    this.updateFocusControls();
+    this.savePrefs();
+    this.showToast(enabled ? "Generous spacing on." : "Generous spacing off.");
+  }
+
+  private parseFocusMode(value: string | undefined): FocusMode {
+    return FOCUS_MODES.has(value as FocusMode) ? (value as FocusMode) : "off";
+  }
+
+  private focusToast(mode: FocusMode): string {
+    if (mode === "spotlight") return "Lantern on.";
+    if (mode === "band") return "Line band selected.";
+    if (mode === "ruler") return "Reading ruler selected.";
+    return "Focus reset.";
+  }
+
+  private loadPrefs(): void {
+    try {
+      const prefs = JSON.parse(window.localStorage.getItem(PREFS_KEY) ?? "{}") as ReaderPrefs;
+      this.focusMode = this.parseFocusMode(prefs.focusMode);
+      this.generousSpacing = Boolean(prefs.generousSpacing);
+    } catch {
+      this.focusMode = "off";
+      this.generousSpacing = false;
+    }
+  }
+
+  private savePrefs(): void {
+    try {
+      window.localStorage.setItem(
+        PREFS_KEY,
+        JSON.stringify({
+          focusMode: this.focusMode,
+          generousSpacing: this.generousSpacing,
+        } satisfies ReaderPrefs),
+      );
+    } catch {
+      // Local storage can be unavailable in private contexts. The controls still work for this session.
+    }
+  }
+
+  private applyPrefsToRoot(): void {
+    this.root.dataset.focusMode = this.focusMode;
+    this.root.dataset.spacingMode = this.generousSpacing ? "on" : "off";
+    this.applyLanternClasses();
+  }
+
+  private updateFocusControls(): void {
+    const lanternOn = this.focusMode === "spotlight";
+    const lantern = this.root.querySelector<HTMLButtonElement>("[data-action='lantern']");
+    if (lantern) {
+      lantern.setAttribute("aria-pressed", String(lanternOn));
+      lantern.setAttribute("aria-label", lanternOn ? COPY.lanternAriaOn : COPY.lanternAriaOff);
+    }
+
+    const focusMore = this.root.querySelector<HTMLButtonElement>(".om-focus-more");
+    const focusPanelOpen = Boolean(this.root.querySelector(".om-panel[aria-label='Reading focus aids']"));
+    focusMore?.setAttribute("aria-expanded", String(focusPanelOpen));
+
+    this.root.querySelectorAll<HTMLButtonElement>("[data-focus-mode]").forEach((button) => {
+      const selected = this.parseFocusMode(button.dataset.focusMode) === this.focusMode;
+      button.setAttribute("aria-checked", String(selected));
+    });
+
+    this.root
+      .querySelector<HTMLButtonElement>("[data-spacing-toggle]")
+      ?.setAttribute("aria-pressed", String(this.generousSpacing));
+  }
+
+  private startActiveBlockTracker(): void {
+    this.stopActiveBlockTracker();
+    if (!this.readingArticle) return;
+
+    const schedule = () => this.scheduleActiveBlockUpdate();
+    this.readingArticle.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    this.releaseActiveBlockTracker = () => {
+      this.readingArticle?.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+    this.scheduleActiveBlockUpdate();
+  }
+
+  private stopActiveBlockTracker(): void {
+    this.releaseActiveBlockTracker?.();
+    this.releaseActiveBlockTracker = null;
+
+    if (this.activeBlockFrame !== null) {
+      window.cancelAnimationFrame(this.activeBlockFrame);
+      this.activeBlockFrame = null;
+    }
+
+    this.activeBlockId = null;
+    this.models.forEach(({ element }) => element.classList.remove("is-lit", "om-dim"));
+  }
+
+  private scheduleActiveBlockUpdate(): void {
+    if (this.activeBlockFrame !== null) return;
+    this.activeBlockFrame = window.requestAnimationFrame(() => {
+      this.activeBlockFrame = null;
+      this.updateActiveBlock();
+    });
+  }
+
+  private updateActiveBlock(): void {
+    if (!this.readingArticle || !this.models.length) return;
+
+    const readingRect = this.readingArticle.getBoundingClientRect();
+    const viewportCenter = readingRect.top + readingRect.height / 2;
+    let nearest: BlockModel | null = null;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+
+    for (const model of this.models) {
+      if (!this.readingArticle.contains(model.element)) continue;
+
+      const rect = model.element.getBoundingClientRect();
+      if (rect.height === 0 && rect.width === 0) continue;
+
+      const blockCenter = rect.top + rect.height / 2;
+      const distance = Math.abs(blockCenter - viewportCenter);
+      if (distance < nearestDistance) {
+        nearest = model;
+        nearestDistance = distance;
+      }
+    }
+
+    if (!nearest) return;
+    this.activeBlockId = nearest.id;
+    this.applyLanternClasses();
+  }
+
+  private applyLanternClasses(): void {
+    const lanternActive = this.focusMode === "spotlight" && Boolean(this.activeBlockId);
+    const litIds = new Set<string>();
+
+    if (lanternActive && this.activeBlockId) {
+      const activeIndex = this.models.findIndex((model) => model.id === this.activeBlockId);
+      const active = this.models[activeIndex];
+      const previous = this.models[activeIndex - 1];
+      litIds.add(this.activeBlockId);
+
+      if (active?.type === "p" && previous?.type === "h") {
+        litIds.add(previous.id);
+      }
+    }
+
+    for (const model of this.models) {
+      const inReading = this.readingArticle?.contains(model.element) ?? false;
+      if (!inReading) continue;
+
+      const lit = lanternActive && litIds.has(model.id);
+      model.element.classList.toggle("is-lit", lit);
+      model.element.classList.toggle("om-dim", lanternActive && !lit);
+    }
+  }
+
+  private trackFocusChange(source: Exclude<FocusChangeSource, "restore">): void {
+    const analyticsWindow = window as unknown as {
+      ggAnalyticsConsent?: boolean;
+      gtag?: (command: "event", name: string, params: Record<string, string>) => void;
+    };
+
+    if (analyticsWindow.ggAnalyticsConsent === true && typeof analyticsWindow.gtag === "function") {
+      analyticsWindow.gtag("event", "om_focus_change", { mode: this.focusMode, source });
+    }
   }
 
   private showToast(message: string): void {
