@@ -4,8 +4,12 @@ import { useEffect, useState } from "react";
 import {
   GLASS_SOUND_EVENT,
   isGlassSoundEnabled,
+  pauseGlassMusic,
   playGlassSound,
   setGlassSoundEnabled,
+  startGlassMusic,
+  startGlassMusicAfterFirstInteraction,
+  syncGlassMusic,
 } from "./glassSound";
 
 export function GlassSoundToggle() {
@@ -23,6 +27,33 @@ export function GlassSoundToggle() {
     return () => window.removeEventListener(GLASS_SOUND_EVENT, syncSoundState);
   }, []);
 
+  useEffect(() => {
+    const stopFirstInteractionListener = startGlassMusicAfterFirstInteraction();
+    const observer = new MutationObserver(syncGlassMusic);
+
+    observer.observe(document.documentElement, {
+      attributeFilter: ["class"],
+      attributes: true,
+    });
+
+    function syncForVisibility() {
+      if (document.hidden) {
+        pauseGlassMusic();
+        return;
+      }
+
+      syncGlassMusic();
+    }
+
+    document.addEventListener("visibilitychange", syncForVisibility);
+
+    return () => {
+      stopFirstInteractionListener();
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", syncForVisibility);
+    };
+  }, []);
+
   function toggleSound() {
     const nextValue = !isEnabled;
     setGlassSoundEnabled(nextValue);
@@ -30,6 +61,9 @@ export function GlassSoundToggle() {
 
     if (nextValue) {
       playGlassSound("open");
+      void startGlassMusic();
+    } else {
+      pauseGlassMusic();
     }
   }
 

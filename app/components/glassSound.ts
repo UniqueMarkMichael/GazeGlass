@@ -12,11 +12,16 @@ export type GlassSound =
 
 export const GLASS_SOUND_KEY = "gaze-glass.sound.v1";
 export const GLASS_SOUND_EVENT = "gaze-glass:sound-change";
+const GLASS_MUSIC_SRC = "/audio/atmosphere/divine-sanctuary-observatory.mp3";
+const GLASS_MUSIC_VOLUME = 0.18;
 
 type OscillatorShape = OscillatorType;
 
 let audioContext: AudioContext | null = null;
 let masterGain: GainNode | null = null;
+let ambientMusic: HTMLAudioElement | null = null;
+let ambientMusicUnlocked = false;
+let ambientMusicFadeFrame: number | null = null;
 
 function isBrowser() {
   return typeof window !== "undefined";
@@ -36,7 +41,126 @@ export function setGlassSoundEnabled(enabled: boolean) {
   }
 
   window.localStorage.setItem(GLASS_SOUND_KEY, enabled ? "on" : "off");
+  if (!enabled) {
+    pauseGlassMusic();
+  }
   window.dispatchEvent(new CustomEvent(GLASS_SOUND_EVENT, { detail: enabled }));
+}
+
+function isObservationModeActive() {
+  return document.documentElement.classList.contains("observation-mode-active");
+}
+
+function getAmbientMusic() {
+  if (!isBrowser()) {
+    return null;
+  }
+
+  if (!ambientMusic) {
+    ambientMusic = new Audio(GLASS_MUSIC_SRC);
+    ambientMusic.loop = true;
+    ambientMusic.preload = "auto";
+    ambientMusic.volume = 0;
+  }
+
+  return ambientMusic;
+}
+
+function fadeGlassMusic(targetVolume: number) {
+  const music = getAmbientMusic();
+  if (!music) {
+    return;
+  }
+
+  const musicElement = music;
+
+  if (ambientMusicFadeFrame !== null) {
+    window.cancelAnimationFrame(ambientMusicFadeFrame);
+  }
+
+  const startVolume = musicElement.volume;
+  const startedAt = performance.now();
+  const duration = 700;
+
+  function step(now: number) {
+    const progress = Math.min(1, (now - startedAt) / duration);
+    musicElement.volume = startVolume + (targetVolume - startVolume) * progress;
+
+    if (progress < 1) {
+      ambientMusicFadeFrame = window.requestAnimationFrame(step);
+      return;
+    }
+
+    ambientMusicFadeFrame = null;
+    if (targetVolume === 0) {
+      musicElement.pause();
+    }
+  }
+
+  ambientMusicFadeFrame = window.requestAnimationFrame(step);
+}
+
+export async function startGlassMusic() {
+  if (!isBrowser() || !isGlassSoundEnabled() || isObservationModeActive()) {
+    return;
+  }
+
+  const music = getAmbientMusic();
+  if (!music) {
+    return;
+  }
+
+  ambientMusicUnlocked = true;
+
+  try {
+    await music.play();
+    fadeGlassMusic(GLASS_MUSIC_VOLUME);
+  } catch {
+    ambientMusicUnlocked = false;
+  }
+}
+
+export function pauseGlassMusic() {
+  if (!isBrowser() || !ambientMusic) {
+    return;
+  }
+
+  fadeGlassMusic(0);
+}
+
+export function syncGlassMusic() {
+  if (!isBrowser()) {
+    return;
+  }
+
+  if (!isGlassSoundEnabled() || isObservationModeActive()) {
+    pauseGlassMusic();
+    return;
+  }
+
+  if (ambientMusicUnlocked) {
+    void startGlassMusic();
+  }
+}
+
+export function startGlassMusicAfterFirstInteraction() {
+  if (!isBrowser()) {
+    return () => {};
+  }
+
+  const start = () => {
+    void startGlassMusic();
+  };
+
+  window.addEventListener("pointerdown", start, { once: true, passive: true });
+  window.addEventListener("keydown", start, { once: true });
+  window.addEventListener("touchstart", start, { once: true, passive: true });
+
+  return () => {
+    window.removeEventListener("pointerdown", start);
+    window.removeEventListener("keydown", start);
+    window.removeEventListener("touchstart", start);
+  };
 }
 
 function getAudioContext() {
