@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "check:contrast": "node scripts/check-observation-entry-contrast.mjs",
     "start": "next start"
   },
   "dependencies": {
