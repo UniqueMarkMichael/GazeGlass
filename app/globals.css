@@ -531,6 +531,8 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 9px;
+  width: auto;
+  max-width: calc(100vw - 36px);
   min-height: auto;
   padding: 10px 13px 10px 11px;
   border: 1px solid rgba(237, 227, 204, 0.18);
@@ -5328,17 +5330,24 @@ dd {
   }
 
   .glass-sound-toggle {
-    left: 18px;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
-    padding: 9px 11px 9px 10px;
+    left: max(14px, env(safe-area-inset-left));
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    border-color: rgba(95, 183, 196, 0.34);
+    box-shadow:
+      0 12px 34px rgba(3, 2, 11, 0.42),
+      inset 0 0 18px rgba(237, 227, 204, 0.035);
   }
 
   .glass-sound-toggle span:first-child {
-    width: 22px;
+    width: 24px;
   }
 
   .glass-sound-toggle-label {
-    font-size: 0.5rem;
+    display: none;
   }
 
   .glass-memory-toggle {

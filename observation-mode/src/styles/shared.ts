@@ -623,7 +623,7 @@ export const COMPONENT_STYLES = `
     padding:
       calc(env(safe-area-inset-top) + 1.35rem)
       max(1.15rem, env(safe-area-inset-right))
-      calc(12.25rem + env(safe-area-inset-bottom))
+      calc(10.6rem + env(safe-area-inset-bottom))
       max(1.15rem, env(safe-area-inset-left));
     line-height: 1.68;
   }
@@ -641,78 +641,117 @@ export const COMPONENT_STYLES = `
   }
 
   .om-dock {
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.45rem;
-    padding:
-      0.7rem
-      max(0.75rem, env(safe-area-inset-right))
-      calc(0.8rem + env(safe-area-inset-bottom))
-      max(0.75rem, env(safe-area-inset-left));
-    border-top: 1px solid color-mix(in srgb, var(--om-accent), transparent 72%);
+    right: auto;
+    bottom: calc(0.7rem + env(safe-area-inset-bottom));
+    left: 50%;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: center;
+    width: min(25.5rem, calc(100vw - 1.2rem));
+    gap: 0.48rem;
+    padding: 0.62rem;
+    border: 1px solid color-mix(in srgb, var(--om-accent), transparent 65%);
+    border-radius: 22px;
     background:
-      linear-gradient(180deg, transparent, color-mix(in srgb, var(--om-bg), transparent 8%) 24%, var(--om-bg) 100%);
-    box-shadow: 0 -18px 44px color-mix(in srgb, var(--om-bg), transparent 12%);
+      radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--om-accent), transparent 86%), transparent 6.5rem),
+      linear-gradient(180deg, color-mix(in srgb, var(--om-bg-elev), transparent 4%), color-mix(in srgb, var(--om-bg), transparent 2%));
+    box-shadow:
+      0 -18px 44px color-mix(in srgb, var(--om-bg), transparent 16%),
+      inset 0 0 24px color-mix(in srgb, var(--om-text), transparent 97%);
     backdrop-filter: blur(18px);
+    transform: translateX(-50%);
   }
 
   .om-status {
-    grid-column: 1 / -1;
+    order: -1;
+    flex: 0 0 100%;
     min-height: 0;
-    padding: 0.42rem 0.65rem;
-    border-radius: 14px;
+    padding: 0.18rem 0.45rem 0.24rem;
+    border-radius: 0;
+    background: transparent;
     text-align: center;
-    font-size: 0.72rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
     line-height: 1.25;
+    text-transform: uppercase;
   }
 
   .om-dock button {
+    box-sizing: border-box;
+    flex: 1 1 4.75rem;
     min-width: 0;
-    min-height: 44px;
-    padding: 0.55rem 0.35rem;
+    height: 46px;
+    min-height: 46px;
+    padding: 0.56rem 0.5rem;
     border-radius: 14px;
     font-family: system-ui, sans-serif;
-    font-size: clamp(0.68rem, 3vw, 0.78rem);
+    font-size: clamp(0.7rem, 3vw, 0.78rem);
     line-height: 1.12;
-    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .om-split-control {
-    grid-template-columns: minmax(44px, 1fr) 44px;
-    min-width: 0;
+    box-sizing: border-box;
+    flex: 1 1 5.55rem;
+    grid-template-columns: minmax(0, 1fr) 2.4rem;
+    min-width: 5.55rem;
+    height: 46px;
+    min-height: 46px;
     border-radius: 14px;
   }
 
   .om-dock .om-split-control button {
-    min-height: 44px;
-    padding: 0.55rem 0.25rem;
+    height: 100%;
+    min-height: 0;
+    padding: 0.56rem 0.25rem;
   }
 
   .om-lantern-toggle {
     gap: 0.22rem;
+    min-width: 0;
+    padding-right: 0.34rem;
+    padding-left: 0.34rem;
+  }
+
+  .om-lantern-icon {
+    display: none;
+  }
+
+  .om-lantern-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .om-dock button[data-action="exit"] {
-    grid-column: 1 / -1;
-    min-height: 44px;
-    font-size: 0.92rem;
+    flex: 1 1 4.75rem;
+    height: 46px;
+    min-height: 46px;
+    font-size: clamp(0.7rem, 3vw, 0.78rem);
+  }
+
+  .om-dock:has([data-action="images"]) > button,
+  .om-dock:has([data-action="images"]) > .om-split-control {
+    flex: 0 1 calc((100% - 0.96rem) / 3);
+    max-width: calc((100% - 0.96rem) / 3);
   }
 
   .om-panel {
     right: max(0.75rem, env(safe-area-inset-right));
-    bottom: calc(10.9rem + env(safe-area-inset-bottom));
+    bottom: calc(10.05rem + env(safe-area-inset-bottom));
     left: max(0.75rem, env(safe-area-inset-left));
     width: auto;
-    max-height: calc(100dvh - 12.5rem);
+    max-height: calc(100dvh - 11.4rem);
     overflow: auto;
     border-radius: 16px;
   }
 
   .om-toast {
-    bottom: calc(11.35rem + env(safe-area-inset-bottom));
+    bottom: calc(10.45rem + env(safe-area-inset-bottom));
     width: min(24rem, calc(100vw - 2rem));
     text-align: center;
   }
