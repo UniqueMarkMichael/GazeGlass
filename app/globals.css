@@ -1151,6 +1151,7 @@ h1 {
   font-size: clamp(0.78rem, 0.88vw, 0.9rem);
   font-weight: 600;
   letter-spacing: 0.2em;
+  line-height: 1.55;
   text-decoration-line: underline;
   text-decoration-color: rgba(201, 162, 39, 0.72);
   text-decoration-thickness: 1px;
@@ -5514,9 +5515,11 @@ dd {
   }
 
   .scroll-cue {
+    max-width: 21rem;
     margin-top: 34px;
     font-size: 0.72rem;
     letter-spacing: 0.18em;
+    line-height: 1.6;
   }
 
   .scroll-cue::after {
