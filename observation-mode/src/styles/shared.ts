@@ -498,15 +498,20 @@ export const COMPONENT_STYLES = `
   margin-bottom: 0.75rem;
 }
 
+.om-panel-actions:has([data-audio-action]) {
+  margin-bottom: 1rem;
+}
+
 .om-read-aloud-status {
-  margin: 0.85rem 0 0;
-  padding: 0.75rem 0.85rem;
+  margin: 0;
+  padding: 0.68rem 0.82rem;
   border: 1px solid color-mix(in srgb, var(--om-accent), transparent 72%);
   border-radius: 10px;
   background: color-mix(in srgb, var(--om-accent), transparent 91%);
   color: color-mix(in srgb, var(--om-text), var(--om-text-dim) 32%);
   font-family: system-ui, sans-serif;
   font-size: 0.82rem;
+  line-height: 1.45;
 }
 
 .om-panel-field {
