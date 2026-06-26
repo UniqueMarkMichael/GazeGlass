@@ -16,6 +16,7 @@ export interface ObservationModeControllerOptions {
 type FocusMode = "off" | "spotlight" | "band" | "ruler";
 type FocusChangeSource = "dock" | "panel" | "restore";
 type ReadingTrackId = "reading-mode" | "reading-room";
+type ReadAloudMode = "voice-follow" | "spoken-playback";
 type ReadAloudRecognitionConstructor = new () => ReadAloudRecognition;
 type ReadAloudRecognitionAlternative = {
   transcript: string;
@@ -119,8 +120,10 @@ export class ObservationModeController {
   private readAloudRecognition: ReadAloudRecognition | null = null;
   private readAloudOn = false;
   private readAloudStopping = false;
+  private readAloudMode: ReadAloudMode | null = null;
   private readAloudCursor = 0;
   private readAloudFinalTranscript = "";
+  private readAloudUtterance: SpeechSynthesisUtterance | null = null;
   private audioMuted = false;
   private atmosphereTrackId: ReadingTrackId = DEFAULT_READING_TRACK_ID;
   private activeNarrationOid: string | null = null;
@@ -426,7 +429,7 @@ export class ObservationModeController {
         </div>
         <div class="om-panel-actions">
           <button type="button" data-audio-action="atmosphere" aria-label="${COPY.atmosphereAria}" aria-pressed="${this.atmosphereOn}">${this.atmosphereOn ? COPY.pauseMusic : COPY.playMusic}</button>
-          <button type="button" data-audio-action="read-aloud" aria-label="${readAloudAvailable ? COPY.readAloudAria : COPY.readAloudUnavailableAria}" aria-disabled="${!readAloudAvailable}" ${readAloudAvailable ? "" : "disabled"} aria-pressed="${this.readAloudOn}">${this.readAloudOn ? COPY.stopReading : COPY.readAloud}</button>
+          <button type="button" data-audio-action="read-aloud" aria-label="${this.getReadAloudAriaLabel(readAloudAvailable)}" aria-disabled="${!readAloudAvailable}" ${readAloudAvailable ? "" : "disabled"} aria-pressed="${this.readAloudOn}">${this.readAloudOn ? COPY.stopReading : COPY.readAloud}</button>
           <button type="button" data-audio-action="mute" aria-label="${COPY.muteAria}" aria-pressed="${this.audioMuted}">${COPY.mute}</button>
         </div>
         <p class="om-read-aloud-status" data-read-aloud-status>${this.getReadAloudStatus()}</p>
@@ -680,11 +683,7 @@ export class ObservationModeController {
       readAloudButton.setAttribute("aria-pressed", String(this.readAloudOn));
       readAloudButton.setAttribute(
         "aria-label",
-        readAloudAvailable
-          ? this.readAloudOn
-            ? COPY.readAloudStopAria
-            : COPY.readAloudAria
-          : COPY.readAloudUnavailableAria,
+        this.getReadAloudAriaLabel(readAloudAvailable),
       );
       readAloudButton.textContent = this.readAloudOn ? COPY.stopReading : COPY.readAloud;
     }
@@ -723,7 +722,9 @@ export class ObservationModeController {
 
   private getSoundPanelDescription(): string {
     if (this.readAloudOn) {
-      return COPY.readAloudListeningDescription;
+      return this.readAloudMode === "spoken-playback"
+        ? COPY.readAloudPlaybackDescription
+        : COPY.readAloudListeningDescription;
     }
 
     if (this.atmosphereOn || this.narrationOn) {
@@ -738,7 +739,19 @@ export class ObservationModeController {
       return COPY.readAloudUnsupportedStatus;
     }
 
-    return this.readAloudOn ? COPY.readAloudListeningStatus : COPY.readAloudIdleStatus;
+    if (this.readAloudOn) {
+      return this.readAloudMode === "spoken-playback"
+        ? COPY.readAloudPlaybackStatus
+        : COPY.readAloudListeningStatus;
+    }
+
+    return this.canFollowVoice() ? COPY.readAloudIdleStatus : COPY.readAloudPlaybackIdleStatus;
+  }
+
+  private getReadAloudAriaLabel(readAloudAvailable = this.isReadAloudAvailable()): string {
+    if (!readAloudAvailable) return COPY.readAloudUnavailableAria;
+    if (this.readAloudOn) return COPY.readAloudStopAria;
+    return this.canFollowVoice() ? COPY.readAloudAria : COPY.readAloudPlaybackAria;
   }
 
   private getSpeechRecognitionConstructor(): ReadAloudRecognitionConstructor | null {
@@ -751,7 +764,15 @@ export class ObservationModeController {
   }
 
   private isReadAloudAvailable(): boolean {
+    return this.canFollowVoice() || this.canPlayReadAloud();
+  }
+
+  private canFollowVoice(): boolean {
     return Boolean(window.isSecureContext && this.getSpeechRecognitionConstructor());
+  }
+
+  private canPlayReadAloud(): boolean {
+    return Boolean("speechSynthesis" in window && "SpeechSynthesisUtterance" in window);
   }
 
   private toggleReadAloud(): void {
@@ -765,7 +786,13 @@ export class ObservationModeController {
 
   private startReadAloud(): void {
     const Recognition = this.getSpeechRecognitionConstructor();
+
     if (!window.isSecureContext || !Recognition) {
+      if (this.canPlayReadAloud()) {
+        this.startSpokenReadAloud();
+        return;
+      }
+
       this.playInterfaceSound("error");
       this.showToast(COPY.readAloudUnavailableToast);
       this.updateSoundControls();
@@ -785,6 +812,7 @@ export class ObservationModeController {
     this.readAloudRecognition = recognition;
     this.readAloudStopping = false;
     this.readAloudOn = true;
+    this.readAloudMode = "voice-follow";
     this.readAloudFinalTranscript = "";
     this.readAloudCursor = this.findNearestReadAloudSentenceIndex();
     this.applyPrefsToRoot();
@@ -794,8 +822,14 @@ export class ObservationModeController {
       this.playInterfaceSound("success");
       this.showToast(COPY.readAloudOnToast);
     } catch {
+      if (this.canPlayReadAloud()) {
+        this.startSpokenReadAloud(COPY.readAloudFallbackToast);
+        return;
+      }
+
       this.readAloudOn = false;
       this.readAloudRecognition = null;
+      this.readAloudMode = null;
       this.playInterfaceSound("error");
       this.showToast(COPY.readAloudUnavailableToast);
     }
@@ -809,9 +843,15 @@ export class ObservationModeController {
 
     this.readAloudStopping = true;
     this.readAloudOn = false;
+    this.readAloudMode = null;
     this.readAloudRecognition = null;
+    this.readAloudUtterance = null;
     this.readAloudFinalTranscript = "";
     this.readAloudCursor = 0;
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
 
     if (recognition) {
       recognition.onend = null;
@@ -852,6 +892,7 @@ export class ObservationModeController {
       } catch {
         this.readAloudOn = false;
         this.readAloudRecognition = null;
+        this.readAloudMode = null;
         this.applyPrefsToRoot();
         this.updateSoundControls();
       }
@@ -865,9 +906,19 @@ export class ObservationModeController {
       return;
     }
 
+    if (this.canPlayReadAloud()) {
+      this.startSpokenReadAloud(
+        error === "not-allowed" || error === "service-not-allowed" || error === "audio-capture"
+          ? COPY.readAloudMicFallbackToast
+          : COPY.readAloudFallbackToast,
+      );
+      return;
+    }
+
     this.readAloudStopping = true;
     this.readAloudOn = false;
     this.readAloudRecognition = null;
+    this.readAloudMode = null;
     this.readAloudCursor = 0;
     this.clearNarrationHighlight();
     this.applyPrefsToRoot();
@@ -905,6 +956,61 @@ export class ObservationModeController {
     }
 
     this.matchReadAloudTranscript(`${this.readAloudFinalTranscript} ${interimTranscript}`);
+  }
+
+  private startSpokenReadAloud(toastMessage: string = COPY.readAloudPlaybackOnToast): void {
+    const sentences = this.getReadAloudSentences();
+    if (!sentences.length) {
+      this.playInterfaceSound("error");
+      this.showToast(COPY.readAloudUnavailableToast);
+      this.updateSoundControls();
+      return;
+    }
+
+    this.stopReadAloud(false);
+    this.readAloudStopping = false;
+    this.readAloudOn = true;
+    this.readAloudMode = "spoken-playback";
+    this.readAloudCursor = this.findNearestReadAloudSentenceIndex();
+    this.applyPrefsToRoot();
+    this.updateSoundControls();
+    this.playInterfaceSound("success");
+    this.showToast(toastMessage);
+    this.speakNextReadAloudSentence();
+  }
+
+  private speakNextReadAloudSentence(): void {
+    if (!this.readAloudOn || this.readAloudMode !== "spoken-playback" || this.readAloudStopping) return;
+
+    const sentences = this.getReadAloudSentences();
+    const sentence = sentences[this.readAloudCursor];
+    if (!sentence) {
+      this.stopReadAloud(false);
+      this.showToast(COPY.readAloudFinishedToast);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    this.highlightReadAloudSentence(sentence);
+
+    const utterance = new SpeechSynthesisUtterance(sentence.sentenceElement.textContent?.trim() || "");
+    utterance.lang = document.documentElement.lang || "en-US";
+    utterance.rate = 0.92;
+    utterance.pitch = 0.96;
+    utterance.volume = this.audioMuted ? 0 : 1;
+    utterance.onend = () => {
+      if (!this.readAloudOn || this.readAloudMode !== "spoken-playback") return;
+      this.speakNextReadAloudSentence();
+    };
+    utterance.onerror = () => {
+      if (!this.readAloudOn || this.readAloudMode !== "spoken-playback") return;
+      this.stopReadAloud(false);
+      this.playInterfaceSound("error");
+      this.showToast(COPY.readAloudUnavailableToast);
+    };
+
+    this.readAloudUtterance = utterance;
+    window.speechSynthesis.speak(utterance);
   }
 
   private matchReadAloudTranscript(transcript: string): void {
@@ -1470,6 +1576,7 @@ export class ObservationModeController {
   }
 
   private stopAllAudio(): void {
+    this.stopReadAloud(false);
     this.stopAtmosphere();
     this.narrationAudio?.pause();
     this.narrationOn = false;
