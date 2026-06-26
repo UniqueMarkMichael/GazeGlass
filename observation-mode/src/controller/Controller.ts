@@ -1349,11 +1349,13 @@ export class ObservationModeController {
 
     const readingTrack = this.getAtmosphereTrack();
     if (readingTrack) {
-      this.atmosphereAudio = new Audio(readingTrack.src);
-      this.atmosphereAudio.loop = true;
-      this.atmosphereAudio.volume = this.gainDbToVolume(readingTrack.gainDb);
-      this.atmosphereAudio.muted = this.audioMuted;
-      void this.atmosphereAudio.play().catch(() => {
+      const audio = new Audio(readingTrack.src);
+      this.atmosphereAudio = audio;
+      audio.loop = true;
+      audio.volume = this.gainDbToVolume(readingTrack.gainDb);
+      audio.muted = this.audioMuted;
+      void audio.play().catch(() => {
+        if (this.atmosphereAudio !== audio) return;
         this.atmosphereOn = false;
         this.updateSoundControls();
         this.showToast(COPY.soundUnavailableToast);
@@ -1362,11 +1364,13 @@ export class ObservationModeController {
     }
 
     if (this.manifest?.ambientTrack?.src) {
-      this.atmosphereAudio = new Audio(this.manifest.ambientTrack.src);
-      this.atmosphereAudio.loop = this.manifest.ambientTrack.loop ?? true;
-      this.atmosphereAudio.volume = this.gainDbToVolume(this.manifest.ambientTrack.gainDb ?? -18);
-      this.atmosphereAudio.muted = this.audioMuted;
-      void this.atmosphereAudio.play().catch(() => {
+      const audio = new Audio(this.manifest.ambientTrack.src);
+      this.atmosphereAudio = audio;
+      audio.loop = this.manifest.ambientTrack.loop ?? true;
+      audio.volume = this.gainDbToVolume(this.manifest.ambientTrack.gainDb ?? -18);
+      audio.muted = this.audioMuted;
+      void audio.play().catch(() => {
+        if (this.atmosphereAudio !== audio) return;
         this.atmosphereOn = false;
         this.updateSoundControls();
         this.showToast(COPY.soundUnavailableToast);
