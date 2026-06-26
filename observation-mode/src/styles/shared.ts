@@ -348,6 +348,11 @@ export const COMPONENT_STYLES = `
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  padding: 0.55rem;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--om-bg), transparent 4%), var(--om-bg));
+  box-shadow: 0 -24px 46px color-mix(in srgb, var(--om-bg), transparent 14%);
 }
 
 .om-split-control {
@@ -655,12 +660,12 @@ export const COMPONENT_STYLES = `
     border: 1px solid color-mix(in srgb, var(--om-accent), transparent 65%);
     border-radius: 22px;
     background:
-      radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--om-accent), transparent 86%), transparent 6.5rem),
-      linear-gradient(180deg, color-mix(in srgb, var(--om-bg-elev), transparent 4%), color-mix(in srgb, var(--om-bg), transparent 2%));
+      radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--om-accent), transparent 88%), transparent 6.5rem),
+      linear-gradient(180deg, color-mix(in srgb, var(--om-bg-elev), transparent 1%), var(--om-bg));
     box-shadow:
-      0 -18px 44px color-mix(in srgb, var(--om-bg), transparent 16%),
+      0 -22px 52px color-mix(in srgb, var(--om-bg), transparent 8%),
       inset 0 0 24px color-mix(in srgb, var(--om-text), transparent 97%);
-    backdrop-filter: blur(18px);
+    backdrop-filter: blur(22px);
     transform: translateX(-50%);
   }
 
