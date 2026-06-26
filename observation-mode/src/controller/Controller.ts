@@ -811,6 +811,7 @@ export class ObservationModeController {
     this.readAloudOn = false;
     this.readAloudRecognition = null;
     this.readAloudFinalTranscript = "";
+    this.readAloudCursor = 0;
 
     if (recognition) {
       recognition.onend = null;
@@ -867,6 +868,7 @@ export class ObservationModeController {
     this.readAloudStopping = true;
     this.readAloudOn = false;
     this.readAloudRecognition = null;
+    this.readAloudCursor = 0;
     this.clearNarrationHighlight();
     this.applyPrefsToRoot();
     this.updateSoundControls();
@@ -912,11 +914,11 @@ export class ObservationModeController {
     const sentences = this.getReadAloudSentences();
     if (!sentences.length) return;
 
-    const localStart = Math.max(0, this.readAloudCursor - 1);
-    const localEnd = Math.min(sentences.length, this.readAloudCursor + 8);
-    const localMatch = this.findBestReadAloudMatch(transcriptTokens, sentences, localStart, localEnd, 0.34);
+    const localStart = Math.min(Math.max(0, this.readAloudCursor), Math.max(0, sentences.length - 1));
+    const localEnd = Math.min(sentences.length, localStart + 8);
+    const localMatch = this.findBestReadAloudMatch(transcriptTokens, sentences, localStart, localEnd, 0.32);
     const fallbackMatch =
-      localMatch ?? this.findBestReadAloudMatch(transcriptTokens, sentences, 0, sentences.length, 0.56);
+      localMatch ?? this.findBestReadAloudMatch(transcriptTokens, sentences, localStart, sentences.length, 0.56);
 
     if (!fallbackMatch) return;
 
@@ -994,7 +996,7 @@ export class ObservationModeController {
       sentence.blockElement.classList.add("is-narrating");
     }
 
-    this.readAloudCursor = Math.max(this.readAloudCursor, sentence.index);
+    this.readAloudCursor = Math.max(this.readAloudCursor, sentence.index + 1);
     this.activeBlockId = sentence.blockElement.dataset.blockId ?? sentence.blockElement.id;
     this.applyLanternClasses();
 
