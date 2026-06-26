@@ -1203,15 +1203,18 @@ export class ObservationModeController {
 
     const track = this.getAtmosphereTrack();
 
-    if (changed && this.atmosphereOn) {
-      this.stopAtmosphere();
+    if (changed || !this.atmosphereOn) {
+      this.unmuteForPlayback();
       if (this.startAtmosphere()) {
         this.playInterfaceSound("success");
         this.showToast(`${track.label} playing.`);
+      } else {
+        this.playInterfaceSound("error");
+        this.showToast(COPY.soundUnavailableToast);
       }
     } else {
       this.playInterfaceSound("select");
-      this.showToast(`${track.label} selected.`);
+      this.showToast(`${track.label} already playing.`);
     }
 
     this.updateSoundControls();
@@ -1328,6 +1331,7 @@ export class ObservationModeController {
       return;
     }
 
+    this.unmuteForPlayback();
     if (this.startAtmosphere()) {
       this.playInterfaceSound("success");
       this.showToast(`${this.getAtmosphereTrack().label} playing.`);
@@ -1549,6 +1553,26 @@ export class ObservationModeController {
     if (clearActiveOid) {
       this.activeNarrationOid = null;
     }
+  }
+
+  private unmuteForPlayback(): void {
+    if (!this.audioMuted) return;
+
+    this.audioMuted = false;
+    if (this.masterGain) {
+      this.masterGain.gain.value = 0.16;
+    }
+
+    if (this.narrationAudio) {
+      this.narrationAudio.muted = false;
+    }
+
+    if (this.atmosphereAudio) {
+      this.atmosphereAudio.muted = false;
+    }
+
+    this.applyPrefsToRoot();
+    this.savePrefs();
   }
 
   private toggleMute(): void {
