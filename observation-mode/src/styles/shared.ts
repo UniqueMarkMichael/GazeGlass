@@ -485,6 +485,10 @@ export const COMPONENT_STYLES = `
   box-shadow: 0 -24px 46px color-mix(in srgb, var(--om-bg), transparent 14%);
 }
 
+.om-controls-toggle {
+  display: none;
+}
+
 .om-split-control {
   display: inline-grid;
   grid-template-columns: minmax(0, 1fr) 44px;
@@ -887,6 +891,10 @@ export const COMPONENT_STYLES = `
     line-height: 1.68;
   }
 
+  .om-root[data-controls-mode="collapsed"] .om-reading {
+    padding-bottom: calc(5.2rem + env(safe-area-inset-bottom));
+  }
+
   .om-reading h1 {
     margin-bottom: 1.2rem;
     font-size: clamp(2.1rem, 10vw, 3.4rem);
@@ -921,6 +929,45 @@ export const COMPONENT_STYLES = `
       inset 0 0 24px color-mix(in srgb, var(--om-text), transparent 97%);
     backdrop-filter: blur(22px);
     transform: translateX(-50%);
+    transition:
+      width 180ms ease,
+      padding 180ms ease,
+      border-radius 180ms ease,
+      background-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .om-controls-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 100%;
+    min-width: 0;
+    height: 46px;
+    min-height: 46px;
+    border-radius: 14px;
+    font-family: system-ui, sans-serif;
+    font-size: clamp(0.76rem, 3vw, 0.86rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .om-dock.is-collapsed {
+    width: min(11rem, calc(100% - 1.2rem));
+    padding: 0.44rem;
+    border-radius: 999px;
+  }
+
+  .om-dock.is-collapsed > :not(.om-controls-toggle) {
+    display: none;
+  }
+
+  .om-dock.is-collapsed .om-controls-toggle {
+    flex-basis: auto;
+    height: 44px;
+    min-height: 44px;
+    border-radius: 999px;
   }
 
   .om-status {
@@ -953,7 +1000,11 @@ export const COMPONENT_STYLES = `
     white-space: nowrap;
   }
 
-  .om-split-control {
+  .om-controls-toggle {
+  display: none;
+}
+
+.om-split-control {
     box-sizing: border-box;
     flex: 1 1 5.55rem;
     grid-template-columns: minmax(0, 1fr) 2.4rem;
@@ -1001,7 +1052,11 @@ export const COMPONENT_STYLES = `
   }
 
   .om-dock:has([data-action="images"]) > button,
-  .om-dock:has([data-action="images"]) > .om-split-control {
+  .om-dock:has([data-action="images"]) > .om-controls-toggle {
+  display: none;
+}
+
+.om-split-control {
     flex: 0 1 calc((100% - 0.96rem) / 3);
     max-width: calc((100% - 0.96rem) / 3);
   }

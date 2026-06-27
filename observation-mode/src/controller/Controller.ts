@@ -216,6 +216,7 @@ export class ObservationModeController {
   private shownRestBeatIndexes = new Set<number>();
   private readWithMeOn = false;
   private readWithMeIndex = 0;
+  private controlsCollapsed = true;
   private joltEnabled = false;
   private joltTimer: number | null = null;
   private joltLastBlockId: string | null = null;
@@ -477,6 +478,7 @@ export class ObservationModeController {
         <h1>${this.getTitle()}</h1>
       </article>
       <div class="om-dock" role="toolbar" aria-label="Observation controls">
+        <button class="om-controls-toggle" type="button" data-action="controls-toggle" aria-label="${COPY.controlsOpenAria}" aria-expanded="false">${COPY.controls}</button>
         <button type="button" data-action="exit" aria-label="${COPY.leaveAria}">${COPY.leave}</button>
         <span class="om-status">
           <span data-status-scene>${COPY.plateObservation} ${this.getObservationNumber()}</span>
@@ -545,6 +547,7 @@ export class ObservationModeController {
     this.updateSceneStatus();
     this.startPromiseTimer();
 
+    shell.querySelector<HTMLButtonElement>("[data-action='controls-toggle']")?.addEventListener("click", () => this.toggleControlsDock());
     shell.querySelector<HTMLButtonElement>("[data-action='exit']")?.addEventListener("click", () => void this.exit());
     shell.querySelector<HTMLButtonElement>("[data-action='lost']")?.addEventListener("click", () => this.showLostCard());
     shell.querySelector<HTMLButtonElement>("[data-action='echo']")?.addEventListener("click", () => this.showLineEchoCard());
@@ -575,6 +578,7 @@ export class ObservationModeController {
     this.updateFocusControls();
     this.updateImageControls();
     this.updateReadWithMeControls();
+    this.updateControlsDock();
     this.recordMemoryThread();
     this.startActiveBlockTracker();
     this.maybeShowResumeCard();
@@ -714,6 +718,26 @@ export class ObservationModeController {
     this.root.append(panel);
     this.updateFocusControls();
     panel.querySelector<HTMLElement>(".om-panel-close")?.focus();
+  }
+
+  private toggleControlsDock(): void {
+    this.controlsCollapsed = !this.controlsCollapsed;
+    if (this.controlsCollapsed) {
+      this.closePanel(false);
+    }
+    this.playInterfaceSound("select");
+    this.updateControlsDock();
+  }
+
+  private updateControlsDock(): void {
+    const dock = this.root.querySelector<HTMLElement>(".om-dock");
+    const toggle = this.root.querySelector<HTMLButtonElement>("[data-action='controls-toggle']");
+    dock?.classList.toggle("is-collapsed", this.controlsCollapsed);
+    this.root.dataset.controlsMode = this.controlsCollapsed ? "collapsed" : "open";
+    if (!toggle) return;
+    toggle.textContent = this.controlsCollapsed ? COPY.controls : COPY.controlsHide;
+    toggle.setAttribute("aria-expanded", String(!this.controlsCollapsed));
+    toggle.setAttribute("aria-label", this.controlsCollapsed ? COPY.controlsOpenAria : COPY.controlsCloseAria);
   }
 
   private toggleLantern(): void {
