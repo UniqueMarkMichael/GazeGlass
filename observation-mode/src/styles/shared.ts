@@ -552,6 +552,10 @@ export const COMPONENT_STYLES = `
   margin-bottom: 0.75rem;
 }
 
+.om-pace-options {
+  margin-bottom: 0.85rem;
+}
+
 .om-panel-actions:has([data-audio-action]) {
   margin-bottom: 1rem;
 }

@@ -16,6 +16,7 @@ export interface ObservationModeControllerOptions {
 type FocusMode = "off" | "spotlight" | "band" | "ruler";
 type FocusChangeSource = "dock" | "panel" | "restore";
 type ReadingTrackId = "reading-mode" | "reading-room";
+type ReadingPace = "drift" | "focus" | "sprint" | "rest";
 type ReadAloudMode = "voice-follow" | "spoken-playback";
 type ReadAloudRecognitionConstructor = new () => ReadAloudRecognition;
 type ReadAloudRecognitionAlternative = {
@@ -59,6 +60,8 @@ type ReadAloudSentence = {
 
 type ReaderPrefs = {
   focusMode?: FocusMode;
+  readingPace?: ReadingPace;
+  textSizeRem?: number;
   generousSpacing?: boolean;
   showImages?: boolean;
   audioMuted?: boolean;
@@ -68,7 +71,18 @@ type ReaderPrefs = {
 const PREFS_KEY = "gg.om.prefs";
 const SITE_SOUND_PREF_KEY = "gaze-glass.sound.v1";
 const FOCUS_MODES = new Set<FocusMode>(["off", "spotlight", "band", "ruler"]);
+const READING_PACES = new Set<ReadingPace>(["drift", "focus", "sprint", "rest"]);
 const DEFAULT_READING_TRACK_ID: ReadingTrackId = "reading-mode";
+const DEFAULT_READING_PACE: ReadingPace = "drift";
+const READING_PACE_PRESETS: Record<
+  ReadingPace,
+  { focusMode: FocusMode; generousSpacing: boolean; fontSizeRem: number; trackId: ReadingTrackId }
+> = {
+  drift: { focusMode: "off", generousSpacing: true, fontSizeRem: 1.22, trackId: "reading-room" },
+  focus: { focusMode: "ruler", generousSpacing: true, fontSizeRem: 1.18, trackId: "reading-mode" },
+  sprint: { focusMode: "band", generousSpacing: false, fontSizeRem: 1.1, trackId: "reading-mode" },
+  rest: { focusMode: "spotlight", generousSpacing: true, fontSizeRem: 1.28, trackId: "reading-room" },
+};
 const READING_TRACKS: Array<{
   id: ReadingTrackId;
   label: string;
@@ -103,6 +117,8 @@ export class ObservationModeController {
   private manifest: ObservationManifest | null;
   private previousActiveElement: Element | null = null;
   private focusMode: FocusMode = "off";
+  private readingPace: ReadingPace = DEFAULT_READING_PACE;
+  private textSizeRem = 1.18;
   private generousSpacing = false;
   private showImages = false;
   private activeBlockId: string | null = null;
@@ -447,9 +463,6 @@ export class ObservationModeController {
           <button type="button" role="radio" aria-checked="false" data-focus-mode="band" aria-label="${COPY.bandAria}">${COPY.band}</button>
           <button type="button" role="radio" aria-checked="false" data-focus-mode="ruler" aria-label="${COPY.rulerAria}">${COPY.ruler}</button>
         </div>
-        <div class="om-panel-actions">
-          <button type="button" data-spacing-toggle aria-label="${COPY.spacingAriaOff}" aria-pressed="false">${COPY.spacing}</button>
-        </div>
       `;
     } else {
       panel.setAttribute("aria-label", COPY.textAria);
@@ -458,6 +471,13 @@ export class ObservationModeController {
         <p class="om-panel-kicker">${COPY.text}</p>
         <h2>${COPY.text}</h2>
         <p>${COPY.textDescription}</p>
+        <p class="om-panel-field-label">${COPY.pace}</p>
+        <div class="om-panel-actions om-pace-options" role="radiogroup" aria-label="${COPY.paceGroupAria}">
+          <button type="button" role="radio" aria-checked="false" data-pace="drift" aria-label="${COPY.driftAria}">${COPY.drift}</button>
+          <button type="button" role="radio" aria-checked="false" data-pace="focus" aria-label="${COPY.focusPaceAria}">${COPY.focusPace}</button>
+          <button type="button" role="radio" aria-checked="false" data-pace="sprint" aria-label="${COPY.sprintAria}">${COPY.sprint}</button>
+          <button type="button" role="radio" aria-checked="false" data-pace="rest" aria-label="${COPY.restAria}">${COPY.rest}</button>
+        </div>
         <div class="om-panel-actions">
           <button type="button" data-theme="obsidian" aria-label="${COPY.obsidianAria}">${COPY.obsidian}</button>
           <button type="button" data-theme="parchment" aria-label="${COPY.parchmentAria}">${COPY.parchment}</button>
@@ -469,6 +489,9 @@ export class ObservationModeController {
             <button type="button" data-size="-1" aria-label="${COPY.decreaseTextSizeAria}">−</button>
             <button type="button" data-size="1" aria-label="${COPY.increaseTextSizeAria}">+</button>
           </div>
+        </div>
+        <div class="om-panel-actions">
+          <button type="button" data-spacing-toggle aria-label="${COPY.spacingAriaOff}" aria-pressed="false">${COPY.spacing}</button>
         </div>
       `;
     }
@@ -491,10 +514,15 @@ export class ObservationModeController {
     });
     panel.querySelectorAll<HTMLButtonElement>("[data-size]").forEach((button) => {
       button.addEventListener("click", () => {
-        const current = Number.parseFloat(this.root.style.getPropertyValue("--om-fs-body")) || 1.18;
         const direction = Number.parseInt(button.dataset.size ?? "0", 10);
-        const next = Math.min(1.6, Math.max(1, current + direction * 0.08));
-        this.root.style.setProperty("--om-fs-body", `${next.toFixed(2)}rem`);
+        this.textSizeRem = Math.min(1.6, Math.max(1, this.textSizeRem + direction * 0.08));
+        this.applyPrefsToRoot();
+        this.savePrefs();
+      });
+    });
+    panel.querySelectorAll<HTMLButtonElement>("[data-pace]").forEach((button) => {
+      button.addEventListener("click", () => {
+        this.setReadingPace(this.parseReadingPace(button.dataset.pace));
       });
     });
     panel.querySelectorAll<HTMLButtonElement>("[data-focus-mode]").forEach((button) => {
@@ -558,6 +586,32 @@ export class ObservationModeController {
     return FOCUS_MODES.has(value as FocusMode) ? (value as FocusMode) : "off";
   }
 
+  private parseReadingPace(value: string | undefined): ReadingPace {
+    return READING_PACES.has(value as ReadingPace) ? (value as ReadingPace) : DEFAULT_READING_PACE;
+  }
+
+  private parseTextSize(value: number | undefined, fallback = 1.18): number {
+    return typeof value === "number" && Number.isFinite(value) ? Math.min(1.6, Math.max(1, value)) : fallback;
+  }
+
+  private setReadingPace(pace: ReadingPace): void {
+    const preset = READING_PACE_PRESETS[pace];
+    this.readingPace = pace;
+    this.focusMode = preset.focusMode;
+    this.generousSpacing = preset.generousSpacing;
+    this.atmosphereTrackId = preset.trackId;
+    this.textSizeRem = preset.fontSizeRem;
+    this.playInterfaceSound("select");
+    this.applyPrefsToRoot();
+    this.updateFocusControls();
+    this.updateSoundControls();
+    this.savePrefs();
+    this.scheduleActiveBlockUpdate();
+    const message = this.paceToast(pace);
+    this.showToast(message);
+    this.announce(message);
+  }
+
   private focusToast(mode: FocusMode, previousMode: FocusMode): string {
     if (mode === "spotlight") return COPY.lanternOnToast;
     if (mode === "off" && previousMode === "spotlight") return COPY.lanternOffToast;
@@ -566,15 +620,26 @@ export class ObservationModeController {
     return COPY.focusResetToast;
   }
 
+  private paceToast(pace: ReadingPace): string {
+    if (pace === "focus") return COPY.focusPaceToast;
+    if (pace === "sprint") return COPY.sprintToast;
+    if (pace === "rest") return COPY.restToast;
+    return COPY.driftToast;
+  }
+
   private loadPrefs(): void {
     try {
       const prefs = JSON.parse(window.localStorage.getItem(PREFS_KEY) ?? "{}") as ReaderPrefs;
+      this.readingPace = this.parseReadingPace(prefs.readingPace);
+      this.textSizeRem = this.parseTextSize(prefs.textSizeRem, READING_PACE_PRESETS[this.readingPace].fontSizeRem);
       this.focusMode = this.parseFocusMode(prefs.focusMode);
       this.generousSpacing = Boolean(prefs.generousSpacing);
       this.showImages = Boolean(prefs.showImages);
       this.audioMuted = Boolean(prefs.audioMuted);
       this.atmosphereTrackId = this.parseAtmosphereTrackId(prefs.audioTrackId);
     } catch {
+      this.readingPace = DEFAULT_READING_PACE;
+      this.textSizeRem = READING_PACE_PRESETS[DEFAULT_READING_PACE].fontSizeRem;
       this.focusMode = "off";
       this.generousSpacing = false;
       this.showImages = false;
@@ -589,6 +654,8 @@ export class ObservationModeController {
         PREFS_KEY,
         JSON.stringify({
           focusMode: this.focusMode,
+          readingPace: this.readingPace,
+          textSizeRem: this.textSizeRem,
           generousSpacing: this.generousSpacing,
           showImages: this.showImages,
           audioMuted: this.audioMuted,
@@ -602,11 +669,13 @@ export class ObservationModeController {
 
   private applyPrefsToRoot(): void {
     this.root.dataset.focusMode = this.focusMode;
+    this.root.dataset.paceMode = this.readingPace;
     this.root.dataset.spacingMode = this.generousSpacing ? "on" : "off";
     this.root.dataset.imagesMode = this.showImages ? "on" : "off";
     this.root.dataset.audioMode = this.audioMuted ? "muted" : "on";
     this.root.dataset.readAloudMode = this.readAloudOn ? "on" : "off";
     this.root.dataset.audioTrackId = this.atmosphereTrackId;
+    this.root.style.setProperty("--om-fs-body", `${this.textSizeRem.toFixed(2)}rem`);
     this.applyLanternClasses();
   }
 
@@ -652,6 +721,11 @@ export class ObservationModeController {
 
     this.root.querySelectorAll<HTMLButtonElement>("[data-focus-mode]").forEach((button) => {
       const selected = this.parseFocusMode(button.dataset.focusMode) === this.focusMode;
+      button.setAttribute("aria-checked", String(selected));
+    });
+
+    this.root.querySelectorAll<HTMLButtonElement>("[data-pace]").forEach((button) => {
+      const selected = this.parseReadingPace(button.dataset.pace) === this.readingPace;
       button.setAttribute("aria-checked", String(selected));
     });
 
