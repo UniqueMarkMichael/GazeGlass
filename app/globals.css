@@ -993,7 +993,6 @@ body.menu-open .glass-memory-shell {
 .stars::before,
 .stars::after {
   position: absolute;
-  inset: -10%;
   content: "";
   background-image:
     radial-gradient(circle, rgba(237, 227, 204, 0.82) 0 1px, transparent 1.4px),
@@ -1004,6 +1003,18 @@ body.menu-open .glass-memory-shell {
   background-size: 140px 140px, 210px 210px, 260px 260px, 310px 310px;
   opacity: 0.24;
   animation: drift 28s linear infinite;
+}
+
+.stars {
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  animation: none;
+}
+
+.stars::before,
+.stars::after {
+  inset: -10%;
 }
 
 .stars::before {
