@@ -3477,8 +3477,7 @@ dd {
 }
 
 .observations-hero::after,
-.region-hero::after,
-.observation-page::after {
+.region-hero::after {
   content: "";
   position: absolute;
   inset: auto 0 0;
@@ -4361,7 +4360,7 @@ dd {
 
 .story-body p {
   margin: 0 0 1.35em;
-  color: rgba(237, 227, 204, 0.84);
+  color: rgba(237, 227, 204, 0.92);
   font-family: "EB Garamond", Georgia, serif;
   font-size: clamp(1.32rem, 2vw, 1.72rem);
   line-height: 1.72;

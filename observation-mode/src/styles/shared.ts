@@ -415,6 +415,13 @@ export const COMPONENT_STYLES = `
   box-shadow: inset 0 -0.08em 0 var(--om-accent);
 }
 
+.om-block.is-lost-anchor {
+  background-color: color-mix(in srgb, var(--om-accent), transparent 88%);
+  box-shadow:
+    0 0 0 0.48rem color-mix(in srgb, var(--om-accent), transparent 90%),
+    inset 0 0 0 1px color-mix(in srgb, var(--om-accent), transparent 62%);
+}
+
 .om-dock {
   position: fixed;
   right: max(1rem, env(safe-area-inset-right));
@@ -529,6 +536,21 @@ export const COMPONENT_STYLES = `
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
 }
 
+.om-lost-card {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 4.6rem);
+  z-index: 3;
+  width: min(28rem, calc(100vw - 2rem));
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--om-accent), transparent 38%);
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--om-accent), transparent 82%), transparent 9rem),
+    color-mix(in srgb, var(--om-bg-elev), var(--om-bg) 12%);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+}
+
 .om-panel-close {
   float: right;
 }
@@ -550,10 +572,35 @@ export const COMPONENT_STYLES = `
   font-weight: 500;
 }
 
+.om-lost-card h2 {
+  margin: 0 3.5rem 0.55rem 0;
+  font-family: Georgia, serif;
+  font-size: 1.55rem;
+  font-weight: 500;
+}
+
 .om-panel p {
   margin: 0 0 1rem;
   color: var(--om-text-dim);
   line-height: 1.55;
+}
+
+.om-lost-card p {
+  margin: 0 0 1rem;
+  color: var(--om-text-dim);
+  line-height: 1.55;
+}
+
+.om-lost-card blockquote {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.86rem;
+  border-left: 3px solid color-mix(in srgb, var(--om-accent), transparent 24%);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--om-accent), transparent 92%);
+  color: var(--om-text);
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .om-panel-field-label {

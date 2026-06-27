@@ -124,6 +124,7 @@ export class ObservationModeController {
   private activeBlockId: string | null = null;
   private activeBlockFrame: number | null = null;
   private releaseActiveBlockTracker: (() => void) | null = null;
+  private lostAnchorTimer: number | null = null;
   private audioContext: AudioContext | null = null;
   private masterGain: GainNode | null = null;
   private atmosphereGain: GainNode | null = null;
@@ -348,6 +349,7 @@ export class ObservationModeController {
       <div class="om-dock" role="toolbar" aria-label="Observation controls">
         <button type="button" data-action="exit" aria-label="${COPY.leaveAria}">${COPY.leave}</button>
         <span class="om-status">${COPY.plateObservation} ${this.getObservationNumber()} · 0% witnessed</span>
+        <button type="button" data-action="lost" aria-label="${COPY.lostAria}">${COPY.lost}</button>
         <button type="button" data-panel="sound" aria-label="${COPY.soundAria}" aria-haspopup="dialog" aria-expanded="false">${COPY.sound}</button>
         <span class="om-split-control" role="group" aria-label="Focus controls">
           <button
@@ -399,6 +401,7 @@ export class ObservationModeController {
     }
 
     shell.querySelector<HTMLButtonElement>("[data-action='exit']")?.addEventListener("click", () => void this.exit());
+    shell.querySelector<HTMLButtonElement>("[data-action='lost']")?.addEventListener("click", () => this.showLostCard());
     shell.querySelector<HTMLButtonElement>("[data-action='lantern']")?.addEventListener("click", () => this.toggleLantern());
     shell.querySelector<HTMLButtonElement>("[data-action='images']")?.addEventListener("click", () => this.toggleImages());
     shell.querySelectorAll<HTMLButtonElement>("[data-panel]").forEach((button) => {
@@ -1691,6 +1694,93 @@ export class ObservationModeController {
     this.updateSoundControls();
   }
 
+  private showLostCard(): void {
+    this.root.querySelector(".om-lost-card")?.remove();
+    this.closePanel(false);
+    this.updateActiveBlock();
+
+    const model = this.getActiveReadableBlock();
+    if (!model) {
+      this.showToast(COPY.lostToast);
+      return;
+    }
+
+    this.playInterfaceSound("panel");
+    const card = document.createElement("section");
+    card.className = "om-lost-card";
+    card.setAttribute("role", "dialog");
+    card.setAttribute("aria-modal", "false");
+    card.setAttribute("aria-label", COPY.lostPanelAria);
+    card.innerHTML = `
+      <button class="om-panel-close" type="button" aria-label="${COPY.closePanelAria}">${COPY.close}</button>
+      <p class="om-panel-kicker">${COPY.lostKicker}</p>
+      <h2>${COPY.lostTitle}</h2>
+      <p>${COPY.lostDescription}</p>
+      <blockquote>${this.escapeHtml(this.getLostCue(model))}</blockquote>
+      <div class="om-panel-actions">
+        <button type="button" data-lost-action="continue">${COPY.lostContinue}</button>
+        <button type="button" data-lost-action="ruler">${COPY.lostRuler}</button>
+      </div>
+    `;
+
+    const returnToLine = () => {
+      this.returnToLostBlock(model);
+      card.remove();
+    };
+
+    card.querySelector<HTMLButtonElement>(".om-panel-close")?.addEventListener("click", () => card.remove());
+    card.querySelector<HTMLButtonElement>("[data-lost-action='continue']")?.addEventListener("click", returnToLine);
+    card.querySelector<HTMLButtonElement>("[data-lost-action='ruler']")?.addEventListener("click", () => {
+      this.setFocusMode("ruler", "panel");
+      returnToLine();
+    });
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") card.remove();
+    });
+
+    this.root.append(card);
+    card.querySelector<HTMLElement>("[data-lost-action='continue']")?.focus();
+    this.markLostAnchor(model);
+    this.announce(COPY.lostToast);
+  }
+
+  private getActiveReadableBlock(): BlockModel | null {
+    const active = this.activeBlockId ? this.models.find((model) => model.id === this.activeBlockId) : null;
+    if (active && active.type !== "image" && active.type !== "hr") return active;
+    return this.models.find((model) => model.type !== "image" && model.type !== "hr") ?? null;
+  }
+
+  private getLostCue(model: BlockModel): string {
+    const text = (model.element.textContent ?? "").replace(/\s+/g, " ").trim();
+    if (!text) return this.getTitle();
+    const firstSentence = text.match(/[^.!?]+[.!?]/)?.[0]?.trim();
+    const cue = firstSentence && firstSentence.length >= 24 ? firstSentence : text;
+    return cue.length > 190 ? `${cue.slice(0, 187).trim()}...` : cue;
+  }
+
+  private returnToLostBlock(model: BlockModel): void {
+    model.element.scrollIntoView({ behavior: "smooth", block: "center" });
+    this.readingArticle?.focus();
+    this.markLostAnchor(model);
+    this.showToast(COPY.lostToast);
+  }
+
+  private markLostAnchor(model: BlockModel): void {
+    this.root.querySelectorAll(".is-lost-anchor").forEach((node) => node.classList.remove("is-lost-anchor"));
+    if (this.lostAnchorTimer !== null) {
+      window.clearTimeout(this.lostAnchorTimer);
+    }
+    model.element.classList.add("is-lost-anchor");
+    this.lostAnchorTimer = window.setTimeout(() => {
+      model.element.classList.remove("is-lost-anchor");
+      this.lostAnchorTimer = null;
+    }, 4200);
+  }
+
+  private escapeHtml(value: string): string {
+    return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+  }
+
   private gainDbToVolume(gainDb: number): number {
     return Math.min(1, Math.max(0, 10 ** (gainDb / 20)));
   }
@@ -1720,6 +1810,7 @@ export class ObservationModeController {
 
     this.activeBlockId = null;
     this.models.forEach(({ element }) => element.classList.remove("is-lit", "is-ruler", "om-dim"));
+    this.root.querySelectorAll(".is-lost-anchor").forEach((node) => node.classList.remove("is-lost-anchor"));
   }
 
   private scheduleActiveBlockUpdate(): void {
