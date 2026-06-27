@@ -77,7 +77,7 @@ const spirits: SpiritRecord[] = [
     name: "Sindren",
     role: "Assistant to the God of Love",
     image: "/spirits/sindren.webp",
-    text: "Cobalt-furred and unshakably composed, Sindren is proof that the gentlest god keeps the sharpest company.",
+    text: "Cobalt-furred and unshakably composed, Sindren has watched enough divine briefings to know when fear is theater and when it is prophecy.",
     note: "Field Note: The gentlest god keeps the sharpest company.",
   },
   {
@@ -85,8 +85,8 @@ const spirits: SpiritRecord[] = [
     spiritId: "saroka" as SpiritId,
     role: "Assistant to the God of Fortune",
     image: "/spirits/saroka.png",
-    text: "Scarlet-furred with a cream chest, white-tipped bushy tail, gold-dipped paws, and ember eyes, Saroka serves Fortune with unnerving calm.",
-    note: "Field Note: He snickers at mortal panic, especially when the outcome was already turning in their favor.",
+    text: "Scarlet-furred with a cream chest, white-tipped tail, gold-dipped paws, and ember eyes, Saroka serves Fortune with a calm smile and a devious little snicker whenever mortals confuse panic for prophecy.",
+    note: "Field Note: Luck has teeth, gold paws, and impeccable timing.",
   },
 ];
 
@@ -192,9 +192,17 @@ export default function TheSpirits() {
           New assistants and observed behaviors will be added as the archive opens.
           Until then, return to the first glass or enter another lens.
         </p>
-        <a className="text-link return-link" href="/#home">
-          Return to the first glass
-        </a>
+        <div className="seer-links">
+          <a className="text-link return-link" href="/the-gods">
+            Enter the divine archive
+          </a>
+          <a className="text-link return-link" href="/observations/patricia">
+            Read the first Observation
+          </a>
+          <a className="text-link return-link" href="/#home">
+            Return to the first glass
+          </a>
+        </div>
       </section>
 
       <footer className="site-footer" aria-label="Gaze Glass ritual line">

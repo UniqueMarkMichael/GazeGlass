@@ -31,7 +31,7 @@ const homeSections = [
   { hash: "#the-mortals", id: "mortal-threshold", label: "Mortals Pray", href: "/#the-mortals", realm: "mortal" },
   { hash: "#featured-gods", id: "gods-watch", label: "Gods Watch", href: "/#featured-gods", realm: "god" },
   { hash: "#the-spirits", id: "spirits-remember", label: "Spirits Remember", href: "/#the-spirits", realm: "spirit" },
-  { hash: "#behind-the-glass", id: "behind-the-glass", label: "Behind the Glass", href: "/#behind-the-glass", realm: "seer" },
+  { hash: "#behind-the-glass", id: "behind-the-glass", label: "The Seer Speaks", href: "/#behind-the-glass", realm: "seer" },
   { hash: "#the-seer-circle", id: "seer-circle", label: "The Circle Listens", href: "/#the-seer-circle", realm: "seer" },
 ] as const;
 

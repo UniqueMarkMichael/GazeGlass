@@ -117,7 +117,7 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
 
       <article className="observation-page">
         <a className="back-link" href="/observations">
-          Back to Observations
+          Back to the Observatory
         </a>
         <div className="observation-shell">
           <aside className="observation-sidebar" aria-label="Observation metadata">
@@ -127,7 +127,7 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
               <dd>{observation.magnitudeLabel}</dd>
               <dt>Region</dt>
               <dd>{regionMeta[observation.region].title}</dd>
-              <dt>Associated With</dt>
+              <dt>Witnessed by</dt>
               <dd>
                 <a href={`/the-gods#the-god-of-${observation.godId}`}>
                   {godFilterLabels[observation.godId]}

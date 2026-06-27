@@ -14,9 +14,32 @@ type RegionPageProps = {
   region: ObservationRegion;
 };
 
+const regionRecordLabels: Record<ObservationRegion, {
+  singular: string;
+  plural: string;
+  note: string;
+}> = {
+  gods: {
+    singular: "pressure recorded",
+    plural: "pressures recorded",
+    note: "The Glass is still recording. New divine pressure opens here as it is witnessed.",
+  },
+  spirits: {
+    singular: "memory kept",
+    plural: "memories kept",
+    note: "The Glass is still recording. New spirit memory opens here as it is witnessed.",
+  },
+  mortals: {
+    singular: "life witnessed",
+    plural: "lives witnessed",
+    note: "The Glass is still recording. New mortal lives open here as they are witnessed.",
+  },
+};
+
 export function RegionPage({ region }: RegionPageProps) {
   const meta = regionMeta[region];
   const records = getRegionObservations(region);
+  const recordLabel = regionRecordLabels[region];
   const regionData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -59,9 +82,9 @@ export function RegionPage({ region }: RegionPageProps) {
         <div>
           <p className="eyebrow">Witnessed in this region</p>
           <h2>
-            {records.length} {records.length === 1 ? "vision" : "visions"} captured.
+            {records.length} {records.length === 1 ? recordLabel.singular : recordLabel.plural}.
           </h2>
-          <p>{meta.subtitle} The chart is still opening.</p>
+          <p>{meta.subtitle} {recordLabel.note}</p>
         </div>
       </section>
 

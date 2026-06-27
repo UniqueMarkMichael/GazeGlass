@@ -108,6 +108,7 @@ export const observations: Observation[] = [
     godId: "wisdom",
     spiritWitnessIds: [],
     themeTags: ["meaning", "awakening", "identity", "judgment"],
+    startHere: true,
     description:
       "A former financier abandons wealth to seek enlightenment on a city street and learns there was never a wall between herself and the world.",
     region: "mortals",
@@ -189,7 +190,7 @@ export const observations: Observation[] = [
       "“You have been asking the wrong question,” a voice boomed. The cosmic being’s voice was not loud. It arrived already inside her, the way her own thoughts did. “You ask what your life is for as though it were a tool set down by someone who left the room.”",
       "“Isn’t it?” she asked. Her own voice sounded small, and very far off.",
       "“No. I would know,” the voice said. “For I am the God of Wisdom. Watch, mortal.”",
-      "And the deity did not explain. It did the older, harder thing: It took away the wall.",
+      "And the god did not explain. It did the older, harder thing: It took away the wall.",
       "Patricia felt the edge of herself, the invisible line that had always run between Patricia and everything else, thin like ice in a thaw, and then give. She remained on the cardboard, but she was also the man who had stepped over her at sunrise, hurrying, his chest tight with a fear he had not named. Then, she was the child three blocks east, asleep, dreaming of a dog she did not have.",
       "The God of Wisdom’s laughter echoed off her mind’s walls as she saw the world through the green eyes of the woman in the highest office of the tallest tower, signing the figures Patricia had once signed, asking the same trapdoor question and not yet falling.",
       "A strong breeze smothered her face until she was the pigeon soaring above, on the hunt. There was no seam anywhere. There had never been a seam from what she could remember. The suffering she had fled in the towers and the suffering she had found on the street were not two things. They were one weather, moving through one body, and the body was hers, and it was everyone’s, and it was no one’s at all. This was the thing the books had pointed at and could not say, not that her life had a purpose, but that she had never been separate from it. Purpose was not a possession you went out and found. It was a fabric you discovered you had been woven into the whole time, while you searched the floor for a single thread.",
@@ -211,7 +212,6 @@ export const observations: Observation[] = [
     godId: "justice",
     spiritWitnessIds: [],
     themeTags: ["credit", "work", "injustice", "voice"],
-    startHere: true,
     description:
       "A creative worker asks to be witnessed after her labor is stolen and renamed, and the God of Justice makes the truth impossible to misattribute.",
     region: "mortals",
@@ -241,7 +241,7 @@ export const observations: Observation[] = [
       "The blessing was not thunder. It was accuracy. In the next meeting, the file history opened at the wrong time and told the truth. The phrasing no one remembered drafting returned to its author. The strategy map, the late-night notes, the source documents, the timestamps, the messages where Marcella had explained the whole thing before anyone else understood it: all of it rose like testimony.",
       "No one was destroyed. That was the part Marcella remembered later. Justice did not need spectacle to be complete. It returned the credit to its proper name, then waited to see what Marcella would do with power once it had finally found her.",
       "She spoke plainly. She accepted the correction without apology. She named the work and the people who had helped without becoming the kind of person who steals light because light had once been stolen from her.",
-      "The promotion came later, but the blessing had already arrived. It was in the way the room looked at her and could no longer misfile what it saw. It was in the way Marcella learned that being witnessed is not vanity. Sometimes it is survival.",
+      "The recognition came later, but the blessing had already arrived. It was in the way the room looked at her and could no longer misfile what it saw. It was in the way Marcella learned that being witnessed is not vanity. Sometimes it is survival.",
       "The Seer records the case under Justice because the verdict did not make Marcella louder. It made her impossible to erase.",
     ],
     related: ["patricia", "walter"],
@@ -398,6 +398,14 @@ export function getRelatedObservations(observation: Observation) {
 }
 
 export function getRegionObservations(region: ObservationRegion) {
+  if (region === "gods") {
+    return observations.filter((observation) => Boolean(observation.godId));
+  }
+
+  if (region === "spirits") {
+    return observations.filter((observation) => observation.spiritWitnessIds.length > 0);
+  }
+
   return observations.filter((observation) => observation.region === region);
 }
 

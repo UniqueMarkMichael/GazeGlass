@@ -94,7 +94,7 @@ export function ReceiveVision() {
         <h2 id="vision-oracle-title">Receive a vision.</h2>
         <p>
           Let the Glass choose where your witnessing begins. One tap opens a
-          path to a mortal, deity, spirit, or sacred law already waiting in the
+          path to a mortal, god, spirit, or sacred law already waiting in the
           archive.
         </p>
       </div>

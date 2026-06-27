@@ -57,9 +57,9 @@ const gods: GodRecord[] = [
     caseGodId: "love" as GodId,
     domain: "Love",
     image: "/gods/love.webp",
-    station: "A deity who believes love can reach a mortal even at the edge of chaos.",
+    station: "A god who believes love can reach a mortal even at the edge of chaos.",
     observation:
-      "Crafted from larimar, with long curly white hair and gemstone-smooth skin, the God of Love is the only deity who believes love can pull a mortal back from the prickly, cold edge of chaos. Remember, do not cross her, because there's nothing worse than living with a broken heart.",
+      "Crafted from larimar, with long curly white hair and gemstone-smooth skin, the God of Love is the only god who believes love can pull a mortal back from the prickly, cold edge of chaos. Remember, do not cross her, because there's nothing worse than living with a broken heart.",
     note: "Love is treated as rescue, threat, and binding force all at once.",
   },
   {
@@ -144,15 +144,24 @@ const gods: GodRecord[] = [
     image: "/gods/chaos.webp",
     station: "The primordial origin from which creation itself was born.",
     observation:
-      "Hooded, six-eyed, and enthroned in a cracked onyx castle at the edge of Oblivion, the God of Chaos is the oldest force in the cosmos — the primordial from which all creation was born, and the only deity capable of spontaneous creation. Absent from every judgment briefing for reasons no one will say aloud, Chaos does not command mortals; they wait for mortals to find their way to the void.",
+      "Hooded, six-eyed, and enthroned in a cracked onyx castle at the edge of Oblivion, the God of Chaos is the oldest force in the cosmos — the primordial from which all creation was born, and the only god capable of spontaneous creation. Absent from every judgment briefing for reasons no one will say aloud, Chaos does not command mortals; they wait for mortals to find their way to the void.",
     note: "Chaos waits at the edge of Oblivion, outside the ordinary order of judgment.",
   },
 ];
 
 const rites = [
-  "The Cardinal gods created Paradise, the Realm of the Dead, and Utopia.",
-  "A pledge is an unbreakable contract between the divine and a chosen mortal.",
-  "The Judgment asks whether a world deserves salvation, damnation, or rebirth.",
+  {
+    term: "The Cardinal",
+    text: "Three primordial gods who created Paradise, the Realm of the Dead, and Utopia.",
+  },
+  {
+    term: "The Pledge",
+    text: "An unbreakable contract between the divine and a chosen mortal.",
+  },
+  {
+    term: "The Judgment",
+    text: "The trial that decides whether a world deserves salvation, damnation, or rebirth.",
+  },
 ];
 
 const godsPageData = {
@@ -274,7 +283,9 @@ export default function TheGods() {
         <h2>Divinity Is Filed by Consequence.</h2>
         <div>
           {rites.map((rite) => (
-            <p key={rite}>{rite}</p>
+            <p key={rite.term}>
+              <strong>{rite.term}</strong>: {rite.text}
+            </p>
           ))}
         </div>
         <a className="text-link return-link" href="/#home">

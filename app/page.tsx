@@ -142,7 +142,7 @@ const chapters = [
   { number: "03", label: "Mortals Pray", href: "#the-mortals" },
   { number: "04", label: "Gods Watch", href: "#featured-gods" },
   { number: "05", label: "Spirits Remember", href: "#the-spirits" },
-  { number: "06", label: "Behind the Glass", href: "#behind-the-glass" },
+  { number: "06", label: "The Seer Speaks", href: "#behind-the-glass" },
   { number: "07", label: "The Circle Listens", href: "#the-seer-circle" },
 ];
 
@@ -176,9 +176,9 @@ export default function Home() {
       <section className="welcome-plate" aria-label="Gaze Glass greeting">
         <div className="mortal-inscription">
           <p className="mortal-inscription-title">
-            <span>Hello</span>
+            <span>Hello,</span>
             {" "}
-            <span>Mortal</span>
+            <span>Mortal.</span>
           </p>
           <span className="signature-rule" aria-hidden="true">
             <span />
@@ -207,7 +207,7 @@ export default function Home() {
             <span>Mortals Pray.</span>
             <span>Spirits Remember.</span>
           </div>
-          <a className="scroll-cue" href="/observations/marcella" aria-label="Start with Marcella's Observation">
+          <a className="scroll-cue" href="/observations/patricia" aria-label="Start with Patricia's Observation">
             New here? Start with this Observation
           </a>
         </div>
@@ -229,7 +229,7 @@ export default function Home() {
           </div>
           <div className="glass-portal-copy" aria-hidden="true">
             <span>Gaze Into The Glass</span>
-            <p>Scroll to receive visions and witness celestial transformations.</p>
+            <p>Scroll to receive visions and witness what the Glass reveals.</p>
           </div>
         </div>
       </section>
@@ -238,7 +238,7 @@ export default function Home() {
 
       <section className="section seer-prologue reveal" id="the-seer" aria-label="The Seer introduces Gaze Glass">
         <span className="chapter-stamp">01 / The Seer Records</span>
-        <p className="eyebrow">Before the Observation</p>
+        <p className="eyebrow">The Seer Records.</p>
         <h2>The Seer Records What the Glass Reveals.</h2>
         <p>
           Gaze Glass is an immersive fantasy world brought to life through an
@@ -249,7 +249,7 @@ export default function Home() {
           The Seer is your guide through the glass. Begin with one mortal life, then
           follow the light outward to the gods and spirits watching from beyond.
         </p>
-        <a className="text-link" href="/observations/marcella">
+        <a className="text-link" href="/observations/patricia">
           Begin Witnessing
         </a>
       </section>
@@ -359,17 +359,17 @@ export default function Home() {
           <img src="/seer/seer-and-marok.webp" alt="The Seer and Marok observing a sacred glass orb" />
         </figure>
         <div className="seer-copy">
-          <span className="chapter-stamp">06 / Behind the Glass</span>
+          <span className="chapter-stamp">06 / The Seer Speaks</span>
           <p className="eyebrow">The Seer</p>
           <h2>The Keeper Behind the Glass.</h2>
           <p>
-            Gaze Glass observes the dance between mortals, spirits, and gods, then
+            The Seer observes the dance between mortals, spirits, and gods, then
             translates what passes through the sacred instrument into story.
           </p>
           <div className="seer-rites" aria-label="The Seer's work">
             <span>Observes divine pressure.</span>
             <span>Records mortal consequence.</span>
-            <span>Sends prayers through Marok.</span>
+            <span>Carries prayer to the divine.</span>
           </div>
           <div className="seer-links">
             <a className="text-link" href="mailto:behold@gazeglass.com">
