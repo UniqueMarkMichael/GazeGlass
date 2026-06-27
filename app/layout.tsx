@@ -99,7 +99,7 @@ const websiteData = {
     email: "behold@gazeglass.com",
     logo: {
       "@type": "ImageObject",
-      url: "https://www.gazeglass.com/brand/gaze-glass-logo-color.png",
+      url: "https://www.gazeglass.com/brand/gaze-glass-lockup-spectrum-gold.svg",
     },
   },
 };

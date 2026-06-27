@@ -152,8 +152,8 @@ export default function Home() {
       <JsonLd data={homePageData} />
       <header className="site-header" aria-label="Primary navigation">
         <a className="brand" href="/#home" aria-label="Gaze Glass home">
-          <img className="brand-mark" src="/brand/gaze-glass-logo-color.png" alt="" />
-          Gaze Glass
+          <img className="brand-mark" src="/brand/gaze-glass-lockup-spectrum-gold.svg" alt="" />
+          <span className="brand-name">Gaze Glass</span>
         </a>
         <GlassMenu />
       </header>
