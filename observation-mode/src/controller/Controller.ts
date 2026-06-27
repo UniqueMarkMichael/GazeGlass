@@ -19,7 +19,7 @@ type ReadingTrackId = "reading-mode" | "reading-room";
 type ReadingPace = "drift" | "focus" | "sprint" | "rest";
 type PagePromise = "scene" | "time" | "finish";
 type PleasureMode = "wonder" | "calm" | "intensity" | "tenderness";
-type ObservationTheme = "obsidian" | "parchment" | "moonlight";
+type ObservationTheme = "obsidian" | "parchment" | "moonlight" | "aurora";
 type ReadAloudMode = "voice-follow" | "spoken-playback";
 type ReadAloudRecognitionConstructor = new () => ReadAloudRecognition;
 type ReadAloudRecognitionAlternative = {
@@ -92,7 +92,7 @@ const FOCUS_MODES = new Set<FocusMode>(["off", "spotlight", "band", "ruler"]);
 const READING_PACES = new Set<ReadingPace>(["drift", "focus", "sprint", "rest"]);
 const PAGE_PROMISES = new Set<PagePromise>(["scene", "time", "finish"]);
 const PLEASURE_MODES = new Set<PleasureMode>(["wonder", "calm", "intensity", "tenderness"]);
-const OBSERVATION_THEMES = new Set<ObservationTheme>(["obsidian", "parchment", "moonlight"]);
+const OBSERVATION_THEMES = new Set<ObservationTheme>(["obsidian", "parchment", "moonlight", "aurora"]);
 const DEFAULT_READING_TRACK_ID: ReadingTrackId = "reading-mode";
 const DEFAULT_READING_PACE: ReadingPace = "drift";
 const DEFAULT_PAGE_PROMISE: PagePromise = "scene";
@@ -142,7 +142,7 @@ const PLEASURE_PRESETS: Record<
     focusMode: "off",
     generousSpacing: true,
     trackId: "reading-room",
-    theme: "moonlight",
+    theme: "aurora",
     status: "Read for wonder",
   },
   calm: {

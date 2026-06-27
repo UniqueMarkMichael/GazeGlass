@@ -213,6 +213,15 @@ export const COMPONENT_STYLES = `
   --om-selection: rgba(185, 198, 218, 0.28);
 }
 
+.om-root[data-om-theme="aurora"] {
+  --om-bg: #071f25;
+  --om-bg-elev: #12343a;
+  --om-text: #f4f0dc;
+  --om-text-dim: #b7d3c9;
+  --om-accent: #e0c25d;
+  --om-selection: rgba(224, 194, 93, 0.25);
+}
+
 .om-root.is-open {
   opacity: 1;
   pointer-events: auto;
