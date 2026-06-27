@@ -271,7 +271,8 @@ export const COMPONENT_STYLES = `
   text-transform: uppercase;
 }
 
-.om-promise {
+.om-promise,
+.om-pleasure {
   display: grid;
   gap: 0.65rem;
   width: min(30rem, 100%);
@@ -282,11 +283,13 @@ export const COMPONENT_STYLES = `
   background: color-mix(in srgb, var(--om-bg-elev), transparent 42%);
 }
 
-.om-promise p {
+.om-promise p,
+.om-pleasure p {
   margin: 0;
 }
 
-.om-promise-options {
+.om-promise-options,
+.om-pleasure-options {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -304,6 +307,7 @@ export const COMPONENT_STYLES = `
 .om-actions button,
 .om-dock button,
 .om-promise button,
+.om-pleasure button,
 .om-panel button {
   min-width: 44px;
   min-height: 44px;
@@ -319,6 +323,7 @@ export const COMPONENT_STYLES = `
 .om-actions button:disabled,
 .om-dock button:disabled,
 .om-promise button:disabled,
+.om-pleasure button:disabled,
 .om-panel button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
@@ -558,6 +563,11 @@ export const COMPONENT_STYLES = `
   font-size: 0.75rem;
 }
 
+.om-status [data-status-pleasure] {
+  color: color-mix(in srgb, var(--om-text-dim), var(--om-accent) 36%);
+  font-size: 0.72rem;
+}
+
 .om-panel {
   position: fixed;
   right: max(1rem, env(safe-area-inset-right));
@@ -714,6 +724,7 @@ export const COMPONENT_STYLES = `
 
 .om-panel-actions button[role="radio"][aria-checked="true"],
 .om-promise button[role="radio"][aria-checked="true"],
+.om-pleasure button[role="radio"][aria-checked="true"],
 .om-panel-actions button[data-spacing-toggle][aria-pressed="true"],
 .om-panel-actions button[data-audio-action][aria-pressed="true"] {
   border-color: color-mix(in srgb, var(--om-accent), transparent 22%);

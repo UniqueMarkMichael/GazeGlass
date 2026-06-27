@@ -18,6 +18,8 @@ type FocusChangeSource = "dock" | "panel" | "restore";
 type ReadingTrackId = "reading-mode" | "reading-room";
 type ReadingPace = "drift" | "focus" | "sprint" | "rest";
 type PagePromise = "scene" | "time" | "finish";
+type PleasureMode = "wonder" | "calm" | "intensity" | "tenderness";
+type ObservationTheme = "obsidian" | "parchment" | "moonlight";
 type ReadAloudMode = "voice-follow" | "spoken-playback";
 type ReadAloudRecognitionConstructor = new () => ReadAloudRecognition;
 type ReadAloudRecognitionAlternative = {
@@ -74,6 +76,8 @@ type ReaderPrefs = {
   focusMode?: FocusMode;
   readingPace?: ReadingPace;
   pagePromise?: PagePromise;
+  pleasureMode?: PleasureMode;
+  observationTheme?: ObservationTheme;
   textSizeRem?: number;
   generousSpacing?: boolean;
   showImages?: boolean;
@@ -87,9 +91,12 @@ const SITE_SOUND_PREF_KEY = "gaze-glass.sound.v1";
 const FOCUS_MODES = new Set<FocusMode>(["off", "spotlight", "band", "ruler"]);
 const READING_PACES = new Set<ReadingPace>(["drift", "focus", "sprint", "rest"]);
 const PAGE_PROMISES = new Set<PagePromise>(["scene", "time", "finish"]);
+const PLEASURE_MODES = new Set<PleasureMode>(["wonder", "calm", "intensity", "tenderness"]);
+const OBSERVATION_THEMES = new Set<ObservationTheme>(["obsidian", "parchment", "moonlight"]);
 const DEFAULT_READING_TRACK_ID: ReadingTrackId = "reading-mode";
 const DEFAULT_READING_PACE: ReadingPace = "drift";
 const DEFAULT_PAGE_PROMISE: PagePromise = "scene";
+const DEFAULT_PLEASURE_MODE: PleasureMode = "wonder";
 const PAGE_PROMISE_DURATION_MS = 5 * 60 * 1000;
 const READING_PACE_PRESETS: Record<
   ReadingPace,
@@ -119,6 +126,50 @@ const READING_TRACKS: Array<{
     gainDb: -8,
   },
 ];
+const PLEASURE_PRESETS: Record<
+  PleasureMode,
+  {
+    pace: ReadingPace;
+    focusMode: FocusMode;
+    generousSpacing: boolean;
+    trackId: ReadingTrackId;
+    theme: ObservationTheme;
+    status: string;
+  }
+> = {
+  wonder: {
+    pace: "drift",
+    focusMode: "off",
+    generousSpacing: true,
+    trackId: "reading-room",
+    theme: "moonlight",
+    status: "Read for wonder",
+  },
+  calm: {
+    pace: "rest",
+    focusMode: "spotlight",
+    generousSpacing: true,
+    trackId: "reading-room",
+    theme: "moonlight",
+    status: "Read for calm",
+  },
+  intensity: {
+    pace: "sprint",
+    focusMode: "band",
+    generousSpacing: false,
+    trackId: "reading-mode",
+    theme: "obsidian",
+    status: "Stay with the intensity",
+  },
+  tenderness: {
+    pace: "rest",
+    focusMode: "spotlight",
+    generousSpacing: true,
+    trackId: "reading-room",
+    theme: "parchment",
+    status: "Stay with the tenderness",
+  },
+};
 
 export class ObservationModeController {
   private state: MachineState = "idle";
@@ -136,6 +187,8 @@ export class ObservationModeController {
   private focusMode: FocusMode = "off";
   private readingPace: ReadingPace = DEFAULT_READING_PACE;
   private pagePromise: PagePromise = DEFAULT_PAGE_PROMISE;
+  private pleasureMode: PleasureMode = DEFAULT_PLEASURE_MODE;
+  private observationTheme: ObservationTheme = PLEASURE_PRESETS[DEFAULT_PLEASURE_MODE].theme;
   private textSizeRem = 1.18;
   private generousSpacing = false;
   private showImages = false;
@@ -354,6 +407,16 @@ export class ObservationModeController {
             <button type="button" role="radio" aria-checked="false" data-promise="finish" aria-label="${COPY.promiseFinishAria}">${COPY.promiseFinish}</button>
           </div>
         </div>
+        <div class="om-pleasure" role="radiogroup" aria-label="${COPY.pleasureKicker}">
+          <p class="om-panel-kicker">${COPY.pleasureKicker}</p>
+          <p>${COPY.pleasureDescription}</p>
+          <div class="om-pleasure-options">
+            <button type="button" role="radio" aria-checked="false" data-pleasure="wonder" aria-label="${COPY.pleasureWonderAria}">${COPY.pleasureWonder}</button>
+            <button type="button" role="radio" aria-checked="false" data-pleasure="calm" aria-label="${COPY.pleasureCalmAria}">${COPY.pleasureCalm}</button>
+            <button type="button" role="radio" aria-checked="false" data-pleasure="intensity" aria-label="${COPY.pleasureIntensityAria}">${COPY.pleasureIntensity}</button>
+            <button type="button" role="radio" aria-checked="false" data-pleasure="tenderness" aria-label="${COPY.pleasureTendernessAria}">${COPY.pleasureTenderness}</button>
+          </div>
+        </div>
         <div class="om-actions">
           <button type="button" data-action="skip" aria-label="${COPY.skipAria}">${COPY.skip}</button>
           <button type="button" data-action="exit" aria-label="${COPY.leaveAria}">${COPY.leave}</button>
@@ -369,12 +432,16 @@ export class ObservationModeController {
     plate.querySelectorAll<HTMLButtonElement>("[data-promise]").forEach((button) => {
       button.addEventListener("click", () => this.setPagePromise(button.dataset.promise));
     });
+    plate.querySelectorAll<HTMLButtonElement>("[data-pleasure]").forEach((button) => {
+      button.addEventListener("click", () => this.setPleasureMode(button.dataset.pleasure));
+    });
     plate.querySelector<HTMLButtonElement>("[data-action='exit']")?.addEventListener("click", () => void this.exit());
     plate.addEventListener("keydown", (event) => {
       if (event.key === "Escape") void this.exit();
     });
     this.root.append(plate);
     this.updatePromiseControls();
+    this.updatePleasureControls();
     plate.querySelector<HTMLButtonElement>("[data-action='skip']")?.focus();
   }
 
@@ -391,6 +458,7 @@ export class ObservationModeController {
         <span class="om-status">
           <span data-status-scene>${COPY.plateObservation} ${this.getObservationNumber()}</span>
           <span data-status-promise>${this.getPromiseStatusText()}</span>
+          <span data-status-pleasure>${this.getPleasureStatusText()}</span>
         </span>
         <button type="button" data-action="lost" aria-label="${COPY.lostAria}">${COPY.lost}</button>
         <button type="button" data-panel="sound" aria-label="${COPY.soundAria}" aria-haspopup="dialog" aria-expanded="false">${COPY.sound}</button>
@@ -566,7 +634,9 @@ export class ObservationModeController {
     });
     panel.querySelectorAll<HTMLButtonElement>("[data-theme]").forEach((button) => {
       button.addEventListener("click", () => {
-        this.root.dataset.omTheme = button.dataset.theme ?? "obsidian";
+        this.observationTheme = this.parseObservationTheme(button.dataset.theme);
+        this.applyPrefsToRoot();
+        this.savePrefs();
         this.showToast(`${button.textContent ?? "Theme"} selected.`);
       });
     });
@@ -652,6 +722,14 @@ export class ObservationModeController {
     return PAGE_PROMISES.has(value as PagePromise) ? (value as PagePromise) : DEFAULT_PAGE_PROMISE;
   }
 
+  private parsePleasureMode(value: string | undefined): PleasureMode {
+    return PLEASURE_MODES.has(value as PleasureMode) ? (value as PleasureMode) : DEFAULT_PLEASURE_MODE;
+  }
+
+  private parseObservationTheme(value: string | undefined): ObservationTheme {
+    return OBSERVATION_THEMES.has(value as ObservationTheme) ? (value as ObservationTheme) : "obsidian";
+  }
+
   private parseTextSize(value: number | undefined, fallback = 1.18): number {
     return typeof value === "number" && Number.isFinite(value) ? Math.min(1.6, Math.max(1, value)) : fallback;
   }
@@ -665,6 +743,31 @@ export class ObservationModeController {
     const message = this.promiseToast(this.pagePromise);
     this.showToast(message);
     this.announce(message);
+  }
+
+  private setPleasureMode(value: string | undefined): void {
+    this.pleasureMode = this.parsePleasureMode(value);
+    this.applyPleasurePreset();
+    this.playInterfaceSound("select");
+    this.updatePleasureControls();
+    this.updateFocusControls();
+    this.updateSoundControls();
+    this.updateSceneStatus();
+    this.savePrefs();
+    const message = this.pleasureToast(this.pleasureMode);
+    this.showToast(message);
+    this.announce(message);
+  }
+
+  private applyPleasurePreset(): void {
+    const preset = PLEASURE_PRESETS[this.pleasureMode];
+    this.readingPace = preset.pace;
+    this.focusMode = preset.focusMode;
+    this.generousSpacing = preset.generousSpacing;
+    this.atmosphereTrackId = preset.trackId;
+    this.observationTheme = preset.theme;
+    this.applyPrefsToRoot();
+    this.scheduleActiveBlockUpdate();
   }
 
   private setReadingPace(pace: ReadingPace): void {
@@ -706,11 +809,23 @@ export class ObservationModeController {
     return COPY.promiseSceneSetToast;
   }
 
+  private pleasureToast(mode: PleasureMode): string {
+    if (mode === "calm") return COPY.pleasureCalmToast;
+    if (mode === "intensity") return COPY.pleasureIntensityToast;
+    if (mode === "tenderness") return COPY.pleasureTendernessToast;
+    return COPY.pleasureWonderToast;
+  }
+
   private loadPrefs(): void {
     try {
       const prefs = JSON.parse(window.localStorage.getItem(PREFS_KEY) ?? "{}") as ReaderPrefs;
       this.readingPace = this.parseReadingPace(prefs.readingPace);
       this.pagePromise = this.parsePagePromise(prefs.pagePromise);
+      this.pleasureMode = this.parsePleasureMode(prefs.pleasureMode);
+      this.observationTheme =
+        typeof prefs.observationTheme === "string"
+          ? this.parseObservationTheme(prefs.observationTheme)
+          : PLEASURE_PRESETS[this.pleasureMode].theme;
       this.textSizeRem = this.parseTextSize(prefs.textSizeRem, READING_PACE_PRESETS[this.readingPace].fontSizeRem);
       this.focusMode = this.parseFocusMode(prefs.focusMode);
       this.generousSpacing = Boolean(prefs.generousSpacing);
@@ -720,6 +835,8 @@ export class ObservationModeController {
     } catch {
       this.readingPace = DEFAULT_READING_PACE;
       this.pagePromise = DEFAULT_PAGE_PROMISE;
+      this.pleasureMode = DEFAULT_PLEASURE_MODE;
+      this.observationTheme = PLEASURE_PRESETS[DEFAULT_PLEASURE_MODE].theme;
       this.textSizeRem = READING_PACE_PRESETS[DEFAULT_READING_PACE].fontSizeRem;
       this.focusMode = "off";
       this.generousSpacing = false;
@@ -737,6 +854,8 @@ export class ObservationModeController {
           focusMode: this.focusMode,
           readingPace: this.readingPace,
           pagePromise: this.pagePromise,
+          pleasureMode: this.pleasureMode,
+          observationTheme: this.observationTheme,
           textSizeRem: this.textSizeRem,
           generousSpacing: this.generousSpacing,
           showImages: this.showImages,
@@ -750,6 +869,8 @@ export class ObservationModeController {
   }
 
   private applyPrefsToRoot(): void {
+    this.root.dataset.omTheme = this.observationTheme;
+    this.root.dataset.pleasureMode = this.pleasureMode;
     this.root.dataset.focusMode = this.focusMode;
     this.root.dataset.paceMode = this.readingPace;
     this.root.dataset.spacingMode = this.generousSpacing ? "on" : "off";
@@ -812,6 +933,7 @@ export class ObservationModeController {
     });
 
     this.updatePromiseControls();
+    this.updatePleasureControls();
 
     const spacingToggle = this.root.querySelector<HTMLButtonElement>("[data-spacing-toggle]");
     spacingToggle?.setAttribute("aria-pressed", String(this.generousSpacing));
@@ -822,6 +944,13 @@ export class ObservationModeController {
   private updatePromiseControls(): void {
     this.root.querySelectorAll<HTMLButtonElement>("[data-promise]").forEach((button) => {
       const selected = this.parsePagePromise(button.dataset.promise) === this.pagePromise;
+      button.setAttribute("aria-checked", String(selected));
+    });
+  }
+
+  private updatePleasureControls(): void {
+    this.root.querySelectorAll<HTMLButtonElement>("[data-pleasure]").forEach((button) => {
+      const selected = this.parsePleasureMode(button.dataset.pleasure) === this.pleasureMode;
       button.setAttribute("aria-checked", String(selected));
     });
   }
@@ -2169,12 +2298,14 @@ export class ObservationModeController {
   private updateSceneStatus(): void {
     const sceneStatus = this.root.querySelector<HTMLElement>("[data-status-scene]");
     const promiseStatus = this.root.querySelector<HTMLElement>("[data-status-promise]");
-    if (!sceneStatus && !promiseStatus) return;
+    const pleasureStatus = this.root.querySelector<HTMLElement>("[data-status-pleasure]");
+    if (!sceneStatus && !promiseStatus && !pleasureStatus) return;
 
     const beat = this.getActiveSceneBeat();
     if (!beat) {
       if (sceneStatus) sceneStatus.textContent = `${COPY.plateObservation} ${this.getObservationNumber()}`;
       if (promiseStatus) promiseStatus.textContent = this.getPromiseStatusText();
+      if (pleasureStatus) pleasureStatus.textContent = this.getPleasureStatusText();
       return;
     }
 
@@ -2183,12 +2314,17 @@ export class ObservationModeController {
         beat.total > 1 ? `Scene ${beat.index} of ${beat.total} · ${beat.label}` : `Scene · ${beat.label}`;
     }
     if (promiseStatus) promiseStatus.textContent = this.getPromiseStatusText();
+    if (pleasureStatus) pleasureStatus.textContent = this.getPleasureStatusText();
   }
 
   private getPromiseStatusText(): string {
     if (this.pagePromise === "time") return this.getTimePromiseStatusText();
     if (this.pagePromise === "finish") return this.getFinishPromiseStatusText();
     return this.getScenePromiseStatusText();
+  }
+
+  private getPleasureStatusText(): string {
+    return PLEASURE_PRESETS[this.pleasureMode].status;
   }
 
   private getScenePromiseStatusText(): string {
