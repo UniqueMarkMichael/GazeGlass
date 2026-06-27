@@ -1876,7 +1876,7 @@ export class ObservationModeController {
       articleRect.top -
       this.readingArticle.clientHeight / 2 +
       blockRect.height / 2;
-    this.readingArticle.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    this.readingArticle.scrollTop = Math.max(0, top);
     this.activeBlockId = model.id;
     this.applyLanternClasses();
     this.updateSceneStatus();
