@@ -879,7 +879,8 @@ export const COMPONENT_STYLES = `
     max-width: calc((100% - 0.96rem) / 3);
   }
 
-  .om-panel {
+  .om-panel,
+  .om-lost-card {
     right: max(0.75rem, env(safe-area-inset-right));
     bottom: calc(10.05rem + env(safe-area-inset-bottom));
     left: max(0.75rem, env(safe-area-inset-left));
