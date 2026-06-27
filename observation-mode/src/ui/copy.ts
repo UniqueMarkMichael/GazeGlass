@@ -1,7 +1,7 @@
 export const COPY = {
   open: "Open",
   openAria: "Open immersive reading",
-  skip: "View",
+  skip: "Begin",
   skipAria: "View this Observation and begin reading",
   leave: "Leave",
   leaveAria: "Leave immersive reading",
@@ -121,6 +121,9 @@ export const COPY = {
   sprintToast: "Sprint pace selected.",
   restToast: "Rest pace selected.",
   plateObservation: "Observation",
+  modeName: "Observation Mode",
+  modeDescription:
+    "A focused reading space for this story. Inside, choose a pace, use sound or Read Aloud, and steady the text with Lantern, Band, or Ruler.",
   recordedBy: "Recorded by the Seer",
   sealed: "The Seer has sealed this record.",
   loadError: "This record couldn't open in the Glass. You can still read it below.",

@@ -313,6 +313,10 @@ export class ObservationModeController {
         <p>${this.getRealm()} · ${this.getMagnitude()}</p>
         ${this.manifest?.deity ? `<p>Associated with the God of ${this.manifest.deity}</p>` : ""}
         <p>${COPY.recordedBy}</p>
+        <div class="om-mode-intro" aria-label="${COPY.modeName}">
+          <strong>${COPY.modeName}</strong>
+          <span>${COPY.modeDescription}</span>
+        </div>
         <div class="om-actions">
           <button type="button" data-action="skip" aria-label="${COPY.skipAria}">${COPY.skip}</button>
           <button type="button" data-action="exit" aria-label="${COPY.leaveAria}">${COPY.leave}</button>

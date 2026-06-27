@@ -249,6 +249,28 @@ export const COMPONENT_STYLES = `
   line-height: 1.6;
 }
 
+.om-mode-intro {
+  display: grid;
+  gap: 0.38rem;
+  width: min(27rem, 100%);
+  margin: 1.35rem auto 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--om-accent), transparent 74%);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--om-bg-elev), transparent 32%);
+  color: var(--om-text-dim);
+  font-family: system-ui, sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.om-mode-intro strong {
+  color: var(--om-accent);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .om-actions {
   display: flex;
   flex-wrap: wrap;
@@ -346,8 +368,8 @@ export const COMPONENT_STYLES = `
     0 0 0 0.52rem rgba(201, 162, 39, 0.16),
     inset 0 0 0 1px rgba(201, 162, 39, 0.42);
   opacity: 1;
-  padding-block: clamp(0.38rem, 1.4vw, 0.7rem);
-  padding-inline: clamp(0.7rem, 2.8vw, 1rem);
+  padding-block: clamp(0.8rem, 2.1vw, 1.25rem);
+  padding-inline: clamp(1.45rem, 4.6vw, 2.5rem);
 }
 
 .om-root[data-focus-mode="ruler"] .om-block.is-ruler {
