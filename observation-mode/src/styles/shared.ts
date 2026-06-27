@@ -1072,7 +1072,8 @@ export const COMPONENT_STYLES = `
   }
 
   .om-dock button[data-action="exit"] {
-    flex: 1 1 4.75rem;
+    flex: 0 1 calc((100% - 0.96rem) / 3);
+    max-width: calc((100% - 0.96rem) / 3);
     height: 46px;
     min-height: 46px;
     font-size: clamp(0.7rem, 3vw, 0.78rem);
@@ -1088,6 +1089,11 @@ export const COMPONENT_STYLES = `
   .om-dock:has([data-action="images"]) > button:not(.om-controls-toggle),
   .om-dock:has([data-action="images"]) > .om-split-control {
     flex: 0 1 calc((100% - 0.96rem) / 3);
+    max-width: calc((100% - 0.96rem) / 3);
+  }
+
+  .om-dock:has([data-action="images"]) > button[data-action="exit"] {
+    flex-basis: calc((100% - 0.96rem) / 3);
     max-width: calc((100% - 0.96rem) / 3);
   }
 

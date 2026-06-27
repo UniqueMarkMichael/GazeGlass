@@ -485,18 +485,14 @@ export class ObservationModeController {
       </article>
       <div class="om-dock" role="toolbar" aria-label="Observation controls">
         <button class="om-controls-toggle" type="button" data-action="controls-toggle" aria-label="${COPY.controlsOpenAria}" aria-expanded="false" data-help="${COPY.controlsHelp}">${COPY.controls}</button>
-        <button type="button" data-action="exit" aria-label="${COPY.leaveAria}" data-help="${COPY.leaveHelp}">${COPY.leave}</button>
         <span class="om-status">
           <span data-status-scene>${COPY.plateObservation} ${this.getObservationNumber()}</span>
           <span data-status-promise>${this.getPromiseStatusText()}</span>
           <span data-status-pleasure>${this.getPleasureStatusText()}</span>
         </span>
-        <button type="button" data-action="lost" aria-label="${COPY.lostAria}" data-help="${COPY.lostHelp}">${COPY.lost}</button>
-        <button type="button" data-action="echo" aria-label="${COPY.echoAria}" data-help="${COPY.echoHelp}">${COPY.echo}</button>
         <button type="button" data-action="read-with-me" aria-label="${COPY.readWithMeAriaOff}" aria-pressed="false" data-help="${COPY.readWithMeHelp}">${COPY.readWithMe}</button>
         <button type="button" data-action="read-next" aria-label="${COPY.readWithMeNextAria}" hidden data-help="${COPY.readWithMeNextHelp}">${COPY.readWithMeNext}</button>
-        <button type="button" data-action="memory" aria-label="${COPY.memoryAria}" data-help="${COPY.memoryHelp}">${COPY.memory}</button>
-        <button type="button" data-panel="sound" aria-label="${COPY.soundAria}" aria-haspopup="dialog" aria-expanded="false" data-help="${COPY.soundHelp}">${COPY.sound}</button>
+        <button type="button" data-action="lost" aria-label="${COPY.lostAria}" data-help="${COPY.lostHelp}">${COPY.lost}</button>
         <span class="om-split-control" role="group" aria-label="Focus controls">
           <button
             class="om-lantern-toggle"
@@ -529,12 +525,16 @@ export class ObservationModeController {
             </svg>
           </button>
         </span>
+        <button type="button" data-panel="display" aria-label="${COPY.textAria}" aria-haspopup="dialog" aria-expanded="false" data-help="${COPY.textHelp}">${COPY.text}</button>
+        <button type="button" data-panel="sound" aria-label="${COPY.soundAria}" aria-haspopup="dialog" aria-expanded="false" data-help="${COPY.soundHelp}">${COPY.sound}</button>
+        <button type="button" data-action="echo" aria-label="${COPY.echoAria}" data-help="${COPY.echoHelp}">${COPY.echo}</button>
         ${
           this.hasImageBlocks()
             ? `<button type="button" data-action="images" aria-label="${COPY.imagesAriaOff}" aria-pressed="false" data-help="${COPY.imagesHelp}">${COPY.images}</button>`
             : ""
         }
-        <button type="button" data-panel="display" aria-label="${COPY.textAria}" aria-haspopup="dialog" aria-expanded="false" data-help="${COPY.textHelp}">${COPY.text}</button>
+        <button type="button" data-action="memory" aria-label="${COPY.memoryAria}" data-help="${COPY.memoryHelp}">${COPY.memory}</button>
+        <button type="button" data-action="exit" aria-label="${COPY.leaveAria}" data-help="${COPY.leaveHelp}">${COPY.leave}</button>
       </div>
     `;
 
