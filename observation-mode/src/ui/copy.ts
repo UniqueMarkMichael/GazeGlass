@@ -30,7 +30,7 @@ export const COPY = {
   soundReady:
     "Choose a focus track to play, use Read Aloud, or silence the Glass.",
   soundReadyNoNarration:
-    "Choose Reading Mode or Reading Room to start focus audio, or turn on Read Aloud to hear the Glass read with you.",
+    "Choose Focus #1 or Focus #2 to start focus audio, or turn on Read Aloud to hear the Glass read with you.",
   soundActive: "Sound is active. The Glass will keep the focus audio gentle while you read.",
   readAloudListeningDescription: "Read Aloud is listening. Read naturally; the Glass will highlight each sentence it recognizes.",
   readAloudPlaybackDescription: "Read Aloud is playing. The Glass will read each sentence and highlight the text as it goes.",

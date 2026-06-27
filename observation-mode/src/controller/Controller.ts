@@ -77,13 +77,13 @@ const READING_TRACKS: Array<{
 }> = [
   {
     id: "reading-mode",
-    label: "Reading Mode",
+    label: "Focus #1",
     src: "/audio/focus/sacred-glass-reading-mode.mp3",
     gainDb: -8,
   },
   {
     id: "reading-room",
-    label: "Reading Room",
+    label: "Focus #2",
     src: "/audio/focus/sacred-glass-reading-room.mp3",
     gainDb: -8,
   },
@@ -1679,10 +1679,11 @@ export class ObservationModeController {
   }
 
   private applyLanternClasses(): void {
-    const lanternActive = this.focusMode === "spotlight" && Boolean(this.activeBlockId);
+    const focusActive = this.focusMode !== "off" && Boolean(this.activeBlockId);
+    const dimInactiveBlocks = this.focusMode === "spotlight" || this.focusMode === "band";
     const litIds = new Set<string>();
 
-    if (lanternActive && this.activeBlockId) {
+    if (focusActive && this.activeBlockId) {
       const activeIndex = this.models.findIndex((model) => model.id === this.activeBlockId);
       const active = this.models[activeIndex];
       const previous = this.models[activeIndex - 1];
@@ -1697,9 +1698,10 @@ export class ObservationModeController {
       const inReading = this.readingArticle?.contains(model.element) ?? false;
       if (!inReading) continue;
 
-      const lit = lanternActive && litIds.has(model.id);
-      model.element.classList.toggle("is-lit", lit);
-      model.element.classList.toggle("om-dim", lanternActive && !lit);
+      const lit = focusActive && litIds.has(model.id);
+      model.element.classList.toggle("is-lit", lit && this.focusMode !== "ruler");
+      model.element.classList.toggle("is-ruler", lit && this.focusMode === "ruler");
+      model.element.classList.toggle("om-dim", dimInactiveBlocks && !lit);
     }
   }
 

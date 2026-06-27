@@ -110,6 +110,7 @@ export const COMPONENT_STYLES = `
 }
 
 .om-block {
+  position: relative;
   scroll-margin-block: 24vh;
   border-radius: 8px;
   transition:
@@ -324,6 +325,44 @@ export const COMPONENT_STYLES = `
   background-color: var(--om-lantern-wash);
   box-shadow: 0 0 0 0.42rem var(--om-lantern-wash);
   opacity: 1;
+}
+
+.om-root[data-focus-mode="band"] .om-block.om-dim {
+  opacity: 0.48;
+}
+
+.om-root[data-focus-mode="band"] .om-block.is-lit {
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--om-accent), transparent 88%) 12%,
+      color-mix(in srgb, var(--om-accent), transparent 82%) 50%,
+      color-mix(in srgb, var(--om-accent), transparent 88%) 88%,
+      transparent
+    );
+  box-shadow:
+    0 0 0 0.46rem color-mix(in srgb, var(--om-accent), transparent 90%),
+    inset 0 0 0 1px color-mix(in srgb, var(--om-accent), transparent 76%);
+  opacity: 1;
+}
+
+.om-root[data-focus-mode="ruler"] .om-block.is-ruler {
+  background: color-mix(in srgb, var(--om-accent), transparent 94%);
+  box-shadow: inset 0.22rem 0 0 color-mix(in srgb, var(--om-accent), transparent 28%);
+}
+
+.om-root[data-focus-mode="ruler"] .om-block.is-ruler::after {
+  content: "";
+  position: absolute;
+  right: -0.65rem;
+  bottom: -0.44rem;
+  left: -0.65rem;
+  height: 2px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--om-accent), transparent 18%);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--om-accent), transparent 54%);
+  pointer-events: none;
 }
 
 .om-block.is-narrating {
