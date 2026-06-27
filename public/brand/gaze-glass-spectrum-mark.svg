@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="320" height="928" viewBox="96 48 320 928"
+     role="img" aria-labelledby="title desc"
+     shape-rendering="geometricPrecision">
+  <title id="title">Gaze Glass Spectrum Mark</title>
+  <desc id="desc">A vertical stained-glass spectrum crystal in gold, teal, indigo, and magenta.</desc>
+  <defs>
+    <clipPath id="spectrum-mark-clip">
+      <path d="M256 64L400 208V816L256 960L112 816V208L256 64Z"/>
+    </clipPath>
+    <linearGradient id="spectrum-mark-base" x1="256" y1="64" x2="256" y2="960" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1A1733"/>
+      <stop offset="0.28" stop-color="#1A1733"/>
+      <stop offset="0.52" stop-color="#E0A030"/>
+      <stop offset="0.70" stop-color="#C9A227"/>
+      <stop offset="1" stop-color="#B5179E"/>
+    </linearGradient>
+    <radialGradient id="spectrum-mark-larimar" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(150 330) rotate(50) scale(360 300)">
+      <stop stop-color="#5FB7C4" stop-opacity="0.95"/>
+      <stop offset="0.72" stop-color="#5FB7C4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="spectrum-mark-light" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(255 560) rotate(90) scale(290 210)">
+      <stop stop-color="#EDE3CC" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#EDE3CC" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="spectrum-mark-stroke" x1="256" y1="64" x2="256" y2="960" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EDE3CC"/>
+      <stop offset="0.24" stop-color="#C9A227"/>
+      <stop offset="0.70" stop-color="#E0A030"/>
+      <stop offset="1" stop-color="#C9A227"/>
+    </linearGradient>
+  </defs>
+  <path d="M256 64L400 208V816L256 960L112 816V208L256 64Z" fill="url(#spectrum-mark-base)"/>
+  <path d="M256 64L400 208V816L256 960L112 816V208L256 64Z" fill="url(#spectrum-mark-larimar)"/>
+  <path d="M256 64L400 208V816L256 960L112 816V208L256 64Z" fill="url(#spectrum-mark-light)"/>
+  <g clip-path="url(#spectrum-mark-clip)">
+    <rect x="112" y="64" width="96" height="896" fill="#07101F" opacity="0.14"/>
+    <rect x="208" y="64" width="96" height="896" fill="#FFFFFF" opacity="0.025"/>
+    <rect x="304" y="64" width="96" height="896" fill="#32092C" opacity="0.12"/>
+  </g>
+  <path d="M208 112V912M304 112V912" stroke="#EDE3CC" stroke-opacity="0.25" stroke-width="2"/>
+  <path d="M256 64L400 208V816L256 960L112 816V208L256 64Z" fill="none" stroke="url(#spectrum-mark-stroke)" stroke-width="8" stroke-linejoin="miter"/>
+</svg>

@@ -93,7 +93,7 @@ a {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   font-family: "Playfair Display", Georgia, serif;
   font-size: 1.05rem;
   letter-spacing: 0.08em;
@@ -102,8 +102,8 @@ a {
 
 .brand-mark {
   display: block;
-  width: clamp(42px, 3.8vw, 58px);
-  height: auto;
+  width: auto;
+  height: clamp(42px, 4.4vw, 58px);
   border-radius: 0;
   object-fit: contain;
   opacity: 0.96;
@@ -5313,7 +5313,7 @@ dd {
   }
 
   .brand-mark {
-    width: 42px;
+    height: 42px;
   }
 
   .glass-menu-trigger {

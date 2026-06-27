@@ -17,6 +17,7 @@ type FocusMode = "off" | "spotlight" | "band" | "ruler";
 type FocusChangeSource = "dock" | "panel" | "restore";
 type ReadingTrackId = "reading-mode" | "reading-room";
 type ReadingPace = "drift" | "focus" | "sprint" | "rest";
+type ReaderState = "distracted" | "tired" | "curious" | "overwhelmed" | "returning" | "finishing";
 type PagePromise = "scene" | "time" | "finish";
 type PleasureMode = "wonder" | "calm" | "intensity" | "tenderness";
 type ObservationTheme = "obsidian" | "parchment" | "moonlight" | "aurora";
@@ -81,6 +82,7 @@ type MemoryEntry = {
 };
 
 type ReaderPrefs = {
+  readerState?: ReaderState;
   focusMode?: FocusMode;
   readingPace?: ReadingPace;
   pagePromise?: PagePromise;
@@ -100,14 +102,24 @@ const MEMORY_THREAD_KEY = "gg.om.memory.v1";
 const SITE_SOUND_PREF_KEY = "gaze-glass.sound.v1";
 const FOCUS_MODES = new Set<FocusMode>(["off", "spotlight", "band", "ruler"]);
 const READING_PACES = new Set<ReadingPace>(["drift", "focus", "sprint", "rest"]);
+const READER_STATES = new Set<ReaderState>([
+  "distracted",
+  "tired",
+  "curious",
+  "overwhelmed",
+  "returning",
+  "finishing",
+]);
 const PAGE_PROMISES = new Set<PagePromise>(["scene", "time", "finish"]);
 const PLEASURE_MODES = new Set<PleasureMode>(["wonder", "calm", "intensity", "tenderness"]);
 const OBSERVATION_THEMES = new Set<ObservationTheme>(["obsidian", "parchment", "moonlight", "aurora"]);
 const DEFAULT_READING_TRACK_ID: ReadingTrackId = "reading-mode";
 const DEFAULT_READING_PACE: ReadingPace = "drift";
+const DEFAULT_READER_STATE: ReaderState = "curious";
 const DEFAULT_PAGE_PROMISE: PagePromise = "scene";
 const DEFAULT_PLEASURE_MODE: PleasureMode = "wonder";
 const PAGE_PROMISE_DURATION_MS = 5 * 60 * 1000;
+const HELP_LONG_PRESS_MS = 820;
 const JOLT_IDLE_MS = 45 * 1000;
 const JOLT_IDLE_PATTERN = 18;
 const JOLT_FINISH_PATTERN = [24, 90, 34];
@@ -139,6 +151,101 @@ const READING_TRACKS: Array<{
     gainDb: -8,
   },
 ];
+const READER_STATE_PRESETS: Record<
+  ReaderState,
+  {
+    label: string;
+    status: string;
+    pagePromise: PagePromise;
+    pleasureMode: PleasureMode;
+    pace: ReadingPace;
+    focusMode: FocusMode;
+    generousSpacing: boolean;
+    fontSizeRem: number;
+    trackId: ReadingTrackId;
+    theme: ObservationTheme;
+    showImages: boolean;
+  }
+> = {
+  distracted: {
+    label: COPY.arrivalDistracted,
+    status: "Arrival: distracted",
+    pagePromise: "scene",
+    pleasureMode: "calm",
+    pace: "focus",
+    focusMode: "ruler",
+    generousSpacing: true,
+    fontSizeRem: 1.2,
+    trackId: "reading-mode",
+    theme: "moonlight",
+    showImages: false,
+  },
+  tired: {
+    label: COPY.arrivalTired,
+    status: "Arrival: tired",
+    pagePromise: "time",
+    pleasureMode: "calm",
+    pace: "rest",
+    focusMode: "spotlight",
+    generousSpacing: true,
+    fontSizeRem: 1.3,
+    trackId: "reading-room",
+    theme: "moonlight",
+    showImages: false,
+  },
+  curious: {
+    label: COPY.arrivalCurious,
+    status: "Arrival: curious",
+    pagePromise: "scene",
+    pleasureMode: "wonder",
+    pace: "drift",
+    focusMode: "off",
+    generousSpacing: true,
+    fontSizeRem: 1.22,
+    trackId: "reading-room",
+    theme: "aurora",
+    showImages: true,
+  },
+  overwhelmed: {
+    label: COPY.arrivalOverwhelmed,
+    status: "Arrival: overwhelmed",
+    pagePromise: "scene",
+    pleasureMode: "tenderness",
+    pace: "rest",
+    focusMode: "spotlight",
+    generousSpacing: true,
+    fontSizeRem: 1.28,
+    trackId: "reading-room",
+    theme: "parchment",
+    showImages: false,
+  },
+  returning: {
+    label: COPY.arrivalReturning,
+    status: "Arrival: returning",
+    pagePromise: "scene",
+    pleasureMode: "calm",
+    pace: "focus",
+    focusMode: "ruler",
+    generousSpacing: true,
+    fontSizeRem: 1.18,
+    trackId: "reading-room",
+    theme: "moonlight",
+    showImages: false,
+  },
+  finishing: {
+    label: COPY.arrivalFinishing,
+    status: "Arrival: near finish",
+    pagePromise: "finish",
+    pleasureMode: "intensity",
+    pace: "sprint",
+    focusMode: "band",
+    generousSpacing: false,
+    fontSizeRem: 1.1,
+    trackId: "reading-mode",
+    theme: "obsidian",
+    showImages: false,
+  },
+};
 const PLEASURE_PRESETS: Record<
   PleasureMode,
   {
@@ -198,6 +305,7 @@ export class ObservationModeController {
   private manifest: ObservationManifest | null;
   private previousActiveElement: Element | null = null;
   private focusMode: FocusMode = "off";
+  private readerState: ReaderState = DEFAULT_READER_STATE;
   private readingPace: ReadingPace = DEFAULT_READING_PACE;
   private pagePromise: PagePromise = DEFAULT_PAGE_PROMISE;
   private pleasureMode: PleasureMode = DEFAULT_PLEASURE_MODE;
@@ -428,6 +536,18 @@ export class ObservationModeController {
           <strong>${COPY.modeName}</strong>
           <span>${COPY.modeDescription}</span>
         </div>
+        <div class="om-arrival" role="radiogroup" aria-label="${COPY.arrivalKicker}">
+          <p class="om-panel-kicker">${COPY.arrivalKicker}</p>
+          <p>${COPY.arrivalDescription}</p>
+          <div class="om-arrival-options">
+            <button type="button" role="radio" aria-checked="false" data-reader-state="distracted" aria-label="${COPY.arrivalDistractedAria}">${COPY.arrivalDistracted}</button>
+            <button type="button" role="radio" aria-checked="false" data-reader-state="tired" aria-label="${COPY.arrivalTiredAria}">${COPY.arrivalTired}</button>
+            <button type="button" role="radio" aria-checked="false" data-reader-state="curious" aria-label="${COPY.arrivalCuriousAria}">${COPY.arrivalCurious}</button>
+            <button type="button" role="radio" aria-checked="false" data-reader-state="overwhelmed" aria-label="${COPY.arrivalOverwhelmedAria}">${COPY.arrivalOverwhelmed}</button>
+            <button type="button" role="radio" aria-checked="false" data-reader-state="returning" aria-label="${COPY.arrivalReturningAria}">${COPY.arrivalReturning}</button>
+            <button type="button" role="radio" aria-checked="false" data-reader-state="finishing" aria-label="${COPY.arrivalFinishingAria}">${COPY.arrivalFinishing}</button>
+          </div>
+        </div>
         <div class="om-promise" role="radiogroup" aria-label="${COPY.promiseKicker}">
           <p class="om-panel-kicker">${COPY.promiseKicker}</p>
           <p>${COPY.promiseDescription}</p>
@@ -459,6 +579,9 @@ export class ObservationModeController {
       this.dispatch({ type: "THRESHOLD_DONE" });
       this.renderWitnessing();
     });
+    plate.querySelectorAll<HTMLButtonElement>("[data-reader-state]").forEach((button) => {
+      button.addEventListener("click", () => this.setReaderState(button.dataset.readerState));
+    });
     plate.querySelectorAll<HTMLButtonElement>("[data-promise]").forEach((button) => {
       button.addEventListener("click", () => this.setPagePromise(button.dataset.promise));
     });
@@ -470,6 +593,7 @@ export class ObservationModeController {
       if (event.key === "Escape") void this.exit();
     });
     this.root.append(plate);
+    this.updateReaderStateControls();
     this.updatePromiseControls();
     this.updatePleasureControls();
     plate.querySelector<HTMLButtonElement>("[data-action='skip']")?.focus();
@@ -483,10 +607,20 @@ export class ObservationModeController {
       <article class="om-reading" tabindex="0" aria-label="${this.getTitle()}">
         <h1>${this.getTitle()}</h1>
       </article>
+      <button class="om-finish-lantern" type="button" data-action="finish-lantern" aria-label="${COPY.finishLanternAria}" hidden>
+        <span class="om-finish-lantern-art" aria-hidden="true">
+          <img src="/brand/finish-lantern.png" alt="" />
+        </span>
+        <span class="om-finish-lantern-copy">
+          <strong data-finish-title>${COPY.finishLanternTitle}</strong>
+          <span data-finish-detail></span>
+        </span>
+      </button>
       <div class="om-dock" role="toolbar" aria-label="Observation controls">
         <button class="om-controls-toggle" type="button" data-action="controls-toggle" aria-label="${COPY.controlsOpenAria}" aria-expanded="false" data-help="${COPY.controlsHelp}">${COPY.controls}</button>
         <span class="om-status">
           <span data-status-scene>${COPY.plateObservation} ${this.getObservationNumber()}</span>
+          <span data-status-arrival>${this.getReaderStateStatusText()}</span>
           <span data-status-promise>${this.getPromiseStatusText()}</span>
           <span data-status-pleasure>${this.getPleasureStatusText()}</span>
         </span>
@@ -557,6 +691,9 @@ export class ObservationModeController {
 
     shell.querySelector<HTMLButtonElement>("[data-action='controls-toggle']")?.addEventListener("click", () => this.toggleControlsDock());
     shell.querySelector<HTMLButtonElement>("[data-action='exit']")?.addEventListener("click", () => void this.exit());
+    shell.querySelector<HTMLButtonElement>("[data-action='finish-lantern']")?.addEventListener("click", () => {
+      this.activateFinishLantern();
+    });
     shell.querySelector<HTMLButtonElement>("[data-action='lost']")?.addEventListener("click", () => this.showLostCard());
     shell.querySelector<HTMLButtonElement>("[data-action='echo']")?.addEventListener("click", () => this.showLineEchoCard());
     shell
@@ -764,14 +901,21 @@ export class ObservationModeController {
       button.addEventListener("focus", () => this.showControlHelp(button, help));
       button.addEventListener("blur", () => this.hideControlHelp());
       button.addEventListener("pointerdown", (event) => {
-        if (button.dataset.action === "controls-toggle" || this.canHoverHelp() || event.pointerType === "mouse") return;
+        if (
+          button.dataset.action === "controls-toggle" ||
+          this.canHoverHelp() ||
+          event.pointerType === "mouse" ||
+          navigator.maxTouchPoints < 1
+        ) {
+          return;
+        }
         this.helpSuppressNextClick = false;
         this.clearHelpTimers();
         this.helpPressTimer = window.setTimeout(() => {
           this.helpPressTimer = null;
           this.helpSuppressNextClick = true;
           this.showControlHelp(button, help);
-        }, 520);
+        }, HELP_LONG_PRESS_MS);
       });
       button.addEventListener("pointerup", () => this.clearHelpPressTimer());
       button.addEventListener("pointercancel", () => {
@@ -960,6 +1104,10 @@ export class ObservationModeController {
     return READING_PACES.has(value as ReadingPace) ? (value as ReadingPace) : DEFAULT_READING_PACE;
   }
 
+  private parseReaderState(value: string | undefined): ReaderState {
+    return READER_STATES.has(value as ReaderState) ? (value as ReaderState) : DEFAULT_READER_STATE;
+  }
+
   private parsePagePromise(value: string | undefined): PagePromise {
     return PAGE_PROMISES.has(value as PagePromise) ? (value as PagePromise) : DEFAULT_PAGE_PROMISE;
   }
@@ -987,6 +1135,30 @@ export class ObservationModeController {
     this.announce(message);
   }
 
+  private setReaderState(value: string | undefined, options: { quiet?: boolean } = {}): void {
+    this.readerState = this.parseReaderState(value);
+    this.applyReaderStatePreset();
+    if (!options.quiet) {
+      this.playInterfaceSound("select");
+    }
+
+    this.updateReaderStateControls();
+    this.updatePromiseControls();
+    this.updatePleasureControls();
+    this.updateFocusControls();
+    this.updateSoundControls();
+    this.updateImageControls();
+    this.updateSceneStatus();
+    this.savePrefs();
+    this.scheduleActiveBlockUpdate();
+
+    if (!options.quiet) {
+      const message = this.readerStateToast(this.readerState);
+      this.showToast(message);
+      this.announce(message);
+    }
+  }
+
   private setPleasureMode(value: string | undefined): void {
     this.pleasureMode = this.parsePleasureMode(value);
     this.applyPleasurePreset();
@@ -999,6 +1171,20 @@ export class ObservationModeController {
     const message = this.pleasureToast(this.pleasureMode);
     this.showToast(message);
     this.announce(message);
+  }
+
+  private applyReaderStatePreset(): void {
+    const preset = READER_STATE_PRESETS[this.readerState];
+    this.pagePromise = preset.pagePromise;
+    this.pleasureMode = preset.pleasureMode;
+    this.readingPace = preset.pace;
+    this.focusMode = preset.focusMode;
+    this.generousSpacing = preset.generousSpacing;
+    this.textSizeRem = preset.fontSizeRem;
+    this.atmosphereTrackId = preset.trackId;
+    this.observationTheme = preset.theme;
+    this.showImages = preset.showImages && this.hasImageBlocks();
+    this.applyPrefsToRoot();
   }
 
   private applyPleasurePreset(): void {
@@ -1051,6 +1237,15 @@ export class ObservationModeController {
     return COPY.promiseSceneSetToast;
   }
 
+  private readerStateToast(state: ReaderState): string {
+    if (state === "distracted") return COPY.arrivalDistractedToast;
+    if (state === "tired") return COPY.arrivalTiredToast;
+    if (state === "overwhelmed") return COPY.arrivalOverwhelmedToast;
+    if (state === "returning") return COPY.arrivalReturningToast;
+    if (state === "finishing") return COPY.arrivalFinishingToast;
+    return COPY.arrivalCuriousToast;
+  }
+
   private pleasureToast(mode: PleasureMode): string {
     if (mode === "calm") return COPY.pleasureCalmToast;
     if (mode === "intensity") return COPY.pleasureIntensityToast;
@@ -1061,6 +1256,7 @@ export class ObservationModeController {
   private loadPrefs(): void {
     try {
       const prefs = JSON.parse(window.localStorage.getItem(PREFS_KEY) ?? "{}") as ReaderPrefs;
+      this.readerState = this.parseReaderState(prefs.readerState);
       this.readingPace = this.parseReadingPace(prefs.readingPace);
       this.pagePromise = this.parsePagePromise(prefs.pagePromise);
       this.pleasureMode = this.parsePleasureMode(prefs.pleasureMode);
@@ -1076,6 +1272,7 @@ export class ObservationModeController {
       this.atmosphereTrackId = this.parseAtmosphereTrackId(prefs.audioTrackId);
       this.joltEnabled = Boolean(prefs.joltEnabled) && this.isJoltSupported();
     } catch {
+      this.readerState = DEFAULT_READER_STATE;
       this.readingPace = DEFAULT_READING_PACE;
       this.pagePromise = DEFAULT_PAGE_PROMISE;
       this.pleasureMode = DEFAULT_PLEASURE_MODE;
@@ -1095,6 +1292,7 @@ export class ObservationModeController {
       window.localStorage.setItem(
         PREFS_KEY,
         JSON.stringify({
+          readerState: this.readerState,
           focusMode: this.focusMode,
           readingPace: this.readingPace,
           pagePromise: this.pagePromise,
@@ -1115,6 +1313,7 @@ export class ObservationModeController {
 
   private applyPrefsToRoot(): void {
     this.root.dataset.omTheme = this.observationTheme;
+    this.root.dataset.readerState = this.readerState;
     this.root.dataset.pleasureMode = this.pleasureMode;
     this.root.dataset.focusMode = this.focusMode;
     this.root.dataset.paceMode = this.readingPace;
@@ -1215,6 +1414,13 @@ export class ObservationModeController {
   private updatePromiseControls(): void {
     this.root.querySelectorAll<HTMLButtonElement>("[data-promise]").forEach((button) => {
       const selected = this.parsePagePromise(button.dataset.promise) === this.pagePromise;
+      button.setAttribute("aria-checked", String(selected));
+    });
+  }
+
+  private updateReaderStateControls(): void {
+    this.root.querySelectorAll<HTMLButtonElement>("[data-reader-state]").forEach((button) => {
+      const selected = this.parseReaderState(button.dataset.readerState) === this.readerState;
       button.setAttribute("aria-checked", String(selected));
     });
   }
@@ -1756,8 +1962,13 @@ export class ObservationModeController {
     return READING_TRACKS.some((track) => track.id === value) ? (value as ReadingTrackId) : DEFAULT_READING_TRACK_ID;
   }
 
-  private getAtmosphereTrack() {
-    return READING_TRACKS.find((track) => track.id === this.atmosphereTrackId) ?? READING_TRACKS[0];
+  private getAtmosphereTrack(): (typeof READING_TRACKS)[number] {
+    const fallbackTrack = READING_TRACKS[0];
+    if (!fallbackTrack) {
+      throw new Error("Observation Mode needs at least one reading focus track.");
+    }
+
+    return READING_TRACKS.find((track) => track.id === this.atmosphereTrackId) ?? fallbackTrack;
   }
 
   private selectAtmosphereTrack(value: string | undefined): void {
@@ -2356,6 +2567,7 @@ export class ObservationModeController {
     }
 
     this.playInterfaceSound("panel");
+    const threadItems = this.getLostThreadItems(model);
     const card = document.createElement("section");
     card.className = "om-lost-card";
     card.setAttribute("role", "dialog");
@@ -2367,9 +2579,23 @@ export class ObservationModeController {
       <h2>${COPY.lostTitle}</h2>
       <p>${COPY.lostDescription}</p>
       <blockquote>${this.escapeHtml(this.getLostCue(model))}</blockquote>
+      <p class="om-panel-kicker">${COPY.lostThreadKicker}</p>
+      <div class="om-thread-grid">
+        ${threadItems
+          .map(
+            (item) => `
+              <div>
+                <span>${this.escapeHtml(item.label)}</span>
+                <strong>${this.escapeHtml(item.value)}</strong>
+              </div>`,
+          )
+          .join("")}
+      </div>
       <div class="om-panel-actions">
         <button type="button" data-lost-action="continue">${COPY.lostContinue}</button>
         <button type="button" data-lost-action="ruler">${COPY.lostRuler}</button>
+        <button type="button" data-lost-action="read-with-me">${COPY.lostReadWithMe}</button>
+        <button type="button" data-lost-action="echo">${COPY.lostEcho}</button>
       </div>
     `;
 
@@ -2383,6 +2609,14 @@ export class ObservationModeController {
     card.querySelector<HTMLButtonElement>("[data-lost-action='ruler']")?.addEventListener("click", () => {
       this.setFocusMode("ruler", "panel");
       returnToLine();
+    });
+    card.querySelector<HTMLButtonElement>("[data-lost-action='read-with-me']")?.addEventListener("click", () => {
+      if (!this.readWithMeOn) this.toggleReadWithMe();
+      returnToLine();
+    });
+    card.querySelector<HTMLButtonElement>("[data-lost-action='echo']")?.addEventListener("click", () => {
+      card.remove();
+      this.showLineEchoCard();
     });
     card.addEventListener("keydown", (event) => {
       if (event.key === "Escape") card.remove();
@@ -2411,6 +2645,7 @@ export class ObservationModeController {
   private showResumeCard(model: BlockModel, bookmark: ResumeBookmark): void {
     this.closeResumeCard(false);
     this.resumePromptActive = true;
+    const ritualItems = this.getReturnRitualItems(model, bookmark);
 
     const card = document.createElement("section");
     card.className = "om-resume-card";
@@ -2422,6 +2657,17 @@ export class ObservationModeController {
       <p class="om-panel-kicker">${COPY.resumeKicker}</p>
       <h2>${COPY.resumeTitle}</h2>
       <p>${COPY.resumeDescription}</p>
+      <div class="om-return-ritual">
+        ${ritualItems
+          .map(
+            (item) => `
+              <div>
+                <span>${this.escapeHtml(item.step)}</span>
+                <strong>${this.escapeHtml(item.line)}</strong>
+              </div>`,
+          )
+          .join("")}
+      </div>
       <blockquote>${this.escapeHtml(bookmark.cue || this.getLostCue(model))}</blockquote>
       <div class="om-panel-actions">
         <button type="button" data-resume-action="continue">${COPY.resumeContinue}</button>
@@ -2433,6 +2679,7 @@ export class ObservationModeController {
     card.querySelector<HTMLButtonElement>(".om-panel-close")?.addEventListener("click", () => this.closeResumeCard());
     card.querySelector<HTMLButtonElement>("[data-resume-action='continue']")?.addEventListener("click", () => {
       this.resumePromptActive = false;
+      this.setReaderState("returning", { quiet: true });
       this.returnToResumeBlock(model);
       card.remove();
     });
@@ -2446,6 +2693,7 @@ export class ObservationModeController {
     });
     card.querySelector<HTMLButtonElement>("[data-resume-action='lost']")?.addEventListener("click", () => {
       this.resumePromptActive = false;
+      this.setReaderState("returning", { quiet: true });
       card.remove();
       this.activeBlockId = model.id;
       this.showLostCard(model);
@@ -2473,6 +2721,32 @@ export class ObservationModeController {
     this.showToast(COPY.resumeToast);
   }
 
+  private getReturnRitualItems(
+    model: BlockModel,
+    bookmark: ResumeBookmark,
+  ): Array<{ step: string; line: string }> {
+    const leadName = this.getLeadName();
+    const deity = this.manifest?.deity;
+    const thread = deity
+      ? `${leadName} is moving under the God of ${deity}.`
+      : `${leadName} is still inside this record.`;
+
+    return [
+      {
+        step: COPY.resumeStepBreathe,
+        line: "Let the page arrive before you chase it.",
+      },
+      {
+        step: COPY.resumeStepRemember,
+        line: thread,
+      },
+      {
+        step: COPY.resumeStepContinue,
+        line: bookmark.cue || this.getLostCue(model),
+      },
+    ];
+  }
+
   private getActiveReadableBlock(): BlockModel | null {
     const active = this.activeBlockId ? this.models.find((model) => model.id === this.activeBlockId) : null;
     if (active && active.type !== "image" && active.type !== "hr") return active;
@@ -2485,6 +2759,44 @@ export class ObservationModeController {
     const firstSentence = text.match(/[^.!?]+[.!?]/)?.[0]?.trim();
     const cue = firstSentence && firstSentence.length >= 24 ? firstSentence : text;
     return cue.length > 190 ? `${cue.slice(0, 187).trim()}...` : cue;
+  }
+
+  private getLostThreadItems(model: BlockModel): Array<{ label: string; value: string }> {
+    const leadName = this.getLeadName();
+    const deity = this.manifest?.deity;
+    const beat = this.getActiveSceneBeat();
+    const progress = this.getReadableProgress();
+    const why =
+      progress.remaining <= 3 && progress.total >= 5
+        ? "You are close enough to carry this to the end."
+        : beat && beat.total > 1
+          ? `This is ${beat.label.toLowerCase()}, one turn in the record.`
+          : "This paragraph helps the ending land.";
+
+    return [
+      {
+        label: COPY.lostThreadWho,
+        value: deity ? `${leadName}, witnessed by the God of ${deity}.` : leadName,
+      },
+      {
+        label: COPY.lostThreadWant,
+        value: deity
+          ? `To move through the ${deity.toLowerCase()} pressure without losing the thread.`
+          : "To move through the pressure of this moment.",
+      },
+      {
+        label: COPY.lostThreadChanged,
+        value: this.getPlainCue(model),
+      },
+      {
+        label: COPY.lostThreadCare,
+        value: why,
+      },
+    ];
+  }
+
+  private getPlainCue(model: BlockModel): string {
+    return this.getLineEcho(model).replace(/^In plain words:\s*/i, "");
   }
 
   private getLineEcho(model: BlockModel): string {
@@ -2501,6 +2813,11 @@ export class ObservationModeController {
 
     const cue = shorter.length > 155 ? `${shorter.slice(0, 152).trim()}...` : shorter;
     return `In plain words: ${cue}`;
+  }
+
+  private getLeadName(): string {
+    const leadName = this.getTitle().split(",")[0]?.trim();
+    return leadName || this.getTitle();
   }
 
   private recordMemoryThread(): void {
@@ -2693,6 +3010,7 @@ export class ObservationModeController {
     this.activeBlockId = nearest.id;
     this.applyLanternClasses();
     this.updateSceneStatus();
+    this.updateFinishLantern();
     this.saveResumeBookmark(nearest);
     this.updateJoltProgress(nearest);
     this.maybeShowRestStop();
@@ -2865,13 +3183,15 @@ export class ObservationModeController {
 
   private updateSceneStatus(): void {
     const sceneStatus = this.root.querySelector<HTMLElement>("[data-status-scene]");
+    const arrivalStatus = this.root.querySelector<HTMLElement>("[data-status-arrival]");
     const promiseStatus = this.root.querySelector<HTMLElement>("[data-status-promise]");
     const pleasureStatus = this.root.querySelector<HTMLElement>("[data-status-pleasure]");
-    if (!sceneStatus && !promiseStatus && !pleasureStatus) return;
+    if (!sceneStatus && !arrivalStatus && !promiseStatus && !pleasureStatus) return;
 
     const beat = this.getActiveSceneBeat();
     if (!beat) {
       if (sceneStatus) sceneStatus.textContent = `${COPY.plateObservation} ${this.getObservationNumber()}`;
+      if (arrivalStatus) arrivalStatus.textContent = this.getReaderStateStatusText();
       if (promiseStatus) promiseStatus.textContent = this.getPromiseStatusText();
       if (pleasureStatus) pleasureStatus.textContent = this.getPleasureStatusText();
       return;
@@ -2881,8 +3201,13 @@ export class ObservationModeController {
       sceneStatus.textContent =
         beat.total > 1 ? `Scene ${beat.index} of ${beat.total} · ${beat.label}` : `Scene · ${beat.label}`;
     }
+    if (arrivalStatus) arrivalStatus.textContent = this.getReaderStateStatusText();
     if (promiseStatus) promiseStatus.textContent = this.getPromiseStatusText();
     if (pleasureStatus) pleasureStatus.textContent = this.getPleasureStatusText();
+  }
+
+  private getReaderStateStatusText(): string {
+    return READER_STATE_PRESETS[this.readerState].status;
   }
 
   private getPromiseStatusText(): string {
@@ -2893,6 +3218,56 @@ export class ObservationModeController {
 
   private getPleasureStatusText(): string {
     return PLEASURE_PRESETS[this.pleasureMode].status;
+  }
+
+  private updateFinishLantern(): void {
+    const lantern = this.root.querySelector<HTMLButtonElement>("[data-action='finish-lantern']");
+    if (!lantern) return;
+
+    const progress = this.getReadableProgress();
+    const revealAt = this.pagePromise === "finish" || this.readerState === "finishing" ? 0.68 : 0.78;
+    const shouldShow = progress.total >= 5 && progress.progress >= revealAt;
+    lantern.hidden = !shouldShow;
+    if (!shouldShow) return;
+
+    const title = lantern.querySelector<HTMLElement>("[data-finish-title]");
+    const detail = lantern.querySelector<HTMLElement>("[data-finish-detail]");
+    const endingReached = progress.remaining <= 1;
+    if (title) title.textContent = endingReached ? COPY.finishLanternReached : COPY.finishLanternTitle;
+    if (detail) {
+      detail.textContent =
+        progress.remaining <= 1
+          ? "Stay one last breath."
+          : `${progress.remaining} paragraph${progress.remaining === 1 ? "" : "s"} left.`;
+    }
+  }
+
+  private activateFinishLantern(): void {
+    this.setReaderState("finishing", { quiet: true });
+    this.playInterfaceSound("success");
+    this.showToast(COPY.finishLanternToast);
+    this.announce(COPY.finishLanternToast);
+    const model = this.getActiveReadableBlock();
+    if (model) {
+      this.scrollBlockIntoReadingView(model);
+      this.markLostAnchor(model);
+    }
+  }
+
+  private getReadableProgress(): { total: number; position: number; remaining: number; progress: number } {
+    const readableModels = this.getReadableModelsWithIndex();
+    if (!readableModels.length) return { total: 0, position: 0, remaining: 0, progress: 0 };
+
+    const activeIndex = this.getActiveModelIndex();
+    const readablePosition = readableModels.findIndex(({ index }) => index >= activeIndex);
+    const position = readablePosition >= 0 ? readablePosition + 1 : readableModels.length;
+    const remaining = Math.max(0, readableModels.length - position);
+    return {
+      total: readableModels.length,
+      position,
+      remaining,
+      progress: position / readableModels.length,
+    };
   }
 
   private getScenePromiseStatusText(): string {
@@ -2947,6 +3322,7 @@ export class ObservationModeController {
       : fallbackIndex;
 
     let activeBeat = this.sceneBeats[0];
+    if (!activeBeat) return null;
     for (const beat of this.sceneBeats) {
       if (beat.startIndex <= activeIndex) activeBeat = beat;
     }
