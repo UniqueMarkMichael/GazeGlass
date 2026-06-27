@@ -819,6 +819,30 @@ export const COMPONENT_STYLES = `
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
 }
 
+.om-help-popover {
+  position: fixed;
+  z-index: 7;
+  width: max-content;
+  max-width: min(18rem, calc(100vw - 2rem));
+  padding: 0.68rem 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--om-accent), transparent 44%);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--om-bg-elev), transparent 2%), var(--om-bg-elev));
+  color: var(--om-text);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
+  font-family: system-ui, sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  text-align: center;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+}
+
+.om-help-popover[data-placement="below"] {
+  transform: translate(-50%, 0);
+}
+
 .om-sr-only {
   position: absolute;
   width: 1px;
@@ -1000,11 +1024,7 @@ export const COMPONENT_STYLES = `
     white-space: nowrap;
   }
 
-  .om-controls-toggle {
-  display: none;
-}
-
-.om-split-control {
+  .om-split-control {
     box-sizing: border-box;
     flex: 1 1 5.55rem;
     grid-template-columns: minmax(0, 1fr) 2.4rem;

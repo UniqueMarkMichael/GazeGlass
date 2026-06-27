@@ -217,6 +217,9 @@ export class ObservationModeController {
   private readWithMeOn = false;
   private readWithMeIndex = 0;
   private controlsCollapsed = true;
+  private helpPressTimer: number | null = null;
+  private helpHideTimer: number | null = null;
+  private helpSuppressNextClick = false;
   private joltEnabled = false;
   private joltTimer: number | null = null;
   private joltLastBlockId: string | null = null;
@@ -289,6 +292,7 @@ export class ObservationModeController {
     this.stopActiveBlockTracker();
     this.stopPromiseTimer();
     this.clearJoltTimer();
+    this.clearHelpTimers();
     this.stopAllAudio();
     this.unlockHostExperience();
   }
@@ -326,6 +330,8 @@ export class ObservationModeController {
     this.playInterfaceSound("close");
     this.stopAllAudio();
     this.clearJoltTimer();
+    this.hideControlHelp();
+    this.clearHelpTimers();
     this.clearReadWithMeVisibility();
     this.readWithMeOn = false;
     this.dispatch({ type: "EXIT" });
@@ -478,19 +484,19 @@ export class ObservationModeController {
         <h1>${this.getTitle()}</h1>
       </article>
       <div class="om-dock" role="toolbar" aria-label="Observation controls">
-        <button class="om-controls-toggle" type="button" data-action="controls-toggle" aria-label="${COPY.controlsOpenAria}" aria-expanded="false">${COPY.controls}</button>
-        <button type="button" data-action="exit" aria-label="${COPY.leaveAria}">${COPY.leave}</button>
+        <button class="om-controls-toggle" type="button" data-action="controls-toggle" aria-label="${COPY.controlsOpenAria}" aria-expanded="false" data-help="${COPY.controlsHelp}">${COPY.controls}</button>
+        <button type="button" data-action="exit" aria-label="${COPY.leaveAria}" data-help="${COPY.leaveHelp}">${COPY.leave}</button>
         <span class="om-status">
           <span data-status-scene>${COPY.plateObservation} ${this.getObservationNumber()}</span>
           <span data-status-promise>${this.getPromiseStatusText()}</span>
           <span data-status-pleasure>${this.getPleasureStatusText()}</span>
         </span>
-        <button type="button" data-action="lost" aria-label="${COPY.lostAria}">${COPY.lost}</button>
-        <button type="button" data-action="echo" aria-label="${COPY.echoAria}">${COPY.echo}</button>
-        <button type="button" data-action="read-with-me" aria-label="${COPY.readWithMeAriaOff}" aria-pressed="false">${COPY.readWithMe}</button>
-        <button type="button" data-action="read-next" aria-label="${COPY.readWithMeNextAria}" hidden>${COPY.readWithMeNext}</button>
-        <button type="button" data-action="memory" aria-label="${COPY.memoryAria}">${COPY.memory}</button>
-        <button type="button" data-panel="sound" aria-label="${COPY.soundAria}" aria-haspopup="dialog" aria-expanded="false">${COPY.sound}</button>
+        <button type="button" data-action="lost" aria-label="${COPY.lostAria}" data-help="${COPY.lostHelp}">${COPY.lost}</button>
+        <button type="button" data-action="echo" aria-label="${COPY.echoAria}" data-help="${COPY.echoHelp}">${COPY.echo}</button>
+        <button type="button" data-action="read-with-me" aria-label="${COPY.readWithMeAriaOff}" aria-pressed="false" data-help="${COPY.readWithMeHelp}">${COPY.readWithMe}</button>
+        <button type="button" data-action="read-next" aria-label="${COPY.readWithMeNextAria}" hidden data-help="${COPY.readWithMeNextHelp}">${COPY.readWithMeNext}</button>
+        <button type="button" data-action="memory" aria-label="${COPY.memoryAria}" data-help="${COPY.memoryHelp}">${COPY.memory}</button>
+        <button type="button" data-panel="sound" aria-label="${COPY.soundAria}" aria-haspopup="dialog" aria-expanded="false" data-help="${COPY.soundHelp}">${COPY.sound}</button>
         <span class="om-split-control" role="group" aria-label="Focus controls">
           <button
             class="om-lantern-toggle"
@@ -498,6 +504,7 @@ export class ObservationModeController {
             data-action="lantern"
             aria-label="${COPY.lanternAriaOff}"
             aria-pressed="false"
+            data-help="${COPY.lanternHelp}"
           >
             <span class="om-lantern-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" focusable="false">
@@ -515,6 +522,7 @@ export class ObservationModeController {
             aria-label="${COPY.focusMoreAria}"
             aria-haspopup="dialog"
             aria-expanded="false"
+            data-help="${COPY.focusMoreHelp}"
           >
             <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
               <path d="M5.5 7.5 10 12l4.5-4.5" />
@@ -523,10 +531,10 @@ export class ObservationModeController {
         </span>
         ${
           this.hasImageBlocks()
-            ? `<button type="button" data-action="images" aria-label="${COPY.imagesAriaOff}" aria-pressed="false">${COPY.images}</button>`
+            ? `<button type="button" data-action="images" aria-label="${COPY.imagesAriaOff}" aria-pressed="false" data-help="${COPY.imagesHelp}">${COPY.images}</button>`
             : ""
         }
-        <button type="button" data-panel="display" aria-label="${COPY.textAria}" aria-haspopup="dialog" aria-expanded="false">${COPY.text}</button>
+        <button type="button" data-panel="display" aria-label="${COPY.textAria}" aria-haspopup="dialog" aria-expanded="false" data-help="${COPY.textHelp}">${COPY.text}</button>
       </div>
     `;
 
@@ -579,6 +587,7 @@ export class ObservationModeController {
     this.updateImageControls();
     this.updateReadWithMeControls();
     this.updateControlsDock();
+    this.bindControlHelp(shell);
     this.recordMemoryThread();
     this.startActiveBlockTracker();
     this.maybeShowResumeCard();
@@ -717,6 +726,7 @@ export class ObservationModeController {
 
     this.root.append(panel);
     this.updateFocusControls();
+    this.bindControlHelp(panel);
     panel.querySelector<HTMLElement>(".om-panel-close")?.focus();
   }
 
@@ -738,6 +748,105 @@ export class ObservationModeController {
     toggle.textContent = this.controlsCollapsed ? COPY.controls : COPY.controlsHide;
     toggle.setAttribute("aria-expanded", String(!this.controlsCollapsed));
     toggle.setAttribute("aria-label", this.controlsCollapsed ? COPY.controlsOpenAria : COPY.controlsCloseAria);
+  }
+
+  private bindControlHelp(container: HTMLElement): void {
+    container.querySelectorAll<HTMLElement>("button").forEach((button) => {
+      const help = button.dataset.help ?? button.getAttribute("aria-label");
+      if (!help) return;
+      button.dataset.help = help;
+
+      button.addEventListener("pointerenter", () => {
+        if (!this.canHoverHelp()) return;
+        this.showControlHelp(button, help);
+      });
+      button.addEventListener("pointerleave", () => this.hideControlHelpSoon());
+      button.addEventListener("focus", () => this.showControlHelp(button, help));
+      button.addEventListener("blur", () => this.hideControlHelp());
+      button.addEventListener("pointerdown", (event) => {
+        if (this.canHoverHelp() || event.pointerType === "mouse") return;
+        this.helpSuppressNextClick = false;
+        this.clearHelpTimers();
+        this.helpPressTimer = window.setTimeout(() => {
+          this.helpPressTimer = null;
+          this.helpSuppressNextClick = true;
+          this.showControlHelp(button, help);
+        }, 520);
+      });
+      button.addEventListener("pointerup", () => this.clearHelpPressTimer());
+      button.addEventListener("pointercancel", () => {
+        this.clearHelpPressTimer();
+        this.hideControlHelpSoon();
+      });
+      button.addEventListener(
+        "click",
+        (event) => {
+          if (this.helpSuppressNextClick) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            this.helpSuppressNextClick = false;
+          }
+          this.hideControlHelpSoon();
+        },
+        { capture: true },
+      );
+    });
+  }
+
+  private canHoverHelp(): boolean {
+    return typeof window.matchMedia === "function" && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  }
+
+  private showControlHelp(target: HTMLElement, message: string): void {
+    this.clearHelpTimers();
+    this.root.querySelector(".om-help-popover")?.remove();
+
+    const popover = document.createElement("div");
+    const id = "om-help-popover";
+    popover.id = id;
+    popover.className = "om-help-popover";
+    popover.setAttribute("role", "tooltip");
+    popover.textContent = message;
+    this.root.append(popover);
+    target.setAttribute("aria-describedby", id);
+
+    const rect = target.getBoundingClientRect();
+    const popoverRect = popover.getBoundingClientRect();
+    const left = Math.min(window.innerWidth - 16, Math.max(16, rect.left + rect.width / 2));
+    const roomAbove = rect.top > popoverRect.height + 28;
+    const top = roomAbove ? rect.top - 10 : rect.bottom + 10;
+    popover.dataset.placement = roomAbove ? "above" : "below";
+    popover.style.left = `${left}px`;
+    popover.style.top = `${top}px`;
+  }
+
+  private hideControlHelpSoon(): void {
+    this.clearHelpPressTimer();
+    if (this.helpHideTimer !== null) window.clearTimeout(this.helpHideTimer);
+    this.helpHideTimer = window.setTimeout(() => this.hideControlHelp(), 120);
+  }
+
+  private hideControlHelp(): void {
+    this.clearHelpTimers();
+    this.root.querySelector(".om-help-popover")?.remove();
+    this.root.querySelectorAll("[aria-describedby='om-help-popover']").forEach((node) => {
+      node.removeAttribute("aria-describedby");
+    });
+  }
+
+  private clearHelpTimers(): void {
+    this.clearHelpPressTimer();
+    if (this.helpHideTimer !== null) {
+      window.clearTimeout(this.helpHideTimer);
+      this.helpHideTimer = null;
+    }
+  }
+
+  private clearHelpPressTimer(): void {
+    if (this.helpPressTimer !== null) {
+      window.clearTimeout(this.helpPressTimer);
+      this.helpPressTimer = null;
+    }
   }
 
   private toggleLantern(): void {
