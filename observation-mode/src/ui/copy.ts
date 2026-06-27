@@ -123,7 +123,7 @@ export const COPY = {
   plateObservation: "Observation",
   modeName: "Observation Mode",
   modeDescription:
-    "A focused reading space for this story. Inside, choose a pace, use sound or Read Aloud, and steady the text with Lantern, Band, or Ruler.",
+    "Focus is harder than it used to be, even for stories we want to read. This room is built to help — choose your pace, add sound or Read Aloud, and steady each line with Lantern, Band, or Ruler.",
   recordedBy: "Recorded by the Seer",
   sealed: "The Seer has sealed this record.",
   loadError: "This record couldn't open in the Glass. You can still read it below.",
