@@ -63,6 +63,11 @@ type SceneBeat = {
   startIndex: number;
   label: string;
 };
+type ResumeBookmark = {
+  blockId: string;
+  cue: string;
+  updatedAt: number;
+};
 
 type ReaderPrefs = {
   focusMode?: FocusMode;
@@ -75,6 +80,7 @@ type ReaderPrefs = {
 };
 
 const PREFS_KEY = "gg.om.prefs";
+const RESUME_KEY_PREFIX = "gg.om.resume.";
 const SITE_SOUND_PREF_KEY = "gaze-glass.sound.v1";
 const FOCUS_MODES = new Set<FocusMode>(["off", "spotlight", "band", "ruler"]);
 const READING_PACES = new Set<ReadingPace>(["drift", "focus", "sprint", "rest"]);
@@ -131,6 +137,7 @@ export class ObservationModeController {
   private activeBlockFrame: number | null = null;
   private releaseActiveBlockTracker: (() => void) | null = null;
   private sceneBeats: SceneBeat[] = [];
+  private resumePromptActive = false;
   private lostAnchorTimer: number | null = null;
   private audioContext: AudioContext | null = null;
   private masterGain: GainNode | null = null;
@@ -433,6 +440,7 @@ export class ObservationModeController {
     this.updateFocusControls();
     this.updateImageControls();
     this.startActiveBlockTracker();
+    this.maybeShowResumeCard();
     this.readingArticle?.focus();
   }
 
@@ -1703,12 +1711,13 @@ export class ObservationModeController {
     this.updateSoundControls();
   }
 
-  private showLostCard(): void {
+  private showLostCard(modelOverride?: BlockModel): void {
     this.root.querySelector(".om-lost-card")?.remove();
+    this.closeResumeCard(false);
     this.closePanel(false);
-    this.updateActiveBlock();
+    if (!modelOverride) this.updateActiveBlock();
 
-    const model = this.getActiveReadableBlock();
+    const model = modelOverride ?? this.getActiveReadableBlock();
     if (!model) {
       this.showToast(COPY.lostToast);
       return;
@@ -1753,6 +1762,85 @@ export class ObservationModeController {
     this.announce(COPY.lostToast);
   }
 
+  private maybeShowResumeCard(): void {
+    const bookmark = this.loadResumeBookmark();
+    if (!bookmark) return;
+
+    const model = this.models.find((candidate) => candidate.id === bookmark.blockId);
+    if (!model || model.type === "image" || model.type === "hr") return;
+
+    const readableModels = this.getReadableModelsWithIndex();
+    const readableIndex = readableModels.findIndex(({ model: readableModel }) => readableModel.id === bookmark.blockId);
+    if (readableIndex < 2) return;
+
+    this.showResumeCard(model, bookmark);
+  }
+
+  private showResumeCard(model: BlockModel, bookmark: ResumeBookmark): void {
+    this.closeResumeCard(false);
+    this.resumePromptActive = true;
+
+    const card = document.createElement("section");
+    card.className = "om-resume-card";
+    card.setAttribute("role", "dialog");
+    card.setAttribute("aria-modal", "false");
+    card.setAttribute("aria-label", COPY.resumePanelAria);
+    card.innerHTML = `
+      <button class="om-panel-close" type="button" aria-label="${COPY.closePanelAria}">${COPY.close}</button>
+      <p class="om-panel-kicker">${COPY.resumeKicker}</p>
+      <h2>${COPY.resumeTitle}</h2>
+      <p>${COPY.resumeDescription}</p>
+      <blockquote>${this.escapeHtml(bookmark.cue || this.getLostCue(model))}</blockquote>
+      <div class="om-panel-actions">
+        <button type="button" data-resume-action="continue">${COPY.resumeContinue}</button>
+        <button type="button" data-resume-action="start">${COPY.resumeStartOver}</button>
+        <button type="button" data-resume-action="lost">${COPY.resumeLost}</button>
+      </div>
+    `;
+
+    card.querySelector<HTMLButtonElement>(".om-panel-close")?.addEventListener("click", () => this.closeResumeCard());
+    card.querySelector<HTMLButtonElement>("[data-resume-action='continue']")?.addEventListener("click", () => {
+      this.resumePromptActive = false;
+      this.returnToResumeBlock(model);
+      card.remove();
+    });
+    card.querySelector<HTMLButtonElement>("[data-resume-action='start']")?.addEventListener("click", () => {
+      this.resumePromptActive = false;
+      this.clearResumeBookmark();
+      this.readingArticle?.scrollTo({ top: 0, behavior: "smooth" });
+      this.scheduleActiveBlockUpdate();
+      card.remove();
+      this.showToast(COPY.resumeToast);
+    });
+    card.querySelector<HTMLButtonElement>("[data-resume-action='lost']")?.addEventListener("click", () => {
+      this.resumePromptActive = false;
+      card.remove();
+      this.activeBlockId = model.id;
+      this.showLostCard(model);
+    });
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") this.closeResumeCard();
+    });
+
+    this.root.append(card);
+    card.querySelector<HTMLElement>("[data-resume-action='continue']")?.focus();
+    this.announce(COPY.resumeToast);
+  }
+
+  private closeResumeCard(allowProgressSave = true): void {
+    this.root.querySelector(".om-resume-card")?.remove();
+    this.resumePromptActive = false;
+    if (allowProgressSave) this.scheduleActiveBlockUpdate();
+  }
+
+  private returnToResumeBlock(model: BlockModel): void {
+    this.scrollBlockIntoReadingView(model);
+    this.readingArticle?.focus();
+    this.markLostAnchor(model);
+    this.saveResumeBookmark(model);
+    this.showToast(COPY.resumeToast);
+  }
+
   private getActiveReadableBlock(): BlockModel | null {
     const active = this.activeBlockId ? this.models.find((model) => model.id === this.activeBlockId) : null;
     if (active && active.type !== "image" && active.type !== "hr") return active;
@@ -1768,10 +1856,30 @@ export class ObservationModeController {
   }
 
   private returnToLostBlock(model: BlockModel): void {
-    model.element.scrollIntoView({ behavior: "smooth", block: "center" });
+    this.scrollBlockIntoReadingView(model);
     this.readingArticle?.focus();
     this.markLostAnchor(model);
     this.showToast(COPY.lostToast);
+  }
+
+  private scrollBlockIntoReadingView(model: BlockModel): void {
+    if (!this.readingArticle) {
+      model.element.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    const articleRect = this.readingArticle.getBoundingClientRect();
+    const blockRect = model.element.getBoundingClientRect();
+    const top =
+      this.readingArticle.scrollTop +
+      blockRect.top -
+      articleRect.top -
+      this.readingArticle.clientHeight / 2 +
+      blockRect.height / 2;
+    this.readingArticle.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    this.activeBlockId = model.id;
+    this.applyLanternClasses();
+    this.updateSceneStatus();
   }
 
   private markLostAnchor(model: BlockModel): void {
@@ -1856,6 +1964,7 @@ export class ObservationModeController {
     this.activeBlockId = nearest.id;
     this.applyLanternClasses();
     this.updateSceneStatus();
+    this.saveResumeBookmark(nearest);
   }
 
   private createSceneBeats(): SceneBeat[] {
@@ -1947,6 +2056,51 @@ export class ObservationModeController {
       5: ["The scene opens", "The pressure gathers", "The turn arrives", "The meaning lands", "The final echo"],
     };
     return labelsByCount[total]?.[index] ?? `Beat ${index + 1}`;
+  }
+
+  private loadResumeBookmark(): ResumeBookmark | null {
+    try {
+      const raw = window.localStorage.getItem(this.getResumeStorageKey());
+      if (!raw) return null;
+      const bookmark = JSON.parse(raw) as Partial<ResumeBookmark>;
+      if (typeof bookmark.blockId !== "string" || typeof bookmark.cue !== "string") return null;
+      return {
+        blockId: bookmark.blockId,
+        cue: bookmark.cue,
+        updatedAt: typeof bookmark.updatedAt === "number" ? bookmark.updatedAt : Date.now(),
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  private saveResumeBookmark(model: BlockModel): void {
+    if (this.resumePromptActive || model.type === "image" || model.type === "hr") return;
+
+    try {
+      window.localStorage.setItem(
+        this.getResumeStorageKey(),
+        JSON.stringify({
+          blockId: model.id,
+          cue: this.getLostCue(model),
+          updatedAt: Date.now(),
+        } satisfies ResumeBookmark),
+      );
+    } catch {
+      // Resume is a convenience. Reading should never depend on storage being available.
+    }
+  }
+
+  private clearResumeBookmark(): void {
+    try {
+      window.localStorage.removeItem(this.getResumeStorageKey());
+    } catch {
+      // Ignore unavailable storage.
+    }
+  }
+
+  private getResumeStorageKey(): string {
+    return `${RESUME_KEY_PREFIX}${encodeURIComponent(this.manifest?.id ?? this.getTitle())}`;
   }
 
   private applyLanternClasses(): void {
