@@ -764,7 +764,7 @@ export class ObservationModeController {
       button.addEventListener("focus", () => this.showControlHelp(button, help));
       button.addEventListener("blur", () => this.hideControlHelp());
       button.addEventListener("pointerdown", (event) => {
-        if (this.canHoverHelp() || event.pointerType === "mouse") return;
+        if (button.dataset.action === "controls-toggle" || this.canHoverHelp() || event.pointerType === "mouse") return;
         this.helpSuppressNextClick = false;
         this.clearHelpTimers();
         this.helpPressTimer = window.setTimeout(() => {

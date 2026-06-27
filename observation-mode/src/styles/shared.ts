@@ -248,7 +248,9 @@ export const COMPONENT_STYLES = `
 }
 
 .om-plate {
+  box-sizing: border-box;
   width: min(34rem, 100%);
+  max-width: 100%;
   text-align: center;
 }
 
@@ -266,9 +268,11 @@ export const COMPONENT_STYLES = `
 }
 
 .om-mode-intro {
+  box-sizing: border-box;
   display: grid;
   gap: 0.38rem;
   width: min(27rem, 100%);
+  max-width: 100%;
   margin: 1.35rem auto 0;
   padding: 0.85rem 1rem;
   border: 1px solid color-mix(in srgb, var(--om-accent), transparent 74%);
@@ -289,9 +293,11 @@ export const COMPONENT_STYLES = `
 
 .om-promise,
 .om-pleasure {
+  box-sizing: border-box;
   display: grid;
   gap: 0.65rem;
   width: min(30rem, 100%);
+  max-width: 100%;
   margin: 1rem auto 0;
   padding: 0.85rem 1rem;
   border: 1px solid color-mix(in srgb, var(--om-accent), transparent 76%);
@@ -859,6 +865,7 @@ export const COMPONENT_STYLES = `
   }
 
   .om-threshold {
+    justify-items: center;
     align-items: center;
     overflow-x: hidden;
     overflow-y: auto;
@@ -870,6 +877,7 @@ export const COMPONENT_STYLES = `
   }
 
   .om-plate {
+    width: 100%;
     padding: 1.5rem 0;
   }
 
@@ -978,9 +986,10 @@ export const COMPONENT_STYLES = `
   }
 
   .om-dock.is-collapsed {
-    width: min(11rem, calc(100% - 1.2rem));
-    padding: 0.44rem;
+    width: min(14rem, calc(100% - 1.2rem));
+    padding: 0.5rem;
     border-radius: 999px;
+    z-index: 6;
   }
 
   .om-dock.is-collapsed > :not(.om-controls-toggle) {
@@ -988,10 +997,15 @@ export const COMPONENT_STYLES = `
   }
 
   .om-dock.is-collapsed .om-controls-toggle {
+    flex: 1 1 auto;
     flex-basis: auto;
-    height: 44px;
-    min-height: 44px;
+    width: 100%;
+    height: 48px;
+    min-height: 48px;
     border-radius: 999px;
+    cursor: pointer;
+    pointer-events: auto;
+    touch-action: manipulation;
   }
 
   .om-status {
@@ -1071,14 +1085,16 @@ export const COMPONENT_STYLES = `
     border-top: 1px solid color-mix(in srgb, var(--om-accent), transparent 76%);
   }
 
-  .om-dock:has([data-action="images"]) > button,
-  .om-dock:has([data-action="images"]) > .om-controls-toggle {
-  display: none;
-}
-
-.om-split-control {
+  .om-dock:has([data-action="images"]) > button:not(.om-controls-toggle),
+  .om-dock:has([data-action="images"]) > .om-split-control {
     flex: 0 1 calc((100% - 0.96rem) / 3);
     max-width: calc((100% - 0.96rem) / 3);
+  }
+
+  .om-dock.is-collapsed:has([data-action="images"]) > .om-controls-toggle {
+    display: inline-flex;
+    flex: 1 1 auto;
+    max-width: none;
   }
 
   .om-panel,
