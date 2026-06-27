@@ -536,6 +536,7 @@ export class ObservationModeController {
     this.applyPrefsToRoot();
     this.updateFocusControls();
     this.savePrefs();
+    this.scheduleActiveBlockUpdate();
 
     if (source !== "restore") {
       const message = this.focusToast(mode, previousMode);
@@ -1640,7 +1641,7 @@ export class ObservationModeController {
     }
 
     this.activeBlockId = null;
-    this.models.forEach(({ element }) => element.classList.remove("is-lit", "om-dim"));
+    this.models.forEach(({ element }) => element.classList.remove("is-lit", "is-ruler", "om-dim"));
   }
 
   private scheduleActiveBlockUpdate(): void {

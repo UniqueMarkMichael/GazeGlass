@@ -110,6 +110,7 @@ export const COMPONENT_STYLES = `
 }
 
 .om-block {
+  box-sizing: border-box;
   position: relative;
   scroll-margin-block: 24vh;
   border-radius: 8px;
@@ -328,28 +329,42 @@ export const COMPONENT_STYLES = `
 }
 
 .om-root[data-focus-mode="band"] .om-block.om-dim {
-  opacity: 0.48;
+  opacity: 0.38;
 }
 
 .om-root[data-focus-mode="band"] .om-block.is-lit {
   background:
     linear-gradient(
       90deg,
-      transparent,
-      color-mix(in srgb, var(--om-accent), transparent 88%) 12%,
-      color-mix(in srgb, var(--om-accent), transparent 82%) 50%,
-      color-mix(in srgb, var(--om-accent), transparent 88%) 88%,
-      transparent
+      rgba(201, 162, 39, 0.04),
+      rgba(201, 162, 39, 0.22) 16%,
+      rgba(201, 162, 39, 0.28) 50%,
+      rgba(201, 162, 39, 0.22) 84%,
+      rgba(201, 162, 39, 0.04)
     );
   box-shadow:
-    0 0 0 0.46rem color-mix(in srgb, var(--om-accent), transparent 90%),
-    inset 0 0 0 1px color-mix(in srgb, var(--om-accent), transparent 76%);
+    0 0 0 0.52rem rgba(201, 162, 39, 0.16),
+    inset 0 0 0 1px rgba(201, 162, 39, 0.42);
   opacity: 1;
 }
 
 .om-root[data-focus-mode="ruler"] .om-block.is-ruler {
-  background: color-mix(in srgb, var(--om-accent), transparent 94%);
-  box-shadow: inset 0.22rem 0 0 color-mix(in srgb, var(--om-accent), transparent 28%);
+  background: rgba(201, 162, 39, 0.11);
+  box-shadow: inset 0 -0.18rem 0 rgba(201, 162, 39, 0.72);
+  padding-inline: clamp(0.7rem, 2.8vw, 1rem);
+}
+
+.om-root[data-focus-mode="ruler"] .om-block.is-ruler::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: clamp(-0.72rem, -2vw, -0.46rem);
+  width: 0.24rem;
+  border-radius: 999px;
+  background: rgba(201, 162, 39, 0.82);
+  box-shadow: 0 0 16px rgba(201, 162, 39, 0.34);
+  pointer-events: none;
 }
 
 .om-root[data-focus-mode="ruler"] .om-block.is-ruler::after {
@@ -358,10 +373,10 @@ export const COMPONENT_STYLES = `
   right: -0.65rem;
   bottom: -0.44rem;
   left: -0.65rem;
-  height: 2px;
+  height: 3px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--om-accent), transparent 18%);
-  box-shadow: 0 0 18px color-mix(in srgb, var(--om-accent), transparent 54%);
+  background: rgba(201, 162, 39, 0.9);
+  box-shadow: 0 0 20px rgba(201, 162, 39, 0.42);
   pointer-events: none;
 }
 
