@@ -146,6 +146,8 @@ export class ObservationModeController {
   private readingStartedAt = 0;
   private promiseStartBeatIndex = 1;
   private promiseTimer: number | null = null;
+  private lastRestBeatIndex = 1;
+  private shownRestBeatIndexes = new Set<number>();
   private resumePromptActive = false;
   private lostAnchorTimer: number | null = null;
   private audioContext: AudioContext | null = null;
@@ -443,6 +445,8 @@ export class ObservationModeController {
     this.sceneBeats = this.createSceneBeats();
     this.readingStartedAt = Date.now();
     this.promiseStartBeatIndex = this.getActiveSceneBeat()?.index ?? 1;
+    this.lastRestBeatIndex = this.promiseStartBeatIndex;
+    this.shownRestBeatIndexes.clear();
     this.updateSceneStatus();
     this.startPromiseTimer();
 
@@ -1774,8 +1778,70 @@ export class ObservationModeController {
     this.updateSoundControls();
   }
 
+  private showRestStopCard(beat: SceneBeat): void {
+    if (this.root.querySelector(".om-rest-card")) return;
+    this.closePanel(false);
+    this.closeResumeCard(false);
+    this.root.querySelector(".om-lost-card")?.remove();
+
+    const previousScene = Math.max(1, beat.index - 1);
+    const promiseKept = this.pagePromise === "scene" && beat.index > this.promiseStartBeatIndex;
+    const card = document.createElement("section");
+    card.className = "om-rest-card";
+    card.setAttribute("role", "dialog");
+    card.setAttribute("aria-modal", "false");
+    card.setAttribute("aria-label", COPY.restStopPanelAria);
+    card.innerHTML = `
+      <button class="om-panel-close" type="button" aria-label="${COPY.closePanelAria}">${COPY.close}</button>
+      <p class="om-panel-kicker">${COPY.restStopKicker}</p>
+      <h2>${COPY.restStopTitle}</h2>
+      <p>
+        ${COPY.restStopDescription}
+        ${promiseKept ? " You kept your One Scene promise." : ""}
+      </p>
+      <blockquote>${this.escapeHtml(`Scene ${previousScene} complete. ${COPY.restStopNext} ${beat.label}`)}</blockquote>
+      <div class="om-panel-actions">
+        <button type="button" data-rest-action="continue">${COPY.restStopContinue}</button>
+        <button type="button" data-rest-action="pause">${COPY.restStopPause}</button>
+        <button type="button" data-rest-action="lost">${COPY.restStopLost}</button>
+      </div>
+    `;
+
+    const close = () => {
+      card.remove();
+      this.readingArticle?.focus();
+      this.scheduleActiveBlockUpdate();
+    };
+
+    card.querySelector<HTMLButtonElement>(".om-panel-close")?.addEventListener("click", close);
+    card.querySelector<HTMLButtonElement>("[data-rest-action='continue']")?.addEventListener("click", close);
+    card.querySelector<HTMLButtonElement>("[data-rest-action='pause']")?.addEventListener("click", () => {
+      this.stopAllAudio();
+      const pauseButton = card.querySelector<HTMLButtonElement>("[data-rest-action='pause']");
+      if (pauseButton) {
+        pauseButton.textContent = COPY.restStopPaused;
+        pauseButton.disabled = true;
+      }
+      this.showToast(COPY.restStopPausedToast);
+      this.announce(COPY.restStopPausedToast);
+    });
+    card.querySelector<HTMLButtonElement>("[data-rest-action='lost']")?.addEventListener("click", () => {
+      card.remove();
+      this.showLostCard();
+    });
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") close();
+    });
+
+    this.root.append(card);
+    card.querySelector<HTMLElement>("[data-rest-action='continue']")?.focus();
+    this.showToast(COPY.restStopToast);
+    this.announce(COPY.restStopToast);
+  }
+
   private showLostCard(modelOverride?: BlockModel): void {
     this.root.querySelector(".om-lost-card")?.remove();
+    this.root.querySelector(".om-rest-card")?.remove();
     this.closeResumeCard(false);
     this.closePanel(false);
     if (!modelOverride) this.updateActiveBlock();
@@ -2039,6 +2105,20 @@ export class ObservationModeController {
     this.applyLanternClasses();
     this.updateSceneStatus();
     this.saveResumeBookmark(nearest);
+    this.maybeShowRestStop();
+  }
+
+  private maybeShowRestStop(): void {
+    const beat = this.getActiveSceneBeat();
+    if (!beat || beat.index <= 1 || beat.total <= 1) return;
+
+    const movedIntoNewScene = beat.index > this.lastRestBeatIndex;
+    this.lastRestBeatIndex = Math.max(this.lastRestBeatIndex, beat.index);
+    if (!movedIntoNewScene || this.shownRestBeatIndexes.has(beat.index)) return;
+    if (this.resumePromptActive || this.root.querySelector(".om-resume-card, .om-lost-card, .om-rest-card, .om-panel")) return;
+
+    this.shownRestBeatIndexes.add(beat.index);
+    this.showRestStopCard(beat);
   }
 
   private createSceneBeats(): SceneBeat[] {

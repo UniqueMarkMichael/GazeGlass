@@ -572,7 +572,8 @@ export const COMPONENT_STYLES = `
 }
 
 .om-lost-card,
-.om-resume-card {
+.om-resume-card,
+.om-rest-card {
   position: fixed;
   right: max(1rem, env(safe-area-inset-right));
   bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 4.6rem);
@@ -609,7 +610,8 @@ export const COMPONENT_STYLES = `
 }
 
 .om-lost-card h2,
-.om-resume-card h2 {
+.om-resume-card h2,
+.om-rest-card h2 {
   margin: 0 3.5rem 0.55rem 0;
   font-family: Georgia, serif;
   font-size: 1.55rem;
@@ -623,14 +625,16 @@ export const COMPONENT_STYLES = `
 }
 
 .om-lost-card p,
-.om-resume-card p {
+.om-resume-card p,
+.om-rest-card p {
   margin: 0 0 1rem;
   color: var(--om-text-dim);
   line-height: 1.55;
 }
 
 .om-lost-card blockquote,
-.om-resume-card blockquote {
+.om-resume-card blockquote,
+.om-rest-card blockquote {
   margin: 0 0 1rem;
   padding: 0.75rem 0.86rem;
   border-left: 3px solid color-mix(in srgb, var(--om-accent), transparent 24%);
@@ -921,7 +925,8 @@ export const COMPONENT_STYLES = `
 
   .om-panel,
   .om-lost-card,
-  .om-resume-card {
+  .om-resume-card,
+  .om-rest-card {
     right: max(0.75rem, env(safe-area-inset-right));
     bottom: calc(10.05rem + env(safe-area-inset-bottom));
     left: max(0.75rem, env(safe-area-inset-left));
