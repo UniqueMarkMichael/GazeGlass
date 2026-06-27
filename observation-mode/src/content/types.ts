@@ -41,6 +41,7 @@ export interface Scene {
   id: string;
   startBlockId: string;
   mood: Deity | "Neutral";
+  label?: string;
   accentOverride?: string;
   ambientCue?: AudioRef;
   lightOverride?: string;

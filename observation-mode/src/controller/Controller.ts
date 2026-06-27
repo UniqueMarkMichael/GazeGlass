@@ -57,6 +57,12 @@ type ReadAloudSentence = {
   sentenceElement: HTMLElement;
   blockElement: HTMLElement;
 };
+type SceneBeat = {
+  index: number;
+  total: number;
+  startIndex: number;
+  label: string;
+};
 
 type ReaderPrefs = {
   focusMode?: FocusMode;
@@ -124,6 +130,7 @@ export class ObservationModeController {
   private activeBlockId: string | null = null;
   private activeBlockFrame: number | null = null;
   private releaseActiveBlockTracker: (() => void) | null = null;
+  private sceneBeats: SceneBeat[] = [];
   private lostAnchorTimer: number | null = null;
   private audioContext: AudioContext | null = null;
   private masterGain: GainNode | null = null;
@@ -399,6 +406,8 @@ export class ObservationModeController {
       }
       this.models = parseHtmlBody(this.readingArticle);
     }
+    this.sceneBeats = this.createSceneBeats();
+    this.updateSceneStatus();
 
     shell.querySelector<HTMLButtonElement>("[data-action='exit']")?.addEventListener("click", () => void this.exit());
     shell.querySelector<HTMLButtonElement>("[data-action='lost']")?.addEventListener("click", () => this.showLostCard());
@@ -1846,6 +1855,98 @@ export class ObservationModeController {
     if (!nearest) return;
     this.activeBlockId = nearest.id;
     this.applyLanternClasses();
+    this.updateSceneStatus();
+  }
+
+  private createSceneBeats(): SceneBeat[] {
+    const readableModels = this.getReadableModelsWithIndex();
+    if (!readableModels.length) return [];
+
+    const sceneStarts = (this.manifest?.scenes ?? [])
+      .map((scene) => {
+        const startIndex = this.models.findIndex((model) => model.id === scene.startBlockId);
+        return startIndex >= 0 ? { startIndex, label: scene.label ?? this.sceneLabelFromId(scene.id) } : null;
+      })
+      .filter((scene): scene is { startIndex: number; label: string } => Boolean(scene))
+      .sort((a, b) => a.startIndex - b.startIndex);
+
+    const uniqueSceneStarts = sceneStarts.filter(
+      (scene, index, scenes) => index === 0 || scene.startIndex !== scenes[index - 1]?.startIndex
+    );
+
+    if (uniqueSceneStarts.length >= 2) {
+      const total = uniqueSceneStarts.length;
+      return uniqueSceneStarts.map((scene, index) => ({
+        index: index + 1,
+        total,
+        startIndex: scene.startIndex,
+        label: scene.label || this.fallbackSceneLabel(index, total),
+      }));
+    }
+
+    const readableCount = readableModels.length;
+    const total = readableCount >= 16 ? 5 : readableCount >= 10 ? 4 : readableCount >= 5 ? 3 : 1;
+    return Array.from({ length: total }, (_value, index) => {
+      const readableIndex = Math.min(readableCount - 1, Math.floor((index / total) * readableCount));
+      return {
+        index: index + 1,
+        total,
+        startIndex: readableModels[readableIndex]?.index ?? 0,
+        label: this.fallbackSceneLabel(index, total),
+      };
+    });
+  }
+
+  private getReadableModelsWithIndex(): Array<{ index: number; model: BlockModel }> {
+    return this.models
+      .map((model, index) => ({ index, model }))
+      .filter(({ model }) => model.type !== "image" && model.type !== "hr");
+  }
+
+  private updateSceneStatus(): void {
+    const status = this.root.querySelector<HTMLElement>(".om-status");
+    if (!status) return;
+
+    const beat = this.getActiveSceneBeat();
+    if (!beat) {
+      status.textContent = `${COPY.plateObservation} ${this.getObservationNumber()}`;
+      return;
+    }
+
+    status.textContent =
+      beat.total > 1 ? `Scene ${beat.index} of ${beat.total} · ${beat.label}` : `Scene · ${beat.label}`;
+  }
+
+  private getActiveSceneBeat(): SceneBeat | null {
+    if (!this.sceneBeats.length) return null;
+    const fallbackIndex = this.getReadableModelsWithIndex()[0]?.index ?? 0;
+    const activeIndex = this.activeBlockId
+      ? Math.max(0, this.models.findIndex((model) => model.id === this.activeBlockId))
+      : fallbackIndex;
+
+    let activeBeat = this.sceneBeats[0];
+    for (const beat of this.sceneBeats) {
+      if (beat.startIndex <= activeIndex) activeBeat = beat;
+    }
+    return activeBeat;
+  }
+
+  private sceneLabelFromId(id: string): string {
+    return id
+      .replace(/^sc-/, "")
+      .replace(/[-_]+/g, " ")
+      .replace(/\b\w/g, (letter) => letter.toUpperCase());
+  }
+
+  private fallbackSceneLabel(index: number, total: number): string {
+    const labelsByCount: Record<number, string[]> = {
+      1: ["The scene opens"],
+      2: ["The scene opens", "The witness arrives"],
+      3: ["The scene opens", "The turn arrives", "The final echo"],
+      4: ["The scene opens", "The pressure gathers", "The turn arrives", "The final echo"],
+      5: ["The scene opens", "The pressure gathers", "The turn arrives", "The meaning lands", "The final echo"],
+    };
+    return labelsByCount[total]?.[index] ?? `Beat ${index + 1}`;
   }
 
   private applyLanternClasses(): void {

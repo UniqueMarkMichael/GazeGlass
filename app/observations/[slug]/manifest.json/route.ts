@@ -33,6 +33,33 @@ function imageBlock(image: ObservationStoryImage) {
   };
 }
 
+function sceneLabel(index: number, total: number) {
+  const labelsByCount: Record<number, string[]> = {
+    2: ["The scene opens", "The witness arrives"],
+    3: ["The scene opens", "The turn arrives", "The final echo"],
+    4: ["The scene opens", "The pressure gathers", "The turn arrives", "The final echo"],
+    5: ["The scene opens", "The pressure gathers", "The turn arrives", "The meaning lands", "The final echo"],
+  };
+  return labelsByCount[total]?.[index] ?? `Beat ${index + 1}`;
+}
+
+function buildScenes(body: Array<{ type: string; id: string }>, deity: (typeof deityById)[keyof typeof deityById]) {
+  const paragraphIds = body.filter((block) => block.type === "p").map((block) => block.id);
+  const paragraphCount = paragraphIds.length;
+  const sceneCount = paragraphCount >= 16 ? 5 : paragraphCount >= 10 ? 4 : paragraphCount >= 5 ? 3 : 2;
+  const startIds = Array.from({ length: sceneCount }, (_value, index) => {
+    const paragraphIndex = Math.min(paragraphCount - 1, Math.floor((index / sceneCount) * paragraphCount));
+    return paragraphIds[paragraphIndex] ?? "b0";
+  });
+
+  return startIds.map((startBlockId, index) => ({
+    id: `sc-${index + 1}`,
+    startBlockId,
+    mood: index === 0 ? ("Neutral" as const) : deity,
+    label: sceneLabel(index, sceneCount),
+  }));
+}
+
 export function generateStaticParams() {
   return observations.map((observation) => ({
     slug: observation.slug,
@@ -77,14 +104,7 @@ export async function GET(_request: Request, { params }: ManifestRouteProps) {
     wordCount,
     contentNote: null,
     body,
-    scenes: [
-      { id: "sc-opening", startBlockId: "b0", mood: "Neutral" },
-      {
-        id: "sc-witness",
-        startBlockId: body[Math.max(0, Math.floor(body.length / 2))]?.id ?? "b0",
-        mood: deity,
-      },
-    ],
+    scenes: buildScenes(body, deity),
     glossary: [
       {
         key: observation.godId,
