@@ -346,6 +346,8 @@ export const COMPONENT_STYLES = `
     0 0 0 0.52rem rgba(201, 162, 39, 0.16),
     inset 0 0 0 1px rgba(201, 162, 39, 0.42);
   opacity: 1;
+  padding-block: clamp(0.38rem, 1.4vw, 0.7rem);
+  padding-inline: clamp(0.7rem, 2.8vw, 1rem);
 }
 
 .om-root[data-focus-mode="ruler"] .om-block.is-ruler {
