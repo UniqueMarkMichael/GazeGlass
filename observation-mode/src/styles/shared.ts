@@ -592,7 +592,9 @@ export const COMPONENT_STYLES = `
 
 .om-lost-card,
 .om-resume-card,
-.om-rest-card {
+.om-rest-card,
+.om-echo-card,
+.om-memory-card {
   position: fixed;
   right: max(1rem, env(safe-area-inset-right));
   bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 4.6rem);
@@ -630,7 +632,9 @@ export const COMPONENT_STYLES = `
 
 .om-lost-card h2,
 .om-resume-card h2,
-.om-rest-card h2 {
+.om-rest-card h2,
+.om-echo-card h2,
+.om-memory-card h2 {
   margin: 0 3.5rem 0.55rem 0;
   font-family: Georgia, serif;
   font-size: 1.55rem;
@@ -645,7 +649,9 @@ export const COMPONENT_STYLES = `
 
 .om-lost-card p,
 .om-resume-card p,
-.om-rest-card p {
+.om-rest-card p,
+.om-echo-card p,
+.om-memory-card p {
   margin: 0 0 1rem;
   color: var(--om-text-dim);
   line-height: 1.55;
@@ -653,7 +659,9 @@ export const COMPONENT_STYLES = `
 
 .om-lost-card blockquote,
 .om-resume-card blockquote,
-.om-rest-card blockquote {
+.om-rest-card blockquote,
+.om-echo-card blockquote,
+.om-memory-card blockquote {
   margin: 0 0 1rem;
   padding: 0.75rem 0.86rem;
   border-left: 3px solid color-mix(in srgb, var(--om-accent), transparent 24%);
@@ -663,6 +671,34 @@ export const COMPONENT_STYLES = `
   font-family: Georgia, serif;
   font-size: 1rem;
   line-height: 1.5;
+}
+
+.om-read-hidden {
+  display: none !important;
+}
+
+.om-memory-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.om-memory-list li {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.72rem 0.82rem;
+  border: 1px solid color-mix(in srgb, var(--om-accent), transparent 78%);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--om-accent), transparent 94%);
+}
+
+.om-memory-list span {
+  color: var(--om-text-dim);
+  font-family: system-ui, sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.4;
 }
 
 .om-panel-field-label {
@@ -946,7 +982,9 @@ export const COMPONENT_STYLES = `
   .om-panel,
   .om-lost-card,
   .om-resume-card,
-  .om-rest-card {
+  .om-rest-card,
+  .om-echo-card,
+  .om-memory-card {
     right: max(0.75rem, env(safe-area-inset-right));
     bottom: calc(10.05rem + env(safe-area-inset-bottom));
     left: max(0.75rem, env(safe-area-inset-left));

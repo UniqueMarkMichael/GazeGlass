@@ -71,6 +71,14 @@ type ResumeBookmark = {
   cue: string;
   updatedAt: number;
 };
+type MemoryEntry = {
+  id: string;
+  title: string;
+  realm: string;
+  deity: string | null;
+  cue: string;
+  updatedAt: number;
+};
 
 type ReaderPrefs = {
   focusMode?: FocusMode;
@@ -87,6 +95,7 @@ type ReaderPrefs = {
 
 const PREFS_KEY = "gg.om.prefs";
 const RESUME_KEY_PREFIX = "gg.om.resume.";
+const MEMORY_THREAD_KEY = "gg.om.memory.v1";
 const SITE_SOUND_PREF_KEY = "gaze-glass.sound.v1";
 const FOCUS_MODES = new Set<FocusMode>(["off", "spotlight", "band", "ruler"]);
 const READING_PACES = new Set<ReadingPace>(["drift", "focus", "sprint", "rest"]);
@@ -201,6 +210,8 @@ export class ObservationModeController {
   private promiseTimer: number | null = null;
   private lastRestBeatIndex = 1;
   private shownRestBeatIndexes = new Set<number>();
+  private readWithMeOn = false;
+  private readWithMeIndex = 0;
   private resumePromptActive = false;
   private lostAnchorTimer: number | null = null;
   private audioContext: AudioContext | null = null;
@@ -304,6 +315,8 @@ export class ObservationModeController {
     this.closePanel(false);
     this.playInterfaceSound("close");
     this.stopAllAudio();
+    this.clearReadWithMeVisibility();
+    this.readWithMeOn = false;
     this.dispatch({ type: "EXIT" });
     this.root.classList.remove("is-open");
     this.sourceArticle?.removeAttribute("aria-hidden");
@@ -461,6 +474,10 @@ export class ObservationModeController {
           <span data-status-pleasure>${this.getPleasureStatusText()}</span>
         </span>
         <button type="button" data-action="lost" aria-label="${COPY.lostAria}">${COPY.lost}</button>
+        <button type="button" data-action="echo" aria-label="${COPY.echoAria}">${COPY.echo}</button>
+        <button type="button" data-action="read-with-me" aria-label="${COPY.readWithMeAriaOff}" aria-pressed="false">${COPY.readWithMe}</button>
+        <button type="button" data-action="read-next" aria-label="${COPY.readWithMeNextAria}" hidden>${COPY.readWithMeNext}</button>
+        <button type="button" data-action="memory" aria-label="${COPY.memoryAria}">${COPY.memory}</button>
         <button type="button" data-panel="sound" aria-label="${COPY.soundAria}" aria-haspopup="dialog" aria-expanded="false">${COPY.sound}</button>
         <span class="om-split-control" role="group" aria-label="Focus controls">
           <button
@@ -520,6 +537,12 @@ export class ObservationModeController {
 
     shell.querySelector<HTMLButtonElement>("[data-action='exit']")?.addEventListener("click", () => void this.exit());
     shell.querySelector<HTMLButtonElement>("[data-action='lost']")?.addEventListener("click", () => this.showLostCard());
+    shell.querySelector<HTMLButtonElement>("[data-action='echo']")?.addEventListener("click", () => this.showLineEchoCard());
+    shell
+      .querySelector<HTMLButtonElement>("[data-action='read-with-me']")
+      ?.addEventListener("click", () => this.toggleReadWithMe());
+    shell.querySelector<HTMLButtonElement>("[data-action='read-next']")?.addEventListener("click", () => this.advanceReadWithMe());
+    shell.querySelector<HTMLButtonElement>("[data-action='memory']")?.addEventListener("click", () => this.showMemoryThreadCard());
     shell.querySelector<HTMLButtonElement>("[data-action='lantern']")?.addEventListener("click", () => this.toggleLantern());
     shell.querySelector<HTMLButtonElement>("[data-action='images']")?.addEventListener("click", () => this.toggleImages());
     shell.querySelectorAll<HTMLButtonElement>("[data-panel]").forEach((button) => {
@@ -541,6 +564,8 @@ export class ObservationModeController {
     this.applyPrefsToRoot();
     this.updateFocusControls();
     this.updateImageControls();
+    this.updateReadWithMeControls();
+    this.recordMemoryThread();
     this.startActiveBlockTracker();
     this.maybeShowResumeCard();
     this.readingArticle?.focus();
@@ -683,6 +708,42 @@ export class ObservationModeController {
     this.updateImageControls();
     this.savePrefs();
     this.showToast(this.showImages ? COPY.imagesShownToast : COPY.imagesHiddenToast);
+    this.scheduleActiveBlockUpdate();
+  }
+
+  private toggleReadWithMe(): void {
+    this.readWithMeOn = !this.readWithMeOn;
+    this.playInterfaceSound("select");
+
+    if (this.readWithMeOn) {
+      const activeIndex = this.getActiveReadablePosition();
+      this.readWithMeIndex = Math.max(0, activeIndex);
+      this.applyReadWithMeVisibility();
+      this.scrollReadablePositionIntoView(this.readWithMeIndex);
+      this.showToast(COPY.readWithMeOnToast);
+      this.announce(COPY.readWithMeOnToast);
+    } else {
+      this.clearReadWithMeVisibility();
+      this.showToast(COPY.readWithMeOffToast);
+      this.announce(COPY.readWithMeOffToast);
+    }
+
+    this.updateReadWithMeControls();
+    this.scheduleActiveBlockUpdate();
+  }
+
+  private advanceReadWithMe(): void {
+    if (!this.readWithMeOn) return;
+    const readable = this.getReadableModelsWithIndex();
+    if (this.readWithMeIndex >= readable.length - 1) {
+      this.showToast(COPY.readWithMeDoneToast);
+      return;
+    }
+
+    this.readWithMeIndex += 1;
+    this.applyReadWithMeVisibility();
+    this.scrollReadablePositionIntoView(this.readWithMeIndex);
+    this.updateReadWithMeControls();
     this.scheduleActiveBlockUpdate();
   }
 
@@ -897,6 +958,18 @@ export class ObservationModeController {
     this.root.querySelectorAll<HTMLElement>(".om-image-block").forEach((imageBlock) => {
       imageBlock.hidden = !this.showImages;
     });
+  }
+
+  private updateReadWithMeControls(): void {
+    const toggle = this.root.querySelector<HTMLButtonElement>("[data-action='read-with-me']");
+    const next = this.root.querySelector<HTMLButtonElement>("[data-action='read-next']");
+    toggle?.setAttribute("aria-pressed", String(this.readWithMeOn));
+    toggle?.setAttribute("aria-label", this.readWithMeOn ? COPY.readWithMeAriaOn : COPY.readWithMeAriaOff);
+    if (next) {
+      next.hidden = !this.readWithMeOn;
+      const atEnd = this.readWithMeIndex >= this.getReadableModelsWithIndex().length - 1;
+      next.disabled = this.readWithMeOn && atEnd;
+    }
   }
 
   private updateFocusControls(): void {
@@ -1907,6 +1980,109 @@ export class ObservationModeController {
     this.updateSoundControls();
   }
 
+  private showLineEchoCard(): void {
+    this.root.querySelector(".om-echo-card")?.remove();
+    this.root.querySelector(".om-memory-card")?.remove();
+    this.closePanel(false);
+    this.closeResumeCard(false);
+    this.updateActiveBlock();
+
+    const model = this.getActiveReadableBlock();
+    if (!model) return;
+
+    this.playInterfaceSound("panel");
+    const card = document.createElement("section");
+    card.className = "om-echo-card";
+    card.setAttribute("role", "dialog");
+    card.setAttribute("aria-modal", "false");
+    card.setAttribute("aria-label", COPY.echoPanelAria);
+    card.innerHTML = `
+      <button class="om-panel-close" type="button" aria-label="${COPY.closePanelAria}">${COPY.close}</button>
+      <p class="om-panel-kicker">${COPY.echoKicker}</p>
+      <h2>${COPY.echoTitle}</h2>
+      <p>${COPY.echoDescription}</p>
+      <blockquote>${this.escapeHtml(this.getLineEcho(model))}</blockquote>
+      <div class="om-panel-actions">
+        <button type="button" data-echo-action="back">${COPY.echoBack}</button>
+        <button type="button" data-echo-action="ruler">${COPY.echoRuler}</button>
+      </div>
+    `;
+
+    const backToLine = () => {
+      this.returnToLostBlock(model);
+      card.remove();
+    };
+
+    card.querySelector<HTMLButtonElement>(".om-panel-close")?.addEventListener("click", () => card.remove());
+    card.querySelector<HTMLButtonElement>("[data-echo-action='back']")?.addEventListener("click", backToLine);
+    card.querySelector<HTMLButtonElement>("[data-echo-action='ruler']")?.addEventListener("click", () => {
+      this.setFocusMode("ruler", "panel");
+      backToLine();
+    });
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") card.remove();
+    });
+
+    this.root.append(card);
+    card.querySelector<HTMLElement>("[data-echo-action='back']")?.focus();
+    this.markLostAnchor(model);
+    this.announce(COPY.echoToast);
+  }
+
+  private showMemoryThreadCard(): void {
+    this.root.querySelector(".om-memory-card")?.remove();
+    this.root.querySelector(".om-echo-card")?.remove();
+    this.closePanel(false);
+    this.closeResumeCard(false);
+    this.recordMemoryThread();
+
+    const entries = this.loadMemoryThread();
+    const card = document.createElement("section");
+    card.className = "om-memory-card";
+    card.setAttribute("role", "dialog");
+    card.setAttribute("aria-modal", "false");
+    card.setAttribute("aria-label", COPY.memoryPanelAria);
+    card.innerHTML = `
+      <button class="om-panel-close" type="button" aria-label="${COPY.closePanelAria}">${COPY.close}</button>
+      <p class="om-panel-kicker">${COPY.memoryKicker}</p>
+      <h2>${COPY.memoryTitle}</h2>
+      <p>${COPY.memoryDescription}</p>
+      ${
+        entries.length
+          ? `<ul class="om-memory-list">${entries
+              .map(
+                (entry) => `
+                  <li>
+                    <strong>${this.escapeHtml(entry.title)}</strong>
+                    <span>${this.escapeHtml(this.memoryEntryLine(entry))}</span>
+                  </li>`,
+              )
+              .join("")}</ul>`
+          : `<p>${COPY.memoryEmpty}</p>`
+      }
+      <div class="om-panel-actions">
+        <button type="button" data-memory-action="close">${COPY.close}</button>
+        <button type="button" data-memory-action="clear">${COPY.memoryClear}</button>
+      </div>
+    `;
+
+    card.querySelector<HTMLButtonElement>(".om-panel-close")?.addEventListener("click", () => card.remove());
+    card.querySelector<HTMLButtonElement>("[data-memory-action='close']")?.addEventListener("click", () => card.remove());
+    card.querySelector<HTMLButtonElement>("[data-memory-action='clear']")?.addEventListener("click", () => {
+      this.clearMemoryThread();
+      card.remove();
+      this.showToast(COPY.memoryClearedToast);
+      this.announce(COPY.memoryClearedToast);
+    });
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") card.remove();
+    });
+
+    this.root.append(card);
+    card.querySelector<HTMLElement>("[data-memory-action='close']")?.focus();
+    this.showToast(COPY.memoryToast);
+  }
+
   private showRestStopCard(beat: SceneBeat): void {
     if (this.root.querySelector(".om-rest-card")) return;
     this.closePanel(false);
@@ -2113,6 +2289,92 @@ export class ObservationModeController {
     return cue.length > 190 ? `${cue.slice(0, 187).trim()}...` : cue;
   }
 
+  private getLineEcho(model: BlockModel): string {
+    const text = (model.element.textContent ?? "").replace(/\s+/g, " ").trim();
+    if (!text) return `In plain words: this moment belongs to ${this.getTitle()}.`;
+
+    const firstSentence = text.match(/[^.!?]+[.!?]/)?.[0]?.trim() ?? text;
+    const shorter = firstSentence
+      .replace(/\bwhich is to say\b/gi, "meaning")
+      .replace(/\bas though\b/gi, "like")
+      .replace(/\bnot out of\b/gi, "not because of")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    const cue = shorter.length > 155 ? `${shorter.slice(0, 152).trim()}...` : shorter;
+    return `In plain words: ${cue}`;
+  }
+
+  private recordMemoryThread(): void {
+    const entry = this.getCurrentMemoryEntry();
+    const entries = this.loadMemoryThread().filter((item) => item.id !== entry.id);
+    entries.unshift(entry);
+    this.saveMemoryThread(entries.slice(0, 8));
+  }
+
+  private getCurrentMemoryEntry(): MemoryEntry {
+    return {
+      id: this.manifest?.id ?? this.getTitle(),
+      title: this.getTitle(),
+      realm: this.getRealm(),
+      deity: this.manifest?.deity ?? null,
+      cue: this.getMemoryCue(),
+      updatedAt: Date.now(),
+    };
+  }
+
+  private getMemoryCue(): string {
+    const titleName = this.getTitle().split(",")[0]?.trim();
+    const deity = this.manifest?.deity;
+    if (titleName && deity) return `${titleName} is connected to the God of ${deity}.`;
+    if (titleName) return `${titleName} has entered the Glass.`;
+    return `${this.getRealm()} / ${this.getMagnitude()}`;
+  }
+
+  private loadMemoryThread(): MemoryEntry[] {
+    try {
+      const raw = window.localStorage.getItem(MEMORY_THREAD_KEY);
+      if (!raw) return [];
+      const entries = JSON.parse(raw) as Partial<MemoryEntry>[];
+      if (!Array.isArray(entries)) return [];
+      return entries
+        .filter((entry): entry is MemoryEntry => {
+          return (
+            typeof entry.id === "string" &&
+            typeof entry.title === "string" &&
+            typeof entry.realm === "string" &&
+            typeof entry.cue === "string" &&
+            typeof entry.updatedAt === "number"
+          );
+        })
+        .slice(0, 8);
+    } catch {
+      return [];
+    }
+  }
+
+  private saveMemoryThread(entries: MemoryEntry[]): void {
+    try {
+      window.localStorage.setItem(MEMORY_THREAD_KEY, JSON.stringify(entries));
+    } catch {
+      // Memory Thread is a local convenience; reading should continue without storage.
+    }
+  }
+
+  private clearMemoryThread(): void {
+    try {
+      window.localStorage.removeItem(MEMORY_THREAD_KEY);
+    } catch {
+      // Ignore unavailable storage.
+    }
+  }
+
+  private memoryEntryLine(entry: MemoryEntry): string {
+    const current = entry.id === (this.manifest?.id ?? this.getTitle()) ? `${COPY.memoryCurrent}. ` : "";
+    const force = entry.deity ? `God of ${entry.deity}. ` : "";
+    return `${current}${entry.realm}. ${force}${entry.cue}`;
+  }
+
   private returnToLostBlock(model: BlockModel): void {
     this.scrollBlockIntoReadingView(model);
     this.readingArticle?.focus();
@@ -2293,6 +2555,52 @@ export class ObservationModeController {
     return this.models
       .map((model, index) => ({ index, model }))
       .filter(({ model }) => model.type !== "image" && model.type !== "hr");
+  }
+
+  private getActiveReadablePosition(): number {
+    const readable = this.getReadableModelsWithIndex();
+    if (!readable.length) return 0;
+    const activeIndex = this.getActiveModelIndex();
+    const position = readable.findIndex(({ index }) => index >= activeIndex);
+    return position >= 0 ? position : readable.length - 1;
+  }
+
+  private applyReadWithMeVisibility(): void {
+    const readable = this.getReadableModelsWithIndex();
+    const visibleModelIds = new Set(readable.slice(0, this.readWithMeIndex + 1).map(({ model }) => model.id));
+
+    for (const model of this.models) {
+      const hide =
+        model.type !== "image" && model.type !== "hr" ? !visibleModelIds.has(model.id) : this.shouldHideSupportBlock(model);
+      model.element.classList.toggle("om-read-hidden", hide);
+      if (hide) {
+        model.element.setAttribute("aria-hidden", "true");
+      } else {
+        model.element.removeAttribute("aria-hidden");
+      }
+    }
+  }
+
+  private shouldHideSupportBlock(model: BlockModel): boolean {
+    const readable = this.getReadableModelsWithIndex();
+    const nextVisible = readable[this.readWithMeIndex + 1]?.index ?? Number.POSITIVE_INFINITY;
+    const modelIndex = this.models.findIndex((candidate) => candidate.id === model.id);
+    return modelIndex >= nextVisible;
+  }
+
+  private clearReadWithMeVisibility(): void {
+    this.models.forEach(({ element }) => {
+      element.classList.remove("om-read-hidden");
+      element.removeAttribute("aria-hidden");
+    });
+  }
+
+  private scrollReadablePositionIntoView(position: number): void {
+    const readable = this.getReadableModelsWithIndex();
+    const model = readable[position]?.model;
+    if (!model) return;
+    this.scrollBlockIntoReadingView(model);
+    this.markLostAnchor(model);
   }
 
   private updateSceneStatus(): void {
