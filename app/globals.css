@@ -20,6 +20,8 @@
 html {
   scroll-behavior: smooth;
   background: var(--ink);
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -34,6 +36,8 @@ body {
     linear-gradient(180deg, #0b0a18 0%, var(--ink) 42%, #100e24 100%);
   min-height: 100vh;
   overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 body.menu-open {
@@ -42,6 +46,8 @@ body.menu-open {
 
 html.observation-mode-active,
 html.observation-mode-active body {
+  overflow-x: hidden;
+  overflow-x: clip;
   overscroll-behavior: none;
 }
 

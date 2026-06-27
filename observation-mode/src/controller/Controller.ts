@@ -91,6 +91,7 @@ type ReaderPrefs = {
   showImages?: boolean;
   audioMuted?: boolean;
   audioTrackId?: ReadingTrackId;
+  joltEnabled?: boolean;
 };
 
 const PREFS_KEY = "gg.om.prefs";
@@ -107,6 +108,9 @@ const DEFAULT_READING_PACE: ReadingPace = "drift";
 const DEFAULT_PAGE_PROMISE: PagePromise = "scene";
 const DEFAULT_PLEASURE_MODE: PleasureMode = "wonder";
 const PAGE_PROMISE_DURATION_MS = 5 * 60 * 1000;
+const JOLT_IDLE_MS = 45 * 1000;
+const JOLT_IDLE_PATTERN = 18;
+const JOLT_FINISH_PATTERN = [24, 90, 34];
 const READING_PACE_PRESETS: Record<
   ReadingPace,
   { focusMode: FocusMode; generousSpacing: boolean; fontSizeRem: number; trackId: ReadingTrackId }
@@ -212,6 +216,10 @@ export class ObservationModeController {
   private shownRestBeatIndexes = new Set<number>();
   private readWithMeOn = false;
   private readWithMeIndex = 0;
+  private joltEnabled = false;
+  private joltTimer: number | null = null;
+  private joltLastBlockId: string | null = null;
+  private joltCompletionSent = false;
   private resumePromptActive = false;
   private lostAnchorTimer: number | null = null;
   private audioContext: AudioContext | null = null;
@@ -279,6 +287,7 @@ export class ObservationModeController {
     this.releaseTrap = null;
     this.stopActiveBlockTracker();
     this.stopPromiseTimer();
+    this.clearJoltTimer();
     this.stopAllAudio();
     this.unlockHostExperience();
   }
@@ -315,6 +324,7 @@ export class ObservationModeController {
     this.closePanel(false);
     this.playInterfaceSound("close");
     this.stopAllAudio();
+    this.clearJoltTimer();
     this.clearReadWithMeVisibility();
     this.readWithMeOn = false;
     this.dispatch({ type: "EXIT" });
@@ -614,6 +624,13 @@ export class ObservationModeController {
           <button type="button" role="radio" aria-checked="false" data-focus-mode="band" aria-label="${COPY.bandAria}">${COPY.band}</button>
           <button type="button" role="radio" aria-checked="false" data-focus-mode="ruler" aria-label="${COPY.rulerAria}">${COPY.ruler}</button>
         </div>
+        <div class="om-mobile-jolt">
+          <p class="om-panel-field-label">${COPY.mobileFocus}</p>
+          <div class="om-panel-actions">
+            <button type="button" data-jolt-toggle aria-label="${COPY.joltAriaOff}" aria-pressed="false">${COPY.jolt}</button>
+          </div>
+          <p>${COPY.joltDescription}</p>
+        </div>
       `;
     } else {
       panel.setAttribute("aria-label", COPY.textAria);
@@ -684,6 +701,9 @@ export class ObservationModeController {
         this.setFocusMode(mode, "panel");
       });
     });
+    panel.querySelector<HTMLButtonElement>("[data-jolt-toggle]")?.addEventListener("click", () => {
+      this.toggleJolt();
+    });
     panel.querySelector<HTMLButtonElement>("[data-spacing-toggle]")?.addEventListener("click", () => {
       this.setGenerousSpacing(!this.generousSpacing);
     });
@@ -709,6 +729,34 @@ export class ObservationModeController {
     this.savePrefs();
     this.showToast(this.showImages ? COPY.imagesShownToast : COPY.imagesHiddenToast);
     this.scheduleActiveBlockUpdate();
+  }
+
+  private toggleJolt(): void {
+    if (!this.isJoltSupported()) {
+      this.joltEnabled = false;
+      this.clearJoltTimer();
+      this.updateFocusControls();
+      this.savePrefs();
+      this.showToast(COPY.joltUnavailableToast);
+      this.announce(COPY.joltUnavailableToast);
+      return;
+    }
+
+    this.joltEnabled = !this.joltEnabled;
+    this.playInterfaceSound("select");
+    this.updateFocusControls();
+    this.savePrefs();
+
+    if (this.joltEnabled) {
+      this.sendJolt(JOLT_IDLE_PATTERN);
+      this.scheduleJoltForActiveBlock();
+      this.showToast(COPY.joltOnToast);
+      this.announce(COPY.joltOnToast);
+    } else {
+      this.clearJoltTimer();
+      this.showToast(COPY.joltOffToast);
+      this.announce(COPY.joltOffToast);
+    }
   }
 
   private toggleReadWithMe(): void {
@@ -893,6 +941,7 @@ export class ObservationModeController {
       this.showImages = Boolean(prefs.showImages);
       this.audioMuted = Boolean(prefs.audioMuted);
       this.atmosphereTrackId = this.parseAtmosphereTrackId(prefs.audioTrackId);
+      this.joltEnabled = Boolean(prefs.joltEnabled) && this.isJoltSupported();
     } catch {
       this.readingPace = DEFAULT_READING_PACE;
       this.pagePromise = DEFAULT_PAGE_PROMISE;
@@ -904,6 +953,7 @@ export class ObservationModeController {
       this.showImages = false;
       this.audioMuted = false;
       this.atmosphereTrackId = DEFAULT_READING_TRACK_ID;
+      this.joltEnabled = false;
     }
   }
 
@@ -922,6 +972,7 @@ export class ObservationModeController {
           showImages: this.showImages,
           audioMuted: this.audioMuted,
           audioTrackId: this.atmosphereTrackId,
+          joltEnabled: this.joltEnabled,
         } satisfies ReaderPrefs),
       );
     } catch {
@@ -939,6 +990,7 @@ export class ObservationModeController {
     this.root.dataset.audioMode = this.audioMuted ? "muted" : "on";
     this.root.dataset.readAloudMode = this.readAloudOn ? "on" : "off";
     this.root.dataset.audioTrackId = this.atmosphereTrackId;
+    this.root.dataset.joltMode = this.joltEnabled ? "on" : "off";
     this.root.style.setProperty("--om-fs-body", `${this.textSizeRem.toFixed(2)}rem`);
     this.applyLanternClasses();
   }
@@ -1011,6 +1063,19 @@ export class ObservationModeController {
     const spacingToggle = this.root.querySelector<HTMLButtonElement>("[data-spacing-toggle]");
     spacingToggle?.setAttribute("aria-pressed", String(this.generousSpacing));
     spacingToggle?.setAttribute("aria-label", this.generousSpacing ? COPY.spacingAriaOn : COPY.spacingAriaOff);
+
+    const joltToggle = this.root.querySelector<HTMLButtonElement>("[data-jolt-toggle]");
+    const joltSupported = this.isJoltSupported();
+    if (joltToggle) {
+      joltToggle.disabled = !joltSupported;
+      joltToggle.setAttribute("aria-disabled", String(!joltSupported));
+      joltToggle.setAttribute(
+        "aria-label",
+        joltSupported ? (this.joltEnabled ? COPY.joltAriaOn : COPY.joltAriaOff) : COPY.joltUnavailableAria,
+      );
+      joltToggle.setAttribute("aria-pressed", String(this.joltEnabled && joltSupported));
+    }
+
     this.updateSoundControls();
   }
 
@@ -2496,7 +2561,69 @@ export class ObservationModeController {
     this.applyLanternClasses();
     this.updateSceneStatus();
     this.saveResumeBookmark(nearest);
+    this.updateJoltProgress(nearest);
     this.maybeShowRestStop();
+  }
+
+  private updateJoltProgress(model: BlockModel): void {
+    if (!this.joltEnabled || !this.isJoltSupported() || model.type === "image" || model.type === "hr") {
+      this.clearJoltTimer();
+      return;
+    }
+
+    this.scheduleJoltForActiveBlock();
+    this.maybeSendFinishJolt(model);
+  }
+
+  private scheduleJoltForActiveBlock(): void {
+    if (!this.joltEnabled || !this.isJoltSupported() || !this.activeBlockId) return;
+    if (this.joltLastBlockId === this.activeBlockId && this.joltTimer !== null) return;
+
+    this.clearJoltTimer();
+    this.joltLastBlockId = this.activeBlockId;
+    this.joltTimer = window.setTimeout(() => {
+      this.joltTimer = null;
+      if (!this.joltEnabled || !this.isJoltSupported() || this.activeBlockId !== this.joltLastBlockId) return;
+      this.sendJolt(JOLT_IDLE_PATTERN);
+      this.scheduleJoltForActiveBlock();
+    }, JOLT_IDLE_MS);
+  }
+
+  private maybeSendFinishJolt(model: BlockModel): void {
+    if (this.joltCompletionSent) return;
+
+    const readable = this.getReadableModelsWithIndex();
+    const lastReadable = readable.at(-1)?.model;
+    if (!lastReadable || model.id !== lastReadable.id) return;
+
+    this.joltCompletionSent = true;
+    this.sendJolt(JOLT_FINISH_PATTERN);
+    this.showToast(COPY.joltFinishToast);
+  }
+
+  private clearJoltTimer(): void {
+    if (this.joltTimer !== null) {
+      window.clearTimeout(this.joltTimer);
+      this.joltTimer = null;
+    }
+    this.joltLastBlockId = null;
+  }
+
+  private isJoltSupported(): boolean {
+    if (typeof navigator === "undefined" || typeof navigator.vibrate !== "function") return false;
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return false;
+    return window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+  }
+
+  private sendJolt(pattern: VibratePattern): void {
+    try {
+      navigator.vibrate(pattern);
+    } catch {
+      this.joltEnabled = false;
+      this.clearJoltTimer();
+      this.updateFocusControls();
+      this.savePrefs();
+    }
   }
 
   private maybeShowRestStop(): void {

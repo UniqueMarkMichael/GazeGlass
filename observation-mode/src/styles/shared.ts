@@ -182,11 +182,14 @@ export const COMPONENT_STYLES = `
   inset: 0;
   z-index: 2147483647;
   display: grid;
-  width: 100vw;
+  width: 100%;
+  max-width: 100%;
   height: 100dvh;
   min-height: 100svh;
   overflow: hidden;
+  overflow-x: clip;
   overscroll-behavior: contain;
+  touch-action: pan-y;
   isolation: isolate;
   background: var(--om-bg);
   color: var(--om-text);
@@ -232,6 +235,10 @@ export const COMPONENT_STYLES = `
   display: grid;
   place-items: center;
   min-height: 100%;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   height: 100%;
   padding:
     max(2rem, env(safe-area-inset-top))
@@ -725,6 +732,14 @@ export const COMPONENT_STYLES = `
   margin-bottom: 0.85rem;
 }
 
+.om-mobile-jolt {
+  display: none;
+}
+
+.om-mobile-jolt p:last-child {
+  margin-top: 0.55rem;
+}
+
 .om-panel-actions:has([data-audio-action]) {
   margin-bottom: 1rem;
 }
@@ -771,6 +786,7 @@ export const COMPONENT_STYLES = `
 .om-promise button[role="radio"][aria-checked="true"],
 .om-pleasure button[role="radio"][aria-checked="true"],
 .om-panel-actions button[data-spacing-toggle][aria-pressed="true"],
+.om-panel-actions button[data-jolt-toggle][aria-pressed="true"],
 .om-panel-actions button[data-audio-action][aria-pressed="true"] {
   border-color: color-mix(in srgb, var(--om-accent), transparent 22%);
   background: color-mix(in srgb, var(--om-accent), var(--om-bg-elev) 78%);
@@ -816,7 +832,8 @@ export const COMPONENT_STYLES = `
 
   .om-threshold {
     align-items: center;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     padding:
       calc(env(safe-area-inset-top) + 1.2rem)
       max(1rem, env(safe-area-inset-right))
@@ -855,7 +872,10 @@ export const COMPONENT_STYLES = `
   }
 
   .om-reading {
+    box-sizing: border-box;
     width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
     height: 100%;
     max-height: none;
     margin: 0;
@@ -888,7 +908,7 @@ export const COMPONENT_STYLES = `
     flex-wrap: wrap;
     align-items: stretch;
     justify-content: center;
-    width: min(25.5rem, calc(100vw - 1.2rem));
+    width: min(25.5rem, calc(100% - 1.2rem));
     gap: 0.48rem;
     padding: 0.62rem;
     border: 1px solid color-mix(in srgb, var(--om-accent), transparent 65%);
@@ -971,6 +991,13 @@ export const COMPONENT_STYLES = `
     height: 46px;
     min-height: 46px;
     font-size: clamp(0.7rem, 3vw, 0.78rem);
+  }
+
+  .om-mobile-jolt {
+    display: block;
+    margin-top: 1rem;
+    padding-top: 0.95rem;
+    border-top: 1px solid color-mix(in srgb, var(--om-accent), transparent 76%);
   }
 
   .om-dock:has([data-action="images"]) > button,
