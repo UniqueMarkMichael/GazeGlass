@@ -17,6 +17,7 @@ type FocusMode = "off" | "spotlight" | "band" | "ruler";
 type FocusChangeSource = "dock" | "panel" | "restore";
 type ReadingTrackId = "reading-mode" | "reading-room";
 type ReadingPace = "drift" | "focus" | "sprint" | "rest";
+type PagePromise = "scene" | "time" | "finish";
 type ReadAloudMode = "voice-follow" | "spoken-playback";
 type ReadAloudRecognitionConstructor = new () => ReadAloudRecognition;
 type ReadAloudRecognitionAlternative = {
@@ -72,6 +73,7 @@ type ResumeBookmark = {
 type ReaderPrefs = {
   focusMode?: FocusMode;
   readingPace?: ReadingPace;
+  pagePromise?: PagePromise;
   textSizeRem?: number;
   generousSpacing?: boolean;
   showImages?: boolean;
@@ -84,8 +86,11 @@ const RESUME_KEY_PREFIX = "gg.om.resume.";
 const SITE_SOUND_PREF_KEY = "gaze-glass.sound.v1";
 const FOCUS_MODES = new Set<FocusMode>(["off", "spotlight", "band", "ruler"]);
 const READING_PACES = new Set<ReadingPace>(["drift", "focus", "sprint", "rest"]);
+const PAGE_PROMISES = new Set<PagePromise>(["scene", "time", "finish"]);
 const DEFAULT_READING_TRACK_ID: ReadingTrackId = "reading-mode";
 const DEFAULT_READING_PACE: ReadingPace = "drift";
+const DEFAULT_PAGE_PROMISE: PagePromise = "scene";
+const PAGE_PROMISE_DURATION_MS = 5 * 60 * 1000;
 const READING_PACE_PRESETS: Record<
   ReadingPace,
   { focusMode: FocusMode; generousSpacing: boolean; fontSizeRem: number; trackId: ReadingTrackId }
@@ -130,6 +135,7 @@ export class ObservationModeController {
   private previousActiveElement: Element | null = null;
   private focusMode: FocusMode = "off";
   private readingPace: ReadingPace = DEFAULT_READING_PACE;
+  private pagePromise: PagePromise = DEFAULT_PAGE_PROMISE;
   private textSizeRem = 1.18;
   private generousSpacing = false;
   private showImages = false;
@@ -137,6 +143,9 @@ export class ObservationModeController {
   private activeBlockFrame: number | null = null;
   private releaseActiveBlockTracker: (() => void) | null = null;
   private sceneBeats: SceneBeat[] = [];
+  private readingStartedAt = 0;
+  private promiseStartBeatIndex = 1;
+  private promiseTimer: number | null = null;
   private resumePromptActive = false;
   private lostAnchorTimer: number | null = null;
   private audioContext: AudioContext | null = null;
@@ -203,6 +212,7 @@ export class ObservationModeController {
     this.releaseTrap?.();
     this.releaseTrap = null;
     this.stopActiveBlockTracker();
+    this.stopPromiseTimer();
     this.stopAllAudio();
     this.unlockHostExperience();
   }
@@ -243,6 +253,7 @@ export class ObservationModeController {
     this.root.classList.remove("is-open");
     this.sourceArticle?.removeAttribute("aria-hidden");
     this.stopActiveBlockTracker();
+    this.stopPromiseTimer();
     this.unlockHostExperience();
     this.releaseTrap?.();
     this.releaseTrap = null;
@@ -332,6 +343,15 @@ export class ObservationModeController {
           <strong>${COPY.modeName}</strong>
           <span>${COPY.modeDescription}</span>
         </div>
+        <div class="om-promise" role="radiogroup" aria-label="${COPY.promiseKicker}">
+          <p class="om-panel-kicker">${COPY.promiseKicker}</p>
+          <p>${COPY.promiseDescription}</p>
+          <div class="om-promise-options">
+            <button type="button" role="radio" aria-checked="false" data-promise="scene" aria-label="${COPY.promiseOneSceneAria}">${COPY.promiseOneScene}</button>
+            <button type="button" role="radio" aria-checked="false" data-promise="time" aria-label="${COPY.promiseFiveMinutesAria}">${COPY.promiseFiveMinutes}</button>
+            <button type="button" role="radio" aria-checked="false" data-promise="finish" aria-label="${COPY.promiseFinishAria}">${COPY.promiseFinish}</button>
+          </div>
+        </div>
         <div class="om-actions">
           <button type="button" data-action="skip" aria-label="${COPY.skipAria}">${COPY.skip}</button>
           <button type="button" data-action="exit" aria-label="${COPY.leaveAria}">${COPY.leave}</button>
@@ -344,11 +364,15 @@ export class ObservationModeController {
       this.dispatch({ type: "THRESHOLD_DONE" });
       this.renderWitnessing();
     });
+    plate.querySelectorAll<HTMLButtonElement>("[data-promise]").forEach((button) => {
+      button.addEventListener("click", () => this.setPagePromise(button.dataset.promise));
+    });
     plate.querySelector<HTMLButtonElement>("[data-action='exit']")?.addEventListener("click", () => void this.exit());
     plate.addEventListener("keydown", (event) => {
       if (event.key === "Escape") void this.exit();
     });
     this.root.append(plate);
+    this.updatePromiseControls();
     plate.querySelector<HTMLButtonElement>("[data-action='skip']")?.focus();
   }
 
@@ -362,7 +386,10 @@ export class ObservationModeController {
       </article>
       <div class="om-dock" role="toolbar" aria-label="Observation controls">
         <button type="button" data-action="exit" aria-label="${COPY.leaveAria}">${COPY.leave}</button>
-        <span class="om-status">${COPY.plateObservation} ${this.getObservationNumber()} · 0% witnessed</span>
+        <span class="om-status">
+          <span data-status-scene>${COPY.plateObservation} ${this.getObservationNumber()}</span>
+          <span data-status-promise>${this.getPromiseStatusText()}</span>
+        </span>
         <button type="button" data-action="lost" aria-label="${COPY.lostAria}">${COPY.lost}</button>
         <button type="button" data-panel="sound" aria-label="${COPY.soundAria}" aria-haspopup="dialog" aria-expanded="false">${COPY.sound}</button>
         <span class="om-split-control" role="group" aria-label="Focus controls">
@@ -414,7 +441,10 @@ export class ObservationModeController {
       this.models = parseHtmlBody(this.readingArticle);
     }
     this.sceneBeats = this.createSceneBeats();
+    this.readingStartedAt = Date.now();
+    this.promiseStartBeatIndex = this.getActiveSceneBeat()?.index ?? 1;
     this.updateSceneStatus();
+    this.startPromiseTimer();
 
     shell.querySelector<HTMLButtonElement>("[data-action='exit']")?.addEventListener("click", () => void this.exit());
     shell.querySelector<HTMLButtonElement>("[data-action='lost']")?.addEventListener("click", () => this.showLostCard());
@@ -614,8 +644,23 @@ export class ObservationModeController {
     return READING_PACES.has(value as ReadingPace) ? (value as ReadingPace) : DEFAULT_READING_PACE;
   }
 
+  private parsePagePromise(value: string | undefined): PagePromise {
+    return PAGE_PROMISES.has(value as PagePromise) ? (value as PagePromise) : DEFAULT_PAGE_PROMISE;
+  }
+
   private parseTextSize(value: number | undefined, fallback = 1.18): number {
     return typeof value === "number" && Number.isFinite(value) ? Math.min(1.6, Math.max(1, value)) : fallback;
+  }
+
+  private setPagePromise(value: string | undefined): void {
+    this.pagePromise = this.parsePagePromise(value);
+    this.playInterfaceSound("select");
+    this.updatePromiseControls();
+    this.updateSceneStatus();
+    this.savePrefs();
+    const message = this.promiseToast(this.pagePromise);
+    this.showToast(message);
+    this.announce(message);
   }
 
   private setReadingPace(pace: ReadingPace): void {
@@ -651,10 +696,17 @@ export class ObservationModeController {
     return COPY.driftToast;
   }
 
+  private promiseToast(promise: PagePromise): string {
+    if (promise === "time") return COPY.promiseTimeSetToast;
+    if (promise === "finish") return COPY.promiseFinishSetToast;
+    return COPY.promiseSceneSetToast;
+  }
+
   private loadPrefs(): void {
     try {
       const prefs = JSON.parse(window.localStorage.getItem(PREFS_KEY) ?? "{}") as ReaderPrefs;
       this.readingPace = this.parseReadingPace(prefs.readingPace);
+      this.pagePromise = this.parsePagePromise(prefs.pagePromise);
       this.textSizeRem = this.parseTextSize(prefs.textSizeRem, READING_PACE_PRESETS[this.readingPace].fontSizeRem);
       this.focusMode = this.parseFocusMode(prefs.focusMode);
       this.generousSpacing = Boolean(prefs.generousSpacing);
@@ -663,6 +715,7 @@ export class ObservationModeController {
       this.atmosphereTrackId = this.parseAtmosphereTrackId(prefs.audioTrackId);
     } catch {
       this.readingPace = DEFAULT_READING_PACE;
+      this.pagePromise = DEFAULT_PAGE_PROMISE;
       this.textSizeRem = READING_PACE_PRESETS[DEFAULT_READING_PACE].fontSizeRem;
       this.focusMode = "off";
       this.generousSpacing = false;
@@ -679,6 +732,7 @@ export class ObservationModeController {
         JSON.stringify({
           focusMode: this.focusMode,
           readingPace: this.readingPace,
+          pagePromise: this.pagePromise,
           textSizeRem: this.textSizeRem,
           generousSpacing: this.generousSpacing,
           showImages: this.showImages,
@@ -753,10 +807,19 @@ export class ObservationModeController {
       button.setAttribute("aria-checked", String(selected));
     });
 
+    this.updatePromiseControls();
+
     const spacingToggle = this.root.querySelector<HTMLButtonElement>("[data-spacing-toggle]");
     spacingToggle?.setAttribute("aria-pressed", String(this.generousSpacing));
     spacingToggle?.setAttribute("aria-label", this.generousSpacing ? COPY.spacingAriaOn : COPY.spacingAriaOff);
     this.updateSoundControls();
+  }
+
+  private updatePromiseControls(): void {
+    this.root.querySelectorAll<HTMLButtonElement>("[data-promise]").forEach((button) => {
+      const selected = this.parsePagePromise(button.dataset.promise) === this.pagePromise;
+      button.setAttribute("aria-checked", String(selected));
+    });
   }
 
   private updateSoundControls(): void {
@@ -1938,6 +2001,17 @@ export class ObservationModeController {
     });
   }
 
+  private startPromiseTimer(): void {
+    this.stopPromiseTimer();
+    this.promiseTimer = window.setInterval(() => this.updateSceneStatus(), 15000);
+  }
+
+  private stopPromiseTimer(): void {
+    if (this.promiseTimer === null) return;
+    window.clearInterval(this.promiseTimer);
+    this.promiseTimer = null;
+  }
+
   private updateActiveBlock(): void {
     if (!this.readingArticle || !this.models.length) return;
 
@@ -2013,17 +2087,72 @@ export class ObservationModeController {
   }
 
   private updateSceneStatus(): void {
-    const status = this.root.querySelector<HTMLElement>(".om-status");
-    if (!status) return;
+    const sceneStatus = this.root.querySelector<HTMLElement>("[data-status-scene]");
+    const promiseStatus = this.root.querySelector<HTMLElement>("[data-status-promise]");
+    if (!sceneStatus && !promiseStatus) return;
 
     const beat = this.getActiveSceneBeat();
     if (!beat) {
-      status.textContent = `${COPY.plateObservation} ${this.getObservationNumber()}`;
+      if (sceneStatus) sceneStatus.textContent = `${COPY.plateObservation} ${this.getObservationNumber()}`;
+      if (promiseStatus) promiseStatus.textContent = this.getPromiseStatusText();
       return;
     }
 
-    status.textContent =
-      beat.total > 1 ? `Scene ${beat.index} of ${beat.total} · ${beat.label}` : `Scene · ${beat.label}`;
+    if (sceneStatus) {
+      sceneStatus.textContent =
+        beat.total > 1 ? `Scene ${beat.index} of ${beat.total} · ${beat.label}` : `Scene · ${beat.label}`;
+    }
+    if (promiseStatus) promiseStatus.textContent = this.getPromiseStatusText();
+  }
+
+  private getPromiseStatusText(): string {
+    if (this.pagePromise === "time") return this.getTimePromiseStatusText();
+    if (this.pagePromise === "finish") return this.getFinishPromiseStatusText();
+    return this.getScenePromiseStatusText();
+  }
+
+  private getScenePromiseStatusText(): string {
+    const beat = this.getActiveSceneBeat();
+    if (!beat) return "Promise: read one scene";
+    if (beat.index > this.promiseStartBeatIndex) return "Promise kept: one scene read";
+    const currentBeat = this.sceneBeats.find((sceneBeat) => sceneBeat.index === beat.index);
+    const nextBeat = this.sceneBeats.find((sceneBeat) => sceneBeat.index === beat.index + 1);
+    if (!currentBeat || !nextBeat) return "Promise: finish this scene";
+
+    const activeIndex = this.getActiveModelIndex();
+    const sceneSpan = Math.max(1, nextBeat.startIndex - currentBeat.startIndex);
+    const sceneProgress = Math.min(1, Math.max(0, (activeIndex - currentBeat.startIndex) / sceneSpan));
+    if (sceneProgress >= 0.78) return "Promise: almost one scene";
+    if (sceneProgress >= 0.45) return "Promise: halfway through one scene";
+    return "Promise: read one scene";
+  }
+
+  private getTimePromiseStatusText(): string {
+    if (!this.readingStartedAt) return "Promise: read five minutes";
+    const elapsed = Date.now() - this.readingStartedAt;
+    const remainingMs = PAGE_PROMISE_DURATION_MS - elapsed;
+    if (remainingMs <= 0) return "Promise kept: five minutes read";
+    const remainingMinutes = Math.max(1, Math.ceil(remainingMs / 60000));
+    return `Promise: ${remainingMinutes} min left`;
+  }
+
+  private getFinishPromiseStatusText(): string {
+    const readableModels = this.getReadableModelsWithIndex();
+    if (!readableModels.length) return "Promise: finish this Observation";
+    const activeIndex = this.getActiveModelIndex();
+    const readablePosition = readableModels.findIndex(({ index }) => index >= activeIndex);
+    const currentPosition = readablePosition >= 0 ? readablePosition + 1 : readableModels.length;
+    const progress = currentPosition / readableModels.length;
+    if (progress >= 0.97) return "Promise kept: at the ending";
+    if (progress >= 0.78) return "Promise: final stretch";
+    if (progress >= 0.48) return "Promise: halfway to the end";
+    return "Promise: finish this Observation";
+  }
+
+  private getActiveModelIndex(): number {
+    if (!this.activeBlockId) return this.getReadableModelsWithIndex()[0]?.index ?? 0;
+    const activeIndex = this.models.findIndex((model) => model.id === this.activeBlockId);
+    return activeIndex >= 0 ? activeIndex : this.getReadableModelsWithIndex()[0]?.index ?? 0;
   }
 
   private getActiveSceneBeat(): SceneBeat | null {
