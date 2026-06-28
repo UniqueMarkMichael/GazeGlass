@@ -230,7 +230,7 @@ export default function Home() {
           </div>
           <div className="glass-portal-copy" aria-hidden="true">
             <span>Gaze Into The Glass</span>
-            <p>The first path opens with Marcella. After that, the archive begins to answer back.</p>
+            <p>Begin with Marcella. Then follow the thread.</p>
           </div>
         </div>
       </section>

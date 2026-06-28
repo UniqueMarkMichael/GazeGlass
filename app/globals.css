@@ -1371,9 +1371,10 @@ h1 {
   margin: clamp(18px, 3vh, 34px) auto 0;
   color: var(--bone);
   font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(1.9rem, 2.9vw, 3.25rem);
-  line-height: 1.02;
-  max-width: 690px;
+  font-size: 2.45rem;
+  line-height: 1.08;
+  max-width: 560px;
+  text-wrap: balance;
 }
 
 .vision-oracle {
@@ -5572,10 +5573,10 @@ dd {
 
   .glass-portal-copy p {
     display: block;
-    margin-top: 28px;
-    max-width: 340px;
-    font-size: clamp(1.86rem, 10vw, 3rem);
-    line-height: 0.98;
+    margin-top: 24px;
+    max-width: 320px;
+    font-size: 2rem;
+    line-height: 1.08;
   }
 
   .vision-oracle {
@@ -5858,6 +5859,11 @@ dd {
 }
 
 @media (max-width: 520px) {
+  .glass-portal-copy p {
+    max-width: 280px;
+    font-size: 1.72rem;
+  }
+
   .vision-oracle {
     width: min(calc(100% - 40px), 420px);
     margin-top: 18px;
