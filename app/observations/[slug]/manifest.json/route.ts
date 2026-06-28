@@ -33,6 +33,19 @@ function imageBlock(image: ObservationStoryImage) {
   };
 }
 
+function portraitImageBlock(observation: NonNullable<ReturnType<typeof getObservation>>) {
+  if (!observation.image) return null;
+
+  return {
+    type: "image" as const,
+    id: "img-observation-portrait",
+    src: observation.image,
+    alt: observation.imageAlt ?? observation.title,
+    caption: observation.imageAlt ?? observation.title,
+    wide: true,
+  };
+}
+
 function sceneLabel(index: number, total: number) {
   const labelsByCount: Record<number, string[]> = {
     2: ["The scene opens", "The witness arrives"],
@@ -87,6 +100,11 @@ export async function GET(_request: Request, { params }: ManifestRouteProps) {
       text: paragraph,
     },
     ...(imagesByParagraph.get(index + 1) ?? []).map(imageBlock),
+    ...(!observation.storyImages?.length && index === 0
+      ? [portraitImageBlock(observation)].filter(
+          (block): block is NonNullable<ReturnType<typeof portraitImageBlock>> => Boolean(block),
+        )
+      : []),
   ]);
   const wordCount = observation.story.join(" ").split(/\s+/).filter(Boolean).length;
   const deity = deityById[observation.godId];

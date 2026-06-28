@@ -202,13 +202,14 @@ export default function Home() {
         <div className="hero-copy reveal">
           <p className="eyebrow">Gaze into the glass</p>
           <h1>Every mortal soul leaves a story behind.</h1>
+          <p className="subhead">Start with one witnessed mortal. The Glass will show you what opens next.</p>
           <div className="hero-vow" aria-hidden="true">
             <span>Gods Watch.</span>
             <span>Mortals Pray.</span>
             <span>Spirits Remember.</span>
           </div>
-          <a className="scroll-cue" href="/observations/patricia" aria-label="Start with Patricia's Observation">
-            New here? Start with this Observation
+          <a className="scroll-cue" href="/observations/marcella" aria-label="Begin Witnessing with Marcella">
+            Begin Witnessing
           </a>
         </div>
       </section>
@@ -229,12 +230,10 @@ export default function Home() {
           </div>
           <div className="glass-portal-copy" aria-hidden="true">
             <span>Gaze Into The Glass</span>
-            <p>Scroll to receive visions and witness what the Glass reveals.</p>
+            <p>The first path opens with Marcella. After that, the archive begins to answer back.</p>
           </div>
         </div>
       </section>
-
-      <ReceiveVision />
 
       <section className="section seer-prologue reveal" id="the-seer" aria-label="The Seer introduces Gaze Glass">
         <span className="chapter-stamp">01 / The Seer Records</span>
@@ -249,7 +248,7 @@ export default function Home() {
           The Seer is your guide through the glass. Begin with one mortal life, then
           follow the light outward to the gods and spirits watching from beyond.
         </p>
-        <a className="text-link" href="/observations/patricia">
+        <a className="text-link" href="/observations/marcella">
           Begin Witnessing
         </a>
       </section>
@@ -290,13 +289,13 @@ export default function Home() {
         <div className="observation-glass" aria-hidden="true" />
         <div className="observation-copy">
           <span className="chapter-stamp">03 / Mortals Pray</span>
-          <p className="eyebrow">Latest Observation</p>
+          <p className="eyebrow">Start Here</p>
           <h2>Marcella, Blessed by Justice.</h2>
           <p>
             A creative worker loses credit for the work she carried alone. In the
             hallway between humiliation and surrender, she asks Justice to witness.
           </p>
-          <p className="observation-note">Just witnessed: Walter, Blessed by War.</p>
+          <p className="observation-note">First thread: Justice, Kitsu, and the Law of Witness.</p>
           <a href="/observations/marcella">Begin Witnessing</a>
         </div>
         <figure className="observation-portrait">
@@ -304,6 +303,8 @@ export default function Home() {
           <figcaption>Witnessed by Justice</figcaption>
         </figure>
       </section>
+
+      <ReceiveVision />
 
       <section className="section split reveal" id="featured-gods">
         <div>

@@ -53,6 +53,7 @@ type SpiritRecord = {
 const spirits: SpiritRecord[] = [
   {
     name: "Kitsu",
+    spiritId: "kitsu",
     role: "Assistant to the God of Justice",
     image: "/spirits/kitsu.webp",
     text: "The dutiful fox who sits beside the God of Justice at every divine briefing. Where others posture, Kitsu watches, and in the space between accusation and verdict, truth finds its way to the light.",

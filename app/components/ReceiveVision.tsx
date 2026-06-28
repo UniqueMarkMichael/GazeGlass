@@ -90,12 +90,12 @@ export function ReceiveVision() {
   return (
     <section className="vision-oracle reveal" aria-labelledby="vision-oracle-title">
       <div className="vision-oracle-copy">
-        <p className="eyebrow">The Glass chooses</p>
-        <h2 id="vision-oracle-title">Receive a vision.</h2>
+        <p className="eyebrow">After the first witness</p>
+        <h2 id="vision-oracle-title">Another vision awaits.</h2>
         <p>
-          Let the Glass choose where your witnessing begins. One tap opens a
-          path to a mortal, god, spirit, or sacred law already waiting in the
-          archive.
+          Once you have entered through Marcella, return here when you want the
+          archive to surprise you. One tap opens another mortal, god, spirit, or
+          sacred law already waiting in the record.
         </p>
       </div>
 
@@ -136,7 +136,7 @@ export function ReceiveVision() {
             <>
               <span>Awaiting the Glass</span>
               <h3>No vision has opened yet.</h3>
-              <p>Touch the eye and the archive will answer with a place to begin.</p>
+              <p>Touch the eye when you are ready for the archive to choose the next path.</p>
             </>
           )}
         </div>

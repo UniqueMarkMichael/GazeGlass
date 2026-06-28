@@ -1,7 +1,20 @@
 export type ObservationRegion = "gods" | "spirits" | "mortals";
 export type ObservationMagnitude = "observation" | "story" | "novella" | "novel";
 export type GodId = "wisdom" | "justice" | "love" | "fortune" | "war";
-export type SpiritId = "saroka" | "marok";
+export type SpiritId = "kitsu" | "saroka" | "marok";
+
+export type DiscoveryThreadItem = {
+  kind: "observation" | "god" | "spirit" | "law";
+  label: string;
+  title: string;
+  href: string;
+  description: string;
+};
+
+export type DiscoveryThread = {
+  promise: string;
+  items: DiscoveryThreadItem[];
+};
 
 export type ObservationStoryImage = {
   id: string;
@@ -108,7 +121,6 @@ export const observations: Observation[] = [
     godId: "wisdom",
     spiritWitnessIds: [],
     themeTags: ["meaning", "awakening", "identity", "judgment"],
-    startHere: true,
     description:
       "A former financier abandons wealth to seek enlightenment on a city street and learns there was never a wall between herself and the world.",
     region: "mortals",
@@ -210,8 +222,9 @@ export const observations: Observation[] = [
     title: "Marcella, Blessed by Justice",
     slug: "marcella",
     godId: "justice",
-    spiritWitnessIds: [],
+    spiritWitnessIds: ["kitsu"],
     themeTags: ["credit", "work", "injustice", "voice"],
+    startHere: true,
     description:
       "A creative worker asks to be witnessed after her labor is stolen and renamed, and the God of Justice makes the truth impossible to misattribute.",
     region: "mortals",
@@ -379,8 +392,147 @@ export const godFilterLabels: Record<GodId, string> = {
 };
 
 export const spiritFilterLabels: Record<SpiritId, string> = {
+  kitsu: "Kitsu",
   saroka: "Saroka",
   marok: "Marok",
+};
+
+const discoveryThreads: Record<string, DiscoveryThread> = {
+  patricia: {
+    promise:
+      "You have seen Wisdom dissolve the wall between one life and every other life. Follow the divine record, then let the Glass hand you the mortal onramp.",
+    items: [
+      {
+        kind: "god",
+        label: "Follow the god",
+        title: "The God of Wisdom",
+        href: "/the-gods#the-god-of-wisdom",
+        description: "The keeper of the cosmic record waits behind Patricia's awakening.",
+      },
+      {
+        kind: "law",
+        label: "Read the law",
+        title: "The Law of Memory",
+        href: "/celestial-codex#memory",
+        description: "What survives a life is not performance, but the truest thing it carried.",
+      },
+      {
+        kind: "observation",
+        label: "Begin the path",
+        title: "Marcella, Blessed by Justice",
+        href: "/observations/marcella",
+        description: "The clearest first thread begins with a mortal asking to be witnessed.",
+      },
+    ],
+  },
+  marcella: {
+    promise:
+      "You have witnessed Marcella ask to be seen. The next thread is Justice, Kitsu, and the law that explains why a truth changes once the Glass holds it.",
+    items: [
+      {
+        kind: "god",
+        label: "Follow the god",
+        title: "The God of Justice",
+        href: "/the-gods#the-god-of-justice",
+        description: "Justice does not need spectacle. Justice makes the record accurate.",
+      },
+      {
+        kind: "spirit",
+        label: "Meet the spirit",
+        title: "Kitsu",
+        href: "/the-spirits#kitsu",
+        description: "The quiet witness beside Justice watches truth find its way to the light.",
+      },
+      {
+        kind: "law",
+        label: "Read the law",
+        title: "The Law of Witness",
+        href: "/celestial-codex#witness",
+        description: "What is fully seen can no longer remain unchanged.",
+      },
+    ],
+  },
+  malika: {
+    promise:
+      "You have watched Love return Malika to herself. Follow the blessing outward to the god, the spirit nearest that tenderness, and the law of return.",
+    items: [
+      {
+        kind: "god",
+        label: "Follow the god",
+        title: "The God of Love",
+        href: "/the-gods#the-god-of-love",
+        description: "Love arrives first as recognition, then as freedom.",
+      },
+      {
+        kind: "spirit",
+        label: "Meet the spirit",
+        title: "Sindren",
+        href: "/the-spirits#sindren",
+        description: "The cobalt witness who understands when gentleness is not weakness.",
+      },
+      {
+        kind: "law",
+        label: "Read the law",
+        title: "The Law of Return",
+        href: "/celestial-codex#return",
+        description: "Nothing surrendered into the Glass is lost; it returns transformed.",
+      },
+    ],
+  },
+  takeshi: {
+    promise:
+      "You have seen Fortune open one door labor had already built. Follow the god, the fox who carried the blessing, and the law that names devotion.",
+    items: [
+      {
+        kind: "god",
+        label: "Follow the god",
+        title: "The God of Fortune",
+        href: "/the-gods#the-god-of-fortune",
+        description: "Fortune does not replace the work. Fortune chooses the moment a door opens.",
+      },
+      {
+        kind: "spirit",
+        label: "Meet the spirit",
+        title: "Saroka",
+        href: "/the-spirits#saroka",
+        description: "The scarlet fox who knows exactly when luck should develop teeth.",
+      },
+      {
+        kind: "law",
+        label: "Read the law",
+        title: "The Law of Devotion",
+        href: "/celestial-codex#devotion",
+        description: "What remains after reward disappears is the only devotion the gods can name.",
+      },
+    ],
+  },
+  walter: {
+    promise:
+      "You have watched War become strategy instead of cruelty. Follow the god, the trial-maker beside him, and the law that opens when force fails.",
+    items: [
+      {
+        kind: "god",
+        label: "Follow the god",
+        title: "The God of War",
+        href: "/the-gods#the-god-of-war",
+        description: "War is the will to protect what must not be taken.",
+      },
+      {
+        kind: "spirit",
+        label: "Meet the spirit",
+        title: "Marok",
+        href: "/the-spirits#marok",
+        description: "The fox who studies the trial until the weak point shows itself.",
+      },
+      {
+        kind: "law",
+        label: "Read the law",
+        title: "The Law of Surrender",
+        href: "/celestial-codex#surrender",
+        description: "The door that will not open by force opens when the soul stops striking it.",
+      },
+    ],
+  },
 };
 
 export function getObservationHref(observation: Observation) {
@@ -395,6 +547,10 @@ export function getRelatedObservations(observation: Observation) {
   return observation.related
     .map((slug) => getObservation(slug))
     .filter((item): item is Observation => Boolean(item));
+}
+
+export function getDiscoveryThread(slug: string) {
+  return discoveryThreads[slug] ?? null;
 }
 
 export function getRegionObservations(region: ObservationRegion) {

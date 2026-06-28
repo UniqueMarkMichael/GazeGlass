@@ -36,7 +36,8 @@ export function ObservationStoryReader({
   readingTimeMin,
   manifestSrc,
 }: ObservationStoryReaderProps) {
-  const [showImages, setShowImages] = useState(false);
+  const hasStoryImages = storyImages.length > 0;
+  const [showImages, setShowImages] = useState(() => Boolean(heroImage && !hasStoryImages));
   const imagesByParagraph = useMemo(() => {
     const grouped = new Map<number, StoryImage[]>();
 
@@ -47,7 +48,7 @@ export function ObservationStoryReader({
 
     return grouped;
   }, [storyImages]);
-  const hasStoryImages = storyImages.length > 0;
+  const hasImages = hasStoryImages || Boolean(heroImage);
 
   return (
     <>
@@ -55,7 +56,7 @@ export function ObservationStoryReader({
         <span>{readTimeLabel}</span>
         <span>{magnitudeLabel}</span>
         <CopyLinkButton />
-        {hasStoryImages ? (
+        {hasImages ? (
           <button
             className="story-image-toggle"
             type="button"
@@ -72,7 +73,7 @@ export function ObservationStoryReader({
       </div>
 
       {heroImage ? (
-        <figure className="observation-figure">
+        <figure className="observation-figure" hidden={!showImages}>
           <img src={heroImage} alt={heroImageAlt ?? ""} />
         </figure>
       ) : null}

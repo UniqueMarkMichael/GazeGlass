@@ -6,6 +6,7 @@ import { ObservationModeBoot } from "../../components/ObservationModeBoot";
 import { ObservationStoryReader } from "../ObservationStoryReader";
 import {
   formatObservationReadTime,
+  getDiscoveryThread,
   getNextObservation,
   getObservation,
   getObservationHref,
@@ -82,6 +83,7 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
   const previousObservation = getPreviousObservation(observation.slug);
   const nextObservation = getNextObservation(observation.slug);
   const storyImages = observation.storyImages ?? [];
+  const discoveryThread = getDiscoveryThread(observation.slug);
   const storyData = {
     "@context": "https://schema.org",
     "@type": "ShortStory",
@@ -171,6 +173,25 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
               readingTimeMin={observation.readingTimeMin}
               manifestSrc={`/observations/${observation.slug}/manifest.json`}
             />
+
+            {discoveryThread ? (
+              <section className="discovery-thread" aria-labelledby="discovery-thread-title">
+                <p className="eyebrow">What Opens Next</p>
+                <h2 id="discovery-thread-title">Follow the thread.</h2>
+                <p>{discoveryThread.promise}</p>
+                <div className="discovery-thread-list">
+                  {discoveryThread.items.map((item, index) => (
+                    <a className={`discovery-thread-card discovery-${item.kind}`} href={item.href} key={item.href}>
+                      <span>
+                        {String(index + 1).padStart(2, "0")} / {item.label}
+                      </span>
+                      <strong>{item.title}</strong>
+                      <em>{item.description}</em>
+                    </a>
+                  ))}
+                </div>
+              </section>
+            ) : null}
 
             <nav className="observation-path" aria-label="Observation reading path">
               <a href={previousObservation ? getObservationHref(previousObservation) : "/observations"}>
