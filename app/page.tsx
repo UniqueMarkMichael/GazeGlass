@@ -195,6 +195,17 @@ export default function Home() {
       </section>
 
       <section className="hero" id="home">
+        <video
+          className="beauty-blessing-motion"
+          src="/brand/beauty-blessing.mp4"
+          poster="/brand/beauty-blessing-poster.png"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+        />
         <div className="stars" aria-hidden="true" />
         <div className="sphere-wrap" aria-hidden="true">
           <div className="celestial-sphere">
