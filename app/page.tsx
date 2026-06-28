@@ -146,6 +146,11 @@ const chapters = [
   { number: "07", label: "The Circle Listens", href: "#the-seer-circle" },
 ];
 
+const marcellaMirrorPanels = Array.from({ length: 9 }, (_value, index) => ({
+  src: `/mortals/marcella/mirror-story/panel-${index + 1}.jpg`,
+  alt: "",
+}));
+
 export default function Home() {
   return (
     <main>
@@ -216,21 +221,18 @@ export default function Home() {
 
       <section className="glass-portal reveal" id="gaze-into-glass" aria-label="Gaze into the glass">
         <div className="glass-portal-stage">
-          <div className="world-orb" role="img" aria-label="A sacred glass orb revealing a living golden world inside">
-            <video
-              className="world-orb-video"
-              src="/brand/world-orb-living.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-hidden="true"
-            />
-          </div>
-          <div className="glass-portal-copy" aria-hidden="true">
-            <span>Gaze Into The Glass</span>
-            <p>Begin with Marcella. Then follow the thread.</p>
+          <div className="marcella-mirror" role="img" aria-label="The Glass opens Marcella's mirrored record">
+            <div className="marcella-mirror-images" aria-hidden="true">
+              {marcellaMirrorPanels.map((panel, index) => (
+                <img
+                  alt={panel.alt}
+                  className={`marcella-mirror-panel panel-${index + 1}`}
+                  key={panel.src}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  src={panel.src}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
