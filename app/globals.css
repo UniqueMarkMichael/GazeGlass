@@ -5854,6 +5854,30 @@ form div {
   }
 }
 
+@keyframes mobileHeroVideoSettle {
+  0% {
+    opacity: 0.2;
+    filter: saturate(1.04) contrast(0.98) brightness(0.7) blur(0.4px);
+  }
+
+  100% {
+    opacity: 0.06;
+    filter: saturate(0.9) contrast(0.9) brightness(0.46) blur(1px);
+  }
+}
+
+@keyframes mobileHeroContentIn {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   body::after,
   .beauty-blessing-motion,
@@ -5867,6 +5891,12 @@ form div {
 
   .beauty-blessing-motion {
     display: none;
+  }
+
+  .hero-copy,
+  .sphere-wrap {
+    opacity: 1;
+    transform: none;
   }
 
   .vision-eye-button::after {
@@ -6504,10 +6534,11 @@ form div {
   }
 
   .beauty-blessing-motion {
-    opacity: 0.08;
+    opacity: 0.06;
     object-position: 52% center;
     transform: scale(1.18);
-    filter: saturate(0.95) contrast(0.92) brightness(0.58) blur(0.8px);
+    filter: saturate(0.9) contrast(0.9) brightness(0.46) blur(1px);
+    animation: mobileHeroVideoSettle 1800ms ease-out both;
   }
 
   .sphere-wrap {
@@ -6517,6 +6548,9 @@ form div {
     transform: translateX(-50%);
     opacity: 0.82;
     filter: drop-shadow(0 0 54px rgba(201, 162, 39, 0.14));
+    animation:
+      mobileHeroContentIn 900ms ease-out 1150ms both,
+      breathe 8s ease-in-out infinite;
   }
 
   .hero-copy {
@@ -6525,6 +6559,8 @@ form div {
     flex-direction: column;
     justify-content: flex-start;
     padding-top: 0;
+    opacity: 0;
+    animation: mobileHeroContentIn 900ms ease-out 1350ms both;
   }
 
   .hero-copy .subhead {
