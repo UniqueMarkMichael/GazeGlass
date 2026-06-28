@@ -89,7 +89,7 @@ a {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 10;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -218,7 +218,7 @@ a {
 .glass-menu {
   position: fixed;
   inset: 0;
-  z-index: 9;
+  z-index: 80;
   display: grid;
   align-items: start;
   justify-items: center;
@@ -248,6 +248,7 @@ a {
 .glass-menu-backdrop {
   position: absolute;
   inset: 0;
+  z-index: 0;
   min-height: 0;
   padding: 0;
   border: 0;
@@ -257,6 +258,7 @@ a {
 
 .glass-menu-lens {
   position: absolute;
+  z-index: 1;
   width: min(82vw, 720px);
   aspect-ratio: 1;
   border: 1px solid rgba(201, 162, 39, 0.2);
@@ -268,6 +270,7 @@ a {
   transform: scale(0.82) rotate(-8deg);
   transition: transform 560ms ease;
   animation: slowTurn 15s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .glass-menu.is-open .glass-menu-lens {
@@ -292,9 +295,10 @@ a {
 
 .glass-menu-panel {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   width: min(720px, 100%);
   min-height: min-content;
+  pointer-events: auto;
   text-align: center;
   transform: translateY(22px) scale(0.98);
   transition: transform 460ms ease;
@@ -305,6 +309,8 @@ a {
 }
 
 .glass-menu-close {
+  position: relative;
+  z-index: 3;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -344,6 +350,8 @@ a {
 }
 
 .glass-menu-nav {
+  position: relative;
+  z-index: 2;
   display: grid;
   gap: 0;
   margin-top: 14px;
@@ -416,7 +424,7 @@ a {
 .glass-passage {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 120;
   pointer-events: none;
   opacity: 0;
   background:
@@ -1847,9 +1855,41 @@ h1 {
   display: grid;
   grid-template-columns: 0.72fr 1fr;
   gap: clamp(42px, 7vw, 96px);
-  padding-top: clamp(62px, 8vw, 112px);
+  padding-top: clamp(78px, 10vw, 136px);
+  padding-bottom: clamp(78px, 10vw, 136px);
   border-top: 1px solid rgba(237, 227, 204, 0.1);
   border-bottom: 1px solid rgba(237, 227, 204, 0.1);
+  isolation: isolate;
+  overflow: visible;
+}
+
+.experience-spine::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  z-index: -2;
+  width: 100vw;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(circle at 50% 46%, rgba(255, 244, 220, 0.12), transparent 15rem),
+    radial-gradient(circle at 64% 30%, rgba(181, 23, 158, 0.16), transparent 24rem),
+    linear-gradient(90deg, rgba(9, 7, 22, 0.94), rgba(9, 7, 22, 0.62) 34%, rgba(9, 7, 22, 0.68) 66%, rgba(9, 7, 22, 0.94)),
+    linear-gradient(180deg, rgba(9, 7, 22, 0.96), rgba(9, 7, 22, 0.38) 38%, rgba(9, 7, 22, 0.9)),
+    url("/brand/ritual-map-background.jpg");
+  background-position: center;
+  background-size: cover;
+  box-shadow:
+    inset 0 86px 110px rgba(9, 7, 22, 0.9),
+    inset 0 -86px 110px rgba(9, 7, 22, 0.88);
+  pointer-events: none;
+}
+
+.spine-intro,
+.view-rituals {
+  position: relative;
+  z-index: 1;
 }
 
 .spine-intro h2 {
@@ -1862,15 +1902,24 @@ h1 {
 }
 
 .view-ritual {
+  position: relative;
   display: grid;
   grid-template-columns: 86px 1fr;
   column-gap: 26px;
-  padding: 32px 0;
-  border-bottom: 1px solid rgba(201, 162, 39, 0.14);
+  padding: 32px clamp(20px, 2.8vw, 32px);
+  border: 1px solid rgba(216, 162, 106, 0.1);
+  border-bottom-color: rgba(201, 162, 39, 0.16);
+  background:
+    linear-gradient(135deg, rgba(255, 244, 220, 0.055), transparent 46%),
+    rgba(9, 7, 22, 0.48);
+  backdrop-filter: blur(16px) saturate(1.04);
+  box-shadow:
+    0 22px 70px rgba(4, 3, 12, 0.22),
+    inset 0 0 0 1px rgba(255, 244, 220, 0.025);
 }
 
 .view-ritual:last-child {
-  border-bottom: 0;
+  border-bottom-color: rgba(201, 162, 39, 0.16);
 }
 
 .view-mark {
@@ -2555,9 +2604,14 @@ input:disabled {
   border-radius: 50%;
   border: 1px solid rgba(201, 162, 39, 0.2);
   background:
+    radial-gradient(circle at 50% 50%, rgba(255, 244, 220, 0.22), transparent 0 16%, rgba(7, 6, 18, 0.24) 42%, rgba(7, 6, 18, 0.72) 78%),
+    linear-gradient(135deg, rgba(95, 183, 196, 0.12), transparent 36%, rgba(181, 23, 158, 0.14)),
+    url("/brand/archive-record-plate.jpg") center / cover no-repeat,
     radial-gradient(circle at 50% 50%, rgba(201, 162, 39, 0.12), transparent 18%),
     radial-gradient(circle, rgba(237, 227, 204, 0.04), transparent 62%);
   animation: slowTurn 18s ease-in-out infinite;
+  opacity: 0.78;
+  overflow: hidden;
 }
 
 .archive-lens::before,
@@ -4080,6 +4134,55 @@ dd {
   background:
     linear-gradient(135deg, rgba(201, 162, 39, 0.07), transparent 46%),
     rgba(10, 8, 24, 0.52);
+}
+
+.instrument-card::after,
+.observation-row::after,
+.region-record::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  right: clamp(-44px, -3vw, -18px);
+  top: 50%;
+  width: clamp(96px, 10vw, 148px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: url("/brand/archive-record-plate.jpg") center / cover no-repeat;
+  filter: saturate(1.08) contrast(1.08) brightness(0.95);
+  opacity: 0.12;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  transform: translateY(-50%) scale(0.96);
+  transition:
+    opacity 320ms ease,
+    transform 420ms ease;
+}
+
+.instrument-card::after {
+  right: -58px;
+  top: auto;
+  bottom: -72px;
+  width: clamp(150px, 17vw, 238px);
+  opacity: 0.14;
+  transform: scale(0.96);
+}
+
+.instrument-card > *,
+.observation-row > *,
+.region-record > * {
+  position: relative;
+  z-index: 2;
+}
+
+.instrument-card:hover::after,
+.observation-row:hover::after,
+.region-record:hover::after {
+  opacity: 0.23;
+  transform: translateY(-50%) scale(1.02);
+}
+
+.instrument-card:hover::after {
+  transform: scale(1.02);
 }
 
 .instrument-card > span {
@@ -6067,6 +6170,13 @@ form div {
     grid-template-columns: 26px 44px 1fr;
     gap: 12px;
     padding: 18px 14px;
+  }
+
+  .observation-row::after,
+  .region-record::after {
+    right: -46px;
+    width: 112px;
+    opacity: 0.09;
   }
 
   .observation-row > span:nth-last-child(-n + 3),

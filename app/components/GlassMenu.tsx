@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { GLASS_MEMORY_KEY, type GlassMemoryEntry } from "./GlassMemory";
 import { playGlassSound } from "./glassSound";
 
@@ -79,7 +80,12 @@ function isItemRecorded(href: string, entries: GlassMemoryEntry[]) {
 export function GlassMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPassing, setIsPassing] = useState(false);
+  const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
   const [recordedEntries, setRecordedEntries] = useState<GlassMemoryEntry[]>([]);
+
+  useEffect(() => {
+    setPortalRoot(document.body);
+  }, []);
 
   useEffect(() => {
     document.body.classList.toggle("menu-open", isOpen);
@@ -90,11 +96,27 @@ export function GlassMenu() {
     function closeOnEscape(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setIsOpen(false);
+        setIsPassing(false);
       }
     }
 
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
+  }, []);
+
+  useEffect(() => {
+    function closeForNavigation() {
+      setIsOpen(false);
+      setIsPassing(false);
+    }
+
+    window.addEventListener("hashchange", closeForNavigation);
+    window.addEventListener("popstate", closeForNavigation);
+
+    return () => {
+      window.removeEventListener("hashchange", closeForNavigation);
+      window.removeEventListener("popstate", closeForNavigation);
+    };
   }, []);
 
   useEffect(() => {
@@ -139,28 +161,12 @@ export function GlassMenu() {
 
   function closeMenu() {
     setIsOpen(false);
+    setIsPassing(false);
     playGlassSound("close");
   }
 
-  return (
+  const menuOverlay = (
     <>
-      <button
-        className={`glass-menu-trigger ${isOpen ? "is-open" : ""}`}
-        type="button"
-        aria-expanded={isOpen}
-        aria-controls="glass-menu"
-        aria-label={isOpen ? "Close navigation" : "Open navigation"}
-        onClick={() => {
-          const nextValue = !isOpen;
-          setIsOpen(nextValue);
-          playGlassSound(nextValue ? "open" : "close");
-        }}
-      >
-        <span className="trigger-orbit" aria-hidden="true" />
-        <span className="trigger-eye" aria-hidden="true" />
-        <span className="trigger-label">{isOpen ? "Close" : "Menu"}</span>
-      </button>
-
       <div className={`glass-menu ${isOpen ? "is-open" : ""}`} id="glass-menu" aria-hidden={!isOpen}>
         <button
           className="glass-menu-backdrop"
@@ -195,6 +201,30 @@ export function GlassMenu() {
       </div>
 
       <div className={`glass-passage ${isPassing ? "is-active" : ""}`} aria-hidden="true" />
+    </>
+  );
+
+  return (
+    <>
+      <button
+        className={`glass-menu-trigger ${isOpen ? "is-open" : ""}`}
+        type="button"
+        aria-expanded={isOpen}
+        aria-controls="glass-menu"
+        aria-label={isOpen ? "Close navigation" : "Open navigation"}
+        onClick={() => {
+          const nextValue = !isOpen;
+          setIsPassing(false);
+          setIsOpen(nextValue);
+          playGlassSound(nextValue ? "open" : "close");
+        }}
+      >
+        <span className="trigger-orbit" aria-hidden="true" />
+        <span className="trigger-eye" aria-hidden="true" />
+        <span className="trigger-label">{isOpen ? "Close" : "Menu"}</span>
+      </button>
+
+      {portalRoot ? createPortal(menuOverlay, portalRoot) : null}
     </>
   );
 }
