@@ -15,6 +15,10 @@ export const COMPONENT_STYLES = `
   z-index: 2147483647;
 }
 
+:host([data-om-open]) .om-entry-mount {
+  display: none;
+}
+
 .om-entry {
   display: inline-grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -1257,6 +1261,16 @@ export const COMPONENT_STYLES = `
     max-height: calc(100dvh - 11.4rem);
     overflow: auto;
     border-radius: 16px;
+  }
+
+  .om-root:not([data-controls-mode="collapsed"]) .om-panel,
+  .om-root:not([data-controls-mode="collapsed"]) .om-lost-card,
+  .om-root:not([data-controls-mode="collapsed"]) .om-resume-card,
+  .om-root:not([data-controls-mode="collapsed"]) .om-rest-card,
+  .om-root:not([data-controls-mode="collapsed"]) .om-echo-card,
+  .om-root:not([data-controls-mode="collapsed"]) .om-memory-card {
+    bottom: calc(14.75rem + env(safe-area-inset-bottom));
+    max-height: calc(100dvh - 16.1rem);
   }
 
   .om-thread-grid {
