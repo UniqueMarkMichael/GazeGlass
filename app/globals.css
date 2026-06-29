@@ -4835,6 +4835,8 @@ dd {
 .related-panel {
   display: grid;
   gap: 16px;
+  padding: clamp(22px, 2.2vw, 28px);
+  overflow: hidden;
 }
 
 .related-panel a:not(.text-link) {
