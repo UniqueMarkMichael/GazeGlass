@@ -246,8 +246,6 @@ export default function Home() {
           Gaze Glass is an immersive fantasy world brought to life through an
           interactive website that gives mortals the power to conjure meaning from
           moments shared between humans and the unseen forces shaping their lives.
-        </p>
-        <p>
           The Seer is your guide through the glass. Begin with one mortal life, then
           follow the light outward to the gods and spirits watching from beyond.
         </p>

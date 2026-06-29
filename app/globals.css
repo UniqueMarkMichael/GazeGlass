@@ -1808,12 +1808,13 @@ h1 {
 }
 
 .seer-prologue p:not(.eyebrow) {
-  max-width: 760px;
+  max-width: 840px;
   margin: 0 auto 22px;
   color: var(--dim-bone);
   font-family: "EB Garamond", Georgia, serif;
   font-size: clamp(1.24rem, 2.1vw, 1.8rem);
   line-height: 1.5;
+  text-wrap: pretty;
 }
 
 .seer-prologue .text-link {
