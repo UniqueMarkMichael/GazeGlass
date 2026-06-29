@@ -6088,6 +6088,19 @@ form div {
   }
 }
 
+@keyframes mobileOrbBreathe {
+  0%,
+  100% {
+    opacity: 0.42;
+    transform: translateX(-50%) translate3d(-1%, 0, 0) scale(0.98);
+  }
+
+  50% {
+    opacity: 0.55;
+    transform: translateX(-50%) translate3d(1%, -2%, 0) scale(1.04);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   body::after,
   .beauty-blessing-motion,
@@ -6742,9 +6755,9 @@ form div {
   }
 
   .hero {
-    min-height: 112svh;
-    padding: 118px 22px 96px;
-    place-items: start center;
+    min-height: 100svh;
+    padding: 150px 22px 70px;
+    place-items: center;
   }
 
   .beauty-blessing-section {
@@ -6756,22 +6769,21 @@ form div {
   }
 
   .sphere-wrap {
-    top: 106px;
+    top: auto;
+    bottom: clamp(104px, 15svh, 138px);
     left: 50%;
-    width: min(76vw, 310px);
+    width: min(82vw, 350px);
     transform: translateX(-50%);
-    opacity: 0.82;
-    filter: drop-shadow(0 0 54px rgba(201, 162, 39, 0.14));
-    animation:
-      mobileHeroContentIn 900ms ease-out 1150ms both,
-      breathe 8s ease-in-out infinite;
+    opacity: 0.42;
+    filter: drop-shadow(0 0 60px rgba(201, 162, 39, 0.16));
+    animation: mobileOrbBreathe 8s ease-in-out infinite;
   }
 
   .hero-copy {
     display: flex;
-    min-height: calc(112svh - 214px);
+    min-height: calc(100svh - 220px);
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     padding-top: 0;
     opacity: 0;
     animation: mobileHeroContentIn 900ms ease-out 1350ms both;
@@ -6851,17 +6863,25 @@ form div {
 
   .hero-vow {
     flex-direction: column;
-    gap: 9px;
-    margin-top: clamp(118px, 20vh, 172px);
+    align-items: center;
+    gap: 8px;
+    width: min(19rem, 100%);
+    margin: clamp(42px, 8svh, 70px) auto 0;
+  }
+
+  .hero-vow span {
+    display: block;
+    width: 100%;
+    text-align: center;
   }
 
   h1 {
-    font-size: clamp(3.2rem, 15.5vw, 4.8rem);
+    font-size: clamp(3rem, 14.2vw, 4.45rem);
   }
 
   .scroll-cue {
     max-width: 21rem;
-    margin-top: 34px;
+    margin-top: 30px;
     font-size: 0.72rem;
     letter-spacing: 0.18em;
     line-height: 1.6;
