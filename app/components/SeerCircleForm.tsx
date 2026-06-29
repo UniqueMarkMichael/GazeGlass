@@ -83,10 +83,21 @@ export function SeerCircleForm() {
       "The Circle is ready, but Mailchimp still needs to be connected in Vercel.",
   }[formState];
 
+  const statusLabel = {
+    idle: "Circle promise",
+    loading: "Opening",
+    success: "Name received",
+    invalid: "Check the address",
+    duplicate: "Already joined",
+    error: "Try again",
+    unconfigured: "Almost ready",
+  }[formState];
+
   const isBusy = formState === "loading";
+  const statusRole = formState === "invalid" || formState === "error" ? "alert" : "status";
 
   return (
-    <form onSubmit={submit} noValidate>
+    <form onSubmit={submit} noValidate data-state={formState}>
       <label htmlFor="email">Email address</label>
       <div>
         <input
@@ -99,7 +110,7 @@ export function SeerCircleForm() {
           disabled={isBusy}
           onChange={(event) => {
             setEmail(event.target.value);
-            if (formState === "invalid" || formState === "error" || formState === "unconfigured") {
+            if (formState !== "idle" && formState !== "loading") {
               setFormState("idle");
             }
           }}
@@ -108,7 +119,8 @@ export function SeerCircleForm() {
           {isBusy ? "Opening the Glass" : "Join the Circle"}
         </button>
       </div>
-      <p className={`form-note ${formState}`} id="seer-circle-message" role="status">
+      <p className={`form-note ${formState}`} id="seer-circle-message" role={statusRole} aria-live="polite">
+        <span>{statusLabel}</span>
         {message}
       </p>
     </form>

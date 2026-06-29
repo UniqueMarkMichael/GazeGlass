@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FieldNote } from "./components/FieldNote";
 import { JsonLd } from "./components/JsonLd";
 import { GlassMenu } from "./components/GlassMenu";
 import { ReceiveVision } from "./components/ReceiveVision";
@@ -358,7 +359,7 @@ export default function Home() {
                 <p>{spirit.role}</p>
                 <h3>{spirit.name}</h3>
                 <span>{spirit.text}</span>
-                <small>{spirit.note}</small>
+                <FieldNote>{spirit.note}</FieldNote>
               </div>
             </article>
           ))}

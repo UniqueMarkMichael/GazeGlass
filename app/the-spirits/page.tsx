@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FieldNote } from "../components/FieldNote";
 import { GlassMenu } from "../components/GlassMenu";
 import { JsonLd } from "../components/JsonLd";
 import { getCasesBySpirit, getObservationHref, type SpiritId } from "../observations/data";
@@ -169,7 +170,7 @@ export default function TheSpirits() {
                 <p>{spirit.role}</p>
                 <h3>{spirit.name}</h3>
                 <span>{spirit.text}</span>
-                <small>{spirit.note}</small>
+                <FieldNote>{spirit.note}</FieldNote>
                 {spirit.spiritId ? (
                   <div className="record-cases spirit-cases" aria-label={`Observations involving ${spirit.name}`}>
                     <span>Observed Cases</span>

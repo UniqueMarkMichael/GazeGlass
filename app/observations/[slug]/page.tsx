@@ -195,11 +195,11 @@ export default async function ObservationPage({ params }: ObservationPageProps) 
 
             <nav className="observation-path" aria-label="Observation reading path">
               <a href={previousObservation ? getObservationHref(previousObservation) : "/observations"}>
-                <span>Previous</span>
+                <span>{previousObservation ? "Previous Vision" : "Full Archive"}</span>
                 <strong>{previousObservation ? previousObservation.title : "Observation Archive"}</strong>
               </a>
               <a href={nextObservation ? getObservationHref(nextObservation) : "/observations"}>
-                <span>{nextObservation ? "Next Observation" : "Latest Vision"}</span>
+                <span>{nextObservation ? "Next Vision" : "Full Archive"}</span>
                 <strong>{nextObservation ? nextObservation.title : "Browse the full archive"}</strong>
               </a>
             </nav>

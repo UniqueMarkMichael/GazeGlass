@@ -18,8 +18,13 @@ export function CopyLinkButton() {
   }
 
   return (
-    <button className="copy-link-button" type="button" onClick={copyLink}>
-      {copied ? "Link copied" : "Copy link"}
+    <button
+      className="copy-link-button"
+      type="button"
+      aria-label={copied ? "Page link copied" : "Copy page link"}
+      onClick={copyLink}
+    >
+      <span aria-live="polite">{copied ? "Link copied" : "Copy link"}</span>
     </button>
   );
 }

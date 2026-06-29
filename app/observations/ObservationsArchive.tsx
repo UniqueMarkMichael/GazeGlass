@@ -18,6 +18,13 @@ type SpiritFilter = "all" | SpiritId;
 type ThemeFilter = "all" | string;
 type SortKey = "order" | "newest";
 
+function formatThemeLabel(tag: string) {
+  return tag
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 const godFilters: Array<{ label: string; value: GodFilter }> = [
   { label: "All Gods", value: "all" },
   ...Object.entries(godFilterLabels).map(([value, label]) => ({ label, value: value as GodId })),
@@ -31,10 +38,7 @@ const spiritFilters: Array<{ label: string; value: SpiritFilter }> = [
 const themeFilters: Array<{ label: string; value: ThemeFilter }> = [
   { label: "All Themes", value: "all" },
   ...Array.from(new Set(observations.flatMap((observation) => observation.themeTags))).map((tag) => ({
-    label: tag
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" "),
+    label: formatThemeLabel(tag),
     value: tag,
   })),
 ];
@@ -58,6 +62,21 @@ export function ObservationsArchive() {
         return a.number.localeCompare(b.number);
       });
   }, [god, spirit, theme, sort]);
+
+  const activeFilters = [
+    god !== "all" ? godFilterLabels[god] : null,
+    spirit !== "all" ? spiritFilterLabels[spirit] : null,
+    theme !== "all" ? formatThemeLabel(theme) : null,
+  ].filter(Boolean);
+  const hasActiveFilters = activeFilters.length > 0;
+  const resultLabel = filtered.length === 1 ? "vision" : "visions";
+
+  function clearFilters() {
+    setGod("all");
+    setSpirit("all");
+    setTheme("all");
+    playGlassSound("select");
+  }
 
   return (
     <section className="observation-archive reveal" aria-label="Observation archive">
@@ -87,6 +106,7 @@ export function ObservationsArchive() {
             className={god === filter.value ? "is-active" : ""}
             key={filter.value}
             type="button"
+            aria-pressed={god === filter.value}
             onClick={() => {
               setGod(filter.value);
               playGlassSound("select");
@@ -103,6 +123,7 @@ export function ObservationsArchive() {
             className={spirit === filter.value ? "is-active" : ""}
             key={filter.value}
             type="button"
+            aria-pressed={spirit === filter.value}
             onClick={() => {
               setSpirit(filter.value);
               playGlassSound("select");
@@ -119,6 +140,7 @@ export function ObservationsArchive() {
             className={theme === filter.value ? "is-active" : ""}
             key={filter.value}
             type="button"
+            aria-pressed={theme === filter.value}
             onClick={() => {
               setTheme(filter.value);
               playGlassSound("select");
@@ -127,6 +149,21 @@ export function ObservationsArchive() {
             {filter.label}
           </button>
         ))}
+      </div>
+
+      <div className="archive-state" aria-live="polite">
+        <div>
+          <span>Current gaze</span>
+          <strong>{hasActiveFilters ? activeFilters.join(" · ") : "All visions"}</strong>
+        </div>
+        <p>
+          {filtered.length} of {observations.length} {resultLabel} revealed
+        </p>
+        {hasActiveFilters ? (
+          <button className="archive-clear" type="button" onClick={clearFilters}>
+            Clear filters
+          </button>
+        ) : null}
       </div>
 
       <div className="observation-list" aria-live="polite">
@@ -147,7 +184,15 @@ export function ObservationsArchive() {
             </a>
           ))
         ) : (
-          <p className="observation-empty">The Glass has not yet recorded a vision here.</p>
+          <div className="observation-empty" role="status">
+            <strong>No vision matches this gaze.</strong>
+            <span>Clear one filter and look again.</span>
+            {hasActiveFilters ? (
+              <button className="archive-clear" type="button" onClick={clearFilters}>
+                Clear filters
+              </button>
+            ) : null}
+          </div>
         )}
       </div>
     </section>
