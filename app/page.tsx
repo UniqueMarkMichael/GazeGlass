@@ -196,17 +196,6 @@ export default function Home() {
       </section>
 
       <section className="hero" id="home">
-        <video
-          className="beauty-blessing-motion"
-          src="/brand/beauty-blessing.mp4"
-          poster="/brand/beauty-blessing-poster.png"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-hidden="true"
-        />
         <div className="stars" aria-hidden="true" />
         <div className="sphere-wrap" aria-hidden="true">
           <div className="celestial-sphere">
@@ -319,6 +308,33 @@ export default function Home() {
       </section>
 
       <ReceiveVision />
+
+      <section className="beauty-blessing-section reveal" aria-labelledby="beauty-blessing-title">
+        <figure className="beauty-blessing-frame">
+          <video
+            className="beauty-blessing-motion"
+            src="/brand/beauty-blessing.mp4"
+            poster="/brand/beauty-blessing-poster.png"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+          />
+          <img
+            className="beauty-blessing-still"
+            src="/brand/beauty-blessing-poster.png"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+          />
+          <figcaption>
+            <span id="beauty-blessing-title">Blessed by Beauty</span>
+            The image receives the room first. Nothing crosses the deity.
+          </figcaption>
+        </figure>
+      </section>
 
       <section className="section split reveal" id="featured-gods">
         <div>
