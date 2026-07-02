@@ -465,17 +465,17 @@ export function CourtOfFoxesExperience() {
             <button className={choice === "marok" ? "is-selected" : ""} type="button" onClick={() => setChoice("marok")}>
               <span className="cof-dot cof-dot-green" />
               <strong>Go with Marok</strong>
-              <em>War's assistant. Spark and ruin, warm as trouble at your left hand.</em>
+              <em>War's fox. Spark, ruin, and dangerous sincerity.</em>
             </button>
             <button className={choice === "kitsu" ? "is-selected" : ""} type="button" onClick={() => setChoice("kitsu")}>
               <span className="cof-dot cof-dot-gold" />
               <strong>Go with Kitsu</strong>
-              <em>Justice's fox. Quiet as a verdict at your right hand.</em>
+              <em>Justice's fox. Restraint, truth, and a hand that stays.</em>
             </button>
             <button className={choice === "both" ? "is-selected" : ""} type="button" onClick={() => setChoice("both")}>
               <span className="cof-dot cof-dot-rose" />
               <strong>Choose both</strong>
-              <em>The triune bond. No claiming, no hierarchy, no silence disguised as protection.</em>
+              <em>The triune bond. No claiming. No hierarchy.</em>
             </button>
           </div>
           {choice ? (
