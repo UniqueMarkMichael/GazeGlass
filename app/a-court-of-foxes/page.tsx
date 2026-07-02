@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CourtOfFoxesExperience } from "./CourtOfFoxesExperience";
 
 export const metadata: Metadata = {
   title: "A Court of Foxes | Interactive Gaze Glass Reader",
@@ -33,15 +34,7 @@ export const metadata: Metadata = {
 export default function CourtOfFoxesPage() {
   return (
     <main className="court-of-foxes-shell" aria-label="A Court of Foxes interactive reader">
-      <a className="court-of-foxes-home" href="/" aria-label="Return to Gaze Glass home">
-        Gaze Glass
-      </a>
-      <iframe
-        className="court-of-foxes-frame"
-        src="/a-court-of-foxes/index.html"
-        title="A Court of Foxes interactive reader"
-        allow="autoplay"
-      />
+      <CourtOfFoxesExperience />
     </main>
   );
 }
