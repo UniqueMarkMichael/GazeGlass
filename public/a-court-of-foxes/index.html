@@ -40,8 +40,49 @@
     .cof-scroll::-webkit-scrollbar-thumb { background: rgba(201,162,39,0.25); border-radius: 99px; }
     .cof-scroll { scrollbar-width: thin; scrollbar-color: rgba(201,162,39,0.25) transparent; }
     image-slot.cof-fill { display: block !important; width: 100% !important; height: 100% !important; position: absolute !important; inset: 0 !important; }
+    .cof-support-row { display:flex; flex-wrap:wrap; align-items:center; gap:7px; }
+    .cof-pace-strip { display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:5px; }
+    .cof-pace-button,
+    .cof-tool-button,
+    .cof-next-button {
+      appearance:none;
+      border:1px solid var(--gg-hairline);
+      background: rgba(237,227,204,0.035);
+      color: var(--gg-text-muted);
+      cursor:pointer;
+      transition: background var(--gg-dur-fast) var(--gg-ease), border-color var(--gg-dur-fast) var(--gg-ease), color var(--gg-dur-fast) var(--gg-ease), box-shadow var(--gg-dur-fast) var(--gg-ease);
+    }
+    .cof-pace-button { min-width:0; min-height:30px; border-radius:999px; padding:0 6px; font-size:0.58rem; font-weight:700; letter-spacing:0.11em; text-transform:uppercase; white-space:nowrap; }
+    .cof-tool-button { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.92rem; line-height:1; }
+    .cof-next-button { min-height:34px; border-radius:999px; padding:0 11px; font-size:0.66rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; }
+    .cof-pace-button:hover,
+    .cof-tool-button:hover,
+    .cof-next-button:hover { color: var(--gg-gold-leaf); border-color: var(--gg-border-gold); }
+    .cof-pace-button[data-active="true"],
+    .cof-tool-button[data-active="true"],
+    .cof-next-button { color: var(--gg-gold-leaf); border-color: var(--gg-border-gold); background: rgba(201,162,39,0.12); box-shadow: 0 0 18px rgba(201,162,39,0.08); }
+    .cof-support-status { flex:1 1 128px; min-width:0; font-size:0.6rem; letter-spacing:0.11em; text-transform:uppercase; color: var(--gg-text-faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:right; }
+    .cof-reader .cof-readable { position:relative; border-radius:8px; transition: opacity var(--gg-dur-fast) var(--gg-ease), background var(--gg-dur-fast) var(--gg-ease), box-shadow var(--gg-dur-fast) var(--gg-ease), padding var(--gg-dur-fast) var(--gg-ease); }
+    .cof-reader[data-focus-mode="spotlight"] .cof-readable.cof-is-dim { opacity:0.42; }
+    .cof-reader[data-focus-mode="spotlight"] .cof-readable.cof-is-lit { background: rgba(201,162,39,0.13); box-shadow:0 0 0 0.42rem rgba(201,162,39,0.13); opacity:1; }
+    .cof-reader[data-focus-mode="band"] .cof-readable.cof-is-dim { opacity:0.34; }
+    .cof-reader[data-focus-mode="band"] .cof-readable.cof-is-lit { background: linear-gradient(90deg, rgba(201,162,39,0.03), rgba(201,162,39,0.22) 18%, rgba(201,162,39,0.27) 50%, rgba(201,162,39,0.22) 82%, rgba(201,162,39,0.03)); box-shadow:0 0 0 0.48rem rgba(201,162,39,0.12), inset 0 0 0 1px rgba(201,162,39,0.32); opacity:1; padding:0.42rem 0.58rem; }
+    .cof-reader[data-focus-mode="ruler"] .cof-readable.cof-is-ruler { background: rgba(201,162,39,0.09); box-shadow: inset 0 -0.18rem 0 rgba(201,162,39,0.72); padding-inline:0.52rem; }
+    .cof-reader[data-focus-mode="ruler"] .cof-readable.cof-is-ruler::before { content:""; position:absolute; top:0.18rem; bottom:0.18rem; left:-0.44rem; width:0.18rem; border-radius:999px; background: rgba(201,162,39,0.84); box-shadow:0 0 14px rgba(201,162,39,0.34); }
+    .cof-reader[data-pace="drift"] .cof-readable { margin-bottom:1.28em !important; }
+    .cof-reader[data-pace="focus"] .cof-readable { margin-bottom:1.18em !important; }
+    .cof-reader[data-pace="sprint"] .cof-readable { margin-bottom:0.82em !important; }
+    .cof-reader[data-pace="rest"] .cof-readable { margin-bottom:1.5em !important; }
+    .cof-read-hidden,
+    .cof-reader[data-images="hidden"] .cof-media-block { display:none !important; }
+    .cof-toast { position:absolute; left:18px; right:18px; bottom:18px; z-index:8; padding:10px 13px; border:1px solid var(--gg-border-gold); border-radius:14px; background: rgba(14,12,31,0.92); color: var(--gg-parchment-bone); box-shadow: var(--gg-shadow-lg); font-size:0.78rem; line-height:1.35; text-align:center; animation: cof-rise var(--gg-dur-base) var(--gg-ease) both; pointer-events:none; }
+    @media (max-width: 380px) {
+      .cof-pace-button { font-size:0.52rem; letter-spacing:0.07em; padding:0 4px; }
+      .cof-support-status { flex-basis:100%; text-align:left; }
+    }
     @media (prefers-reduced-motion: reduce) {
       [data-anim] { animation: none !important; }
+      .cof-toast { animation:none !important; }
     }
   </style>
 </helmet>
@@ -60,6 +101,9 @@
           <div style="pointer-events:auto;">
             <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Button" variant="primary" size="lg" iconRight="→" onClick="{{ begin }}" hint-size="auto,54px">Begin the chronicle</x-import>
           </div>
+          <sc-if value="{{ hasResume }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ resume }}" aria-label="Resume reading" style="pointer-events:auto; min-height:38px; border-radius:999px; border:1px solid var(--gg-border-gold); background: rgba(14,12,31,0.64); color: var(--gg-gold-leaf); font-family: var(--gg-font-mortals); font-size:0.68rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:0 16px; cursor:pointer;">Return to {{ resumeLabel }}</button>
+          </sc-if>
           <p style="margin:0; font-family: var(--gg-font-spirits); font-style:italic; font-size:0.84rem; letter-spacing:0.12em; color: var(--gg-text-muted);">Gods Watch &middot; Mortals Pray &middot; Spirits Remember</p>
         </div>
       </div>
@@ -67,7 +111,7 @@
 
     <!-- ============ READING ============ -->
     <sc-if value="{{ isReading }}" hint-placeholder-val="{{ true }}">
-      <div data-screen-label="Reading View" style="height:100%; display:flex; flex-direction:column;">
+      <div class="cof-reader" data-screen-label="Reading View" data-focus-mode="{{ focusMode }}" data-pace="{{ paceMode }}" data-read-with-me="{{ readWithMeMode }}" data-images="{{ imageMode }}" style="height:100%; display:flex; flex-direction:column;">
         <!-- top controls -->
         <div style="flex:0 0 auto; padding:14px 16px 12px; border-bottom:1px solid var(--gg-hairline); background: var(--gg-ink-900); display:flex; flex-direction:column; gap:11px; z-index:3;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
@@ -84,6 +128,24 @@
               <button onClick="{{ fontUp }}" aria-label="Larger text" style="width:34px; height:34px; border-radius:50%; border:1px solid var(--gg-hairline); background:transparent; color: var(--gg-text); font-size:1rem; cursor:pointer; font-family: var(--gg-font-gods); transition: all var(--gg-dur-fast) var(--gg-ease);" style-hover="color: var(--gg-gold-leaf); border-color: var(--gg-border-gold);">A</button>
               <button onClick="{{ toggleMode }}" aria-label="Toggle day and night reading" style="width:34px; height:34px; border-radius:50%; border:1px solid var(--gg-border-gold); background: var(--gg-surface-veil); color: var(--gg-gold-leaf); font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: all var(--gg-dur-fast) var(--gg-ease);">{{ modeGlyph }}</button>
             </div>
+          </div>
+          <div class="cof-pace-strip" role="radiogroup" aria-label="Story pace mode">
+            <button class="cof-pace-button" type="button" role="radio" aria-checked="{{ driftActive }}" data-active="{{ driftActive }}" onClick="{{ setPaceDrift }}">Drift</button>
+            <button class="cof-pace-button" type="button" role="radio" aria-checked="{{ focusPaceActive }}" data-active="{{ focusPaceActive }}" onClick="{{ setPaceFocus }}">Focus</button>
+            <button class="cof-pace-button" type="button" role="radio" aria-checked="{{ sprintActive }}" data-active="{{ sprintActive }}" onClick="{{ setPaceSprint }}">Sprint</button>
+            <button class="cof-pace-button" type="button" role="radio" aria-checked="{{ restActive }}" data-active="{{ restActive }}" onClick="{{ setPaceRest }}">Rest</button>
+          </div>
+          <div class="cof-support-row">
+            <button class="cof-tool-button" type="button" aria-label="Lantern paragraph focus" aria-pressed="{{ lanternActive }}" data-active="{{ lanternActive }}" onClick="{{ toggleLantern }}" title="Lantern">◐</button>
+            <button class="cof-tool-button" type="button" aria-label="Reading band focus" aria-pressed="{{ bandActive }}" data-active="{{ bandActive }}" onClick="{{ toggleBand }}" title="Band">≋</button>
+            <button class="cof-tool-button" type="button" aria-label="Reading ruler focus" aria-pressed="{{ rulerActive }}" data-active="{{ rulerActive }}" onClick="{{ toggleRuler }}" title="Ruler">▔</button>
+            <button class="cof-tool-button" type="button" aria-label="Read With Me" aria-pressed="{{ readWithMeActive }}" data-active="{{ readWithMeActive }}" onClick="{{ toggleReadWithMe }}" title="Read With Me">¶</button>
+            <button class="cof-tool-button" type="button" aria-label="Show or hide story images" aria-pressed="{{ imagesHidden }}" data-active="{{ imagesHidden }}" onClick="{{ toggleImages }}" title="Images">▧</button>
+            <button class="cof-tool-button" type="button" aria-label="Find my place" onClick="{{ findPlace }}" title="Lost">⌖</button>
+            <sc-if value="{{ readWithMeActive }}" hint-placeholder-val="{{ false }}">
+              <button class="cof-next-button" type="button" onClick="{{ readNext }}" aria-label="Show the next paragraph">Next</button>
+            </sc-if>
+            <span class="cof-support-status">{{ supportStatus }}</span>
           </div>
         </div>
 
@@ -124,7 +186,7 @@
           </div>
 
           <!-- prose -->
-          <div style="padding:22px 26px 0; font-family: var(--gg-font-mortals); font-size:{{ bodyPx }}; line-height:{{ bodyLh }}; color:{{ paperText }}; max-width:68ch;">
+          <div class="cof-prose" style="padding:22px 26px 0; font-family: var(--gg-font-mortals); font-size:{{ bodyPx }}; line-height:{{ bodyLh }}; color:{{ paperText }}; max-width:68ch;">
             <p style="margin:0 0 1.1em;">I counted seven exits before the first fox smiled at me.</p>
             <p style="margin:0 0 1.1em;">Not kindly. Not subtly. With teeth. Divine courts were full of teeth.</p>
             <p style="margin:0 0 1.1em;">My goddess always told me I was no ordinary vixen — that I should never settle. Standing in that glittering room, I wondered if she understood those were two different instructions.</p>
@@ -200,7 +262,7 @@
             <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> The descent — borrowed flesh, borrowed breath, before the ninth bell.</p>
           </div>
 
-          <div style="padding:22px 26px 0; font-family: var(--gg-font-mortals); font-size:{{ bodyPx }}; line-height:{{ bodyLh }}; color:{{ paperText }}; max-width:68ch;">
+          <div class="cof-prose" style="padding:22px 26px 0; font-family: var(--gg-font-mortals); font-size:{{ bodyPx }}; line-height:{{ bodyLh }}; color:{{ paperText }}; max-width:68ch;">
             <p style="margin:0 0 1.1em;">Icy air grasped my lungs as we exited the Celestial Court.</p>
             <p style="margin:0 0 1.1em;">I had expected gold. Everything above had been gold, or glass pretending to be gold, or beauty pretending not to be a cage — but the stairway beneath the Celestial Court had been cut from black stone veined with amber light. It spiraled down through the body of the palace like a secret no one wished to claim, and smelled like cinnamon rotting.</p>
             <p style="margin:0 0 1.1em;">My claws clicked against each step. Marok took the stairs as if gravity had offended him personally — bounding three at a time, green tail high, ears pricked toward trouble. Kitsu descended as though every stair had filed a petition and he had approved each one in order.</p>
@@ -298,7 +360,7 @@
             <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> The Ninth Bell — where mortals dance beneath a god&rsquo;s broken law.</p>
           </div>
 
-          <div style="padding:22px 26px 0; font-family: var(--gg-font-mortals); font-size:{{ bodyPx }}; line-height:{{ bodyLh }}; color:{{ paperText }}; max-width:68ch;">
+          <div class="cof-prose" style="padding:22px 26px 0; font-family: var(--gg-font-mortals); font-size:{{ bodyPx }}; line-height:{{ bodyLh }}; color:{{ paperText }}; max-width:68ch;">
             <p style="margin:0 0 1.1em;">I had assumed the mortal city would smell worse.</p>
             <p style="margin:0 0 1.1em;">It did, obviously. But not simply worse. It smelled impossibly alive. Smoke curled from iron chimneys and roasted-chestnut carts. Rainwater slicked the cobblestones in silver ribbons. Somewhere close, oranges had been split open, their sharp sweetness bleeding into the street. Somewhere farther, something had died in an alley and no one had politely magicked the evidence away. Perfume, sweat, hot sugar, horse, beer, mud, lamp oil, human breath — it all collided at once and climbed straight into my skull.</p>
             <p style="margin:0 0 1.1em;">I stopped under the archway and gagged with dignity. That is to say, very little dignity.</p>
@@ -458,13 +520,9 @@
           </div>
           </div>
           </sc-if>
-        </div>
-      </div>
-    </sc-if>
-
           <sc-if value="{{ isCh4 }}" hint-placeholder-val="{{ false }}">
           <div data-screen-label="Chapter Four">
-          <div style="max-width:100%; padding:26px 26px 8px; color:{{ paperText }};">
+          <div class="cof-prose" style="max-width:100%; padding:26px 26px 8px; font-family: var(--gg-font-mortals); font-size:{{ bodyPx }}; line-height:{{ bodyLh }}; color:{{ paperText }};">
             <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Eyebrow" number="04 /" color="gold" hint-size="auto,18px">The Mortal Hour Chamber</x-import>
             <h2 style="margin:10px 0 18px; font-family: var(--gg-font-gods); font-weight:600; font-size:1.7rem; line-height:1.15; color:{{ paperHeading }};">The Thread Cut</h2>
 
@@ -578,7 +636,7 @@
 
           <sc-if value="{{ isCh5 }}" hint-placeholder-val="{{ false }}">
           <div data-screen-label="Chapter Five">
-          <div style="max-width:100%; padding:26px 26px 8px; color:{{ paperText }};">
+          <div class="cof-prose" style="max-width:100%; padding:26px 26px 8px; font-family: var(--gg-font-mortals); font-size:{{ bodyPx }}; line-height:{{ bodyLh }}; color:{{ paperText }};">
             <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Eyebrow" number="05 /" color="gold" hint-size="auto,18px">The Tail Market</x-import>
             <h2 style="margin:10px 0 18px; font-family: var(--gg-font-gods); font-weight:600; font-size:1.7rem; line-height:1.15; color:{{ paperHeading }};">No Foxes. No Judgment.</h2>
 
@@ -670,6 +728,13 @@
           </div>
           </div>
           </sc-if>
+
+        </div>
+        <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+          <div class="cof-toast" role="status" aria-live="polite">{{ toast }}</div>
+        </sc-if>
+      </div>
+    </sc-if>
 
     <!-- ============ CHOICE ============ -->
     <sc-if value="{{ isChoice }}" hint-placeholder-val="{{ false }}">
@@ -777,39 +842,285 @@
 class Component extends DCLogic {
   constructor(props) {
     super(props);
+    const supportPrefs = this.loadSupportPrefs();
+    const resumeBookmark = this.loadResumeBookmark();
     this.state = {
       screen: (props && props.startScreen) || 'cover',
-      mode: (props && props.defaultMode) || 'day',
-      fontStep: 1,
+      mode: supportPrefs.mode || (props && props.defaultMode) || 'day',
+      fontStep: supportPrefs.fontStep ?? 1,
       choice: null,
       chapter: 1,
       threads: { rose: 5, green: 0, gold: 0 },
       readProgress: 0,
       beautyHold: false,
       joined: false,
+      pace: supportPrefs.pace || 'focus',
+      focusMode: supportPrefs.focusMode || 'ruler',
+      showImages: supportPrefs.showImages !== false,
+      readWithMe: false,
+      readWithMeIndex: 0,
+      activeBlockIndex: 0,
+      activeBlockTotal: 0,
+      resumeBookmark,
+      toast: '',
     };
     this.scrollRef = React.createRef();
     this._scrollEl = null;
+    this._readerPass = null;
+    this._toastTimer = null;
   }
 
-  componentDidUpdate(prev) {
-    if (prev.startScreen !== this.props.startScreen && this.props.startScreen) {
+  componentDidMount() {
+    this.scheduleReaderPass();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.startScreen !== this.props.startScreen && this.props.startScreen) {
       this.setState({ screen: this.props.startScreen });
     }
-    if (prev.defaultMode !== this.props.defaultMode && this.props.defaultMode) {
+    if (prevProps.defaultMode !== this.props.defaultMode && this.props.defaultMode) {
       this.setState({ mode: this.props.defaultMode });
     }
+
+    const readerChanged =
+      prevState.screen !== this.state.screen ||
+      prevState.chapter !== this.state.chapter ||
+      prevState.focusMode !== this.state.focusMode ||
+      prevState.readWithMe !== this.state.readWithMe ||
+      prevState.readWithMeIndex !== this.state.readWithMeIndex ||
+      prevState.activeBlockIndex !== this.state.activeBlockIndex ||
+      prevState.showImages !== this.state.showImages ||
+      prevState.pace !== this.state.pace ||
+      prevState.fontStep !== this.state.fontStep;
+    if (readerChanged) this.scheduleReaderPass();
+
+    const prefsChanged =
+      prevState.mode !== this.state.mode ||
+      prevState.fontStep !== this.state.fontStep ||
+      prevState.pace !== this.state.pace ||
+      prevState.focusMode !== this.state.focusMode ||
+      prevState.showImages !== this.state.showImages;
+    if (prefsChanged) this.saveSupportPrefs();
+  }
+
+  componentWillUnmount() {
+    if (this._readerPass && window.cancelAnimationFrame) window.cancelAnimationFrame(this._readerPass);
+    if (this._toastTimer) window.clearTimeout(this._toastTimer);
+  }
+
+  supportKey() { return 'cof-reader-support-v1'; }
+  bookmarkKey() { return 'cof-reader-bookmark-v1'; }
+
+  loadSupportPrefs() {
+    try {
+      const raw = window.localStorage.getItem(this.supportKey());
+      if (!raw) return {};
+      const prefs = JSON.parse(raw);
+      if (!prefs || typeof prefs !== 'object') return {};
+      return {
+        mode: prefs.mode === 'night' ? 'night' : prefs.mode === 'day' ? 'day' : null,
+        fontStep: Number.isFinite(prefs.fontStep) ? Math.max(0, Math.min(2, prefs.fontStep)) : undefined,
+        pace: ['drift', 'focus', 'sprint', 'rest'].includes(prefs.pace) ? prefs.pace : null,
+        focusMode: ['off', 'spotlight', 'band', 'ruler'].includes(prefs.focusMode) ? prefs.focusMode : null,
+        showImages: prefs.showImages !== false,
+      };
+    } catch {
+      return {};
+    }
+  }
+
+  saveSupportPrefs() {
+    try {
+      window.localStorage.setItem(this.supportKey(), JSON.stringify({
+        mode: this.state.mode,
+        fontStep: this.state.fontStep,
+        pace: this.state.pace,
+        focusMode: this.state.focusMode,
+        showImages: this.state.showImages,
+      }));
+    } catch {}
+  }
+
+  loadResumeBookmark() {
+    try {
+      const raw = window.localStorage.getItem(this.bookmarkKey());
+      if (!raw) return null;
+      const bookmark = JSON.parse(raw);
+      if (!bookmark || typeof bookmark !== 'object') return null;
+      const chapter = Number(bookmark.chapter);
+      if (!Number.isFinite(chapter) || chapter < 1 || chapter > 5) return null;
+      return {
+        chapter,
+        progress: Math.max(0, Math.min(1, Number(bookmark.progress) || 0)),
+        activeBlockIndex: Math.max(0, Number(bookmark.activeBlockIndex) || 0),
+        cue: typeof bookmark.cue === 'string' ? bookmark.cue : '',
+        updatedAt: Number(bookmark.updatedAt) || Date.now(),
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  saveResumeBookmark(progress, activeBlockIndex) {
+    if (this.state.screen !== 'reading') return;
+    const blocks = this.getReadableBlocks();
+    const cue = (blocks[activeBlockIndex]?.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 120);
+    const bookmark = {
+      chapter: this.state.chapter,
+      progress,
+      activeBlockIndex,
+      cue,
+      updatedAt: Date.now(),
+    };
+    try {
+      window.localStorage.setItem(this.bookmarkKey(), JSON.stringify(bookmark));
+    } catch {}
+    if (!this.state.resumeBookmark) this.setState({ resumeBookmark: bookmark });
+  }
+
+  getScrollEl() {
+    return this.scrollRef.current || this._scrollEl;
+  }
+
+  scheduleReaderPass() {
+    if (typeof window === 'undefined') return;
+    if (this._readerPass && window.cancelAnimationFrame) window.cancelAnimationFrame(this._readerPass);
+    const run = () => {
+      this._readerPass = null;
+      this.applyReaderSupport();
+    };
+    this._readerPass = window.requestAnimationFrame ? window.requestAnimationFrame(run) : window.setTimeout(run, 16);
+  }
+
+  tagReaderBlocks() {
+    const root = this.getScrollEl();
+    if (!root) return { blocks: [], mediaBlocks: [] };
+
+    const blocks = [];
+    const mediaBlocks = [];
+    root.querySelectorAll('.cof-prose').forEach((prose) => {
+      let lastReadableIndex = blocks.length - 1;
+      Array.from(prose.children).forEach((child) => {
+        if (child.tagName === 'P') {
+          child.classList.add('cof-readable');
+          child.dataset.cofIndex = String(blocks.length);
+          child.setAttribute('tabindex', '-1');
+          blocks.push(child);
+          lastReadableIndex = blocks.length - 1;
+          return;
+        }
+        if (child.querySelector && child.querySelector('image-slot, video')) {
+          child.classList.add('cof-media-block');
+          child.dataset.cofAfterIndex = String(lastReadableIndex);
+          mediaBlocks.push(child);
+        }
+      });
+    });
+    return { blocks, mediaBlocks };
+  }
+
+  getReadableBlocks() {
+    return this.tagReaderBlocks().blocks;
+  }
+
+  applyReaderSupport() {
+    if (this.state.screen !== 'reading') return;
+    const { blocks, mediaBlocks } = this.tagReaderBlocks();
+    const total = blocks.length;
+    const activeIndex = Math.min(Math.max(0, this.state.activeBlockIndex), Math.max(0, total - 1));
+    const readWithMeIndex = Math.min(Math.max(0, this.state.readWithMeIndex), Math.max(0, total - 1));
+
+    blocks.forEach((block, index) => {
+      const hidden = this.state.readWithMe && index > readWithMeIndex;
+      const lit = this.state.focusMode !== 'off' && index === activeIndex && !hidden;
+      const dim = (this.state.focusMode === 'spotlight' || this.state.focusMode === 'band') && index !== activeIndex && !hidden;
+      block.classList.toggle('cof-read-hidden', hidden);
+      block.classList.toggle('cof-is-lit', lit && this.state.focusMode !== 'ruler');
+      block.classList.toggle('cof-is-ruler', lit && this.state.focusMode === 'ruler');
+      block.classList.toggle('cof-is-dim', dim);
+      block.setAttribute('aria-hidden', hidden ? 'true' : 'false');
+    });
+
+    mediaBlocks.forEach((block) => {
+      const afterIndex = Number(block.dataset.cofAfterIndex || -1);
+      const hiddenForRead = this.state.readWithMe && afterIndex > readWithMeIndex;
+      block.classList.toggle('cof-read-hidden', hiddenForRead);
+      block.setAttribute('aria-hidden', hiddenForRead || !this.state.showImages ? 'true' : 'false');
+    });
+
+    if (total !== this.state.activeBlockTotal) this.setState({ activeBlockTotal: total });
+  }
+
+  findActiveBlockIndex(blocks, scrollEl) {
+    if (!blocks.length) return 0;
+    const containerRect = scrollEl.getBoundingClientRect();
+    const anchorY = containerRect.top + Math.min(containerRect.height * 0.42, 280);
+    let nearest = 0;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+
+    blocks.forEach((block, index) => {
+      if (block.classList.contains('cof-read-hidden')) return;
+      const rect = block.getBoundingClientRect();
+      if (rect.bottom < containerRect.top + 16 || rect.top > containerRect.bottom - 16) return;
+      const blockAnchor = rect.top + Math.min(rect.height * 0.35, 72);
+      const distance = Math.abs(blockAnchor - anchorY);
+      if (distance < nearestDistance) {
+        nearest = index;
+        nearestDistance = distance;
+      }
+    });
+
+    return nearestDistance === Number.POSITIVE_INFINITY ? this.state.activeBlockIndex : nearest;
+  }
+
+  scrollToBlock(index, instant) {
+    window.setTimeout(() => {
+      const blocks = this.getReadableBlocks();
+      const block = blocks[Math.max(0, Math.min(index, blocks.length - 1))];
+      if (!block) return;
+      block.scrollIntoView({ block: 'center', behavior: instant ? 'auto' : 'smooth' });
+      block.focus({ preventScroll: true });
+    }, 40);
+  }
+
+  showToast(message) {
+    if (this._toastTimer) window.clearTimeout(this._toastTimer);
+    this.setState({ toast: message });
+    this._toastTimer = window.setTimeout(() => this.setState({ toast: '' }), 2100);
   }
 
   go(s) { this.setState({ screen: s }); }
-  exit() { this.setState({ screen: 'cover', readProgress: 0 }); }
-  begin() { this.setState({ screen: 'reading', chapter: 1, readProgress: 0 }); }
+  exit() { this.setState({ screen: 'cover', readProgress: 0, readWithMe: false }); }
+  begin() {
+    this.setState({ screen: 'reading', chapter: 1, readProgress: 0, activeBlockIndex: 0, readWithMeIndex: 0 }, () => {
+      this.scrollToBlock(0, true);
+    });
+  }
+  resume() {
+    const bookmark = this.state.resumeBookmark || this.loadResumeBookmark();
+    if (!bookmark) {
+      this.begin();
+      return;
+    }
+    this.setState({
+      screen: 'reading',
+      chapter: bookmark.chapter,
+      readProgress: bookmark.progress,
+      activeBlockIndex: bookmark.activeBlockIndex,
+      readWithMe: false,
+      readWithMeIndex: bookmark.activeBlockIndex,
+    }, () => {
+      this.scrollToBlock(bookmark.activeBlockIndex, true);
+      this.showToast('Returned to your last mark.');
+    });
+  }
   continueReading() {
     const c = this.state.chapter;
     if (c < 5) {
-      this.setState({ chapter: c + 1, readProgress: 0, beautyHold: false }, () => {
+      this.setState({ chapter: c + 1, readProgress: 0, activeBlockIndex: 0, readWithMeIndex: 0, beautyHold: false }, () => {
         const el = this.scrollRef.current || this._scrollEl;
         if (el) el.scrollTop = 0;
+        this.scrollToBlock(0, true);
       });
     } else {
       this.setState({ screen: 'choice' });
@@ -825,7 +1136,73 @@ class Component extends DCLogic {
     this._scrollEl = el;
     const max = el.scrollHeight - el.clientHeight;
     const p = max > 0 ? el.scrollTop / max : 0;
-    this.setState({ readProgress: Math.max(0, Math.min(1, p)) });
+    const progress = Math.max(0, Math.min(1, p));
+    const blocks = this.getReadableBlocks();
+    const activeBlockIndex = this.findActiveBlockIndex(blocks, el);
+    this.setState({ readProgress: progress, activeBlockIndex });
+    this.saveResumeBookmark(progress, activeBlockIndex);
+  }
+  setPace(pace) {
+    const preset = {
+      drift: { focusMode: 'off', fontStep: 1 },
+      focus: { focusMode: 'ruler', fontStep: 1 },
+      sprint: { focusMode: 'band', fontStep: 0 },
+      rest: { focusMode: 'spotlight', fontStep: 2 },
+    }[pace] || { focusMode: 'ruler', fontStep: 1 };
+    this.setState({ pace, focusMode: preset.focusMode, fontStep: preset.fontStep }, () => {
+      this.showToast({ drift: 'Drift pace selected.', focus: 'Focus pace selected.', sprint: 'Sprint pace selected.', rest: 'Rest pace selected.' }[pace]);
+    });
+  }
+  toggleFocusMode(mode) {
+    this.setState(st => ({ focusMode: st.focusMode === mode ? 'off' : mode }), () => {
+      const label = this.state.focusMode === 'off' ? 'Focus cleared.' : this.focusLabel(this.state.focusMode) + ' on.';
+      this.showToast(label);
+    });
+  }
+  toggleLantern() { this.toggleFocusMode('spotlight'); }
+  toggleBand() { this.toggleFocusMode('band'); }
+  toggleRuler() { this.toggleFocusMode('ruler'); }
+  toggleImages() {
+    this.setState(st => ({ showImages: !st.showImages }), () => {
+      this.showToast(this.state.showImages ? 'Images shown.' : 'Images hidden.');
+    });
+  }
+  toggleReadWithMe() {
+    this.setState(st => {
+      const next = !st.readWithMe;
+      const index = Math.max(0, st.activeBlockIndex);
+      return { readWithMe: next, readWithMeIndex: index, activeBlockIndex: index };
+    }, () => {
+      if (this.state.readWithMe) {
+        this.scrollToBlock(this.state.readWithMeIndex);
+        this.showToast('Read With Me on.');
+      } else {
+        this.showToast('Read With Me off.');
+      }
+    });
+  }
+  readNext() {
+    const total = this.getReadableBlocks().length || this.state.activeBlockTotal;
+    if (this.state.readWithMeIndex >= total - 1) {
+      this.showToast('End of this chapter.');
+      return;
+    }
+    const nextIndex = this.state.readWithMeIndex + 1;
+    this.setState({ readWithMeIndex: nextIndex, activeBlockIndex: nextIndex }, () => this.scrollToBlock(nextIndex));
+  }
+  findPlace() {
+    this.scrollToBlock(this.state.activeBlockIndex);
+    this.showToast('Place found.');
+  }
+  focusLabel(mode) {
+    if (mode === 'spotlight') return 'Lantern';
+    if (mode === 'band') return 'Band';
+    if (mode === 'ruler') return 'Ruler';
+    return 'Focus';
+  }
+  resumeLabel(bookmark) {
+    if (!bookmark) return 'your mark';
+    return ['Chapter One', 'Chapter Two', 'Chapter Three', 'Chapter Four', 'Chapter Five'][bookmark.chapter - 1] || 'your mark';
   }
   choose(p) {
     this.setState(st => {
@@ -839,7 +1216,7 @@ class Component extends DCLogic {
   prevent(e) { if (e && e.preventDefault) e.preventDefault(); }
   join(e) { if (e && e.preventDefault) e.preventDefault(); this.setState({ joined: true }); }
   replay() {
-    this.setState({ screen: 'cover', chapter: 1, choice: null, threads: { rose: 5, green: 0, gold: 0 }, readProgress: 0, joined: false });
+    this.setState({ screen: 'cover', chapter: 1, choice: null, threads: { rose: 5, green: 0, gold: 0 }, readProgress: 0, activeBlockIndex: 0, readWithMeIndex: 0, readWithMe: false, joined: false });
   }
 
   // ---- braid: horizontal progress bar ----
@@ -898,12 +1275,17 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state;
     const reduce = !!this.props.reduceThreadMotion;
-    const px = ['17px', '19px', '22px'][s.fontStep];
-    const lh = ['1.78', '1.8', '1.85'][s.fontStep];
+    const basePx = [17, 19, 22][s.fontStep];
+    const paceDelta = { drift: 0, focus: 0, sprint: -1, rest: 1 }[s.pace] || 0;
+    const px = Math.max(16, Math.min(24, basePx + paceDelta)) + 'px';
+    const lh = { drift: '1.92', focus: '1.86', sprint: '1.62', rest: '2.02' }[s.pace] || '1.86';
     const day = s.mode === 'day';
     const sel = s.choice;
     const ending = sel === 'marok' ? 'marok' : sel === 'kitsu' ? 'kitsu' : 'kitsu';
     const dominant = ending === 'marok' ? 'green' : 'gold';
+    const supportStatus = s.activeBlockTotal
+      ? this.focusLabel(s.focusMode) + ' ' + Math.min(s.activeBlockIndex + 1, s.activeBlockTotal) + '/' + s.activeBlockTotal
+      : this.focusLabel(s.focusMode);
 
     const confirmMap = {
       marok: 'You step toward Marok. The green thread winds tighter — War\u2019s heat at your left hand, and the night gets a great deal less careful.',
@@ -940,6 +1322,7 @@ class Component extends DCLogic {
       isEnding: s.screen === 'ending',
 
       begin: () => this.begin(),
+      resume: () => this.resume(),
       continueReading: () => this.continueReading(),
       exit: () => this.exit(),
       toChoice: () => this.toChoice(),
@@ -955,10 +1338,22 @@ class Component extends DCLogic {
       prevent: (e) => this.prevent(e),
       join: (e) => this.join(e),
       replay: () => this.replay(),
+      setPaceDrift: () => this.setPace('drift'),
+      setPaceFocus: () => this.setPace('focus'),
+      setPaceSprint: () => this.setPace('sprint'),
+      setPaceRest: () => this.setPace('rest'),
+      toggleLantern: () => this.toggleLantern(),
+      toggleBand: () => this.toggleBand(),
+      toggleRuler: () => this.toggleRuler(),
+      toggleReadWithMe: () => this.toggleReadWithMe(),
+      toggleImages: () => this.toggleImages(),
+      findPlace: () => this.findPlace(),
+      readNext: () => this.readNext(),
 
       // reading theme
       paperBg: day ? 'var(--gg-parchment-100)' : 'var(--gg-ink-800)',
       paperText: day ? 'var(--gg-ink-700)' : 'var(--gg-parchment-bone)',
+      paperHeading: day ? 'var(--gg-ink-700)' : 'var(--gg-parchment-bone)',
       paperMuted: day ? '#6B6280' : 'rgba(237,227,204,0.6)',
       paperBorder: day ? 'var(--gg-parchment-300)' : 'rgba(237,227,204,0.14)',
       paperVeil: day ? 'rgba(201,162,39,0.05)' : 'rgba(237,227,204,0.04)',
@@ -967,6 +1362,24 @@ class Component extends DCLogic {
       modeGlyph: day ? '☾' : '☀',
       progressPct: Math.round(s.readProgress * 100) + '%',
       beautyHold: s.beautyHold,
+      focusMode: s.focusMode,
+      paceMode: s.pace,
+      readWithMeMode: s.readWithMe ? 'on' : 'off',
+      imageMode: s.showImages ? 'shown' : 'hidden',
+      supportStatus,
+      hasToast: !!s.toast,
+      toast: s.toast,
+      hasResume: !!s.resumeBookmark,
+      resumeLabel: this.resumeLabel(s.resumeBookmark),
+      driftActive: s.pace === 'drift',
+      focusPaceActive: s.pace === 'focus',
+      sprintActive: s.pace === 'sprint',
+      restActive: s.pace === 'rest',
+      lanternActive: s.focusMode === 'spotlight',
+      bandActive: s.focusMode === 'band',
+      rulerActive: s.focusMode === 'ruler',
+      readWithMeActive: s.readWithMe,
+      imagesHidden: !s.showImages,
 
       braidBar: this.braidH(s.readProgress, reduce),
       braidResolve: this.braidV(dominant, reduce),
