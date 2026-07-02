@@ -38,6 +38,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.95,
     },
     {
+      url: `${baseUrl}/a-court-of-foxes`,
+      lastModified: new Date("2026-07-01"),
+      changeFrequency: "weekly",
+      priority: 0.92,
+    },
+    {
       url: `${baseUrl}/celestial-codex`,
       lastModified,
       changeFrequency: "weekly",

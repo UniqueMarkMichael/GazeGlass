@@ -1,0 +1,36 @@
+/* ============================================================
+   GAZE GLASS — EFFECTS
+   Light, shadow, glow, motion. Caustic light & soft refraction.
+   ============================================================ */
+:root {
+  /* — Shadows: deep, atmospheric, never harsh — */
+  --gg-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --gg-shadow-md: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --gg-shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.6);
+  --gg-shadow-inset: inset 0 1px 0 rgba(237, 227, 204, 0.06);
+
+  /* — Gold illumination glows (use sparingly) — */
+  --gg-glow-gold: 0 0 24px rgba(201, 162, 39, 0.35);
+  --gg-glow-gold-soft: 0 0 60px rgba(224, 160, 48, 0.18);
+  --gg-glow-larimar: 0 0 40px rgba(95, 183, 196, 0.25);
+
+  /* — Borders — */
+  --gg-border-hair: 1px solid var(--gg-hairline);
+  --gg-border-gold-hair: 1px solid var(--gg-border-gold);
+
+  /* — Gradients / atmosphere — */
+  --gg-veil-top: linear-gradient(180deg, var(--gg-ink-900) 0%, rgba(14,12,31,0) 100%);
+  --gg-veil-bottom: linear-gradient(0deg, var(--gg-ink-900) 0%, rgba(14,12,31,0) 100%);
+  --gg-radial-glow: radial-gradient(60% 60% at 50% 40%, rgba(201,162,39,0.16) 0%, rgba(14,12,31,0) 70%); /* @kind other */
+  --gg-spectrum: linear-gradient(90deg, var(--gg-larimar) 0%, var(--gg-honey-amber) 50%, var(--gg-magenta-aura) 100%);
+
+  /* — Motion: slow discovery. Nothing bounces. — */
+  --gg-ease: cubic-bezier(0.22, 0.61, 0.36, 1); /* @kind other */
+  --gg-ease-inout: cubic-bezier(0.65, 0, 0.35, 1); /* @kind other */
+  --gg-dur-fast: 200ms; /* @kind other */
+  --gg-dur-base: 420ms; /* @kind other */
+  --gg-dur-slow: 900ms; /* @kind other */
+
+  /* — Blur (caustic glass) — */
+  --gg-blur: 16px;
+}

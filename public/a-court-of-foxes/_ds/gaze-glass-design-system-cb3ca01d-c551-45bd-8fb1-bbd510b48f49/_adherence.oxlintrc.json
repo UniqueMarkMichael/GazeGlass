@@ -1,0 +1,363 @@
+{
+  "plugins": [
+    "react",
+    "import"
+  ],
+  "rules": {
+    "react/forbid-elements": [
+      "warn",
+      {
+        "forbid": []
+      }
+    ],
+    "no-restricted-imports": [
+      "warn",
+      {
+        "patterns": [
+          {
+            "group": [
+              "components/core/**"
+            ],
+            "message": "Import design-system components from 'index.js', not component internals."
+          }
+        ]
+      }
+    ],
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "Literal[value=/#[0-9a-fA-F]{3,8}\\b/]",
+        "message": "Raw hex color — use a design-system color token via var()."
+      },
+      {
+        "selector": "Literal[value=/\\b\\d+px\\b/]",
+        "message": "Raw px value — use a design-system spacing token via var()."
+      },
+      {
+        "selector": "Literal[value=/font-family\\s*:\\s*(?!['\\\"]?(?:Playfair Display|Mulish|EB Garamond))/i]",
+        "message": "Font not provided by the design system. Available: Playfair Display, Mulish, EB Garamond."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Badge'] > JSXAttribute > JSXIdentifier[name!=/^(?:children|tone|icon|key|ref|className|style|children)$/]",
+        "message": "<Badge> doesn't accept that prop. Declared props: children, tone, icon."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Badge'] > JSXAttribute[name.name='tone'] > Literal[value!=/^(?:gold|larimar|amber|magenta|muted)$/]",
+        "message": "<Badge> tone must be one of 'gold' | 'larimar' | 'amber' | 'magenta' | 'muted'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute > JSXIdentifier[name!=/^(?:children|variant|size|as|href|icon|iconRight|disabled|key|ref|className|style|children)$/]",
+        "message": "<Button> doesn't accept that prop. Declared props: children, variant, size, as, href, icon, iconRight, disabled."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute[name.name='variant'] > Literal[value!=/^(?:primary|secondary|ghost)$/]",
+        "message": "<Button> variant must be one of 'primary' | 'secondary' | 'ghost'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute[name.name='size'] > Literal[value!=/^(?:sm|md|lg)$/]",
+        "message": "<Button> size must be one of 'sm' | 'md' | 'lg'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute[name.name='as'] > Literal[value!=/^(?:button|a)$/]",
+        "message": "<Button> as must be one of 'button' | 'a'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Card'] > JSXAttribute > JSXIdentifier[name!=/^(?:children|glow|as|key|ref|className|style|children)$/]",
+        "message": "<Card> doesn't accept that prop. Declared props: children, glow, as."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Divider'] > JSXAttribute > JSXIdentifier[name!=/^(?:glyph|color|width|key|ref|className|style|children)$/]",
+        "message": "<Divider> doesn't accept that prop. Declared props: glyph, color, width."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Divider'] > JSXAttribute[name.name='color'] > Literal[value!=/^(?:gold|faint)$/]",
+        "message": "<Divider> color must be one of 'gold' | 'faint'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Eyebrow'] > JSXAttribute > JSXIdentifier[name!=/^(?:children|number|color|align|key|ref|className|style|children)$/]",
+        "message": "<Eyebrow> doesn't accept that prop. Declared props: children, number, color, align."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Eyebrow'] > JSXAttribute[name.name='color'] > Literal[value!=/^(?:gold|muted|larimar|magenta)$/]",
+        "message": "<Eyebrow> color must be one of 'gold' | 'muted' | 'larimar' | 'magenta'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Eyebrow'] > JSXAttribute[name.name='align'] > Literal[value!=/^(?:left|center)$/]",
+        "message": "<Eyebrow> align must be one of 'left' | 'center'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Input'] > JSXAttribute > JSXIdentifier[name!=/^(?:label|hint|variant|key|ref|className|style|children)$/]",
+        "message": "<Input> doesn't accept that prop. Declared props: label, hint, variant."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Input'] > JSXAttribute[name.name='variant'] > Literal[value!=/^(?:line|boxed)$/]",
+        "message": "<Input> variant must be one of 'line' | 'boxed'."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/index.js"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ],
+  "x-omelette": {
+    "components": {
+      "Badge": {
+        "replaces": []
+      },
+      "Button": {
+        "replaces": []
+      },
+      "Card": {
+        "replaces": []
+      },
+      "Divider": {
+        "replaces": []
+      },
+      "Eyebrow": {
+        "replaces": []
+      },
+      "Input": {
+        "replaces": []
+      }
+    },
+    "tokens": [
+      "--gg-accent",
+      "--gg-accent-soft",
+      "--gg-bg",
+      "--gg-bg-raised",
+      "--gg-blur",
+      "--gg-border",
+      "--gg-border-gold",
+      "--gg-border-gold-hair",
+      "--gg-border-hair",
+      "--gg-content-max",
+      "--gg-domain-beauty",
+      "--gg-domain-love",
+      "--gg-domain-vision",
+      "--gg-dur-base",
+      "--gg-dur-fast",
+      "--gg-dur-slow",
+      "--gg-ease",
+      "--gg-ease-inout",
+      "--gg-focus",
+      "--gg-font-body",
+      "--gg-font-display",
+      "--gg-font-gods",
+      "--gg-font-mortals",
+      "--gg-font-quote",
+      "--gg-font-spirits",
+      "--gg-glow-gold",
+      "--gg-glow-gold-soft",
+      "--gg-glow-larimar",
+      "--gg-gold-bright",
+      "--gg-gold-deep",
+      "--gg-gold-leaf",
+      "--gg-gutter",
+      "--gg-hairline",
+      "--gg-honey-amber",
+      "--gg-ink-400",
+      "--gg-ink-500",
+      "--gg-ink-600",
+      "--gg-ink-700",
+      "--gg-ink-800",
+      "--gg-ink-900",
+      "--gg-ink-indigo",
+      "--gg-larimar",
+      "--gg-leading-normal",
+      "--gg-leading-relaxed",
+      "--gg-leading-snug",
+      "--gg-leading-tight",
+      "--gg-magenta-aura",
+      "--gg-paper-bg",
+      "--gg-paper-border",
+      "--gg-paper-muted",
+      "--gg-paper-surface",
+      "--gg-paper-text",
+      "--gg-parchment-100",
+      "--gg-parchment-200",
+      "--gg-parchment-300",
+      "--gg-parchment-400",
+      "--gg-parchment-bone",
+      "--gg-prose-max",
+      "--gg-radial-glow",
+      "--gg-radius-circle",
+      "--gg-radius-lg",
+      "--gg-radius-md",
+      "--gg-radius-none",
+      "--gg-radius-pill",
+      "--gg-radius-sm",
+      "--gg-shadow-inset",
+      "--gg-shadow-lg",
+      "--gg-shadow-md",
+      "--gg-shadow-sm",
+      "--gg-space-0",
+      "--gg-space-1",
+      "--gg-space-10",
+      "--gg-space-11",
+      "--gg-space-2",
+      "--gg-space-3",
+      "--gg-space-4",
+      "--gg-space-5",
+      "--gg-space-6",
+      "--gg-space-7",
+      "--gg-space-8",
+      "--gg-space-9",
+      "--gg-spectrum",
+      "--gg-surface",
+      "--gg-surface-veil",
+      "--gg-text",
+      "--gg-text-body",
+      "--gg-text-caption",
+      "--gg-text-display",
+      "--gg-text-faint",
+      "--gg-text-gold",
+      "--gg-text-h1",
+      "--gg-text-h2",
+      "--gg-text-h3",
+      "--gg-text-h4",
+      "--gg-text-lead",
+      "--gg-text-muted",
+      "--gg-text-on-light",
+      "--gg-text-on-light-muted",
+      "--gg-text-quote",
+      "--gg-text-small",
+      "--gg-tracking-display",
+      "--gg-tracking-eyebrow",
+      "--gg-tracking-normal",
+      "--gg-tracking-wide",
+      "--gg-veil-bottom",
+      "--gg-veil-top",
+      "--gg-weight-body",
+      "--gg-weight-body-bold",
+      "--gg-weight-body-medium",
+      "--gg-weight-body-semibold",
+      "--gg-weight-gods",
+      "--gg-weight-spirits"
+    ],
+    "tokenKinds": {
+      "--gg-ink-indigo": "color",
+      "--gg-gold-leaf": "color",
+      "--gg-parchment-bone": "color",
+      "--gg-larimar": "color",
+      "--gg-honey-amber": "color",
+      "--gg-magenta-aura": "color",
+      "--gg-ink-900": "color",
+      "--gg-ink-800": "color",
+      "--gg-ink-700": "color",
+      "--gg-ink-600": "color",
+      "--gg-ink-500": "color",
+      "--gg-ink-400": "color",
+      "--gg-gold-bright": "color",
+      "--gg-gold-deep": "color",
+      "--gg-parchment-100": "color",
+      "--gg-parchment-200": "color",
+      "--gg-parchment-300": "color",
+      "--gg-parchment-400": "color",
+      "--gg-bg": "color",
+      "--gg-bg-raised": "color",
+      "--gg-surface": "color",
+      "--gg-surface-veil": "color",
+      "--gg-border": "color",
+      "--gg-border-gold": "color",
+      "--gg-hairline": "color",
+      "--gg-text": "font",
+      "--gg-text-muted": "font",
+      "--gg-text-faint": "font",
+      "--gg-text-gold": "font",
+      "--gg-text-on-light": "font",
+      "--gg-text-on-light-muted": "font",
+      "--gg-accent": "color",
+      "--gg-accent-soft": "color",
+      "--gg-focus": "color",
+      "--gg-paper-bg": "color",
+      "--gg-paper-surface": "color",
+      "--gg-paper-text": "font",
+      "--gg-paper-muted": "color",
+      "--gg-paper-border": "color",
+      "--gg-domain-love": "color",
+      "--gg-domain-vision": "color",
+      "--gg-domain-beauty": "color",
+      "--gg-font-gods": "font",
+      "--gg-font-mortals": "font",
+      "--gg-font-spirits": "font",
+      "--gg-font-display": "font",
+      "--gg-font-body": "font",
+      "--gg-font-quote": "font",
+      "--gg-text-display": "font",
+      "--gg-text-h1": "font",
+      "--gg-text-h2": "font",
+      "--gg-text-h3": "font",
+      "--gg-text-h4": "font",
+      "--gg-text-lead": "font",
+      "--gg-text-body": "font",
+      "--gg-text-small": "font",
+      "--gg-text-caption": "font",
+      "--gg-text-quote": "font",
+      "--gg-weight-gods": "font",
+      "--gg-weight-body": "font",
+      "--gg-weight-body-medium": "font",
+      "--gg-weight-body-semibold": "font",
+      "--gg-weight-body-bold": "font",
+      "--gg-weight-spirits": "font",
+      "--gg-leading-tight": "font",
+      "--gg-leading-snug": "font",
+      "--gg-leading-normal": "font",
+      "--gg-leading-relaxed": "font",
+      "--gg-tracking-display": "font",
+      "--gg-tracking-normal": "font",
+      "--gg-tracking-wide": "font",
+      "--gg-tracking-eyebrow": "font",
+      "--gg-space-0": "spacing",
+      "--gg-space-1": "spacing",
+      "--gg-space-2": "spacing",
+      "--gg-space-3": "spacing",
+      "--gg-space-4": "spacing",
+      "--gg-space-5": "spacing",
+      "--gg-space-6": "spacing",
+      "--gg-space-7": "spacing",
+      "--gg-space-8": "spacing",
+      "--gg-space-9": "spacing",
+      "--gg-space-10": "spacing",
+      "--gg-space-11": "spacing",
+      "--gg-content-max": "spacing",
+      "--gg-prose-max": "spacing",
+      "--gg-gutter": "spacing",
+      "--gg-radius-none": "radius",
+      "--gg-radius-sm": "radius",
+      "--gg-radius-md": "radius",
+      "--gg-radius-lg": "radius",
+      "--gg-radius-pill": "radius",
+      "--gg-radius-circle": "radius",
+      "--gg-shadow-sm": "shadow",
+      "--gg-shadow-md": "shadow",
+      "--gg-shadow-lg": "shadow",
+      "--gg-shadow-inset": "shadow",
+      "--gg-glow-gold": "shadow",
+      "--gg-glow-gold-soft": "shadow",
+      "--gg-glow-larimar": "shadow",
+      "--gg-border-hair": "color",
+      "--gg-border-gold-hair": "color",
+      "--gg-veil-top": "color",
+      "--gg-veil-bottom": "color",
+      "--gg-radial-glow": "other",
+      "--gg-spectrum": "color",
+      "--gg-ease": "other",
+      "--gg-ease-inout": "other",
+      "--gg-dur-fast": "other",
+      "--gg-dur-base": "other",
+      "--gg-dur-slow": "other",
+      "--gg-blur": "spacing"
+    },
+    "fontFamilies": [
+      "EB Garamond",
+      "Mulish",
+      "Playfair Display"
+    ]
+  }
+}

@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/gaze-glass-design-system-cb3ca01d-c551-45bd-8fb1-bbd510b48f49/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/gaze-glass-design-system-cb3ca01d-c551-45bd-8fb1-bbd510b48f49/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/gaze-glass-design-system-cb3ca01d-c551-45bd-8fb1-bbd510b48f49/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/gaze-glass-design-system-cb3ca01d-c551-45bd-8fb1-bbd510b48f49/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/gaze-glass-design-system-cb3ca01d-c551-45bd-8fb1-bbd510b48f49/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/gaze-glass-design-system-cb3ca01d-c551-45bd-8fb1-bbd510b48f49/styles.css">
+  <script src="_ds/gaze-glass-design-system-cb3ca01d-c551-45bd-8fb1-bbd510b48f49/_ds_bundle.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; background: #0E0C1F; }
+    * { box-sizing: border-box; }
+    @keyframes cof-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes cof-fade { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes cof-shimmer {
+      0%, 100% { text-shadow: 0 0 10px rgba(181,23,158,0.30); }
+      50% { text-shadow: 0 0 20px rgba(181,23,158,0.60), 0 0 4px rgba(95,183,196,0.35); }
+    }
+    @keyframes cof-shimmer-cyan {
+      0%, 100% { text-shadow: 0 0 10px rgba(95,183,196,0.32); }
+      50% { text-shadow: 0 0 20px rgba(95,183,196,0.62), 0 0 4px rgba(181,23,158,0.30); }
+    }
+    @keyframes cof-glow {
+      0%, 100% { opacity: 0.85; }
+      50% { opacity: 1; }
+    }
+    @keyframes cof-breathe {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.04); opacity: 1; }
+    }
+    .cof-scroll::-webkit-scrollbar { width: 6px; }
+    .cof-scroll::-webkit-scrollbar-thumb { background: rgba(201,162,39,0.25); border-radius: 99px; }
+    .cof-scroll { scrollbar-width: thin; scrollbar-color: rgba(201,162,39,0.25) transparent; }
+    image-slot.cof-fill { display: block !important; width: 100% !important; height: 100% !important; position: absolute !important; inset: 0 !important; }
+    @media (prefers-reduced-motion: reduce) {
+      [data-anim] { animation: none !important; }
+    }
+  </style>
+</helmet>
+<div style="min-height:100vh; width:100%; display:flex; align-items:center; justify-content:center; padding:16px; background: radial-gradient(70% 50% at 50% 12%, rgba(201,162,39,0.10) 0%, rgba(14,12,31,0) 60%), #0E0C1F; font-family: var(--gg-font-mortals); color: var(--gg-parchment-bone);">
+  <div style="position:relative; width:min(100%, 432px); height:min(932px, calc(100vh - 32px)); background: var(--gg-ink-900); border:1px solid var(--gg-border-gold); border-radius:30px; overflow:hidden; box-shadow: var(--gg-shadow-lg), 0 0 80px rgba(201,162,39,0.06); display:flex; flex-direction:column;">
+
+    <!-- ============ COVER ============ -->
+    <sc-if value="{{ isCover }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="Cover" style="position:relative; height:100%; width:100%;">
+        <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-cover-hero" src="assets/cover.png" fit="contain" position="50% 50%" shape="rect" placeholder="Cover art" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+        <div style="position:absolute; inset:0; background: linear-gradient(180deg, rgba(14,12,31,0) 48%, rgba(14,12,31,0.60) 78%, rgba(14,12,31,0.96) 100%); pointer-events:none;"></div>
+        <div style="position:absolute; top:0; left:0; right:0; display:flex; justify-content:center; padding:30px 30px 0; pointer-events:none;">
+          <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Eyebrow" align="center" color="gold" hint-size="auto,18px">A Gaze Glass Chronicle</x-import>
+        </div>
+        <div style="position:absolute; left:0; right:0; bottom:0; display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; padding:0 30px 30px; pointer-events:none;">
+          <div style="pointer-events:auto;">
+            <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Button" variant="primary" size="lg" iconRight="→" onClick="{{ begin }}" hint-size="auto,54px">Begin the chronicle</x-import>
+          </div>
+          <p style="margin:0; font-family: var(--gg-font-spirits); font-style:italic; font-size:0.84rem; letter-spacing:0.12em; color: var(--gg-text-muted);">Gods Watch &middot; Mortals Pray &middot; Spirits Remember</p>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ============ READING ============ -->
+    <sc-if value="{{ isReading }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="Reading View" style="height:100%; display:flex; flex-direction:column;">
+        <!-- top controls -->
+        <div style="flex:0 0 auto; padding:14px 16px 12px; border-bottom:1px solid var(--gg-hairline); background: var(--gg-ink-900); display:flex; flex-direction:column; gap:11px; z-index:3;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+            <button onClick="{{ exit }}" aria-label="Back to cover" style="width:36px; height:36px; border-radius:50%; border:1px solid var(--gg-hairline); background:transparent; color: var(--gg-text-muted); font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: all var(--gg-dur-fast) var(--gg-ease);" style-hover="color: var(--gg-gold-leaf); border-color: var(--gg-border-gold);">✕</button>
+            <div style="flex:1; display:flex; flex-direction:column; gap:4px; padding:0 4px;">
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <span style="font-size:0.62rem; letter-spacing:0.15em; text-transform:uppercase; color: var(--gg-text-faint); white-space:nowrap;">{{ chapterLabel }}</span>
+                <span style="font-size:0.62rem; letter-spacing:0.12em; color: var(--gg-text-faint); white-space:nowrap;">{{ progressPct }}</span>
+              </div>
+              <div style="width:100%;">{{ braidBar }}</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <button onClick="{{ fontDown }}" aria-label="Smaller text" style="width:34px; height:34px; border-radius:50%; border:1px solid var(--gg-hairline); background:transparent; color: var(--gg-text); font-size:0.72rem; cursor:pointer; font-family: var(--gg-font-gods); transition: all var(--gg-dur-fast) var(--gg-ease);" style-hover="color: var(--gg-gold-leaf); border-color: var(--gg-border-gold);">A</button>
+              <button onClick="{{ fontUp }}" aria-label="Larger text" style="width:34px; height:34px; border-radius:50%; border:1px solid var(--gg-hairline); background:transparent; color: var(--gg-text); font-size:1rem; cursor:pointer; font-family: var(--gg-font-gods); transition: all var(--gg-dur-fast) var(--gg-ease);" style-hover="color: var(--gg-gold-leaf); border-color: var(--gg-border-gold);">A</button>
+              <button onClick="{{ toggleMode }}" aria-label="Toggle day and night reading" style="width:34px; height:34px; border-radius:50%; border:1px solid var(--gg-border-gold); background: var(--gg-surface-veil); color: var(--gg-gold-leaf); font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: all var(--gg-dur-fast) var(--gg-ease);">{{ modeGlyph }}</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- scroll body -->
+        <div class="cof-scroll" onScroll="{{ onScroll }}" ref="{{ scrollRef }}" style="flex:1 1 auto; overflow-y:auto; background:{{ paperBg }};">
+          <sc-if value="{{ isCh1 }}" hint-placeholder-val="{{ true }}">
+          <div data-screen-label="Chapter One">
+          <div style="max-width:100%; padding:26px 26px 8px; color:{{ paperText }};">
+            <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Eyebrow" number="01 /" color="gold" hint-size="auto,18px">A Court of Foxes</x-import>
+            <h2 style="margin:14px 0 16px; font-family: var(--gg-font-gods); font-weight:600; font-size:2.3rem; line-height:1.04; color:{{ paperText }};">The Celestial Court</h2>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+              <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Badge" tone="muted" hint-size="auto,24px">~9 min</x-import>
+              <span style="font-size:0.78rem; color:{{ paperMuted }}; font-style:italic; font-family: var(--gg-font-spirits);">Chapter One of sixteen</span>
+            </div>
+            <!-- focus prompt -->
+            <div style="border:1px solid {{ paperBorder }}; border-top:2px solid var(--gg-border-gold); border-radius: var(--gg-radius-md); padding:16px 18px; margin-bottom:6px; background:{{ paperVeil }};">
+              <p style="margin:0 0 6px; font-size:0.62rem; letter-spacing:0.22em; text-transform:uppercase; color: var(--gg-gold-deep); font-weight:600;">Hold this question</p>
+              <p style="margin:0; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.18rem; line-height:1.4; color:{{ paperText }};">What does Jem fear about being wanted?</p>
+            </div>
+          </div>
+
+          <!-- hero art + beauty-sight -->
+          <div style="padding:14px 26px 4px;">
+            <div onPointerDown="{{ holdStart }}" onPointerUp="{{ holdEnd }}" onPointerLeave="{{ holdEnd }}" onContextMenu="{{ prevent }}" style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }}; cursor:pointer; user-select:none; touch-action:none;">
+              <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch1-hero" src="assets/ch1-beauty-throne.png" shape="rect" placeholder="Ch 1 hero — the Celestial Court, each god beside their fox" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              <sc-if value="{{ beautyHold }}" hint-placeholder-val="{{ false }}">
+                <div data-anim="" style="position:absolute; inset:0; animation: cof-fade var(--gg-dur-fast) var(--gg-ease) both;">
+                  <div style="position:absolute; inset:0; background: rgba(14,12,31,0.5);"></div>
+                  <div style="position:absolute; inset:0; background: radial-gradient(78% 78% at 50% 42%, rgba(181,23,158,0.45) 0%, rgba(95,183,196,0.24) 50%, rgba(14,12,31,0.5) 100%); mix-blend-mode:screen;"></div>
+                  <div style="position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; gap:5px; padding:16px;">
+                    <p style="margin:0; font-size:0.6rem; letter-spacing:0.22em; text-transform:uppercase; color: var(--gg-larimar); font-weight:600; text-shadow:0 0 10px rgba(0,0,0,0.7);">Beauty-sight</p>
+                    <p style="margin:0; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.0rem; line-height:1.35; color: #F6F0E1; text-shadow: 0 0 16px rgba(181,23,158,0.75);">Beneath the gold — rot through lace, a hand on the back of your neck. The flaw under the ornament.</p>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+            <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-magenta-aura);">✦</span> Press &amp; hold the image — beauty-sight reveals what hides beneath the glamour.</p>
+          </div>
+
+          <!-- prose -->
+          <div style="padding:22px 26px 0; font-family: var(--gg-font-mortals); font-size:{{ bodyPx }}; line-height:{{ bodyLh }}; color:{{ paperText }}; max-width:68ch;">
+            <p style="margin:0 0 1.1em;">I counted seven exits before the first fox smiled at me.</p>
+            <p style="margin:0 0 1.1em;">Not kindly. Not subtly. With teeth. Divine courts were full of teeth.</p>
+            <p style="margin:0 0 1.1em;">My goddess always told me I was no ordinary vixen — that I should never settle. Standing in that glittering room, I wondered if she understood those were two different instructions.</p>
+            <p style="margin:0 0 1.1em;">The Celestial Court glittered like gold. Pillars of multi-colored glass rose into a ceiling too high to trust. Pillar candles burned in floating rings above us, their flames rose-bright at the center and honey-gold at the edges. Nauseating jasmine incense burned, wisps of white smoke snaking in every direction in loose loops. A harp played on its own below silk banners that hung between the pillars, embroidered with the old refrain in thread fine enough to look like trapped sunlight.</p>
+            <p style="margin:1.4em 0; text-align:center; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.12em; letter-spacing:0.06em; color:{{ paperText }};">Gods Watch. Mortals Pray. Spirits Remember.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch1-interior" src="assets/ch1-court-interior.png" shape="rect" placeholder="The Celestial Court — stained glass, gold mirrors, candlelight" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> The Celestial Court — pillars of colored glass, candles rose-bright at the center.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">Every fox sat beside their patron deity with absolute reverence. One god. One fox. That was the law — and attendance was not optional. I stood at the right hand of the God of Beauty and pretended not to notice the weight of her gaze on the back of my bejeweled neck. My goddess's throne was sculpted from blocks of polished rose quartz. I peered into the reflective surface and blinked at myself from six different angles without ever choosing to look. Pink fur swept over one shoulder. A gold collar at my throat. A white tail curled neatly behind my little feet.</p>
+            <p style="margin:0 0 1.1em;">I was trying my best to keep my face composed. Trying my best to keep my mouth soft. Despite two foxes vying for my attention, I kept my eyes lowered exactly enough to flatter, but not enough to seem afraid. I had to look like the very picture of devotion. But that was the problem with beauty. Beauty lies even when the truth is told. We all want to see what we want to see.</p>
+            <p style="margin:0 0 1.1em;">A mortal servant passed by with a tray of sugared figs. Each fig had been brushed with gold dust and arranged around a spray of moonflowers. Lovely, at first glance. Hideous upon second sight. Beneath the nearest bloom, one petal had browned at the edge. A thin black vein spread through it like rot through lace. <span data-anim="" style="border-radius:3px; padding:1px 3px; background: rgba(181,23,158,0.06); animation: cof-shimmer 4.5s var(--gg-ease-inout) infinite;">I saw it because my goddess had made me to see such things. The flaw under the ornament. The hunger under the smile. The bruise under the silk.</span> Mortals think beauty is a gift. They are wrong. Beauty was a hand on the back of your neck, guiding you toward the place someone had already decided you belonged.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Jem,&rdquo; the God of Beauty said, each syllable drawn like pulled silk.</p>
+            <p style="margin:0 0 1.1em;">I turned my head a fraction and smiled. My goddess did not look at me. Gods rarely bothered to look directly at what belonged to them. She watched the assembly below with a little curve to her mouth, amused by the boredom of immortals.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Yes, my goddess?&rdquo; I asked.</p>
+            <p style="margin:0 0 1.1em;">The God of Beauty grinned. &ldquo;You are counting exits again.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">I stilled as her smile widened.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Only admiring the architecture,&rdquo; I said.</p>
+            <p style="margin:0 0 1.1em;">My goddess laughed, and every mirror in her throne caught the sound. &ldquo;Of course you are.&rdquo;</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch1-beauty" src="assets/ch1-court.png" shape="rect" placeholder="The God of Beauty on her rose quartz throne, Jem at her feet" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-magenta-aura);">✦</span> She never looked directly at what belonged to her.</p>
+            </div>
+            <div style="margin:1.6em 0;">{{ proseDivider }}</div>
+            <p style="margin:0 0 1.1em;">Then the western doors opened late. Not a little late. Not politely late. Late enough that every head turned. Marok — divine assistant to the God of War — entered as though applause had been promised and merely forgotten. No one clapped. He wore the colors of War the way fire wore smoke: carelessly, beautifully, and with every intention of ruining something. His coat was green as the glass grass in Utopia. He caught me looking. Of course he did. Marok's grin sharpened. I looked away first, which was irritating because it made him win something I had not agreed to play.</p>
+            <p style="margin:0 0 1.1em;">The eastern doors opened next. No delay. No flourish. No glitter. Kitsu, divine assistant to the God of Justice, entered at the exact appointed moment, as if the court's clock had taken lessons from his spine. His fur was as gold as the sun at dawn. His glimmering tail swept once behind him, controlled as a brushstroke. Kitsu did not look at the gods first. He looked at the exits. All seven. Then he looked at me. My skin tightened under my collar. Marok saw me when I was pretending. Kitsu saw what the pretending was built around — and that made him dangerous in a quieter way.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;One night,&rdquo; Marok said, later, when the bells had rung and the boredom had curdled into something reckless. &ldquo;Borrowed bodies. Tails surrendered before the ninth bell. Returned before dawn. As mortals.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Absolutely not,&rdquo; Kitsu said. &ldquo;It is forbidden to leave without summons.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">&ldquo;It is frowned upon,&rdquo; Marok said.</p>
+            <p style="margin:0 0 1.1em;">And I wanted out. The truth came so suddenly I had to lower my pink eyes before anyone saw it. I wanted one hour where no god adjusted me with a hand on my back. One hour where no mirror told me what I was worth. But desire was a door, too — and I had spent too long counting exits to mistake every open door for freedom.</p>
+            <p style="margin:0 0 1.1em;">The God of Beauty rose from her throne, and the court finally noticed us. &ldquo;My assistant, Jem, will attend the mortal hour,&rdquo; she announced. &ldquo;War's assistant seems eager to escort her. Justice's fox seems eager to prevent catastrophe. How convenient. They may both go.&rdquo;</p>
+            <p style="margin:0 0 1.4em;">I stopped at the threshold and counted the exits one last time. Seven behind me. One ahead. Marok came to my left, warm as trouble. Kitsu came to my right, quiet as a verdict. Behind me, the court glittered like a cage. Ahead, the mortal night opened its teeth and smiled.</p>
+          </div>
+
+          <!-- footer -->
+          <div style="padding:8px 26px 30px;">
+            <div style="margin:6px 0 22px;">{{ proseDivider }}</div>
+            <div style="border:1px solid {{ paperBorder }}; border-left:2px solid var(--gg-larimar); border-radius: var(--gg-radius-md); padding:15px 17px; background:{{ paperVeil }}; margin-bottom:22px;">
+              <p style="margin:0 0 5px; font-size:0.62rem; letter-spacing:0.22em; text-transform:uppercase; color: var(--gg-larimar); font-weight:600;">What changed</p>
+              <p style="margin:0; font-size:0.98rem; line-height:1.5; color:{{ paperText }};">Jem is sent down to live one mortal hour — escorted by War, shadowed by Justice. Three foxes, one borrowed night.</p>
+            </div>
+            <p style="margin:0 0 20px; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.05rem; line-height:1.5; color:{{ paperMuted }};">The crystal doors seal behind them. Below the court waits a stairway of black stone — and the Mortal Hour.</p>
+            <div style="display:flex; justify-content:center;">
+              <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Button" variant="primary" size="lg" iconRight="→" onClick="{{ continueReading }}" hint-size="auto,54px">Continue to Chapter Two</x-import>
+            </div>
+          </div>
+          </div>
+          </sc-if>
+
+          <sc-if value="{{ isCh2 }}" hint-placeholder-val="{{ false }}">
+          <div data-screen-label="Chapter Two">
+          <div style="max-width:100%; padding:26px 26px 8px; color:{{ paperText }};">
+            <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Eyebrow" number="02 /" color="gold" hint-size="auto,18px">A Court of Foxes</x-import>
+            <h2 style="margin:14px 0 16px; font-family: var(--gg-font-gods); font-weight:600; font-size:2.3rem; line-height:1.04; color:{{ paperText }};">The Mortal Hour</h2>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+              <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Badge" tone="muted" hint-size="auto,24px">~10 min</x-import>
+              <span style="font-size:0.78rem; color:{{ paperMuted }}; font-style:italic; font-family: var(--gg-font-spirits);">Chapter Two of sixteen</span>
+            </div>
+            <div style="border:1px solid {{ paperBorder }}; border-top:2px solid var(--gg-border-gold); border-radius: var(--gg-radius-md); padding:16px 18px; margin-bottom:6px; background:{{ paperVeil }};">
+              <p style="margin:0 0 6px; font-size:0.62rem; letter-spacing:0.22em; text-transform:uppercase; color: var(--gg-gold-deep); font-weight:600;">Hold this question</p>
+              <p style="margin:0; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.18rem; line-height:1.4; color:{{ paperText }};">What does Jem surrender when she lets herself be touched?</p>
+            </div>
+          </div>
+
+          <div style="padding:14px 26px 4px;">
+            <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+              <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch2-hero" src="assets/ch2-stairway.png" shape="rect" placeholder="Ch 2 hero — the descent, three foxes on the black stair" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+            </div>
+            <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> The descent — borrowed flesh, borrowed breath, before the ninth bell.</p>
+          </div>
+
+          <div style="padding:22px 26px 0; font-family: var(--gg-font-mortals); font-size:{{ bodyPx }}; line-height:{{ bodyLh }}; color:{{ paperText }}; max-width:68ch;">
+            <p style="margin:0 0 1.1em;">Icy air grasped my lungs as we exited the Celestial Court.</p>
+            <p style="margin:0 0 1.1em;">I had expected gold. Everything above had been gold, or glass pretending to be gold, or beauty pretending not to be a cage — but the stairway beneath the Celestial Court had been cut from black stone veined with amber light. It spiraled down through the body of the palace like a secret no one wished to claim, and smelled like cinnamon rotting.</p>
+            <p style="margin:0 0 1.1em;">My claws clicked against each step. Marok took the stairs as if gravity had offended him personally — bounding three at a time, green tail high, ears pricked toward trouble. Kitsu descended as though every stair had filed a petition and he had approved each one in order.</p>
+            <p style="margin:0 0 1.1em;">I stayed between them, because — of course I did. Not because I needed guarding. Only because the stairway was narrow, and Marok kept glancing back with that grin, and Kitsu kept watching the shadows ahead as if law itself might be hiding in them with a knife. Behind us, the crystal court doors sealed with a sound like a kiss pressed to glass. I did not look back. Though I wanted to.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Still time to confess this was a joke,&rdquo; Kitsu said.</p>
+            <p style="margin:0 0 1.1em;">Marok&rsquo;s ears twitched. &ldquo;The tragic thing about you, golden boy, is that you think jokes cannot also be destiny.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">&ldquo;They cannot,&rdquo; Kitsu growled.</p>
+            <p style="margin:0 0 1.1em;">Marok cackled. &ldquo;Then you are telling them wrong.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">I should have remained silent. Silence was safer. Instead I said, &ldquo;If this is destiny, it has poor manners.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">Marok spun on the next landing and walked backward with bravado. &ldquo;There she is again. The woman under the ornament.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">I nearly missed a step. Kitsu did not. His shoulder brushed mine before I could fall — a controlled, careful touch that vanished almost before it happened. Marok saw it anyway. Of course he did.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Boys,&rdquo; I said sweetly, pitching my voice to the honeyed lift my goddess used when she wanted something destroyed. &ldquo;I have four paws and an excellent memory. Make this about territory, and I will bite you very hard.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">For one glorious heartbeat, they both shut up. Then Marok opened his big mouth. &ldquo;Is that a promise?&rdquo;</p>
+            <div style="margin:1.6em 0;">{{ proseDivider }}</div>
+            <p style="margin:0 0 1.1em;">The stairway ended at a door made of dark mirror-glass. No handle. No hinge. Only our reflections warped across its surface: three foxes — one pink, one green, one gold — all pretending we had not just stepped out of the laws that kept the heavens tidy. Words glowed above the door in old script.</p>
+            <div style="margin:1.5em 0; text-align:center;">
+              <p style="margin:0 0 4px; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.25em; letter-spacing:0.14em; text-transform:uppercase; color:{{ paperText }};">The Mortal Hour</p>
+              <p style="margin:0; font-size:0.78rem; letter-spacing:0.16em; text-transform:uppercase; color: var(--gg-gold-deep);">Borrowed flesh &middot; Borrowed breath &middot; Return before dawn</p>
+            </div>
+            <p style="margin:0 0 1.1em;">The mirror brightened until a face appeared within it. Not a person. Not exactly. A mask of black glass, with eyes of candle flame and a mouth too thin for kindness.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;The God of Beauty&rsquo;s assistant attends under command,&rdquo; it said, its burning eyes turning to me. &ldquo;The God of War&rsquo;s assistant attends under intent. The God of Justice&rsquo;s assistant attends under protest. Terms of the Mortal Hour: tails surrendered, bodies transformed, divine seals veiled. Return before dawn&rsquo;s first bell. Failure to return will result in forfeiture, retrieval, and possible censure.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Possible?&rdquo; Marok asked.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;That word is not comforting,&rdquo; Kitsu said.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;No,&rdquo; I said. &ldquo;It is honest. I prefer it to guaranteed.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">Beyond the door waited a chamber round as an eye — walls black as tar, floor white marble. At its center stood three narrow basins of still water, each shaped like a crescent moon. Above them hung silver hooks, delicate and cruel, swaying though there was no breeze. &ldquo;Surrender in order of claim,&rdquo; the mask said. &ldquo;War. Justice. Beauty.&rdquo; Of course Beauty came last. Beauty loved an audience.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 5 / 4; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch2-ritual" src="assets/ch2-ritual.png" shape="rect" placeholder="The three basins — tails surrendered" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> War. Justice. Beauty — tails surrendered to the crescent basins, the black-glass mask watching.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">Marok padded forward, all easy swagger — until he reached the hook. Then the green of his tail dimmed, and I saw the truth before he covered it. He was afraid. Light tore from him. His tail became a ribbon of green fire pulled into the basin, coiling beneath the water like a sleeping serpent. For a breath he looked smaller without it. Then he smiled too brightly. &ldquo;Well. That was intimate.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">Kitsu stepped to the second basin. He did not hesitate — that was his cruelty to himself. The hook touched his golden tail and his whole body locked. No sound came out of him. That was worse. Gold light streamed into the water, clean and terrible. When it ended, he swayed. I moved before I thought. So did Marok. Neither of us touched him.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;I am fine,&rdquo; he said.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Liar,&rdquo; I said. The word escaped before caution could catch it. Something warmer moved beneath his surprise. &ldquo;Observed,&rdquo; he said quietly. I had no idea why that felt like praise.</p>
+            <p style="margin:0 0 1.1em;">Then the mask turned to me. My reflection moved in every wall: pink fox, gold collar, bright magenta eyes — an army of pretty things, all walking to the same hook. I hated every single one of them.</p>
+            <p style="margin:0 0 1.1em;">The hook touched my tail. Pain bloomed white. Not sharp. Not clean. Worse — familiar. As if every hand that had ever arranged me, praised me, displayed me, and called it love had found the root of me and pulled. My little legs buckled. Marok moved first. Kitsu said my name. I did not fall. I would hold that later like a jewel between my teeth. I did not fall.</p>
+            <p style="margin:0 0 1.1em;">My tail became rose-pink light in the basin, bright as a wound under water. The world tipped. &ldquo;Borrowed flesh granted,&rdquo; the mask said, from very far away. I had been a fox. Then I was pure heat. Then breath. Then weight. Then too much skin.</p>
+            <p style="margin:0 0 1.1em;">I landed hard on hands and knees — pale, slender things spread against cold marble, five fingers splayed like startled spiders. My hair fell around my face in a pink curtain. I inhaled. Then I gagged. The world assaulted me. Jasmine. Stone. Smoke from the city below. My own heartbeat, frantic and loud.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch2-mortal" src="assets/ch2-mortal.png" shape="rect" placeholder="Borrowed flesh — and a silver-tailed watcher in the glass" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> Borrowed flesh — Marok&rsquo;s offered hand, Kitsu&rsquo;s careful distance, and a silver-tailed watcher in the glass.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">&ldquo;Jem?&rdquo; Marok asked — his voice lower now, rougher, still amused. He stood in borrowed flesh, hunter-green hair loose around a face, eyes still that glimmering green above a mouth made entirely for mistakes. &ldquo;Well,&rdquo; he said, staring down at himself. &ldquo;That is inconveniently handsome.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">Justice in mortal skin was worse. Kitsu looked like a temple statue that had learned disappointment — gold-brown skin, dark hair bound at the nape, eyes the same impossible amber as his foxfire. Then he looked at me. Marok did too. As foxes we had fur and function. As mortals, everything had edges. Wrists. Throats. Mouths.</p>
+            <p style="margin:0 0 1.1em;">I tried to stand. My knees betrayed me. Marok offered his hand. &ldquo;Still beautiful,&rdquo; he said, softer than a joke. The words should have irritated me — they did — but they steadied something I had not known was shaking, because he said them as if he was not asking to own the answer.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 4 / 3; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch2-standing" src="assets/ch2-standing.png" shape="rect" placeholder="Three mortals — Justice, Beauty, War" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> Justice, Beauty, and War in borrowed skin — everything edges now: wrists, throats, mouths.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">&ldquo;Beauty is not the concern,&rdquo; Kitsu said carefully. &ldquo;Balance is. Take the hand if you need it.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">&ldquo;I do not need it,&rdquo; I said. My legs wobbled. Marok&rsquo;s hand remained. &ldquo;No debt,&rdquo; he said. &ldquo;Just a hand.&rdquo; That was the trouble with Marok — every now and then, beneath all the ruin, he said the right thing. I took his hand. His fingers closed around mine, warm and startlingly human, and the contact raced up my arm before I could command it not to.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;The Mortal Hour has begun,&rdquo; the mask said. The door had become a tall human mirror in a gilded frame. Beyond it, a corridor of lamps, and past that the dark mouth of the city. Music pulsed faintly through the glass.</p>
+            <p style="margin:0 0 1.1em;"><span data-anim="" style="border-radius:3px; padding:1px 3px; background: rgba(95,183,196,0.08); animation: cof-shimmer-cyan 4.5s var(--gg-ease-inout) infinite;">The mirror rippled. For one heartbeat, my reflection vanished. A silver-tailed fox stood behind us in the glass — thin and pale, with eyes like old moonlight, their tail gleaming bright as a blade drawn in secret. They looked at me. Not Marok. Not Kitsu. Me. Then their mouth opened, but no sound came out. The image blinked away.</span></p>
+            <p style="margin:0 0 1.4em;">Kitsu&rsquo;s voice came low and immediate. &ldquo;What did you see?&rdquo; I looked at the empty mirror, then at Marok&rsquo;s hand still wrapped around mine, then turned toward the mortal city, where music waited like a dare. &ldquo;Nothing,&rdquo; I replied coolly. The mirror knew I was lying. So did Kitsu. So, gods help me, did Marok.</p>
+          </div>
+
+          <div style="padding:8px 26px 30px;">
+            <div style="margin:6px 0 22px;">{{ proseDivider }}</div>
+            <div style="border:1px solid {{ paperBorder }}; border-left:2px solid var(--gg-larimar); border-radius: var(--gg-radius-md); padding:15px 17px; background:{{ paperVeil }}; margin-bottom:22px;">
+              <p style="margin:0 0 5px; font-size:0.62rem; letter-spacing:0.22em; text-transform:uppercase; color: var(--gg-larimar); font-weight:600;">What changed</p>
+              <p style="margin:0; font-size:0.98rem; line-height:1.5; color:{{ paperText }};">The three surrender their tails and step into borrowed mortal flesh — and a silver-tailed stranger watches Jem from the glass.</p>
+            </div>
+            <p style="margin:0 0 20px; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.05rem; line-height:1.5; color:{{ paperMuted }};">Below waits the mortal city — music, smoke, and the first hour Jem has ever belonged to no one. Someone in the glass already knows her name.</p>
+            <div style="display:flex; justify-content:center;">
+              <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Button" variant="primary" size="lg" iconRight="→" onClick="{{ continueReading }}" hint-size="auto,54px">Continue to Chapter Three</x-import>
+            </div>
+          </div>
+          </div>
+          </sc-if>
+
+          <sc-if value="{{ isCh3 }}" hint-placeholder-val="{{ false }}">
+          <div data-screen-label="Chapter Three">
+          <div style="max-width:100%; padding:26px 26px 8px; color:{{ paperText }};">
+            <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Eyebrow" number="03 /" color="gold" hint-size="auto,18px">A Court of Foxes</x-import>
+            <h2 style="margin:14px 0 16px; font-family: var(--gg-font-gods); font-weight:600; font-size:2.3rem; line-height:1.04; color:{{ paperText }};">The Ninth Bell</h2>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+              <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Badge" tone="muted" hint-size="auto,24px">~12 min</x-import>
+              <span style="font-size:0.78rem; color:{{ paperMuted }}; font-style:italic; font-family: var(--gg-font-spirits);">Chapter Three of sixteen</span>
+            </div>
+            <div style="border:1px solid {{ paperBorder }}; border-top:2px solid var(--gg-border-gold); border-radius: var(--gg-radius-md); padding:16px 18px; margin-bottom:6px; background:{{ paperVeil }};">
+              <p style="margin:0 0 6px; font-size:0.62rem; letter-spacing:0.22em; text-transform:uppercase; color: var(--gg-gold-deep); font-weight:600;">Hold this question</p>
+              <p style="margin:0; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.18rem; line-height:1.4; color:{{ paperText }};">What does Jem forget when no one is holding her neck?</p>
+            </div>
+          </div>
+
+          <div style="padding:14px 26px 4px;">
+            <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+              <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch3-hero" src="assets/ch3-street.png" shape="rect" placeholder="Ch 3 hero — The Ninth Bell (the mortal tavern)" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+            </div>
+            <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> The Ninth Bell — where mortals dance beneath a god&rsquo;s broken law.</p>
+          </div>
+
+          <div style="padding:22px 26px 0; font-family: var(--gg-font-mortals); font-size:{{ bodyPx }}; line-height:{{ bodyLh }}; color:{{ paperText }}; max-width:68ch;">
+            <p style="margin:0 0 1.1em;">I had assumed the mortal city would smell worse.</p>
+            <p style="margin:0 0 1.1em;">It did, obviously. But not simply worse. It smelled impossibly alive. Smoke curled from iron chimneys and roasted-chestnut carts. Rainwater slicked the cobblestones in silver ribbons. Somewhere close, oranges had been split open, their sharp sweetness bleeding into the street. Somewhere farther, something had died in an alley and no one had politely magicked the evidence away. Perfume, sweat, hot sugar, horse, beer, mud, lamp oil, human breath — it all collided at once and climbed straight into my skull.</p>
+            <p style="margin:0 0 1.1em;">I stopped under the archway and gagged with dignity. That is to say, very little dignity.</p>
+            <p style="margin:0 0 1.1em;">Marok laughed once, then clapped a hand over his own mouth as the smell hit him too. Kitsu merely went still, which was his preferred way of suffering.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Mortals live in this?&rdquo; I asked.</p>
+            <p style="margin:0 0 1.1em;">Marok inhaled deeply, eyes bright. &ldquo;They do more than live in it.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Yes,&rdquo; Kitsu said. &ldquo;They contract diseases.&rdquo; &ldquo;They dance,&rdquo; Marok corrected. Kitsu sighed. &ldquo;They riot.&rdquo; &ldquo;They kiss,&rdquo; Marok said, pushing his lips out toward me. &ldquo;They also riot after kissing,&rdquo; Kitsu said. Marok pointed at him as if he had just proven a sacred theorem. &ldquo;Passion.&rdquo; &ldquo;Poor city planning,&rdquo; Kitsu said, frowning.</p>
+            <p style="margin:0 0 1.1em;">I pressed my fingers to the bridge of my nose. Fingers remained troubling. Too long. Too bare. Too expressive. Every part of this borrowed body seemed designed to betray me. My lungs wanted too much air. My heart insisted on being dramatic. My feet, delicate traitors, objected to every stone. And my hair. My hair was everywhere — pink as foxglove, loose down my back, sliding over my shoulders whenever I moved. I had spent centuries with fur and dignity. Now I had a gown thin enough to make the night personal and hair determined to crawl into my mouth.</p>
+            <p style="margin:0 0 1.1em;">Humans were built incorrectly. A carriage rattled past, and I startled at the violence of its wheels. Marok caught my elbow before I stepped backward into a puddle. Kitsu caught my other arm at the same time. Naturally. For one suspended moment, I stood between them with Marok&rsquo;s warmth on my left and Kitsu&rsquo;s controlled grip on my right, both of them pretending this was practical. I looked down at their hands. They released me in the same breath.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Balance,&rdquo; Kitsu said. &ldquo;Reflex,&rdquo; Marok said. &ldquo;Territory,&rdquo; I growled. Both of them looked wounded. It improved my mood considerably.</p>
+            <p style="margin:0 0 1.1em;">The mirror-gate behind us folded itself into the wall of an old brick building, as if it had always been nothing more than a window gone black with age. Above the archway, a tarnished sign swung in the wind.</p>
+            <div style="margin:1.5em 0; text-align:center;">
+              <p style="margin:0; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.25em; letter-spacing:0.14em; text-transform:uppercase; color:{{ paperText }};">The Ninth Bell</p>
+            </div>
+            <p style="margin:0 0 1.1em;">Beneath the letters, someone had painted a fox with three tails drinking from a goblet.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch3-outside" src="assets/ch3-outside.png" shape="rect" placeholder="Outside the Ninth Bell — the sign, the three of them" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> The sign has always been there. They only just found it.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">Marok grinned slowly. &ldquo;No,&rdquo; Kitsu said. &ldquo;You say that so often,&rdquo; Marok replied. &ldquo;Do you ever grow bored of being ignored?&rdquo; Kitsu scoffed. &ldquo;That depends. Do you ever grow bored of making disaster feel courted?&rdquo; Marok grinned. &ldquo;Never.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">Music pulsed from behind the door. Not the clean harp-notes of the Celestial Court. This music had knees. It had hips. It had the audacity to thump through the soles of my bare feet and make my new human blood answer before I had given it permission. I hated it immediately. I wanted more.</p>
+            <p style="margin:0 0 1.1em;">Marok pushed open the door. Heat swallowed us. The Ninth Bell was not a tavern. It was not a temple. It was something worse: both, pretending to be neither. Lanterns hung in clusters from black rafters, each one covered in colored glass so the light spilled red, amber, and green over the room. A bar curved along the far wall like a grin. Mortals packed the center, moving together in a whirl of skirts, boots, bare shoulders, open throats, and laughter loud enough to start wars. On a raised platform, three musicians played as if they were trying to outrun death. Drum. Fiddle. Some reedy pipe that sounded like a bird losing an argument. And above the bar, mounted inside a case of smoky glass, hung a golden scale.</p>
+            <p style="margin:0 0 1.1em;">I noticed it because Kitsu stopped breathing. Not metaphorically. Not dramatically. He stopped.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch3-scale-glows" src="assets/ch3-scale-glows.png" shape="rect" placeholder="The Scale of Judgment glowing above the bar" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-gold-leaf);">✦</span> That should not be here.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">Marok followed his gaze and frowned. &ldquo;That is a little on the nose, even for mortals.&rdquo; The scale was beautiful in the way divine tools often were: too balanced to be decorative, too sharp to be safe. Its central beam was blackened gold. Two shallow pans hung from chains so fine they looked like threads of light. The words beneath the case read:</p>
+            <div style="margin:1.5em 0; text-align:center;">
+              <p style="margin:0; font-size:0.78rem; letter-spacing:0.16em; text-transform:uppercase; color: var(--gg-gold-deep);">House relic &middot; Do not touch</p>
+            </div>
+            <p style="margin:0 0 1.1em;">Naturally, this meant every mortal in the building had probably touched it.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch3-bar" src="assets/ch3-bar.png" shape="rect" placeholder="Inside the Ninth Bell — bar, scale, the three of them" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> The Ninth Bell at full roar — scale above, mortals below.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">Kitsu&rsquo;s face had gone pale beneath the warm brown of his borrowed skin. &ldquo;That should not be here,&rdquo; he said. Marok leaned closer. &ldquo;Is it real?&rdquo; &ldquo;No.&rdquo; Kitsu&rsquo;s answer came too quickly. &ldquo;It cannot be.&rdquo; &ldquo;That was not a no.&rdquo; &ldquo;It is impossible.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">I looked at the scale again. It did not glow. It did not sing. It sat above a bar while a mortal woman below it poured beer into chipped mugs and shouted at a man to stop licking the dice. &ldquo;Perhaps it is a replica,&rdquo; I said. Kitsu&rsquo;s eyes did not leave it. &ldquo;Perhaps.&rdquo; Marok brightened. &ldquo;Excellent. Then we should enjoy ourselves.&rdquo; &ldquo;That is not what perhaps means.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">But Marok was already moving. A mortal woman with copper hair and three necklaces appeared in front of us as though summoned by foolishness. &ldquo;First time at the Bell?&rdquo; she asked. Marok tried to open his mouth to say something stupid. Kitsu spoke too fast: &ldquo;No.&rdquo; I said, &ldquo;Yes.&rdquo; Marok said, &ldquo;Tragically undercelebrated until now.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">The woman looked between us, decided we were pretty enough to tolerate, and slapped three small clay cups onto a nearby table. Amber liquid sloshed over the rims. &ldquo;House welcome,&rdquo; she said. &ldquo;Drink, dance, just don&rsquo;t bleed on the floor. Okay?&rdquo;</p>
+            <p style="margin:0 0 1.1em;">Kitsu stared at the cups as if one had confessed to murder. Marok lifted his immediately. &ldquo;To mortal customs!&rdquo; &ldquo;To limited censure,&rdquo; I said, because apparently my mouth had survived the transformation with all its worst impulses intact.</p>
+            <p style="margin:0 0 1.1em;">Kitsu did not drink. Marok did. His expression changed. First delight. Then alarm. Then delight again, but more reckless. &ldquo;Oh,&rdquo; he said. I sniffed my cup. It smelled like honey, smoke, and regret. &ldquo;Absolutely not,&rdquo; Kitsu said. I drank.</p>
+            <p style="margin:0 0 1.1em;">The liquid hit my tongue like a slap wearing perfume. My eyes watered. Heat traveled down my throat and bloomed in my stomach, shocking enough that I nearly laughed. Marok watched me with wicked approval. &ldquo;Well?&rdquo; he asked. &ldquo;Disgusting,&rdquo; I said. Then I drank again.</p>
+            <p style="margin:0 0 1.1em;">Kitsu took the cup from my hand. I stared at him. He stared back. &ldquo;Balance,&rdquo; he said. &ldquo;Possession,&rdquo; I replied. His eyes sharpened. Then, very deliberately, he released the cup and folded his hands behind his back. &ldquo;My apology.&rdquo; That should not have pleased me, but it truly did.</p>
+            <p style="margin:0 0 1.1em;">Marok, who had finished his drink and possibly part of his common sense, leaned toward me. &ldquo;Dance with me.&rdquo; &ldquo;No,&rdquo; I said, bright and pleasant as a door closing. &ldquo;You don&rsquo;t know what I&rsquo;m asking,&rdquo; Marok replied. I smiled. &ldquo;I have been told that before. It ended in bloodshed.&rdquo; Marok&rsquo;s grin flashed. &ldquo;And yet your hair looks magnificent.&rdquo; I lifted my chin. &ldquo;That has nothing to do with you.&rdquo; &ldquo;Most miracles don&rsquo;t,&rdquo; Marok said, sighing. Kitsu made a soft, pained sound.</p>
+            <p style="margin:0 0 1.1em;">The music quickened. Bodies spun. A pair of mortal women turned beneath joined hands, skirts flaring like flowers caught in a storm. No one bowed. No one asked permission from a god. No one seemed arranged. They simply moved because the music had asked them to, and their bodies had answered. I looked away too late. Marok saw. Of course he did. &ldquo;One dance,&rdquo; he said, and this time his voice had less tease in it. &ldquo;No debt. Just gravity.&rdquo; That word should have been harmless. It was not.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Do not let him twirl you near any furniture,&rdquo; Kitsu warned. I shrieked, then brought the back of my hand up to muffle my smile — and feigned innocence the way my goddess taught me to. Marok offered me his hand. &ldquo;Do let me twirl you near everything else.&rdquo; I took his hand because refusing would have looked like fear. Also because I wanted to.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch3-dance1" src="assets/ch3-dance1.png" shape="rect" placeholder="Jem and Marok — first dance" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> The floor asked. Her body answered.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">The second Marok drew me into the crush of bodies, the room changed. Heat pressed close from every side. Music climbed into my knees. My bare feet slid on spilled drink and sawdust. I stumbled immediately. Marok caught me by the waist. A warmth bloomed in my chest. His fingers splayed warm against the rose-colored fabric of my gown. I looked down at it. He did not move.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Too much?&rdquo; he asked, his thick, hunter-green brows knitting together. The question was quiet enough that I almost missed it beneath the fiddle. That was what made it dangerous. &ldquo;No,&rdquo; I said. His smile returned, but softer at the edges. &ldquo;Then stop thinking like you still have four paws.&rdquo; &ldquo;I miss the paws,&rdquo; I whispered. &ldquo;You do have excellent paws,&rdquo; Marok flirted. &ldquo;Do not flatter my lost paws,&rdquo; I warned, smiling. &ldquo;I would never disrespect them by lying!&rdquo; Marok exclaimed. I laughed before I could stop myself.</p>
+            <p style="margin:0 0 1.1em;">Marok moved. I had expected chaotic dancing — with him, one expected chaos the way one expected rain from a black cloud. But his body knew the rhythm. Not perfectly. Not politely. Joyfully. He turned me under his arm, caught me when I came back, and stepped just close enough that the next breath had to negotiate between us. This was what mortals meant by dancing. Not steps. Not music. Argument.</p>
+            <p style="margin:0 0 1.1em;">His hand at my waist said stay. My hand on his shoulder said do not presume. His grin said too late. My glare said try me. Around us, the Ninth Bell roared. Marok spun me again, and for one wild moment I forgot I was owned. I forgot the God of Beauty&rsquo;s hand on my neck. I forgot the scale above the bar and the silver fox in the mirror and the city&rsquo;s rot beneath its perfume. There was only warm, mortal skin. Music. Gravity. And Marok&rsquo;s voice near my ear. &ldquo;There you are.&rdquo;</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <video autoplay loop muted playsinline style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+                  <source src="assets/ch3-dance-video.mp4" type="video/mp4">
+                </video>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> Not steps. Not music. Argument.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">I should have stepped back. I did not. Across the room, Kitsu watched us. He had not touched his drink. Of course he had not. He stood beside the table like a judgment waiting for evidence, eyes following every turn, every stumble, every place Marok&rsquo;s hand almost moved and did not.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch3-dance3" src="assets/ch3-dance3.png" shape="rect" placeholder="Jem and Marok — close" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> He watched every place Marok&rsquo;s hand almost moved and did not.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">The song ended with a crash of drum and shouting. I was breathing too fast. Marok was too. Good. Then Kitsu appeared at the edge of the dance floor. &ldquo;I require one dance,&rdquo; he said. Marok coughed. &ldquo;Require? That&rsquo;s your line, bro?&rdquo; Kitsu looked at him. &ldquo;Yes, bro.&rdquo; &ldquo;With her?&rdquo; Marok asked. Kitsu growled. &ldquo;With Jem.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">Hearing my name in his voice did something unacceptable to the air. Marok&rsquo;s smile sharpened, but he released me. &ldquo;Careful, Golden Boy. People might think you&rsquo;re enjoying yourself.&rdquo; Kitsu bowed low to me, eyes fixed on Marok. &ldquo;I would never be so irresponsible.&rdquo; Then he offered me his hand. Not palm up, like Marok. Palm inward. A choice I could step into or refuse. That was somehow worse.</p>
+            <p style="margin:0 0 1.1em;">I took it. Kitsu&rsquo;s fingers closed around mine with restrained precision, as though he had calculated exactly how much contact was useful and stopped one breath before dangerous. The musicians began another song, slower this time. Of course they did. Kitsu led as if law had been given a body. No flourish. No wasted pressure. His hand settled at my back, not my waist, and the restraint of it made me far more aware of everywhere he was not touching me.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch3-kitsu-dance1" src="assets/ch3-kitsu-dance1.png" shape="rect" placeholder="Kitsu and Jem — the first hold" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-gold-leaf);">✦</span> Law had been given a body. It did not know what to do with that.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">&ldquo;You dance well for someone who disapproves of motion,&rdquo; I said. Kitsu placed his lips near my ear. &ldquo;I disapprove of unnecessary risk.&rdquo; A chill ran down my spine, but I batted my eyelashes. &ldquo;Is this necessary?&rdquo; His gaze flicked to Marok, then back to me. &ldquo;Clarifying.&rdquo; &ldquo;Clarifying what?&rdquo; &ldquo;That you are capable of wanting danger without surrendering to it.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">My breath caught. The mortal room blurred around him. His eyes were still amber, still severe, but there was heat beneath the severity. Contained, not absent. A flame hidden behind temple doors. &ldquo;And you?&rdquo; I asked. His jaw tightened. The song pulled us closer by half an inch. Only half. My new human body noticed as if it were a scandal. &ldquo;I am capable of wanting many things,&rdquo; Kitsu said. &ldquo;That does not make them lawful.&rdquo; &ldquo;No,&rdquo; I said. &ldquo;Only honest.&rdquo;</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch3-kitsu-dance2" src="assets/ch3-kitsu-dance2.png" shape="rect" placeholder="Kitsu and Jem — the dip" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-gold-leaf);">✦</span> Half an inch. Only half. Her body noticed as if it were a scandal.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">For the first time since I had known him, Kitsu missed a step. Barely. Enough that his hand pressed more firmly at my back. Enough that Marok, watching from the table with his second cup halfway to his mouth, noticed and stopped smiling. Kitsu recovered immediately. Naturally. The song ended. He released me at once, but the place where his hand had been remained warm. &ldquo;Observed,&rdquo; I said, because I was cruel and curious and perhaps the amber drink had been stronger than advertised. Kitsu&rsquo;s eyes darkened.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <video autoplay loop muted playsinline style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+                  <source src="assets/ch3-kitsu-dance-video.mp4" type="video/mp4">
+                </video>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> Observed.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">Marok laughed too loudly from the table. &ldquo;You think you&rsquo;re so cool, Golden Boy?&rdquo; I returned to them with as much dignity as a barefoot woman in a too-thin gown could manage. Marok had acquired another cup. No one had given it to him. This was concerning. &ldquo;How many have you had?&rdquo; Kitsu asked. Marok looked into the cup as if the answer might be swimming there. &ldquo;This one? One.&rdquo; &ldquo;That is not what I asked,&rdquo; Kitsu growled. Marok&rsquo;s eyes narrowed into slits. &ldquo;Then ask better questions.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">I took the cup from him and sniffed it. Fire. &ldquo;This smells like lantern oil,&rdquo; I said, pinching the bridge of my nose. &ldquo;And it tastes like courage,&rdquo; Marok whispered, lips near my ear. &ldquo;It tastes like theft,&rdquo; said a voice behind us. The copper-haired woman from earlier plucked the cup from my hand. &ldquo;You three have coin?&rdquo;</p>
+            <p style="margin:0 0 1.1em;">We stared at her. Ah. Coin. A mortal custom requiring preparation, which none of us had done, because the gods did not pay assistants to be scandalous. Marok patted his borrowed coat and produced, to everyone&rsquo;s surprise, three black pearls, a button shaped like a skull, and a small green flame hovering above his palm. Kitsu slapped his hand shut. &ldquo;No immortal displays,&rdquo; he hissed. The copper-haired woman narrowed her eyes. &ldquo;Is that a trick?&rdquo; &ldquo;Yes,&rdquo; I blurted. &ldquo;No,&rdquo; Marok said. &ldquo;Bad one,&rdquo; Kitsu added.</p>
+            <p style="margin:0 0 1.1em;">I mesmerized the woman with every ounce of power I had spent centuries pretending not to wield. &ldquo;Forgive us. We are very new to being irresponsible.&rdquo; Her expression softened despite itself. I could feel my goddess&rsquo;s hand on the back of my neck. I hated using it. I hated more that it worked. &ldquo;It&rsquo;s all right,&rdquo; she said, smiling. &ldquo;Dance debt, then. One of you helps clean at close.&rdquo; Kitsu immediately said, &ldquo;I accept.&rdquo; Marok immediately said, &ldquo;He accepts.&rdquo; I immediately said, &ldquo;No one is staying until close. We leave before dawn.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">At that exact moment, the golden scale above the bar chimed. Not loudly. Not enough for the mortals to notice over the music, but the sound slipped through me like a needle through silk. Kitsu turned first. The smoky glass case had cracked. A single line split it from top to bottom. Inside, the scale trembled. Marok blinked at it with alcohol-bright eyes. &ldquo;That is definitely not a replica.&rdquo; &ldquo;No,&rdquo; Kitsu said. The word had lost all irritation. Now it was fear.</p>
+            <p style="margin:0 0 1.1em;">The room seemed to tilt toward the artifact. Mortals kept drinking. Kept laughing. Kept dancing beneath a divine instrument that could halt a Judgment, as unaware as flowers growing over a grave. A flash of silver moved in the mirror behind the bar. My breath caught. A fox tail. Pale as old moonlight. Then gone.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch3-fox-mirror" src="assets/ch3-fox-mirror.png" shape="rect" placeholder="The silver fox in the mirror — paw to glass" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> Pale as old moonlight. Then gone.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">&ldquo;Did you see—&rdquo; I began. Marok was already moving. &ldquo;Don&rsquo;t,&rdquo; Kitsu snapped. Marok climbed onto the bar. The copper-haired woman shouted. Someone cheered. Someone else threw a peanut at him. &ldquo;Marok,&rdquo; I said, but my voice vanished under the drum. He turned back to me from the bar, grinning like a fool with his heart showing through the cracks. &ldquo;One impressive thing, Jem. Then we leave.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">&ldquo;I am not impressed by theft.&rdquo; &ldquo;Borrowing.&rdquo; &ldquo;I am not impressed by borrowing from glass cases either.&rdquo; Kitsu shoved through the crowd. &ldquo;Put one hand on that case and I will break it for you.&rdquo; Marok&rsquo;s grin faltered. &ldquo;You are very possessive of objects for a man who claims to worship justice.&rdquo; Kitsu snarled. &ldquo;That is Heba&rsquo;s Scale of Judgment.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">The words hit the room and should have shattered it. They did not. The mortals heard nothing sacred in them. They only laughed and danced, because mortals did not know when they stood at the edge of divine ruin. Marok looked back at the scale. His expression changed. For one breath, he looked sober. Then the case opened by itself. No one touched it. The smoky glass simply swung outward, inviting. <span data-anim="" style="border-radius:3px; padding:1px 3px; background: rgba(95,183,196,0.08); animation: cof-shimmer-cyan 4.5s var(--gg-ease-inout) infinite;">Silver flickered in the mirror again. A mouth opening without sound.</span></p>
+            <p style="margin:0 0 1.1em;">My stomach dropped. &ldquo;Marok,&rdquo; I said. &ldquo;Get down.&rdquo; But Marok had already reached for the scale. His fingers closed around the blackened-gold beam. Green light sparked once under his skin. Kitsu lunged. &ldquo;No!&rdquo; Marok twisted away, half laughing, half startled. &ldquo;I have it.&rdquo; &ldquo;You should not have it!&rdquo; Kitsu declared. Marok whined. &ldquo;I know that now!&rdquo; Kitsu seized the other end of the scale. The two of them froze on the bar, War and Justice in borrowed flesh, each gripping one side of a thing neither mortal nor fox should have been touching.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch3-fight-scale" src="assets/ch3-fight-scale.png" shape="rect" placeholder="Kitsu and Marok each gripping the scale, Jem reaching up" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-gold-leaf);">✦</span> War and Justice. Each gripping one end. Neither should have touched it.</p>
+            </div>
+            <p style="margin:0 0 1.1em;"><span data-anim="" style="border-radius:3px; padding:1px 3px; background: rgba(181,23,158,0.06); animation: cof-shimmer 4.5s var(--gg-ease-inout) infinite;">The scale began to glow. Gold at Kitsu&rsquo;s hand. Green at Marok&rsquo;s. Then rose-pink along the center, answering me though I had not moved.</span> Every glass in the tavern rang. Mortals stopped dancing. The copper-haired woman whispered a prayer.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Kitsu,&rdquo; I said carefully. His eyes did not leave the scale. &ldquo;Let go, Marok.&rdquo; &ldquo;You let go!&rdquo; Marok growled. &ldquo;You are intoxicated,&rdquo; Kitsu said. &ldquo;You are insufferable!&rdquo; Marok snarled. Kitsu tugged. &ldquo;You are endangering the court.&rdquo; Marok tugged harder. &ldquo;You are always the court!&rdquo; The words tore out of Marok with more force than he seemed to expect. Kitsu flinched. Only a little. Enough.</p>
+            <p style="margin:0 0 1.1em;">The scale screamed. Not aloud. Inside the bones. I climbed onto the nearest chair, reaching for them both. &ldquo;Stop.&rdquo; <span data-anim="" style="border-radius:3px; padding:1px 3px; background: rgba(95,183,196,0.08); animation: cof-shimmer-cyan 4.5s var(--gg-ease-inout) infinite;">The silver fox appeared in the mirror behind the bar. Clear now. Smiling. They lifted one pale paw and pressed it to the glass. The scale cracked.</span></p>
+            <p style="margin:0 0 1.1em;">A line of white light split the beam down the middle. For one impossible moment, the room held its breath. Then the Scale of Judgment broke in half. The blast threw every lantern sideways. Gold fire burst from one half. Green fire from the other. Rose light flashed between them, and all the mirrors in the Ninth Bell went black. Marok fell from the bar. Kitsu hit the floor on one knee. I landed hard against a table, the taste of copper blooming in my mouth.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch3-scale-explodes" src="assets/ch3-scale-explodes.png" shape="rect" placeholder="The scale breaking — the blast" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-magenta-aura);">✦</span> Gold fire. Green fire. Rose light. Then nothing.</p>
+            </div>
+            <p style="margin:0 0 1.1em;">The two halves of the Scale hovered above us. One turned toward the east-facing windows. The other tilted toward the cellar door behind the bar. &ldquo;No,&rdquo; Kitsu whispered. The halves vanished. Not fell. Not flew. Vanished — pulled through the city by two invisible hands.</p>
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch3-aftermath" src="assets/ch3-aftermath.png" shape="rect" placeholder="The aftermath — Kitsu, Marok, Jem on the tavern floor" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">✦</span> Marok stared at his empty hands. For once, he did not smile.</p>
+            </div>
+            <p style="margin:0 0 1.4em;">The music had stopped. Every mortal in the Ninth Bell stared at us. Marok looked at his empty hands. For once, he did not smile. Kitsu looked at me, and whatever law he had been holding inside himself had gone pale with horror. Above the tavern, far beyond brick and smoke and mortal weather, a bell began to ring. Not the tavern bell. Not the ninth. The true one. It rolled through my borrowed bones, and somewhere inside the dark, the silver-tailed fox laughed without making a sound.</p>
+          </div>
+
+          <div style="padding:8px 26px 30px;">
+            <div style="margin:6px 0 22px;">{{ proseDivider }}</div>
+            <div style="border:1px solid {{ paperBorder }}; border-left:2px solid var(--gg-larimar); border-radius: var(--gg-radius-md); padding:15px 17px; background:{{ paperVeil }}; margin-bottom:22px;">
+              <p style="margin:0 0 5px; font-size:0.62rem; letter-spacing:0.22em; text-transform:uppercase; color: var(--gg-larimar); font-weight:600;">What changed</p>
+              <p style="margin:0; font-size:0.98rem; line-height:1.5; color:{{ paperText }};">The Scale of Judgment shatters at the Ninth Bell. Its two halves vanish into the city — one east, one below. The true bell begins to ring.</p>
+            </div>
+            <p style="margin:0 0 20px; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.05rem; line-height:1.5; color:{{ paperMuted }};">Two halves. Two directions. Jem cannot carry both — one fox crosses the dark with her; the other holds the court.</p>
+            <div style="display:flex; justify-content:center;">
+              <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Button" variant="primary" size="lg" iconRight="→" onClick="{{ continueReading }}" hint-size="auto,54px">Chapter Four</x-import>
+            </div>
+          </div>
+          </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+          <sc-if value="{{ isCh4 }}" hint-placeholder-val="{{ false }}">
+          <div data-screen-label="Chapter Four">
+          <div style="max-width:100%; padding:26px 26px 8px; color:{{ paperText }};">
+            <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Eyebrow" number="04 /" color="gold" hint-size="auto,18px">The Mortal Hour Chamber</x-import>
+            <h2 style="margin:10px 0 18px; font-family: var(--gg-font-gods); font-weight:600; font-size:1.7rem; line-height:1.15; color:{{ paperHeading }};">The Thread Cut</h2>
+
+            <div style="margin:0 0 1.5em;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch4-hero" src="assets/ch4-hero.png" shape="rect" placeholder="The tavern floor after the Bell" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">&#10022;</span> Tasting blood and sawdust and my own excellent decisions.</p>
+            </div>
+
+            <p style="margin:0 0 1.1em;">The true Bell did not ring above us. It rang <em>through</em> us &mdash; through the tavern, the tables, the overturned cups, the shocked mortals with their open mouths and beer-damp hands. It rolled through brick and smoke and glass, through marrow, through memory, through every borrowed inch of my human body. For one breath, no one moved. Then everyone did.</p>
+            <p style="margin:0 0 1.1em;">Mortals screamed. A chair toppled. Someone dropped a mug, and the sound of it breaking was so small beneath the Bell that it seemed almost shy. The copper-haired woman backed away from the bar with both hands pressed to her mouth. The musicians stared at their instruments as if the fiddle or the drum might explain why a golden scale had split in half above their heads and vanished into the city like a crime with wings. Marok lay on the floor amid splinters of glass, one arm thrown over his face. Kitsu was still on one knee. I was half under a table, tasting blood and sawdust and my own excellent decisions.</p>
+            <p style="margin:0 0 1.1em;">The Bell rang again. My borrowed ribs squeezed around the sound, and something behind my spine answered with a pain so sharp I forgot the tavern, forgot the mortals, forgot even the Scale. My tail. Except I did not have one. My body arched. I slapped a hand over my mouth, but a sound got out anyway. Not a scream. Worse. A broken little thing that made Marok sit up too fast and Kitsu turn his head like a blade drawn from a sheath.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;Jem,&rdquo; Kitsu said. Then the sound hit him next, and I watched it happen. His expression did not change &mdash; of course it did not &mdash; but his hands curled against the floor until his knuckles went white. Gold fire flickered once around his fingers and died.</p>
+            <p style="margin:0 0 1.1em;">Marok made no attempt to be dignified. He swore loudly enough to make three mortals gasp and one elderly man choke on his sausage. &ldquo;What is that?&rdquo; Marok snapped. Kitsu&rsquo;s jaw worked. &ldquo;A summons.&rdquo; &ldquo;That is not the dawn bell.&rdquo; &ldquo;No.&rdquo; Something cold moved under the word. &ldquo;It is worse.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">The Bell rang a third time, and the floor vanished. Not truly &mdash; unfortunately, the floor remained committed to being a floor &mdash; but the pull of the Bell seized us by something deeper than flesh and yanked. It should have drawn us home. That was what summons did. One god. One fox. One thread between them, braided through oath and tail and witness. The Bell found that thread in me. Then it found the thread cut.</p>
+            <p style="margin:0 0 1.1em;">Pain burst white. Marok shouted. Kitsu inhaled like he had been stabbed cleanly and had decided not to inconvenience anyone by bleeding. The tavern stretched around us &mdash; lanterns smearing into streaks of amber, mortal faces blurring, the cracked mirror behind the bar going black. The last thing I saw before the world tore sideways was the silver-tailed fox in the dark glass, watching me with moon-pale eyes. They smiled. Then the tavern disappeared.</p>
+
+            <div style="margin:1.4em 0;">{{ proseDivider }}</div>
+
+            <p style="margin:0 0 1.1em;">I landed on cold marble. Again. I was beginning to develop feelings about marble, none of them tender. My palms struck first. My knees followed. The impact jarred my teeth together and sent my hair spilling into my mouth. I gagged, shoved it aside, and tried to breathe around the Bell still vibrating inside my bones.</p>
+            <p style="margin:0 0 1.1em;">The Mortal Hour chamber had changed. The crescent basins were empty. Not dim. Not drained. <em>Empty.</em> The rose-pink light that had been my tail was gone. The green fire that had been Marok&rsquo;s was gone. The gold line of Kitsu&rsquo;s judgment was gone. Above the basins, the silver hooks swayed, clean and bright and innocent as lies. &ldquo;No,&rdquo; I said. My voice sounded small in the round chamber.</p>
+
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch4-chamber" src="assets/ch4-chamber.png" shape="rect" placeholder="The Mortal Hour chamber &mdash; empty basins, silver hooks" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-magenta-aura);">&#10022;</span> The silver hooks swayed, clean and bright and innocent as lies.</p>
+            </div>
+
+            <p style="margin:0 0 1.1em;">Marok pushed himself up beside the first basin. His dark green hair hung in his face, and there was blood at his temple, bright against his skin. He looked into the water, and whatever joke he had been reaching for died before it reached his mouth. &ldquo;Where is it?&rdquo; he asked. Kitsu stood very slowly. He crossed to the second basin and held his hand over the water without touching it. &ldquo;The tails were under seal. The chamber itself witnessed surrender. Nothing can remove a surrendered tail before return.&rdquo; Marok laughed once. It was a terrible sound. &ldquo;Apparently something can.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">Kitsu turned on him. &ldquo;You touched the Scale!&rdquo; Marok flinched as if the words were a hand across his face. &ldquo;I know,&rdquo; Marok said. &ldquo;Do you understand what you touched? The Scale of Judgment is not a toy above a mortal bar. It is the one instrument capable of halting a Judgment once the Bell begins.&rdquo; &ldquo;I know that now!&rdquo; Marok exclaimed. &ldquo;You knew enough before.&rdquo; &ldquo;I was drunk!&rdquo; &ldquo;You were warned.&rdquo; Marok&rsquo;s eyes flashed green. &ldquo;By you? You warn everyone. It&rsquo;s actually your love language.&rdquo; Kitsu sighed. &ldquo;Do not make this charming.&rdquo; &ldquo;I am not trying to make this charming.&rdquo;</p>
+
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch4-argument" src="assets/ch4-argument.png" shape="rect" placeholder="Kitsu confronting Marok" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-gold-leaf);">&#10022;</span> &ldquo;You warn everyone. It&rsquo;s actually your love language.&rdquo;</p>
+            </div>
+
+            <p style="margin:0 0 1.1em;">The chamber went still. For a moment the glittering fool fell away, and underneath him was someone younger. Not in years. In terror. He looked at me, then away. &ldquo;I thought it was a replica,&rdquo; he said. &ldquo;I thought&mdash;&rdquo; &ldquo;You thought impressing Jem mattered more than listening.&rdquo; That landed. Hard.</p>
+            <p style="margin:0 0 1.1em;">I stood before I meant to. My knees wobbled, but I stayed upright, because rage is an underrated form of balance. &ldquo;Do not put my name in the place where your blame belongs,&rdquo; I said. Kitsu&rsquo;s eyes cut to mine. So did Marok&rsquo;s. And I hated them both a little at that moment &mdash; Kitsu for being right too loudly, Marok for being wrong too beautifully, and myself for being the kind of creature men argued around as though my wanting had caused the weather.</p>
+
+            <div style="margin:1.4em 0;">{{ proseDivider }}</div>
+
+            <p style="margin:0 0 1.1em;">The Bell rang again. The black-glass walls lit from within &mdash; not with reflection, but with words. ASSISTANTS SEVERED. The phrase appeared once, then again, then again, multiplying across every wall until there was no darkness left between the letters.</p>
+
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch4-severed" src="assets/ch4-severed.png" shape="rect" placeholder="ASSISTANTS SEVERED multiplying across every wall" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">&#10022;</span> The letters burned until there was no darkness left between them.</p>
+            </div>
+
+            <p style="margin:0 0 1.1em;">My mouth went dry. Marok backed away from the first basin. &ldquo;Assistants,&rdquo; he said. Not us. <em>All</em> of us. One wall cleared. A black mirror opened like an eye, and in it I saw the Celestial Reliquary. Vast and circular, lined with niches of gold and stone, each one holding a vessel for a fox assistant&rsquo;s tail. Scarlet for the God of Fortune. Cobalt for the God of Love. Green for the God of War. Gold for the God of Justice. Magenta for the God of Beauty. Every niche was open. Every vessel was empty.</p>
+
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch4-reliquary" src="assets/ch4-reliquary.png" shape="rect" placeholder="The Celestial Reliquary &mdash; empty niches, cracked vessels" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-magenta-aura);">&#10022;</span> My goddess always knew how to dress a wound.</p>
+            </div>
+
+            <p style="margin:0 0 1.1em;">Saroka&rsquo;s scarlet vessel lay cracked on its side. Sindren&rsquo;s cobalt ribbon of light was gone. My goddess&rsquo;s magenta vessel stood polished and perfect, hiding its emptiness so beautifully that I nearly missed it. A sound left me that might have been a laugh if it had not been so close to sickness. Kitsu stepped toward the mirror. &ldquo;No.&rdquo; The word had no command in it this time. Only grief.</p>
+            <p style="margin:0 0 1.1em;">The mask from the Mortal Hour appeared in the glass, its candle-flame eyes guttering low. &ldquo;Return incomplete.&rdquo; &ldquo;No,&rdquo; Kitsu said. &ldquo;Return is impossible. There is a difference. The assistant seals are severed. The tails are unaccounted. Our mortal forms are unstable. The Judgment Bell is active.&rdquo; &ldquo;Judgment?&rdquo; I asked. The mask&rsquo;s eyes turned toward me. I wished they would stop doing that. &ldquo;Commencement has begun.&rdquo; &ldquo;That is not possible,&rdquo; Kitsu said. &ldquo;Many impossible things are developing a habit tonight,&rdquo; Marok muttered.</p>
+            <p style="margin:0 0 1.1em;">The mirror flickered. For one heartbeat, the Reliquary vanished and the Celestial Court appeared &mdash; gods rising from their thrones in a storm of impossible color, fox assistants moving in panic around them, some crouched low as if something had been ripped from their spines. Saroka flashed past the glass, scarlet ears flattened, no tail behind her. Then the image shattered back to black.</p>
+
+            <div style="margin:1.4em 0;">{{ proseDivider }}</div>
+
+            <p style="margin:0 0 1.1em;">Tails were not ornaments. Mortals thought they were &mdash; pretty things, sacred things, charming things to paint on tavern signs with goblets in their paws. They were wrong. A fox&rsquo;s tail was a memory. Witness. Oath. The place the god&rsquo;s claim touched the assistant&rsquo;s will and made something useful, terrible, binding. Without it, I felt wrong. Not only bare. Unmoored. As if someone had reached into the center of me and removed the word that told my body where to end.</p>
+            <p style="margin:0 0 1.1em;">My borrowed knees buckled. Marok caught my hand. Kitsu caught my waist. Both moved at once. No one joked. No one accused. For one breath, all three of us touched. Marok&rsquo;s palm was hot against mine. Kitsu&rsquo;s hand was steady at my side. My own fingers dug into Marok&rsquo;s wrist hard enough to hurt him, and he did not pull away. Kitsu&rsquo;s grip tightened &mdash; not possessive, not gentle exactly. <em>Necessary.</em> Rose light sparked once in the space between us. Green answered. Gold followed. The lights braided, thin as threads, then vanished. The pain eased. Not gone. Nothing good was gone tonight. But eased.</p>
+
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch4-braid" src="assets/ch4-braid.png" shape="rect" placeholder="All three touching &mdash; rose, green, gold light braiding" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-gold-leaf);">&#10022;</span> Rose. Green. Gold. Thin as threads. Then gone.</p>
+            </div>
+
+            <p style="margin:0 0 1.1em;">Marok stared at our joined hands. Kitsu stared at the place where his hand touched my waist. I stared at both of them and decided I would rather be thrown through another floor than discuss it. &ldquo;Stabilization is temporary,&rdquo; the mask said. &ldquo;Helpful,&rdquo; I said through my teeth. &ldquo;Anything else?&rdquo; The candle-eyes dimmed. &ldquo;Recover tails. Recover Scale. Halt false commencement.&rdquo; &ldquo;False?&rdquo; Kitsu asked sharply. The mirror shuddered. For a moment, something moved behind the mask. Silver. Pale as old moonlight. Then gone. The mask&rsquo;s mouth opened wider than it should have been able to. &ldquo;Recover tails. Recover Scale.&rdquo; The black mirror cracked. And the message vanished.</p>
+            <p style="margin:0 0 1.1em;">Kitsu released me as if the contact had burned him. Marok did not release my hand until I looked at our fingers and lifted one brow. He let go at once. &ldquo;Temporary stabilization,&rdquo; he said, because apparently death, theft, and divine catastrophe had not cured him of being unbearable. &ldquo;That sounds romantic.&rdquo; &ldquo;That sounds medical,&rdquo; Kitsu said. &ldquo;That sounds like both of you are about to become my second and third least favorite problem,&rdquo; I said. Marok looked almost pleased. &ldquo;Only second and third?&rdquo; &ldquo;The missing tail is first.&rdquo; That killed his smile again.</p>
+
+            <div style="margin:1.4em 0;">{{ proseDivider }}</div>
+
+            <p style="margin:0 0 1.1em;">&ldquo;The Scale broke in two. One half went toward the east-facing windows. One toward the cellar door. Our tails vanished at the same time. That is not a coincidence.&rdquo; Kitsu&rsquo;s gaze sharpened. &ldquo;Scale and witness are bound. A Judgment instrument cannot move without a witness thread. The halves may have followed tail signatures.&rdquo; &ldquo;Or carried them,&rdquo; I said.</p>
+            <p style="margin:0 0 1.1em;">Both males looked at me. I turned toward my empty basin. The water should have been clear. It was not. A film floated across the surface, thin and pearlescent, beautiful as crushed petals under ice. Beauty magic. My stomach twisted. I had not cast it. My goddess had made me recognize rot beneath ornament, hunger beneath a smile, bruise beneath silk. And this was glamour used like a bandage over an amputation. I reached toward the basin. Kitsu caught my wrist. &ldquo;Careful.&rdquo; The word was quiet. No command. Warning. &ldquo;You see it,&rdquo; he said. &ldquo;I see something pretending to be pretty,&rdquo; I replied. Marok stepped closer. &ldquo;That narrows it down to half the heavens.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">The pearlescent film shimmered, and for one heartbeat I saw beneath it: not water, not basin, but a narrow alley packed with cages. Tails hung inside them like trapped fire. Scarlet. Cobalt. Green. Gold. Rose. Then the vision vanished. &ldquo;I saw cages,&rdquo; I said. Kitsu went very still. &ldquo;Where?&rdquo; &ldquo;I do not know. An alley. Iron bars. Too much noise. Tails like lanterns.&rdquo;</p>
+
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch4-basin-vision" src="assets/ch4-basin-vision.png" shape="rect" placeholder="The basin vision — cages beneath the surface" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-magenta-aura);">&#10022;</span> Not water. Not basin. Cages. Tails like lanterns.</p>
+            </div>
+
+            <p style="margin:0 0 1.1em;">&ldquo;Tail Market,&rdquo; Marok said. Kitsu turned slowly toward him. The chamber chilled. &ldquo;What is the Tail Market?&rdquo; I asked. Marok did not answer. That was how I knew the next problem had arrived. Not with a Bell. Not with a silver fox. With silence. &ldquo;How do you know that name?&rdquo; Kitsu&rsquo;s voice was calm enough to be dangerous. Marok&rsquo;s eyes met mine first. Wrong choice. Kitsu saw it. &ldquo;Marok,&rdquo; Kitsu said.</p>
+            <p style="margin:0 0 1.1em;">Outside the chamber &mdash; beyond the black door and the old stairs and the Celestial Court above us &mdash; the Judgment Bell rang again. This time, no summons came. No mercy either. The tails were gone. The Scale was broken. And the God of War, apparently, had known where trouble kept its address.</p>
+
+            <div style="margin:6px 0 22px;">{{ proseDivider }}</div>
+            <div style="border:1px solid {{ paperBorder }}; border-left:2px solid var(--gg-larimar); border-radius: var(--gg-radius-md); padding:15px 17px; background:{{ paperVeil }}; margin-bottom:22px;">
+              <p style="margin:0 0 5px; font-size:0.62rem; letter-spacing:0.22em; text-transform:uppercase; color: var(--gg-larimar); font-weight:600;">What changed</p>
+              <p style="margin:0; font-size:0.98rem; line-height:1.5; color:{{ paperText }};">All assistant tails across the heavens are severed. The Scale is in two halves somewhere in the city. Marok knows a name he should not.</p>
+            </div>
+            <p style="margin:0 0 20px; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.05rem; line-height:1.5; color:{{ paperMuted }};">Two halves. Two directions. Jem cannot carry both &mdash; one fox crosses the dark with her; the other holds the court.</p>
+            <div style="display:flex; justify-content:center;">
+              <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Button" variant="primary" size="lg" iconRight="→" onClick="{{ continueReading }}" hint-size="auto,54px">Chapter Five</x-import>
+            </div>
+          </div>
+          </div>
+          </sc-if>
+
+          <sc-if value="{{ isCh5 }}" hint-placeholder-val="{{ false }}">
+          <div data-screen-label="Chapter Five">
+          <div style="max-width:100%; padding:26px 26px 8px; color:{{ paperText }};">
+            <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Eyebrow" number="05 /" color="gold" hint-size="auto,18px">The Tail Market</x-import>
+            <h2 style="margin:10px 0 18px; font-family: var(--gg-font-gods); font-weight:600; font-size:1.7rem; line-height:1.15; color:{{ paperHeading }};">No Foxes. No Judgment.</h2>
+
+            <p style="margin:0 0 1.1em;">The chamber smelled like crushed flowers left too long in the rain. My goddess&rsquo;s magic always announced itself politely before it lied. The power softened the air, smoothed the black glass, and laid a pearlescent film over the empty basins as if theft could become less violent by being made lovely. The water in my basin shimmered rose and magenta, pretty enough to frame, if one had no taste and no respect for amputation.</p>
+            <p style="margin:0 0 1.1em;">Kitsu was staring at Marok. Marok was staring at the basin. I was staring at both of them and thinking that if the gods had wanted me obedient, they should not have made me this good at noticing rot. &ldquo;What is the Tail Market?&rdquo; I asked again. Marok did not answer.</p>
+            <p style="margin:0 0 1.1em;">The Judgment Bell rolled somewhere above us, distant now, but distance did not make it merciful. It trembled through the floor, through the crescent basins, through the place behind my spine where my tail should have been. Kitsu stepped closer to Marok. Not quickly. That would have been less frightening. He moved with the terrible patience of a verdict that had already been written. &ldquo;Answer her,&rdquo; he growled.</p>
+            <p style="margin:0 0 1.1em;">Marok lifted one hand to the blood at his temple, looked at the red on his fingers, and smiled as if the sight had offended him by being too honest. &ldquo;It is a market.&rdquo; &ldquo;Helpful,&rdquo; I said. &ldquo;For tails,&rdquo; Kitsu added. The words struck the chamber colder than the Bell. &ldquo;Stolen things. Forbidden things. Pieces of spirit no lawful court would admit can be priced.&rdquo; &ldquo;And yet they are,&rdquo; Marok said.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;The Tail Market is a rumor,&rdquo; Kitsu said. &ldquo;A disgrace told by foxes who wish to frighten other foxes into better behavior.&rdquo; Marok gave a very small laugh. It had no joy in it. &ldquo;You sound almost convincing.&rdquo; Kitsu&rsquo;s calm changed shape. Not broke. Never that. It gathered itself into something narrower. &ldquo;You know where it is.&rdquo; &ldquo;I know where it <em>was</em>.&rdquo; &ldquo;That is not denial.&rdquo; &ldquo;No,&rdquo; Marok said. &ldquo;It is grammar.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">Kitsu&rsquo;s hand moved. Gold light circled his fingers, thin as wire. The scent of cold parchment and struck bells cut through the rotting flowers. Not a spell, exactly. It was worse than a spell. It was law remembering it had teeth. Marok&rsquo;s smile faded. &ldquo;Do not,&rdquo; he said. Kitsu&rsquo;s voice lowered. &ldquo;Then answer without assistance.&rdquo;</p>
+
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch5-truth" shape="rect" placeholder="Kitsu compelling truth from Marok — gold wire, cold parchment scent" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-gold-leaf);">&#10022;</span> Law remembering it had teeth.</p>
+            </div>
+
+            <p style="margin:0 0 1.1em;">&ldquo;Enough,&rdquo; I said. Both males looked at me. Good. I was tired of being the table over which men set their knives. &ldquo;Kitsu, if you are about to drag the truth out of him, ask the question that matters. Marok, if you are about to avoid the truth, choose a prettier lie. The current one is insulting.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">For once, there was no wink waiting in Marok&rsquo;s eyes. &ldquo;The Tail Market was where I was going tonight,&rdquo; he said. The chamber went so quiet I heard one drop of water fall from an empty hook into an empty basin. &ldquo;You were going,&rdquo; Kitsu said, &ldquo;to a criminal market during a sanctioned Mortal Hour.&rdquo; &ldquo;Not for shopping.&rdquo; &ldquo;How reassuring.&rdquo; &ldquo;I received a warning.&rdquo; Gold light tightened. &ldquo;When?&rdquo; Marok looked at me again. Wrong choice. &ldquo;Before Attendance,&rdquo; he said.</p>
+            <p style="margin:0 0 1.1em;">Before the court. Before the stairway. Before the borrowed bodies. Before Marok had looked at the eighth exit and made desire sound like a door. My stomach turned, and this time it had nothing to do with human flesh. &ldquo;What warning?&rdquo; I asked. Marok looked as if he would rather swallow the hook above his basin. Then he said: &ldquo;No foxes. No Judgment.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">The black glass behind him flashed white. Words appeared, written in a hand I did not know and yet felt I had seen in a dream. NO FOXES. NO JUDGMENT. The letters burned for one heartbeat, then dissolved into smoke that smelled like wet iron and cheap violets. A market scent. A warning scent. A trap scent.</p>
+
+            <div style="margin:1.4em 0;">{{ proseDivider }}</div>
+
+            <p style="margin:0 0 1.1em;">Kitsu stared at the place where the words had been. &ldquo;Who sent it?&rdquo; &ldquo;I do not know.&rdquo; The gold wire pulsed. Marok hissed and clutched his wrist. &ldquo;Truth,&rdquo; Kitsu said. &ldquo;I do not know.&rdquo; Again the gold pulsed. This time Marok did not flinch. The answer held. Kitsu looked almost disappointed.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;You knew there might be danger to the assistants,&rdquo; I said. &ldquo;I knew there might be a threat.&rdquo; &ldquo;So you told us?&rdquo; His silence answered first. My hand lifted. I do not remember deciding to raise it. I only remember seeing it there, pale and shaking, suspended between us with all five fingers spread. Marok did not move away. That made it worse. He stood there with blood at his temple and no tail behind him and fear in his eyes, and he looked like he might let me strike him if it gave the moment somewhere to go. I did not. Not because he did not deserve it. Because he would have accepted it, and I refused to become another pretty punishment arranged for someone else&rsquo;s relief. I lowered my hand. The space between us did not heal. It only learned to stand upright.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;You used my goddess&rsquo;s command,&rdquo; I said. &ldquo;You used my cage as your cover.&rdquo; &ldquo;No.&rdquo; The gold wire snapped bright. Marok sucked in a breath. &ldquo;I used the allowance as cover. I did not know the God of Beauty would order Jem into it.&rdquo; The wire dimmed. Truth. Annoyingly. &ldquo;You wanted to take me,&rdquo; Kitsu said. &ldquo;Yes. To keep me away from the court.&rdquo; &ldquo;To make you look at the warning before you bury it under procedure.&rdquo; &ldquo;I would have reported it.&rdquo; &ldquo;Yes,&rdquo; Marok said. &ldquo;That was the problem.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">Kitsu went very still. Marok&rsquo;s voice cracked at the edge and immediately tried to pretend it had not. &ldquo;If someone inside the court wanted no foxes present for Judgment, then reporting the warning to the court seemed unwise.&rdquo; &ldquo;And drinking beneath the Scale of Judgment seemed wise?&rdquo; &ldquo;No,&rdquo; Marok said. No joke. No grin. Just the word. It landed harder that way.</p>
+
+            <div style="margin:1.4em 0;">{{ proseDivider }}</div>
+
+            <p style="margin:0 0 1.1em;">The black mirror above the basins lit again. This time, it showed the Celestial Court. Gods stood in clusters beneath glass pillars, their faces too perfect to hold panic properly. The God of Justice had one hand on a cracked scroll. The God of War&rsquo;s iron throne stood empty, which was somehow worse than seeing him in it. The God of Love knelt beside Sindren, whose cobalt ears lay flat. Saroka paced in a circle around the God of Fortune&rsquo;s dais, tailless and furious, scarlet sparks snapping from her paws. Then my goddess appeared.</p>
+            <p style="margin:0 0 1.1em;">The God of Beauty stood in front of the mirror as if the catastrophe had been arranged for her complexion. Rose quartz. Magenta light. The lovely tilt of a head that had never needed permission to own a room. Her gaze found me at once. Then the basin beside me. Then the pearlescent film on the water. Every visible assistant looked. Saroka stopped pacing. Sindren lifted one trembling hand to her mouth. My empty spine throbbed. The chamber became very small.</p>
+
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch5-court-mirror" src="assets/ch5-court-mirror.png" shape="rect" placeholder="The court mirror — gods, Saroka tailless, the God of Beauty watching Jem" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-magenta-aura);">&#10022;</span> My goddess never looked directly at what belonged to her. Until now.</p>
+            </div>
+
+            <p style="margin:0 0 1.1em;">&ldquo;Beauty magic,&rdquo; said the God of Justice from the mirror. My goddess&rsquo;s smile did not move. &ldquo;Careful.&rdquo; He looked at me. So did the others. Kitsu stepped half a pace in front of me. I noticed. So did my goddess. I should have disliked it. I did dislike it. I also did not ask him to move. &ldquo;The glamour on the basin is Beauty-aspected,&rdquo; Kitsu said, &ldquo;but Jem did not cast it.&rdquo; &ldquo;Can you attest to that under oath?&rdquo; Kitsu paused. Tiny. Terrible. My heart heard it anyway. &ldquo;I can attest,&rdquo; he said carefully, &ldquo;that she was with us when the tails vanished.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">Not the same answer. My goddess&rsquo;s magenta eyes slid to me. &ldquo;Jem, darling.&rdquo; I hated <em>darling</em> more than I hated marble. &ldquo;Did you dress the theft?&rdquo; The question was gentle. It should have come with a knife so at least everyone could admire the honesty. &ldquo;No, my goddess.&rdquo; &ldquo;Did you recognize the dressing?&rdquo; &ldquo;Yes.&rdquo; A murmur moved through the reflected court. Marok stepped forward. Too late, but with heat. &ldquo;She saw through it. That is different.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">I looked into the mirror and smiled with every cruel, polished lesson my goddess had ever taught me. &ldquo;Beauty magic can hide rot. It can also expose it. If I were responsible, I would not have left a veil I could see through.&rdquo; My goddess&rsquo;s smile sharpened. Pride, perhaps. Possession, certainly. &ldquo;Clever vixen,&rdquo; she said. I wanted to bite the word in half.</p>
+            <p style="margin:0 0 1.1em;">The God of Justice turned to Kitsu. &ldquo;Recover the Scale. Recover the tails. The false commencement must be halted before the first mortal verdict locks.&rdquo; &ldquo;Authority?&rdquo; Kitsu asked. The God of Justice lifted the cracked scroll. &ldquo;Improvised.&rdquo; Kitsu looked as if someone had handed him a burning coal and called it breakfast. Marok looked delighted for half a second before remembering why delight had been made illegal tonight.</p>
+            <p style="margin:0 0 1.1em;">The God of War&rsquo;s voice came from somewhere off mirror. &ldquo;Marok.&rdquo; Marok&rsquo;s face changed. Not fear. Worse. A son hearing disappointment from a father who had never used the word son. The God of War stepped into view. Iron-dark skin. Eyes green as storm glass. A mouth built for commands rather than comfort. &ldquo;You will repair what you broke.&rdquo; Marok bowed his head. &ldquo;Yes, master.&rdquo; No cackle. No flourish. Only obedience. I hated that about him.</p>
+            <p style="margin:0 0 1.1em;">My goddess&rsquo;s gaze lingered on me until the last moment. &ldquo;Try not to become ugly, Jem.&rdquo; The connection snapped to black. For a few breaths, none of us spoke. Then Marok exhaled. &ldquo;Well. That was nurturing.&rdquo; Kitsu looked at him. Marok lifted both hands. &ldquo;Yes, wrong moment. I heard it as I said it.&rdquo;</p>
+
+            <div style="margin:1.4em 0;">{{ proseDivider }}</div>
+
+            <p style="margin:0 0 1.1em;">I turned back to the basin. The pearlescent film had thickened. It swirled lazily across the water, smug as cream over poison. Jasmine over spoiled milk. My magic, but not mine. Or near enough to be blamed. &ldquo;I need to touch it,&rdquo; I said. &ldquo;No,&rdquo; Kitsu and Marok said together. That annoyed me so much I almost smiled. &ldquo;I was not asking,&rdquo; I said, batting my lashes. Kitsu&rsquo;s jaw tightened. &ldquo;It may be keyed to your power.&rdquo; &ldquo;Then it will answer me.&rdquo; &ldquo;It may be keyed to hurt you.&rdquo; I feigned a yawn. &ldquo;Many things are. I still meet them socially.&rdquo;</p>
+            <p style="margin:0 0 1.1em;">Marok stepped closer, but not close enough to touch. His hand hovered, then fell at his side. Good. He was learning. &ldquo;Jem,&rdquo; he said, very quietly. &ldquo;No debt. No cover. No clever turn of phrase. Tell us what you need.&rdquo; That was unfair. Decency should not be allowed to arrive after betrayal. It confused the architecture. I looked at the water. &ldquo;If I fall, catch me.&rdquo; Kitsu&rsquo;s answer came immediately. &ldquo;Yes.&rdquo; Marok&rsquo;s came softer. &ldquo;Always.&rdquo; I did not look at either of them. I touched the water.</p>
+            <p style="margin:0 0 1.1em;">The glamour opened like an eye. The chamber disappeared. Noise struck me first. Not tavern noise. Not laughter or music. This noise was sharper, meaner, made of whispers and cages rattling and coins clinking against teeth. The air smelled of wet iron, burned sugar, cheap violets, and animal fear. I stood in a narrow alley roofed with torn red cloth. Lanterns swung overhead, each one holding a tiny flame shaped like a tail. Iron cages lined the walls. Inside them burned ribbons of spirit-light. Scarlet. Cobalt. Green. Gold. Magenta. My tail glowed in the nearest cage, curled on itself like a sleeping thing pretending not to be terrified.</p>
+            <p style="margin:0 0 1.1em;">I tried to reach for it. A hand caught my wrist. Not Kitsu&rsquo;s. Not Marok&rsquo;s. Silver fingers, cold as moonlit glass. The silver-tailed fox leaned close from behind a curtain of mirrors. In this vision they were almost human and not human at all, a face made of beautiful wrong angles, eyes pale with old amusement. Their mouth opened. &ldquo;No foxes,&rdquo; they whispered. Their breath smelled like extinguished candles. &ldquo;No Judgment.&rdquo; I yanked free. The alley shattered.</p>
+
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch5-vision" src="assets/ch5-vision.png" shape="rect" placeholder="The Tail Market vision — alley, cages, the silver fox" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">&#10022;</span> Silver fingers, cold as moonlit glass. &ldquo;No foxes. No Judgment.&rdquo;</p>
+            </div>
+
+            <p style="margin:0 0 1.1em;">I came back screaming. Not elegantly. Not prettily. With teeth. Marok caught my hand. Kitsu caught my waist. Rose light sparked between us, sharper this time. Green answered too fast. Gold wrapped around both and held. The braided thread burned for one breath, and the pain behind my spine loosened enough for me to drag air into my lungs. Neither male let go until I nodded. That mattered. I hated that it mattered.</p>
+            <p style="margin:0 0 1.1em;">&ldquo;I saw them,&rdquo; I said. Kitsu&rsquo;s voice was low. &ldquo;The tails?&rdquo; &ldquo;Yes.&rdquo; Marok swallowed. &ldquo;Where?&rdquo; &ldquo;The Tail Market.&rdquo; His eyes closed for half a heartbeat. Guilt looked wrong on him. Too plain. Too mortal. &ldquo;Can you lead us there?&rdquo; Kitsu asked him. Marok opened his eyes. &ldquo;Yes.&rdquo; Truth. No gold wire needed.</p>
+            <p style="margin:0 0 1.1em;">I stepped between them before Kitsu could choose the sharpest of his lawful things. &ldquo;We recover one tail first.&rdquo; &ldquo;Yours,&rdquo; Marok said. &ldquo;No.&rdquo; Both of them stared. &ldquo;My tail was nearest in the vision because the glamour wanted me to reach for it. That&rsquo;s bait.&rdquo; Kitsu&rsquo;s expression shifted, calculation returning like armor sliding into place. &ldquo;Scarlet was unstable in the court mirror.&rdquo; &ldquo;Saroka,&rdquo; I said.</p>
+            <p style="margin:0 0 1.1em;">The God of Fortune&rsquo;s fox. My friend. My girl, if immortals who belonged to gods were allowed such mortal little words. The memory of her scarlet tail lying absent behind her made something hot and ugly rise in my throat. &ldquo;We find Saroka&rsquo;s tail first. Then we follow whatever it knows.&rdquo; Marok nodded at once. Kitsu studied me. &ldquo;That is a dangerous choice.&rdquo; &ldquo;Good,&rdquo; I said. &ldquo;I am in the mood to disappoint safety.&rdquo; Marok&rsquo;s mouth twitched. Kitsu did not smile, but something in his eyes warmed despite itself.</p>
+
+            <div style="margin:1.4em 0;">{{ proseDivider }}</div>
+
+            <p style="margin:0 0 1.1em;">Then the chamber door opened. No mask. No invitation. Only a slit of black leading into the old stairway, and beyond that, the mortal city that had already bitten us once and would surely be delighted to find us bleeding again. Marok stepped toward it, then stopped. He looked back at me. &ldquo;For what it is worth,&rdquo; he said, &ldquo;I did not want you to be used.&rdquo; I held his gaze. The kind thing would have been to answer quickly. I was not feeling kind. &ldquo;No,&rdquo; I said at last. &ldquo;You only built a door and hoped I would not be pushed through it.&rdquo; He absorbed that without flinching. Good.</p>
+            <p style="margin:0 0 1.1em;">Kitsu passed him without touching him. &ldquo;We move.&rdquo; Marok followed. I took one step after them, then another. My borrowed feet ached. My hair clung to the blood drying near my mouth. My spine felt unfinished. Behind us, the basin&rsquo;s pretty film sealed itself again. A beautiful lie. Ahead, the stairs descended toward wet iron, cheap violets, and the place where stolen tails burned in cages. Marok had brought us into the night. Now he would have to lead us through its teeth.</p>
+
+            <div style="margin:1.5em 0;">
+              <div style="position:relative; width:100%; aspect-ratio: 16 / 9; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid {{ paperBorder }};">
+                <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-ch5-door" src="assets/ch5-door.png" shape="rect" placeholder="The three of them at the chamber door — heading into the city" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+              </div>
+              <p style="margin:8px 2px 0; display:flex; align-items:center; gap:7px; font-size:0.72rem; letter-spacing:0.06em; color:{{ paperMuted }};"><span style="color: var(--gg-larimar);">&#10022;</span> Marok had brought them into the night. Now he would lead them through its teeth.</p>
+            </div>
+
+            <div style="margin:6px 0 22px;">{{ proseDivider }}</div>
+            <div style="border:1px solid {{ paperBorder }}; border-left:2px solid var(--gg-larimar); border-radius: var(--gg-radius-md); padding:15px 17px; background:{{ paperVeil }}; margin-bottom:22px;">
+              <p style="margin:0 0 5px; font-size:0.62rem; letter-spacing:0.22em; text-transform:uppercase; color: var(--gg-larimar); font-weight:600;">What changed</p>
+              <p style="margin:0; font-size:0.98rem; line-height:1.5; color:{{ paperText }};">Marok knew. Before Attendance, before the night began. The warning was real: someone inside the court wanted no foxes present. They are headed to the Tail Market.</p>
+            </div>
+            <p style="margin:0 0 20px; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.05rem; line-height:1.5; color:{{ paperMuted }};">Two halves. Two directions. Jem cannot carry both &mdash; one fox crosses the dark with her; the other holds the court.</p>
+            <div style="display:flex; justify-content:center;">
+              <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Button" variant="primary" size="lg" iconRight="&#8594;" onClick="{{ toChoice }}" hint-size="auto,54px">The choice</x-import>
+            </div>
+          </div>
+          </div>
+          </sc-if>
+
+    <!-- ============ CHOICE ============ -->
+    <sc-if value="{{ isChoice }}" hint-placeholder-val="{{ false }}">
+      <div class="cof-scroll" data-screen-label="Choice Moment" style="height:100%; overflow-y:auto;">
+        <div style="padding:30px 26px 36px; display:flex; flex-direction:column; gap:18px;">
+          <button onClick="{{ exit }}" aria-label="Back to cover" style="align-self:flex-start; width:36px; height:36px; border-radius:50%; border:1px solid var(--gg-hairline); background:transparent; color: var(--gg-text-muted); font-size:0.9rem; cursor:pointer;">✕</button>
+          <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Eyebrow" number="The Fork /" color="gold" hint-size="auto,18px">A Choice of Paths</x-import>
+          <div style="position:relative; width:100%; aspect-ratio: 16 / 10; border-radius: var(--gg-radius-md); overflow:hidden; border:1px solid var(--gg-hairline);">
+            <x-import component-from-global-scope="image-slot" class="cof-fill" from="./image-slot.js" id="cof-scale-broken" src="assets/trio.png" shape="rect" placeholder="The night you crossed — Jem between them" hint-size="100%,100%" style="position:absolute; inset:0; width:100%; height:100%;"></x-import>
+            <div style="position:absolute; inset:0; background: linear-gradient(180deg, rgba(14,12,31,0) 40%, rgba(14,12,31,0.85) 100%); pointer-events:none;"></div>
+          </div>
+          <p style="margin:0; font-family: var(--gg-font-gods); font-weight:600; font-size:1.5rem; line-height:1.2; color: var(--gg-parchment-bone);">The Scale has broken into two halves across the city.</p>
+          <p style="margin:0; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.08rem; line-height:1.5; color: var(--gg-text-muted);">You cannot carry both halves alone, Mortal. One fox crosses the dark with you. The other holds the court. Choose — and the glass will remember.</p>
+
+          <div style="display:flex; flex-direction:column; gap:14px; margin-top:4px;">
+            <button onClick="{{ chooseMarok }}" style="text-align:left; cursor:pointer; border:{{ marokBorder }}; border-radius: var(--gg-radius-md); background: var(--gg-surface-veil); padding:18px; transition: all var(--gg-dur-base) var(--gg-ease); box-shadow:{{ marokGlow }};" style-hover="border-color: rgba(95,167,126,0.7);">
+              <div style="display:flex; align-items:center; gap:11px; margin-bottom:8px;">
+                <span style="width:11px; height:11px; border-radius:50%; background:#5FA77E; box-shadow:0 0 12px rgba(95,167,126,0.7);"></span>
+                <span style="font-family: var(--gg-font-gods); font-weight:600; font-size:1.35rem; color: var(--gg-parchment-bone);">Go with Marok</span>
+              </div>
+              <p style="margin:0; font-size:0.95rem; line-height:1.5; color: var(--gg-text-muted);">War's assistant. Spark and ruin, warm as trouble at your left hand. He treats rules like a dare.</p>
+            </button>
+            <button onClick="{{ chooseKitsu }}" style="text-align:left; cursor:pointer; border:{{ kitsuBorder }}; border-radius: var(--gg-radius-md); background: var(--gg-surface-veil); padding:18px; transition: all var(--gg-dur-base) var(--gg-ease); box-shadow:{{ kitsuGlow }};" style-hover="border-color: var(--gg-border-gold);">
+              <div style="display:flex; align-items:center; gap:11px; margin-bottom:8px;">
+                <span style="width:11px; height:11px; border-radius:50%; background: var(--gg-gold-leaf); box-shadow: var(--gg-glow-gold);"></span>
+                <span style="font-family: var(--gg-font-gods); font-weight:600; font-size:1.35rem; color: var(--gg-parchment-bone);">Go with Kitsu</span>
+              </div>
+              <p style="margin:0; font-size:0.95rem; line-height:1.5; color: var(--gg-text-muted);">Justice's fox. Quiet as a verdict at your right hand. He sees what the pretending is built around.</p>
+            </button>
+          </div>
+
+          <sc-if value="{{ choiceMade }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex; flex-direction:column; gap:18px; margin-top:4px;">
+              <div style="border-top:1px solid var(--gg-hairline); padding-top:18px;">
+                <p style="margin:0; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.12rem; line-height:1.5; color: var(--gg-honey-amber);">{{ confirmLine }}</p>
+              </div>
+              <div style="display:flex; justify-content:center;">
+                <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Button" variant="primary" size="lg" iconRight="→" onClick="{{ toEnding }}" hint-size="auto,54px">Cross the dark</x-import>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ============ ENDING ============ -->
+    <sc-if value="{{ isEnding }}" hint-placeholder-val="{{ false }}">
+      <div class="cof-scroll" data-screen-label="Ending Reveal" style="height:100%; overflow-y:auto;">
+        <div style="padding:34px 26px 36px; display:flex; flex-direction:column; align-items:center; gap:20px; text-align:center;">
+          <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Eyebrow" align="center" color="gold" hint-size="auto,18px">The Glass Remembers</x-import>
+          <div style="margin:2px 0;">{{ braidResolve }}</div>
+          <p style="margin:0; font-size:0.7rem; letter-spacing:0.22em; text-transform:uppercase; color: var(--gg-text-faint);">The ending you wove</p>
+          <h2 style="margin:0; font-family: var(--gg-font-gods); font-weight:600; font-size:2.5rem; line-height:1.02; color: var(--gg-gold-leaf); text-shadow: var(--gg-glow-gold-soft);">{{ endingTitle }}</h2>
+          <p style="margin:0; max-width:46ch; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.1rem; line-height:1.55; color: var(--gg-parchment-bone);">{{ endingBody }}</p>
+
+          <div style="display:flex; gap:18px; align-items:center; margin:4px 0;">
+            <sc-for list="{{ endingChips }}" as="chip" hint-placeholder-count="3">
+              <span style="font-family: var(--gg-font-mortals); font-size:0.74rem; letter-spacing:0.14em; text-transform:uppercase; color:{{ chip.color }}; opacity:{{ chip.opacity }}; font-weight:{{ chip.weight }}; display:flex; align-items:center; gap:6px;"><span>{{ chip.mark }}</span>{{ chip.label }}</span>
+            </sc-for>
+          </div>
+
+          <div style="width:100%; max-width:340px; margin-top:8px;">{{ ringDivider }}</div>
+
+          <!-- join the circle -->
+          <sc-if value="{{ notJoined }}" hint-placeholder-val="{{ true }}">
+            <div style="width:100%; max-width:340px; text-align:left; display:flex; flex-direction:column; gap:14px;">
+              <div style="text-align:center;">
+                <p style="margin:0 0 4px; font-family: var(--gg-font-gods); font-weight:600; font-size:1.3rem; color: var(--gg-parchment-bone);">Join the Circle</p>
+                <p style="margin:0; font-size:0.9rem; line-height:1.5; color: var(--gg-text-muted);">Optional. Letters from the Seer when new chapters arrive.</p>
+              </div>
+              <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Input" label="Email address" placeholder="you@realm.world" hint="No data leaves this glass — this is a prototype. Nothing you type is sent or stored." hint-size="100%,80px"></x-import>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:2px;">
+                <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Button" variant="secondary" size="md" icon="✦" onClick="{{ join }}" hint-size="auto,46px">Record my name</x-import>
+                <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Button" variant="ghost" size="sm" onClick="{{ join }}" hint-size="auto,32px">Skip — read on alone</x-import>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ joined }}" hint-placeholder-val="{{ false }}">
+            <div data-anim="" style="animation: cof-fade var(--gg-dur-base) var(--gg-ease) both; width:100%; max-width:340px;">
+              <p style="margin:0; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.1rem; color: var(--gg-larimar);">✦ Your name is recorded. The glass keeps nothing it was not given.</p>
+            </div>
+          </sc-if>
+
+          <div style="width:100%; max-width:340px; margin-top:10px;">{{ ringDivider }}</div>
+
+          <!-- replay -->
+          <div style="display:flex; flex-direction:column; align-items:center; gap:14px; margin-top:2px;">
+            <p style="margin:0; font-family: var(--gg-font-spirits); font-style:italic; font-size:1.05rem; color: var(--gg-text-muted);">The glass remembers a different choice.</p>
+            <x-import component-from-global-scope="GazeGlassDesignSystem_cb3ca0.Button" variant="ghost" size="md" icon="↺" onClick="{{ replay }}" hint-size="auto,40px">Read again</x-import>
+          </div>
+          <p style="margin:16px 0 0; font-family: var(--gg-font-spirits); font-style:italic; font-size:0.82rem; letter-spacing:0.12em; color: var(--gg-text-faint);">Gods Watch &middot; Mortals Pray &middot; Spirits Remember</p>
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 460, &quot;height&quot;: 940 },
+  &quot;startScreen&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;cover&quot;, &quot;reading&quot;, &quot;choice&quot;, &quot;ending&quot;], &quot;default&quot;: &quot;cover&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Prototype&quot;, &quot;label&quot;: &quot;Jump to screen&quot; },
+  &quot;defaultMode&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;day&quot;, &quot;night&quot;], &quot;default&quot;: &quot;day&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Reading&quot;, &quot;label&quot;: &quot;Reading surface&quot; },
+  &quot;reduceThreadMotion&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Motion&quot;, &quot;label&quot;: &quot;Reduce thread motion&quot; }
+}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      screen: (props && props.startScreen) || 'cover',
+      mode: (props && props.defaultMode) || 'day',
+      fontStep: 1,
+      choice: null,
+      chapter: 1,
+      threads: { rose: 5, green: 0, gold: 0 },
+      readProgress: 0,
+      beautyHold: false,
+      joined: false,
+    };
+    this.scrollRef = React.createRef();
+    this._scrollEl = null;
+  }
+
+  componentDidUpdate(prev) {
+    if (prev.startScreen !== this.props.startScreen && this.props.startScreen) {
+      this.setState({ screen: this.props.startScreen });
+    }
+    if (prev.defaultMode !== this.props.defaultMode && this.props.defaultMode) {
+      this.setState({ mode: this.props.defaultMode });
+    }
+  }
+
+  go(s) { this.setState({ screen: s }); }
+  exit() { this.setState({ screen: 'cover', readProgress: 0 }); }
+  begin() { this.setState({ screen: 'reading', chapter: 1, readProgress: 0 }); }
+  continueReading() {
+    const c = this.state.chapter;
+    if (c < 5) {
+      this.setState({ chapter: c + 1, readProgress: 0, beautyHold: false }, () => {
+        const el = this.scrollRef.current || this._scrollEl;
+        if (el) el.scrollTop = 0;
+      });
+    } else {
+      this.setState({ screen: 'choice' });
+    }
+  }
+  toChoice() { this.setState({ screen: 'choice' }); }
+  toEnding() { this.setState({ screen: 'ending' }); }
+  fontUp() { this.setState(st => ({ fontStep: Math.min(2, st.fontStep + 1) })); }
+  fontDown() { this.setState(st => ({ fontStep: Math.max(0, st.fontStep - 1) })); }
+  toggleMode() { this.setState(st => ({ mode: st.mode === 'day' ? 'night' : 'day' })); }
+  onScroll(e) {
+    const el = e.currentTarget;
+    this._scrollEl = el;
+    const max = el.scrollHeight - el.clientHeight;
+    const p = max > 0 ? el.scrollTop / max : 0;
+    this.setState({ readProgress: Math.max(0, Math.min(1, p)) });
+  }
+  choose(p) {
+    this.setState(st => {
+      const t = { rose: st.threads.rose + 1, green: st.threads.green, gold: st.threads.gold };
+      if (p === 'marok') t.green += 4; else t.gold += 4;
+      return { choice: p, threads: t };
+    });
+  }
+  holdStart() { this.setState({ beautyHold: true }); }
+  holdEnd() { this.setState({ beautyHold: false }); }
+  prevent(e) { if (e && e.preventDefault) e.preventDefault(); }
+  join(e) { if (e && e.preventDefault) e.preventDefault(); this.setState({ joined: true }); }
+  replay() {
+    this.setState({ screen: 'cover', chapter: 1, choice: null, threads: { rose: 5, green: 0, gold: 0 }, readProgress: 0, joined: false });
+  }
+
+  // ---- braid: horizontal progress bar ----
+  braidH(progress, reduce) {
+    const h = React.createElement;
+    const W = 300, A = 3.0, mid = 8, L = 60, ext = 60;
+    const cols = ['#C58BB0', '#5FA77E', 'var(--gg-gold-leaf)'];
+    const phases = [0, 20, 40];
+    const mk = (ph) => {
+      let d = '';
+      for (let x = -ext; x <= W + ext; x += 5) {
+        const y = mid + A * Math.sin((2 * Math.PI * (x + ph)) / L);
+        d += (x === -ext ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(2) + ' ';
+      }
+      return d;
+    };
+    const strands = (opacity, sw) => phases.map((ph, i) =>
+      h('path', { key: i, d: mk(ph), fill: 'none', stroke: cols[i], strokeWidth: sw, strokeLinecap: 'round', opacity }));
+    const clipId = 'cofbar';
+    return h('svg', { viewBox: '0 0 ' + W + ' 16', preserveAspectRatio: 'none', width: '100%', height: 12, style: { display: 'block', overflow: 'visible' } },
+      h('defs', null, h('clipPath', { id: clipId }, h('rect', { x: 0, y: 0, width: Math.max(0.001, progress * W), height: 16 }))),
+      h('g', null, strands(0.16, 1.8)),
+      h('g', { clipPath: 'url(#' + clipId + ')' }, strands(0.95, 2.3))
+    );
+  }
+
+  // ---- braid: vertical resolving ----
+  braidV(dominant, reduce) {
+    const h = React.createElement;
+    const H = 200, midX = 30, L = 42;
+    const colMap = { rose: '#C58BB0', green: '#5FA77E', gold: 'var(--gg-gold-leaf)' };
+    const glowMap = { rose: 'rgba(197,139,176,0.7)', green: 'rgba(95,167,126,0.7)', gold: 'rgba(201,162,39,0.75)' };
+    const order = [['rose', 0], ['green', L / 3], ['gold', (2 * L) / 3]];
+    const amp = (y) => { const t = y / H; return 14 * (1 - t) + 1.2; };
+    const mk = (ph) => {
+      let d = '';
+      for (let y = 0; y <= H; y += 4) {
+        const x = midX + amp(y) * Math.sin((2 * Math.PI * y) / L + ph);
+        d += (y === 0 ? 'M' : 'L') + x.toFixed(2) + ' ' + y + ' ';
+      }
+      return d;
+    };
+    const paths = order.map(([name, ph], i) => {
+      const isLead = dominant === 'both' ? false : name === dominant;
+      const sw = isLead ? 3.4 : (name === 'rose' ? 2.4 : (dominant === 'both' ? 2.6 : 1.5));
+      const op = isLead ? 1 : (name === 'rose' ? 0.92 : (dominant === 'both' ? 0.92 : 0.34));
+      const glow = (isLead || dominant === 'both') && !reduce ? { filter: 'drop-shadow(0 0 6px ' + glowMap[name] + ')' } : undefined;
+      return h('path', { key: i, d: mk(ph), fill: 'none', stroke: colMap[name], strokeWidth: sw, strokeLinecap: 'round', opacity: op, style: glow });
+    });
+    const tailCol = dominant === 'green' ? colMap.green : dominant === 'gold' ? colMap.gold : (dominant === 'both' ? 'var(--gg-gold-leaf)' : colMap.rose);
+    const tail = h('line', { x1: midX, y1: H, x2: midX, y2: H + 20, stroke: tailCol, strokeWidth: 3.4, strokeLinecap: 'round', style: !reduce ? { filter: 'drop-shadow(0 0 6px ' + (glowMap[dominant] || 'rgba(201,162,39,0.6)') + ')' } : undefined });
+    const star = h('text', { x: midX, y: H + 32, textAnchor: 'middle', fontSize: 13, fill: 'var(--gg-gold-leaf)' }, '✦');
+    return h('svg', { viewBox: '0 0 60 ' + (H + 40), width: 64, height: H + 40, style: { display: 'block', overflow: 'visible' } }, ...paths, tail, star);
+  }
+
+  renderVals() {
+    const s = this.state;
+    const reduce = !!this.props.reduceThreadMotion;
+    const px = ['17px', '19px', '22px'][s.fontStep];
+    const lh = ['1.78', '1.8', '1.85'][s.fontStep];
+    const day = s.mode === 'day';
+    const sel = s.choice;
+    const ending = sel === 'marok' ? 'marok' : sel === 'kitsu' ? 'kitsu' : 'kitsu';
+    const dominant = ending === 'marok' ? 'green' : 'gold';
+
+    const confirmMap = {
+      marok: 'You step toward Marok. The green thread winds tighter — War\u2019s heat at your left hand, and the night gets a great deal less careful.',
+      kitsu: 'You step toward Kitsu. The gold thread winds tighter — Justice, quiet as a verdict, crosses the dark at your right.',
+    };
+    const endingTitleMap = { marok: 'The Spark', kitsu: 'The Verdict' };
+    const endingBodyMap = {
+      marok: 'You chose the fox who treats rules like a dare. The half of the Scale you carried home is scorched at the edges — and so, a little, are you. Marok was right: you cannot judge a hunger you have never let yourself feel.',
+      kitsu: 'You chose the fox who looks at the exits before the gods. The Scale came home level, and Kitsu never once let go of your right hand. He saw what your pretending was built around — and, for once, said nothing.',
+    };
+
+    const chip = (key, label) => {
+      const lit = key === ending;
+      const both = key === 'both';
+      return {
+        key, label, mark: lit ? '✦' : '◆',
+        color: lit ? 'var(--gg-gold-leaf)' : 'var(--gg-text-faint)',
+        opacity: lit ? '1' : '0.5',
+        weight: lit ? '700' : '400',
+      };
+    };
+
+    return {
+      isCover: s.screen === 'cover',
+      isReading: s.screen === 'reading',
+      isCh1: s.chapter === 1,
+      isCh2: s.chapter === 2,
+      isCh3: s.chapter === 3,
+      isCh4: s.chapter === 4,
+      isCh5: s.chapter === 5,
+      chapterLabel: ['', 'Chapter One', 'Chapter Two', 'Chapter Three', 'Chapter Four', 'Chapter Five'][s.chapter] || 'Chapter',
+      scrollRef: this.scrollRef,
+      isChoice: s.screen === 'choice',
+      isEnding: s.screen === 'ending',
+
+      begin: () => this.begin(),
+      continueReading: () => this.continueReading(),
+      exit: () => this.exit(),
+      toChoice: () => this.toChoice(),
+      toEnding: () => this.toEnding(),
+      fontUp: () => this.fontUp(),
+      fontDown: () => this.fontDown(),
+      toggleMode: () => this.toggleMode(),
+      onScroll: (e) => this.onScroll(e),
+      chooseMarok: () => this.choose('marok'),
+      chooseKitsu: () => this.choose('kitsu'),
+      holdStart: () => this.holdStart(),
+      holdEnd: () => this.holdEnd(),
+      prevent: (e) => this.prevent(e),
+      join: (e) => this.join(e),
+      replay: () => this.replay(),
+
+      // reading theme
+      paperBg: day ? 'var(--gg-parchment-100)' : 'var(--gg-ink-800)',
+      paperText: day ? 'var(--gg-ink-700)' : 'var(--gg-parchment-bone)',
+      paperMuted: day ? '#6B6280' : 'rgba(237,227,204,0.6)',
+      paperBorder: day ? 'var(--gg-parchment-300)' : 'rgba(237,227,204,0.14)',
+      paperVeil: day ? 'rgba(201,162,39,0.05)' : 'rgba(237,227,204,0.04)',
+      bodyPx: px,
+      bodyLh: lh,
+      modeGlyph: day ? '☾' : '☀',
+      progressPct: Math.round(s.readProgress * 100) + '%',
+      beautyHold: s.beautyHold,
+
+      braidBar: this.braidH(s.readProgress, reduce),
+      braidResolve: this.braidV(dominant, reduce),
+      proseDivider: React.createElement(window.GazeGlassDesignSystem_cb3ca0.Divider, { color: 'gold' }),
+      ringDivider: React.createElement(window.GazeGlassDesignSystem_cb3ca0.Divider, { glyph: '✦', color: 'faint' }),
+
+      // choice
+      choiceMade: !!s.choice,
+      confirmLine: s.choice ? confirmMap[s.choice] : '',
+      marokBorder: sel === 'marok' ? '2px solid #5FA77E' : '1px solid var(--gg-hairline)',
+      kitsuBorder: sel === 'kitsu' ? '2px solid var(--gg-gold-leaf)' : '1px solid var(--gg-hairline)',
+      marokGlow: sel === 'marok' ? '0 0 30px rgba(95,167,126,0.25)' : 'none',
+      kitsuGlow: sel === 'kitsu' ? 'var(--gg-glow-gold)' : 'none',
+
+      // ending
+      endingTitle: endingTitleMap[ending],
+      endingBody: endingBodyMap[ending],
+      endingChips: [chip('kitsu', 'Kitsu'), chip('marok', 'Marok'), chip('both', 'Both')],
+      notJoined: !s.joined,
+      joined: s.joined,
+    };
+  }
+}
+</script>
+</body>
+</html>

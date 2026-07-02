@@ -84,6 +84,54 @@ a {
   text-decoration: none;
 }
 
+.court-of-foxes-shell {
+  position: relative;
+  min-height: 100svh;
+  background:
+    radial-gradient(circle at 50% 10%, rgba(201, 162, 39, 0.18), transparent 32rem),
+    radial-gradient(circle at 24% 74%, rgba(224, 160, 48, 0.12), transparent 26rem),
+    #0e0c1f;
+}
+
+.court-of-foxes-home {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 8px 13px;
+  border: 1px solid rgba(201, 162, 39, 0.34);
+  border-radius: 999px;
+  color: rgba(237, 227, 204, 0.78);
+  background: rgba(10, 8, 24, 0.68);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(16px);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition:
+    border-color 220ms ease,
+    color 220ms ease,
+    background 220ms ease;
+}
+
+.court-of-foxes-home:hover,
+.court-of-foxes-home:focus-visible {
+  border-color: rgba(201, 162, 39, 0.76);
+  color: var(--pearl);
+  background: rgba(10, 8, 24, 0.84);
+}
+
+.court-of-foxes-frame {
+  display: block;
+  width: 100%;
+  min-height: 100svh;
+  border: 0;
+}
+
 .site-header {
   position: fixed;
   top: 0;
@@ -1257,6 +1305,7 @@ h1 {
 .scroll-cue {
   position: relative;
   display: inline-block;
+  align-self: center;
   margin-top: clamp(34px, 4vh, 52px);
   color: rgba(237, 227, 204, 0.78);
   font-size: clamp(0.78rem, 0.88vw, 0.9rem);
@@ -6881,8 +6930,11 @@ form div {
   }
 
   .scroll-cue {
+    align-self: center;
     max-width: 21rem;
     margin-top: 30px;
+    margin-right: auto;
+    margin-left: auto;
     font-size: 0.72rem;
     letter-spacing: 0.18em;
     line-height: 1.6;

@@ -1,0 +1,31 @@
+/* ============================================================
+   GAZE GLASS — SPACING & LAYOUT
+   Generous negative space. Museum-quality breathing room.
+   ============================================================ */
+:root {
+  --gg-space-0: 0;
+  --gg-space-1: 0.25rem;   /* 4 */
+  --gg-space-2: 0.5rem;    /* 8 */
+  --gg-space-3: 0.75rem;   /* 12 */
+  --gg-space-4: 1rem;      /* 16 */
+  --gg-space-5: 1.5rem;    /* 24 */
+  --gg-space-6: 2rem;      /* 32 */
+  --gg-space-7: 3rem;      /* 48 */
+  --gg-space-8: 4rem;      /* 64 */
+  --gg-space-9: 6rem;      /* 96 */
+  --gg-space-10: 8rem;     /* 128 — section rhythm */
+  --gg-space-11: 12rem;    /* 192 — chapter breaks */
+
+  /* Layout */
+  --gg-content-max: 1280px;
+  --gg-prose-max: 68ch;
+  --gg-gutter: 2rem;
+
+  /* Radii — restrained. The brand is etched, not bubbly. */
+  --gg-radius-none: 0;
+  --gg-radius-sm: 2px;
+  --gg-radius-md: 4px;
+  --gg-radius-lg: 8px;
+  --gg-radius-pill: 999px;
+  --gg-radius-circle: 50%;
+}

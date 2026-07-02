@@ -22,6 +22,12 @@ const menuItems = [
     action: "Open Observations",
   },
   {
+    label: "A Court of Foxes",
+    href: "/a-court-of-foxes",
+    detail: "Enter the branching romantasy reader.",
+    action: "Open A Court of Foxes",
+  },
+  {
     label: "The Celestial Codex",
     href: "/celestial-codex",
     detail: "Discover the seven laws beneath the seen world.",

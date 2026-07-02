@@ -1,0 +1,69 @@
+/* ============================================================
+   GAZE GLASS — COLOR SYSTEM
+   "Not a collection of colors. The physics of the brand."
+   Gold light enters the dark, passes through the glass,
+   and fractures into the divine spectrum.
+   ============================================================ */
+:root {
+  /* — Primary: the three pillars — */
+  --gg-ink-indigo: #1A1733;      /* The night sky of the gods */
+  --gg-gold-leaf: #C9A227;       /* Divine illumination — used sparingly */
+  --gg-parchment-bone: #EDE3CC;  /* Ancient knowledge made visible */
+
+  /* — The Divine Spectrum (accents, ~5% of any surface) — */
+  --gg-larimar: #5FB7C4;         /* Love. Compassion. Grace. */
+  --gg-honey-amber: #E0A030;     /* Vision. The Gaze. */
+  --gg-magenta-aura: #B5179E;    /* Beauty. Desire. Divine intensity. */
+
+  /* — Ink tints / depth (darker & lighter than indigo) — */
+  --gg-ink-900: #0E0C1F;         /* Deepest void — full-bleed backdrops */
+  --gg-ink-800: #14112A;
+  --gg-ink-700: #1A1733;         /* = ink indigo */
+  --gg-ink-600: #272247;
+  --gg-ink-500: #36305E;
+  --gg-ink-400: #4A436F;         /* hairline borders on dark */
+
+  /* — Gold tints — */
+  --gg-gold-bright: #E8C45A;     /* glints, focus rings */
+  --gg-gold-leaf: #C9A227;
+  --gg-gold-deep: #9C7C1C;       /* pressed / shadowed gold */
+
+  /* — Parchment tints (light surfaces) — */
+  --gg-parchment-100: #F6F0E1;
+  --gg-parchment-200: #EDE3CC;   /* = parchment bone */
+  --gg-parchment-300: #DDCFB0;
+  --gg-parchment-400: #C7B58C;   /* muted ink on parchment */
+
+  /* ---- SEMANTIC ALIASES ---- */
+  /* Default mode is dark — the observatory between worlds. */
+  --gg-bg: var(--gg-ink-900);
+  --gg-bg-raised: var(--gg-ink-800);
+  --gg-surface: var(--gg-ink-700);
+  --gg-surface-veil: rgba(237, 227, 204, 0.04); /* faint parchment film */
+  --gg-border: var(--gg-ink-400);
+  --gg-border-gold: rgba(201, 162, 39, 0.45);
+  --gg-hairline: rgba(237, 227, 204, 0.14);
+
+  --gg-text: var(--gg-parchment-bone);
+  --gg-text-muted: rgba(237, 227, 204, 0.62);
+  --gg-text-faint: rgba(237, 227, 204, 0.38);
+  --gg-text-gold: var(--gg-gold-leaf);
+  --gg-text-on-light: var(--gg-ink-700);
+  --gg-text-on-light-muted: #6B6280;
+
+  --gg-accent: var(--gg-gold-leaf);
+  --gg-accent-soft: var(--gg-honey-amber);
+  --gg-focus: var(--gg-gold-bright);
+
+  /* Light (parchment) mode — letters, archives, reading surfaces */
+  --gg-paper-bg: var(--gg-parchment-200);
+  --gg-paper-surface: var(--gg-parchment-100);
+  --gg-paper-text: var(--gg-ink-700);
+  --gg-paper-muted: var(--gg-text-on-light-muted);
+  --gg-paper-border: var(--gg-parchment-300);
+
+  /* Spectrum semantic mapping (god domains) */
+  --gg-domain-love: var(--gg-larimar);
+  --gg-domain-vision: var(--gg-honey-amber);
+  --gg-domain-beauty: var(--gg-magenta-aura);
+}

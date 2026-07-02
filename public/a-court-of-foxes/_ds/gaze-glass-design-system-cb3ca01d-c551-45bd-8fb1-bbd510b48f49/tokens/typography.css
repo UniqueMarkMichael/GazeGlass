@@ -1,0 +1,48 @@
+/* ============================================================
+   GAZE GLASS — TYPOGRAPHY
+   Three voices. One story.
+   Gods (Playfair Display) · Mortals (Mulish) · Spirits (EB Garamond)
+   ============================================================ */
+:root {
+  /* — Families — */
+  --gg-font-gods: "Playfair Display", Georgia, "Times New Roman", serif;
+  --gg-font-mortals: "Mulish", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --gg-font-spirits: "EB Garamond", Georgia, "Times New Roman", serif;
+
+  /* Semantic font aliases */
+  --gg-font-display: var(--gg-font-gods);
+  --gg-font-body: var(--gg-font-mortals);
+  --gg-font-quote: var(--gg-font-spirits);
+
+  /* — Type scale (desktop) — */
+  --gg-text-display: 5.5rem;   /* 88px — hero god statements */
+  --gg-text-h1: 4rem;          /* 64px */
+  --gg-text-h2: 2.75rem;       /* 44px */
+  --gg-text-h3: 1.875rem;      /* 30px */
+  --gg-text-h4: 1.375rem;      /* 22px */
+  --gg-text-lead: 1.375rem;    /* 22px intro paragraphs */
+  --gg-text-body: 1.1875rem;   /* 19px */
+  --gg-text-small: 1rem;       /* 16px — floor for body */
+  --gg-text-caption: 0.8125rem;/* 13px */
+  --gg-text-quote: 1.75rem;    /* 28px EB Garamond italic */
+
+  /* — Weights — */
+  --gg-weight-gods: 600;       /* Playfair headline weight */
+  --gg-weight-body: 400;
+  --gg-weight-body-medium: 500;
+  --gg-weight-body-semibold: 600;
+  --gg-weight-body-bold: 700;
+  --gg-weight-spirits: 500;
+
+  /* — Line heights — */
+  --gg-leading-tight: 1.05;
+  --gg-leading-snug: 1.2;
+  --gg-leading-normal: 1.5;
+  --gg-leading-relaxed: 1.65;
+
+  /* — Letter spacing — */
+  --gg-tracking-display: -0.01em;
+  --gg-tracking-normal: 0;
+  --gg-tracking-wide: 0.04em;
+  --gg-tracking-eyebrow: 0.22em;  /* small-caps eyebrows / labels */
+}
