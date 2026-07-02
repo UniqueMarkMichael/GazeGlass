@@ -252,6 +252,26 @@ a {
   letter-spacing: 0.14em;
 }
 
+.cof-title-block {
+  margin: 0 0 18px;
+  color: rgba(201, 162, 39, 0.82);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: clamp(0.94rem, 1.2vw, 1.08rem);
+  font-style: italic;
+  letter-spacing: 0.08em;
+}
+
+.cof-title-block span {
+  display: inline-block;
+  margin: 0 0.35em;
+  color: rgba(26, 23, 51, 0.54);
+  font-style: normal;
+}
+
+.cof-theme-night .cof-title-block span {
+  color: rgba(237, 227, 204, 0.5);
+}
+
 .cof-cover-copy h1,
 .cof-choice-copy h2,
 .cof-ending-screen h2 {
@@ -554,9 +574,10 @@ a {
 }
 
 .cof-prose p {
-  margin: 0 0 1.18em;
+  margin: 0;
   font-family: "Mulish", system-ui, sans-serif;
   line-height: 1.82;
+  text-indent: 1.8em;
 }
 
 .cof-font-0 .cof-prose p {
@@ -579,6 +600,7 @@ a {
   font-style: italic;
   letter-spacing: 0.08em;
   text-align: center;
+  text-indent: 0;
 }
 
 .cof-inline-scene {

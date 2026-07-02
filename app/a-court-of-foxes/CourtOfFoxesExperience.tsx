@@ -6,6 +6,14 @@ type Stage = "cover" | "reading" | "choice" | "ending";
 type Choice = "marok" | "kitsu" | "both";
 type ReaderTheme = "day" | "night";
 
+type ChapterScene = {
+  after: number;
+  src: string;
+  alt: string;
+  caption: string;
+  video?: boolean;
+};
+
 type Chapter = {
   number: string;
   label: string;
@@ -18,13 +26,8 @@ type Chapter = {
   summary: string;
   hook: string;
   body: string[];
-  scene?: {
-    after: number;
-    src: string;
-    alt: string;
-    caption: string;
-    video?: boolean;
-  };
+  scene?: ChapterScene;
+  scenes?: ChapterScene[];
 };
 
 const chapters: Chapter[] = [
@@ -218,6 +221,106 @@ const chapters: Chapter[] = [
       "My borrowed feet ached. My spine felt unfinished. The night opened its teeth and waited.",
     ],
   },
+  {
+    number: "06",
+    label: "Chapter Six",
+    title: "Fortune Bleeds",
+    readTime: "~12 min",
+    question: "What does Justice become when control cracks?",
+    hero: "/a-court-of-foxes/assets/ch6-tail-market-entrance.png",
+    heroAlt: "Jem, Kitsu, and Marok at the hand-and-eye arch leading into the Tail Market",
+    accent: "rose",
+    summary:
+      "Saroka's scarlet tail is recovered, restored through all three powers, and Fortune names the true trap.",
+    hook:
+      "Beauty. War. Justice. Not all foxes. Them.",
+    scenes: [
+      {
+        after: 11,
+        src: "/a-court-of-foxes/assets/ch6-tail-market.png",
+        alt: "Jem, Marok, and Kitsu walking through the Tail Market among cages, masked vendors, and tail-shaped lanterns",
+        caption: "The Tail Market was exactly as ugly as its perfume.",
+      },
+      {
+        after: 12,
+        src: "/a-court-of-foxes/assets/ch6-saroka-tail-cage.png",
+        alt: "Jem held back by Marok and Kitsu before Saroka's scarlet tail burning in a glass cage guarded by a dice-masked vendor",
+        caption: "Scarlet light. Ember edges. A curl like laughter with a knife behind it.",
+      },
+      {
+        after: 16,
+        src: "/a-court-of-foxes/assets/ch6-fortune-vision-strike.png",
+        alt: "Jem struck by Saroka's scarlet tail as Fortune visions show Kitsu, Marok, and Jem in possible futures",
+        caption: "Fortune split into every path at once and made each one bleed.",
+      },
+      {
+        after: 18,
+        src: "/a-court-of-foxes/assets/ch6-kitsu-law-whip.png",
+        alt: "Kitsu casting gold law like a whip at the dice-masked vendor while Jem watches and Marok holds Saroka's scarlet tail",
+        caption: "Gold law snapped across the alley like a whip made of verdicts.",
+      },
+      {
+        after: 22,
+        src: "/a-court-of-foxes/assets/ch6-restoration-ritual.png",
+        alt: "Jem, Kitsu, and Marok performing the restoration ritual around Saroka's scarlet tail and a rainwater basin where Saroka's face appears",
+        caption: "Fortune smelled like clove, copper, and the first breath before dice hit a table.",
+      },
+      {
+        after: 31,
+        src: "/a-court-of-foxes/assets/ch6-kitsu-first-kiss.png",
+        alt: "Kitsu kissing Jem inside a gold ritual circle while Marok turns away with green fire at the shrine",
+        caption: "Kitsu kissed me like a law breaking itself on purpose.",
+      },
+      {
+        after: 37,
+        src: "/a-court-of-foxes/assets/ch6-saroka-prophecy.png",
+        alt: "Jem, Kitsu, and Marok beneath braided rose, green, and gold fox tails as Saroka's prophecy reveals Beauty, War, and Justice",
+        caption: "Beauty. War. Justice.",
+      },
+    ],
+    body: [
+      "The mortal city had teeth, and Marok knew which alley taught them to bite.",
+      "That should not have reassured me. It did not.",
+      "We descended from the Mortal Hour chamber through the old stairway, past black stone veined with amber light and shadows that smelled faintly of cinnamon gone wrong.",
+      "The Bell had stopped ringing, which felt less like mercy and more like a god taking a breath before saying something worse.",
+      "My spine ached where my tail should have been. Humans were a draft species.",
+      "Marok walked ahead, not with his usual swagger. There was a carefulness at the edges now, a glance into every mirror, every dark pane of glass.",
+      "Kitsu walked behind me, close enough that I knew exactly where he was without looking. That also should not have reassured me. It did not. Mostly.",
+      "The lower door opened without touch, and the city swallowed us a second time. Rain had begun, a cold mist that turned every lantern into a blurred little wound.",
+      "An arch rose between two leaning buildings, hands painted across its stones, not fox paws, not mortal hands. Too many fingers. Each palm bore a small black eye.",
+      "Beneath it hung a strip of red cloth, soaked dark by rain. I touched the red cloth. It was warm, and the rain slid off it as though the fabric remembered fire more clearly than weather.",
+      "Something pulsed under my fingers, and a flicker of rose answered inside me, weak and wrong without my tail. The cloth parted.",
+      "The Tail Market was exactly as ugly as its perfume. Lanterns swung overhead, each flame curled into the shape of a tiny tail, and iron cages lined both walls, stacked into shadow.",
+      "Ahead, beneath a lantern shaped like a bleeding coin, Saroka's tail burned inside a narrow glass cage. Scarlet light. Ember edges. A curl like laughter with a knife behind it.",
+      "The vendor guarding it was thin as a bad promise, in a mask made from cracked dice. Each die showed the same number on every side. One. One. One. No chance at all.",
+      "The cage opened. Not by key. Not by mercy. It unfolded like a flower made of knives, and Saroka's tail shot out, straight into my chest.",
+      "Pain bloomed scarlet. Not mine. Hers. Beauty pulled from the root; Fortune split into every path at once and made each one bleed.",
+      "In one future, Kitsu died with gold fire in his mouth. In one, Marok burned green enough to light a city and did not survive the dawn. In one, I stood crowned in magenta flame while the Celestial Court burned behind me.",
+      "Kitsu caught me before my skull met stone. Marok caught the scarlet tail with both hands. The market screamed, not the vendors, the market itself.",
+      "Kitsu lifted one hand, and gold law snapped across the alley like a whip made of verdicts. The scent of cold parchment and struck bells shattered the violet stink.",
+      "At an abandoned shrine between two warehouses, Marok set Saroka's tail on the altar as gently as if returning a sleeping child.",
+      "Kitsu knelt by a cracked basin filled with rainwater. Gold light spread across it, turning every drop into a tiny bell.",
+      "Saroka's face appeared in the water, awful and furious and alive. \"You look terrible,\" I said. \"Romantic of you,\" she whispered.",
+      "Gold light rose around us in a thin, exact circle. Fortune smelled like clove, copper, and the first breath before dice hit a table.",
+      "My sight opened. Under Saroka's scarlet tail, silver wire wound tight. There. Rot beneath the ornament.",
+      "Green fire answered. Not the tavern flame that had grabbed the Scale to make me look. Narrower. Hotter. Honest enough to frighten him.",
+      "The wire shrieked. Saroka screamed. I screamed too. Kitsu's hands closed over mine in the water, gold law pulled, and the braided thread snapped into being between my ribs: rose, green, gold.",
+      "\"Jem,\" Kitsu said, voice low and rough. \"Look at me.\"",
+      "There were a dozen ways to pretend I did not understand. Unfortunately, Beauty had made me excellent at seeing what hid beneath pretty things, and there was nothing hidden here.",
+      "\"Then ask,\" I said.",
+      "Kitsu's voice was barely sound. \"May I kiss you?\"",
+      "It was a terrible moment for a first kiss. Naturally, it was ours.",
+      "Kitsu kissed me like a law breaking itself on purpose. Soft first. Careful. Then not. Gold light surged through the shrine, clean and terrible.",
+      "The silver wire snapped. In the basin, Saroka arched back with a scream that shook the shrine stones, and her tail tore itself back into being behind her like a banner dragged through war.",
+      "For one breath, Saroka's eyes went black. Then red. Then full of stars.",
+      "\"Three tails braided,\" she said, in a voice like coins falling into a well with no bottom. \"Rose. Green. Gold. Not bound by gods. Bound by witness.\"",
+      "\"The trap is not for all foxes. All foxes are the curtain.\"",
+      "\"Then who is it for?\" Kitsu asked.",
+      "Her stare moved from him to Marok, then back to me. \"Beauty. War. Justice.\"",
+      "Above us, the Judgment Bell rang once. Softly this time. Almost thoughtfully.",
+      "Somewhere in that dark, my tail hung in a cage. Somewhere else, a Scale half sang from its grave.",
+    ],
+  },
 ];
 
 const endingCopy = {
@@ -405,7 +508,9 @@ export function CourtOfFoxesExperience() {
 
           <article className="cof-reader" ref={readerRef}>
             <div className="cof-reader-inner">
-              <p className="cof-kicker">{chapter.number} / A Court of Foxes</p>
+              <p className="cof-title-block">
+                A COURT OF FOXES <span aria-hidden="true">→</span> {chapter.label}: {chapter.title}
+              </p>
               <div className="cof-reader-heading">
                 <h2>{chapter.title}</h2>
                 <span>{chapter.readTime}</span>
@@ -418,18 +523,20 @@ export function CourtOfFoxesExperience() {
                 {chapter.body.map((paragraph, index) => (
                   <div key={`${chapter.number}-${paragraph.slice(0, 20)}-${index}`}>
                     <p className={paragraph.includes("Gods Watch") ? "cof-refrain" : ""}>{paragraph}</p>
-                    {chapter.scene && chapter.scene.after === index ? (
-                      <figure className="cof-inline-scene">
-                        {chapter.scene.video ? (
-                          <video muted autoPlay loop playsInline>
-                            <source src={chapter.scene.src} type="video/mp4" />
-                          </video>
-                        ) : (
-                          <img src={chapter.scene.src} alt={chapter.scene.alt} />
-                        )}
-                        <figcaption>{chapter.scene.caption}</figcaption>
-                      </figure>
-                    ) : null}
+                    {[...(chapter.scene ? [chapter.scene] : []), ...(chapter.scenes ?? [])]
+                      .filter((scene) => scene.after === index)
+                      .map((scene) => (
+                        <figure className="cof-inline-scene" key={scene.src}>
+                          {scene.video ? (
+                            <video muted autoPlay loop playsInline>
+                              <source src={scene.src} type="video/mp4" />
+                            </video>
+                          ) : (
+                            <img src={scene.src} alt={scene.alt} />
+                          )}
+                          <figcaption>{scene.caption}</figcaption>
+                        </figure>
+                      ))}
                   </div>
                 ))}
               </div>
