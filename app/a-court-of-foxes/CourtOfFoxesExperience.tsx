@@ -786,6 +786,36 @@ const chapters: Chapter[] = [
         "src": "/a-court-of-foxes/assets/ch7-marok-coat-kitsu-warmth.png",
         "alt": "Marok's dark green coat around Jem while Kitsu warms it with gold magic and rose, green, and gold light answer between them",
         "caption": "Rose light answered in my chest. Green flickered from the coat. Gold settled over both."
+      },
+      {
+        "after": 37,
+        "src": "/a-court-of-foxes/assets/ch7-ruined-god-shrine.png",
+        "alt": "Jem, Kitsu, and Marok standing in the rain before a ruined god shrine with broken fox offerings and overturned thrones",
+        "caption": "Someone had ruined it. Not with carelessness. With devotion."
+      },
+      {
+        "after": 58,
+        "src": "/a-court-of-foxes/assets/ch7-glasswater-judgment.png",
+        "alt": "The Glasswater Judgment vision with a white fox witness, the God of Mercy, drowning mortal city, and distant heavenly court",
+        "caption": "The city drowned in its own river during commencement."
+      },
+      {
+        "after": 65,
+        "src": "/a-court-of-foxes/assets/ch7-veyr-mirror-shard.png",
+        "alt": "Jem holding a mirror shard where Veyr's pale silver face appears while Kitsu and Marok watch in the ruined shrine",
+        "caption": "Silver tail. Pale eyes. A smile like a door opening under water."
+      },
+      {
+        "after": 98,
+        "src": "/a-court-of-foxes/assets/ch7-kitsu-heals-lip.png",
+        "alt": "Kitsu touching Jem's lower lip with gold healing light while Marok watches from the ruined shrine",
+        "caption": "Gold warmth closed over the split skin."
+      },
+      {
+        "after": 109,
+        "src": "/a-court-of-foxes/assets/ch7-menagerie-key.png",
+        "alt": "A tiny gold key tied with black velvet among broken fox offerings, coins, violets, and rain-slick shrine debris",
+        "caption": "Pleasure dressed as an invitation. Desire dressed as a door."
       }
     ]
   },
