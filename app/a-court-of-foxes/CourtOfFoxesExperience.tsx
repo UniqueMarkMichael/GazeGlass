@@ -818,7 +818,7 @@ const chapters: Chapter[] = [
         "caption": "Pleasure dressed as an invitation. Desire dressed as a door."
       }
     ]
-  },,
+  },
   {
     "number": "08",
     "label": "Chapter Eight",
