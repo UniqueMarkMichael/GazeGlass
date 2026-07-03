@@ -1182,6 +1182,29 @@ export function CourtOfFoxesExperience() {
   }, [readWithMe, readWithMeIndex, stage]);
 
   useEffect(() => {
+    if (stage !== "reading") return;
+
+    let frame: number | null = null;
+    const scheduleUpdate = () => {
+      if (frame !== null) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = null;
+        updateActiveParagraph();
+      });
+    };
+
+    scheduleUpdate();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+
+    return () => {
+      if (frame !== null) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
+  }, [activeParagraphIndex, chapterIndex, readWithMe, readWithMeIndex, stage]);
+
+  useEffect(() => {
     return () => {
       clearTooltipTimer();
     };
@@ -1343,16 +1366,28 @@ export function CourtOfFoxesExperience() {
     const reader = readerRef.current;
     if (!reader) return;
     const readerRect = reader.getBoundingClientRect();
-    const anchorY = readerRect.top + Math.min(readerRect.height * 0.42, 280);
+    const readerStyle = window.getComputedStyle(reader);
+    const readerScrolls = readerStyle.overflowY !== "visible" && reader.scrollHeight > reader.clientHeight + 1;
+    const supportDock = reader.querySelector<HTMLElement>(".cof-support-dock");
+    const dockRect = supportDock?.getBoundingClientRect();
+    const visibleTop = readerScrolls ? readerRect.top : 0;
+    const visibleBottom = readerScrolls ? readerRect.bottom : window.innerHeight;
+    const dockBottom =
+      dockRect && dockRect.bottom > visibleTop && dockRect.top < visibleBottom ? dockRect.bottom : visibleTop;
+    const scanTop = Math.min(visibleBottom - 40, Math.max(visibleTop, dockBottom + 24));
+    const scanBottom = visibleBottom - 20;
+    const anchorY = Math.min(scanBottom, scanTop + Math.min(180, Math.max(80, (scanBottom - scanTop) * 0.34)));
     let nearest = activeParagraphIndex;
     let nearestDistance = Number.POSITIVE_INFINITY;
 
     paragraphRefs.current.forEach((paragraph, index) => {
       if (!paragraph || (readWithMe && index > readWithMeIndex)) return;
       const rect = paragraph.getBoundingClientRect();
-      if (rect.bottom < readerRect.top + 20 || rect.top > readerRect.bottom - 20) return;
-      const paragraphAnchor = rect.top + Math.min(rect.height * 0.35, 72);
-      const distance = Math.abs(paragraphAnchor - anchorY);
+      if (rect.bottom < scanTop || rect.top > scanBottom) return;
+      const distance =
+        rect.top <= anchorY && rect.bottom >= anchorY
+          ? 0
+          : Math.min(Math.abs(rect.top - anchorY), Math.abs(rect.bottom - anchorY));
       if (distance < nearestDistance) {
         nearest = index;
         nearestDistance = distance;
