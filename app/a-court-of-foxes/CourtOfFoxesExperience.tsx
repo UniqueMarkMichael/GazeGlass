@@ -819,6 +819,21 @@ export function CourtOfFoxesExperience() {
     } catch {}
   }, [activeParagraphIndex, chapterIndex, stage]);
 
+  useEffect(() => {
+    if (!readWithMe || stage !== "reading") return;
+
+    let followup: number | undefined;
+    const frame = window.requestAnimationFrame(() => {
+      scrollParagraphIntoView(readWithMeIndex);
+      followup = window.setTimeout(() => scrollParagraphIntoView(readWithMeIndex), 90);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      if (followup) window.clearTimeout(followup);
+    };
+  }, [readWithMe, readWithMeIndex, stage]);
+
   function begin() {
     setStage("reading");
     setChapterIndex(0);
@@ -867,23 +882,45 @@ export function CourtOfFoxesExperience() {
       const next = !current;
       if (next) {
         setReadWithMeIndex(activeParagraphIndex);
-        window.setTimeout(() => scrollParagraphIntoView(activeParagraphIndex), 20);
+        setActiveParagraphIndex(activeParagraphIndex);
       }
       return next;
     });
   }
 
   function readNext() {
-    const nextIndex = Math.min(chapter.body.length - 1, readWithMeIndex + 1);
-    setReadWithMeIndex(nextIndex);
-    setActiveParagraphIndex(nextIndex);
-    window.setTimeout(() => scrollParagraphIntoView(nextIndex), 20);
+    setReadWithMeIndex((current) => {
+      const nextIndex = Math.min(chapter.body.length - 1, current + 1);
+      setActiveParagraphIndex(nextIndex);
+      return nextIndex;
+    });
   }
 
   function scrollParagraphIntoView(index: number, behavior: ScrollBehavior = "smooth") {
-    const paragraph = paragraphRefs.current[Math.max(0, Math.min(index, chapter.body.length - 1))];
-    paragraph?.scrollIntoView({ block: "center", behavior });
-    paragraph?.focus({ preventScroll: true });
+    const paragraphIndex = Math.max(0, Math.min(index, chapter.body.length - 1));
+    const paragraph = paragraphRefs.current[paragraphIndex];
+    const reader = readerRef.current;
+    if (!paragraph || !reader) return;
+
+    const supportDock = reader.querySelector<HTMLElement>(".cof-support-dock");
+    const dockHeight = supportDock?.getBoundingClientRect().height ?? 0;
+    const offset = Math.max(28, Math.min(190, dockHeight + 32));
+    const readerStyle = window.getComputedStyle(reader);
+    const readerScrolls = readerStyle.overflowY !== "visible" && reader.scrollHeight > reader.clientHeight + 1;
+
+    if (readerScrolls) {
+      const readerRect = reader.getBoundingClientRect();
+      const paragraphRect = paragraph.getBoundingClientRect();
+      reader.scrollTo({
+        top: Math.max(0, reader.scrollTop + paragraphRect.top - readerRect.top - offset),
+        behavior,
+      });
+    } else {
+      const paragraphTop = paragraph.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: Math.max(0, paragraphTop - offset), behavior });
+    }
+
+    paragraph.focus({ preventScroll: true });
   }
 
   function findPlace() {
