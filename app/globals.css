@@ -1009,7 +1009,8 @@ a {
     "options art"
     "confirm art";
   align-items: center;
-  gap: clamp(24px, 4vw, 58px);
+  column-gap: clamp(24px, 4vw, 58px);
+  row-gap: clamp(16px, 2.4vw, 28px);
   width: min(1380px, 100%);
   min-height: calc(100svh - 118px);
   margin: 0 auto;
@@ -1104,10 +1105,10 @@ a {
 
 .cof-choice-confirm {
   grid-area: confirm;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 18px;
-  flex-wrap: wrap;
   padding-top: 10px;
 }
 
@@ -1220,6 +1221,7 @@ a {
       "art"
       "options"
       "confirm";
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
   }
 
   .cof-choice-art {
@@ -1328,6 +1330,7 @@ a {
 
   .cof-choice-confirm {
     display: grid;
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1818,6 +1821,14 @@ a {
     border-color 240ms ease,
     color 240ms ease,
     transform 240ms ease;
+}
+
+@media (min-width: 901px) {
+  html.cof-reader-choice-active .glass-sound-toggle,
+  html.cof-reader-ending-active .glass-sound-toggle {
+    left: auto;
+    right: calc(env(safe-area-inset-right, 0px) + clamp(260px, 18vw, 320px));
+  }
 }
 
 .glass-sound-toggle:hover,

@@ -1056,6 +1056,7 @@ export function CourtOfFoxesExperience() {
   const readerRef = useRef<HTMLDivElement | null>(null);
   const paragraphRefs = useRef<Array<HTMLParagraphElement | null>>([]);
   const pendingResumeRef = useRef<ResumeBookmark | null>(null);
+  const choiceConfirmRef = useRef<HTMLDivElement | null>(null);
   const tooltipTimerRef = useRef<number | null>(null);
   const tooltipClickBlockRef = useRef<string | null>(null);
 
@@ -1128,6 +1129,29 @@ export function CourtOfFoxesExperience() {
       );
     } catch {}
   }, [theme, fontStep, pace, focusMode, showImages]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle("cof-reader-choice-active", stage === "choice");
+    root.classList.toggle("cof-reader-ending-active", stage === "ending");
+
+    return () => {
+      root.classList.remove("cof-reader-choice-active", "cof-reader-ending-active");
+    };
+  }, [stage]);
+
+  useEffect(() => {
+    if (stage !== "choice" || !choice) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      choiceConfirmRef.current?.scrollIntoView({
+        block: window.innerWidth <= 760 ? "center" : "nearest",
+        behavior: "smooth",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [choice, stage]);
 
   useEffect(() => {
     if (stage !== "reading") return;
@@ -1347,7 +1371,7 @@ export function CourtOfFoxesExperience() {
   }
 
   return (
-    <div className={`cof-experience cof-theme-${theme} ${fontClass}`} data-pace={pace}>
+    <div className={`cof-experience cof-stage-${stage} cof-theme-${theme} ${fontClass}`} data-pace={pace}>
       <div className="cof-backdrop" aria-hidden="true">
         <img src={stage === "cover" ? "/a-court-of-foxes/assets/cover.png" : chapter.hero} alt="" />
       </div>
@@ -1720,7 +1744,7 @@ export function CourtOfFoxesExperience() {
             </button>
           </div>
           {choice ? (
-            <div className="cof-choice-confirm">
+            <div className="cof-choice-confirm" ref={choiceConfirmRef}>
               <p>{choiceConfirmation(choice)}</p>
               <button
                 {...tooltipProps("cross-dark", "Reveal the ending shaped by your chosen path.")}
