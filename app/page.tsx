@@ -4,6 +4,7 @@ import { JsonLd } from "./components/JsonLd";
 import { GlassMenu } from "./components/GlassMenu";
 import { ReceiveVision } from "./components/ReceiveVision";
 import { SeerCircleForm } from "./components/SeerCircleForm";
+import { TikTokTransmissions } from "./components/TikTokTransmissions";
 
 export const metadata: Metadata = {
   title: "Gaze Glass | Fantasy Stories of Gods, Spirits, and Mortals",
@@ -144,7 +145,8 @@ const chapters = [
   { number: "04", label: "Gods Watch", href: "#featured-gods" },
   { number: "05", label: "Spirits Remember", href: "#the-spirits" },
   { number: "06", label: "The Seer Speaks", href: "#behind-the-glass" },
-  { number: "07", label: "The Circle Listens", href: "#the-seer-circle" },
+  { number: "07", label: "The Glass Broadcasts", href: "#tiktok-transmissions" },
+  { number: "08", label: "The Circle Listens", href: "#the-seer-circle" },
 ];
 
 const marcellaMirrorPanels = Array.from({ length: 9 }, (_value, index) => ({
@@ -404,15 +406,17 @@ export default function Home() {
             <a className="text-link" href="mailto:behold@gazeglass.com">
               Send a message through the glass
             </a>
-            <a className="text-link" href="https://www.tiktok.com/@gazeglass" target="_blank" rel="noreferrer">
-              Watch the stories unfold on TikTok
+            <a className="text-link" href="#tiktok-transmissions">
+              Watch the public transmissions
             </a>
           </div>
         </div>
       </section>
 
+      <TikTokTransmissions />
+
       <section className="signup reveal" id="the-seer-circle">
-        <span className="chapter-stamp">07 / The Circle Listens</span>
+        <span className="chapter-stamp">08 / The Circle Listens</span>
         <p className="eyebrow">Join the Circle</p>
         <h2>Letters from the Seer.</h2>
         <p>

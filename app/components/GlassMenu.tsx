@@ -35,6 +35,12 @@ const menuItems = [
   },
   { label: "The Seer", href: "/the-seer", detail: "Meet the voice recording what the Glass reveals.", action: "Meet The Seer" },
   {
+    label: "TikTok",
+    href: "/#tiktok-transmissions",
+    detail: "See the public transmissions from @gazeglass.",
+    action: "Open TikTok",
+  },
+  {
     label: "Join the Circle",
     href: "/#the-seer-circle",
     detail: "Receive new stories, laws, and letters from the Seer.",
