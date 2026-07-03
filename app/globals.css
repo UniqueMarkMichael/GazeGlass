@@ -159,6 +159,7 @@ a {
 .cof-tooltip {
   position: relative;
   overflow: visible;
+  touch-action: manipulation;
   -webkit-user-select: none;
   user-select: none;
 }

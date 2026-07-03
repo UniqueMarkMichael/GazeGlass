@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type MouseEvent, type PointerEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 
 type Stage = "cover" | "reading" | "choice" | "ending";
 type Choice = "marok" | "kitsu" | "both";
@@ -989,7 +989,7 @@ const endingCopy = {
 
 const readerPrefsKey = "cof-reader-prefs-v2";
 const readerBookmarkKey = "cof-reader-bookmark-v2";
-const tooltipLongPressMs = 520;
+const tooltipClickBlockMs = 900;
 
 function tooltipSentenceFragment(text: string) {
   return text.replace(/[.!?]+$/, "");
@@ -1058,7 +1058,7 @@ export function CourtOfFoxesExperience() {
   const pendingResumeRef = useRef<ResumeBookmark | null>(null);
   const choiceConfirmRef = useRef<HTMLDivElement | null>(null);
   const tooltipTimerRef = useRef<number | null>(null);
-  const tooltipClickBlockRef = useRef<string | null>(null);
+  const tooltipClickBlockRef = useRef<{ key: string; until: number } | null>(null);
 
   const chapter = chapters[chapterIndex];
   const ending = endingCopy[choice ?? "kitsu"];
@@ -1205,23 +1205,25 @@ export function CourtOfFoxesExperience() {
 
   function cancelTooltipPress(key: string) {
     hideTooltip(key);
-    if (tooltipClickBlockRef.current === key) {
+    if (tooltipClickBlockRef.current?.key === key) {
       tooltipClickBlockRef.current = null;
     }
   }
 
-  function startTooltipPress(key: string, event: PointerEvent<HTMLElement>) {
-    if (event.pointerType === "mouse") return;
-    clearTooltipTimer();
-    tooltipTimerRef.current = window.setTimeout(() => {
-      tooltipTimerRef.current = null;
-      tooltipClickBlockRef.current = key;
-      setActiveTooltip(key);
-    }, tooltipLongPressMs);
+  function showTouchTooltip(key: string, event: MouseEvent<HTMLElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    tooltipClickBlockRef.current = { key, until: Date.now() + tooltipClickBlockMs };
+    showTooltip(key);
   }
 
   function blockTooltipClick(key: string, event: MouseEvent<HTMLElement>) {
-    if (tooltipClickBlockRef.current !== key) return;
+    const block = tooltipClickBlockRef.current;
+    if (!block || block.key !== key) return;
+    if (Date.now() > block.until) {
+      tooltipClickBlockRef.current = null;
+      return;
+    }
     event.preventDefault();
     event.stopPropagation();
     tooltipClickBlockRef.current = null;
@@ -1236,9 +1238,9 @@ export function CourtOfFoxesExperience() {
       "data-tooltip-place": placement,
       onBlur: () => hideTooltip(key),
       onClickCapture: (event: MouseEvent<HTMLElement>) => blockTooltipClick(key, event),
+      onContextMenu: (event: MouseEvent<HTMLElement>) => showTouchTooltip(key, event),
       onFocus: () => showTooltip(key),
       onPointerCancel: () => cancelTooltipPress(key),
-      onPointerDown: (event: PointerEvent<HTMLElement>) => startTooltipPress(key, event),
       onPointerLeave: () => cancelTooltipPress(key),
       onPointerUp: () => hideTooltip(key),
     };

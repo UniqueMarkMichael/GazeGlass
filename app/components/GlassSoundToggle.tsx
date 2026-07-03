@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type MouseEvent, type PointerEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import {
   GLASS_SOUND_EVENT,
   isGlassSoundEnabled,
@@ -13,13 +13,13 @@ import {
 } from "./glassSound";
 
 const soundTooltipKey = "site-sound-toggle";
-const tooltipLongPressMs = 520;
+const tooltipClickBlockMs = 900;
 
 export function GlassSoundToggle() {
   const [isEnabled, setIsEnabled] = useState(true);
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const tooltipTimerRef = useRef<number | null>(null);
-  const tooltipClickBlockRef = useRef<string | null>(null);
+  const tooltipClickBlockRef = useRef<{ key: string; until: number } | null>(null);
 
   useEffect(() => {
     setIsEnabled(isGlassSoundEnabled());
@@ -86,23 +86,25 @@ export function GlassSoundToggle() {
 
   function cancelTooltipPress(key: string) {
     hideTooltip(key);
-    if (tooltipClickBlockRef.current === key) {
+    if (tooltipClickBlockRef.current?.key === key) {
       tooltipClickBlockRef.current = null;
     }
   }
 
-  function startTooltipPress(key: string, event: PointerEvent<HTMLButtonElement>) {
-    if (event.pointerType === "mouse") return;
-    clearTooltipTimer();
-    tooltipTimerRef.current = window.setTimeout(() => {
-      tooltipTimerRef.current = null;
-      tooltipClickBlockRef.current = key;
-      setActiveTooltip(key);
-    }, tooltipLongPressMs);
+  function showTouchTooltip(key: string, event: MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    tooltipClickBlockRef.current = { key, until: Date.now() + tooltipClickBlockMs };
+    showTooltip(key);
   }
 
   function blockTooltipClick(key: string, event: MouseEvent<HTMLButtonElement>) {
-    if (tooltipClickBlockRef.current !== key) return;
+    const block = tooltipClickBlockRef.current;
+    if (!block || block.key !== key) return;
+    if (Date.now() > block.until) {
+      tooltipClickBlockRef.current = null;
+      return;
+    }
     event.preventDefault();
     event.stopPropagation();
     tooltipClickBlockRef.current = null;
@@ -135,10 +137,10 @@ export function GlassSoundToggle() {
       data-tooltip-place="top"
       onBlur={() => hideTooltip(soundTooltipKey)}
       onClickCapture={(event) => blockTooltipClick(soundTooltipKey, event)}
+      onContextMenu={(event) => showTouchTooltip(soundTooltipKey, event)}
       onClick={toggleSound}
       onFocus={() => showTooltip(soundTooltipKey)}
       onPointerCancel={() => cancelTooltipPress(soundTooltipKey)}
-      onPointerDown={(event) => startTooltipPress(soundTooltipKey, event)}
       onPointerLeave={() => cancelTooltipPress(soundTooltipKey)}
       onPointerUp={() => hideTooltip(soundTooltipKey)}
     >
