@@ -1051,7 +1051,7 @@ function routeChoiceConfirmation(choice: Choice) {
     return "You take Kitsu's hand. The courthouse opens across the river, and Marok descends into velvet alone.";
   }
 
-  return "The triune bond waits deeper in the glass. This fork asks which half of the Scale Jem reaches first.";
+  return "You take both hands. The city may divide the work, but the glass records the triune bond.";
 }
 
 export function CourtOfFoxesExperience() {
@@ -1078,7 +1078,7 @@ export function CourtOfFoxesExperience() {
   const tooltipClickBlockRef = useRef<{ key: string; until: number } | null>(null);
 
   const chapter = chapters[chapterIndex];
-  const selectedRoute: Choice = choice === "kitsu" ? "kitsu" : "marok";
+  const selectedRoute: Choice = choice ?? "marok";
   const chapterBody = chapter.bodyByChoice?.[selectedRoute] ?? chapter.body;
   const chapterScenes = useMemo(
     () => [
@@ -1794,10 +1794,10 @@ export function CourtOfFoxesExperience() {
         <section className="cof-choice-screen" aria-label={isChapterTenFork ? "Chapter Ten route choice" : "A Choice of Paths"}>
           <div className="cof-choice-copy">
             <p className="cof-kicker">{isChapterTenFork ? "The Fork / Chapter Ten" : "The Fork / A Choice of Paths"}</p>
-            <h2>{isChapterTenFork ? "Which half do we steal first?" : "The Scale has broken into two halves across the city."}</h2>
+            <h2>{isChapterTenFork ? "Marok, Kitsu, or both?" : "The Scale has broken into two halves across the city."}</h2>
             <p>
               {isChapterTenFork
-                ? "The Menagerie waits below. The courthouse waits across the river. The glass will remember which hand Jem takes."
+                ? "The Menagerie waits below. The courthouse waits across the river. The glass will remember who Jem chooses."
                 : "You cannot carry both halves alone. One fox may cross the dark with you, or Jem may choose the dangerous third way."}
             </p>
           </div>
@@ -1842,18 +1842,21 @@ export function CourtOfFoxesExperience() {
               <strong>Go with Kitsu</strong>
               <em>{isChapterTenFork ? "Across the river. Law, grief, and gold light." : "Justice's fox. Restraint, truth, and a hand that stays."}</em>
             </button>
-            {!isChapterTenFork ? (
-              <button
-                {...tooltipProps("choice-both", "Choose the triune bond: no claiming, no hierarchy.")}
-                className={`${choice === "both" ? "is-selected " : ""}cof-tooltip`}
-                type="button"
-                onClick={() => setChoice("both")}
-              >
-                <span className="cof-dot cof-dot-rose" />
-                <strong>Choose both</strong>
-                <em>The triune bond. No claiming. No hierarchy.</em>
-              </button>
-            ) : null}
+            <button
+              {...tooltipProps(
+                "choice-both",
+                isChapterTenFork
+                  ? "Choose the triune bond and keep both foxes in the route."
+                  : "Choose the triune bond: no claiming, no hierarchy.",
+              )}
+              className={`${choice === "both" ? "is-selected " : ""}cof-tooltip`}
+              type="button"
+              onClick={() => setChoice("both")}
+            >
+              <span className="cof-dot cof-dot-rose" />
+              <strong>Choose both</strong>
+              <em>{isChapterTenFork ? "The forbidden answer. Rose, green, and gold." : "The triune bond. No claiming. No hierarchy."}</em>
+            </button>
           </div>
           {choice ? (
             <div className="cof-choice-confirm" ref={choiceConfirmRef}>
