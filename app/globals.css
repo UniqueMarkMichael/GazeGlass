@@ -5534,6 +5534,37 @@ dd {
   margin: 28px 0 30px;
 }
 
+.observation-start-mirror {
+  display: grid;
+  width: fit-content;
+  margin-top: clamp(30px, 5vw, 52px);
+  color: inherit;
+  text-decoration: none;
+}
+
+.observation-start-mirror .marcella-mirror {
+  width: min(34vw, 360px);
+  min-width: min(100%, 250px);
+  box-shadow:
+    0 0 0 1px rgba(237, 227, 204, 0.16),
+    0 0 0 8px rgba(201, 162, 39, 0.1),
+    inset 0 0 0 1px rgba(255, 244, 199, 0.18),
+    inset 0 -34px 72px rgba(4, 3, 12, 0.64),
+    0 0 52px rgba(201, 162, 39, 0.28),
+    0 34px 96px rgba(4, 3, 12, 0.62);
+}
+
+.observation-start-mirror:hover .marcella-mirror,
+.observation-start-mirror:focus-visible .marcella-mirror {
+  box-shadow:
+    0 0 0 1px rgba(255, 244, 199, 0.28),
+    0 0 0 8px rgba(201, 162, 39, 0.16),
+    inset 0 0 0 1px rgba(255, 244, 199, 0.2),
+    inset 0 -34px 72px rgba(4, 3, 12, 0.64),
+    0 0 72px rgba(201, 162, 39, 0.36),
+    0 40px 116px rgba(4, 3, 12, 0.72);
+}
+
 .sky-ledger {
   position: relative;
   z-index: 2;
@@ -7698,6 +7729,15 @@ form div {
 
   .observations-hero-copy {
     max-width: 760px;
+  }
+
+  .observation-start-mirror {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .observation-start-mirror .marcella-mirror {
+    width: min(74vw, 360px);
   }
 
   .observatory-glass {
