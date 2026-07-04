@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import extraChaptersData from "./extraChapters.json";
 
 type Stage = "cover" | "reading" | "choice" | "ending";
 type Choice = "marok" | "kitsu" | "both";
@@ -34,11 +35,13 @@ type Chapter = {
   summary: string;
   hook: string;
   body: string[];
+  bodyByChoice?: Partial<Record<Choice, string[]>>;
   scene?: ChapterScene;
   scenes?: ChapterScene[];
+  scenesByChoice?: Partial<Record<Choice, ChapterScene[]>>;
 };
 
-const chapters: Chapter[] = [
+const baseChapters: Chapter[] = [
   {
     "number": "01",
     "label": "Chapter One",
@@ -966,24 +969,26 @@ const chapters: Chapter[] = [
   }
 ];
 
+const chapters: Chapter[] = [...baseChapters, ...(extraChaptersData as Chapter[])];
+
 const endingCopy = {
   marok: {
-    title: "The Spark",
+    title: "Velvet and Green Fire",
     body:
-      "You chose the fox who treats rules like a dare. The half of the Scale you carried home is scorched at the edges, and so, a little, are you.",
-    thread: "War's green thread burns bright beside Beauty's rose.",
+      "You went below the Menagerie with Marok first. The Scale half came back marked with velvet, green fire, and a want Jem refused to mistake for freedom.",
+    thread: "Beauty's rose and War's green return to the bridge, carrying one half of Judgment.",
   },
   kitsu: {
-    title: "The Verdict",
+    title: "Law and Gold Grief",
     body:
-      "You chose the fox who looks at the exits before the gods. The Scale came home level, and Kitsu never once let go of your right hand.",
-    thread: "Justice's gold thread holds steady beside Beauty's rose.",
+      "You crossed to the courthouse with Kitsu first. The Scale half came back marked with law, gold grief, and a promise to return for what Justice left behind.",
+    thread: "Beauty's rose and Justice's gold return to the bridge, carrying one half of Judgment.",
   },
   both: {
-    title: "The Bond",
+    title: "The Third Promise",
     body:
-      "You chose the third way. Jem does not become a prize passed between War and Justice. She touches both first, and the bond answers because none of them are diminished.",
-    thread: "Beauty's rose, War's green, and Justice's gold braid into one chosen witness.",
+      "The both route is still ahead. Jem has named the rule: no claiming, no hierarchy, and no one becomes the prettiest excuse for someone else's fear.",
+    thread: "Beauty's rose, War's green, and Justice's gold are not finished braiding.",
   },
 };
 
@@ -1037,6 +1042,18 @@ function choiceConfirmation(choice: Choice) {
   return "You refuse to make desire into a verdict. Rose, green, and gold braid together, and both foxes cross the dark with you.";
 }
 
+function routeChoiceConfirmation(choice: Choice) {
+  if (choice === "marok") {
+    return "You take Marok's hand. The Menagerie opens below, and Kitsu crosses the river alone.";
+  }
+
+  if (choice === "kitsu") {
+    return "You take Kitsu's hand. The courthouse opens across the river, and Marok descends into velvet alone.";
+  }
+
+  return "The triune bond waits deeper in the glass. This fork asks which half of the Scale Jem reaches first.";
+}
+
 export function CourtOfFoxesExperience() {
   const [stage, setStage] = useState<Stage>("cover");
   const [chapterIndex, setChapterIndex] = useState(0);
@@ -1061,11 +1078,22 @@ export function CourtOfFoxesExperience() {
   const tooltipClickBlockRef = useRef<{ key: string; until: number } | null>(null);
 
   const chapter = chapters[chapterIndex];
+  const selectedRoute: Choice = choice === "kitsu" ? "kitsu" : "marok";
+  const chapterBody = chapter.bodyByChoice?.[selectedRoute] ?? chapter.body;
+  const chapterScenes = useMemo(
+    () => [
+      ...(chapter.scene ? [chapter.scene] : []),
+      ...(chapter.scenes ?? []),
+      ...(chapter.scenesByChoice?.[selectedRoute] ?? []),
+    ],
+    [chapter, selectedRoute],
+  );
+  const isChapterTenFork = stage === "choice" && chapter.number === "09";
   const ending = endingCopy[choice ?? "kitsu"];
   const progress = stage === "cover" ? 0 : stage === "ending" ? 100 : Math.round(((chapterIndex + 1) / chapters.length) * 82);
 
   const fontClass = useMemo(() => `cof-font-${fontStep}`, [fontStep]);
-  const supportStatus = `${focusLabel(focusMode)} ${Math.min(activeParagraphIndex + 1, chapter.body.length)}/${chapter.body.length}`;
+  const supportStatus = `${focusLabel(focusMode)} ${Math.min(activeParagraphIndex + 1, chapterBody.length)}/${chapterBody.length}`;
 
   useEffect(() => {
     const pending = pendingResumeRef.current;
@@ -1291,6 +1319,12 @@ export function CourtOfFoxesExperience() {
   }
 
   function continueReading() {
+    if (chapter.number === "09") {
+      setChoice(null);
+      setStage("choice");
+      return;
+    }
+
     if (chapterIndex < chapters.length - 1) {
       setChapterIndex((current) => current + 1);
       setActiveParagraphIndex(0);
@@ -1298,7 +1332,23 @@ export function CourtOfFoxesExperience() {
       return;
     }
 
-    setStage("choice");
+    setStage("ending");
+  }
+
+  function completeChoice() {
+    if (isChapterTenFork) {
+      const chapterTenIndex = chapters.findIndex((item) => item.number === "10");
+      if (chapterTenIndex >= 0) {
+        setChapterIndex(chapterTenIndex);
+        setActiveParagraphIndex(0);
+        setReadWithMeIndex(0);
+        setReadWithMe(false);
+        setStage("reading");
+      }
+      return;
+    }
+
+    setStage("ending");
   }
 
   function setPace(value: ReadingPace) {
@@ -1325,14 +1375,14 @@ export function CourtOfFoxesExperience() {
 
   function readNext() {
     setReadWithMeIndex((current) => {
-      const nextIndex = Math.min(chapter.body.length - 1, current + 1);
+      const nextIndex = Math.min(chapterBody.length - 1, current + 1);
       setActiveParagraphIndex(nextIndex);
       return nextIndex;
     });
   }
 
   function scrollParagraphIntoView(index: number, behavior: ScrollBehavior = "smooth") {
-    const paragraphIndex = Math.max(0, Math.min(index, chapter.body.length - 1));
+    const paragraphIndex = Math.max(0, Math.min(index, chapterBody.length - 1));
     const paragraph = paragraphRefs.current[paragraphIndex];
     const reader = readerRef.current;
     if (!paragraph || !reader) return;
@@ -1419,7 +1469,7 @@ export function CourtOfFoxesExperience() {
         </a>
         <div className="cof-topbar-title">
           <span>A Court of Foxes</span>
-          <strong>{stage === "reading" ? chapter.label : stage === "choice" ? "The Fork" : stage === "ending" ? "The Ending" : "Chronicle"}</strong>
+          <strong>{stage === "reading" ? chapter.label : stage === "choice" ? "The Fork" : stage === "ending" ? "The Hold" : "Chronicle"}</strong>
         </div>
         <div className="cof-topbar-actions" aria-label="Reader controls">
           <button
@@ -1661,7 +1711,7 @@ export function CourtOfFoxesExperience() {
                 <p>{chapter.question}</p>
               </div>
               <div className="cof-prose">
-                {chapter.body.map((paragraph, index) => {
+                {chapterBody.map((paragraph, index) => {
                   const hidden = readWithMe && index > readWithMeIndex;
                   const active = index === activeParagraphIndex && !hidden;
                   const blockClassName = [
@@ -1673,9 +1723,7 @@ export function CourtOfFoxesExperience() {
                   ]
                     .filter(Boolean)
                     .join(" ");
-                  const scenes = [...(chapter.scene ? [chapter.scene] : []), ...(chapter.scenes ?? [])].filter(
-                    (scene) => scene.after === index,
-                  );
+                  const scenes = chapterScenes.filter((scene) => scene.after === index);
 
                   return (
                     <div
@@ -1719,15 +1767,21 @@ export function CourtOfFoxesExperience() {
                 <button
                   {...tooltipProps(
                     "continue-reading",
-                    chapterIndex < chapters.length - 1
+                    chapter.number === "09"
+                      ? "Choose which half of the Scale Jem reaches first."
+                      : chapterIndex < chapters.length - 1
                       ? `Continue to ${chapters[chapterIndex + 1].label}.`
-                      : "Open the final path choice.",
+                      : "Pause at the current end of the available chapters.",
                   )}
                   className="cof-primary-action cof-tooltip"
                   type="button"
                   onClick={continueReading}
                 >
-                {chapterIndex < chapters.length - 1 ? `Continue to ${chapters[chapterIndex + 1].label}` : "Choose who crosses the dark"}
+                  {chapter.number === "09"
+                    ? "Choose the first half"
+                    : chapterIndex < chapters.length - 1
+                      ? `Continue to ${chapters[chapterIndex + 1].label}`
+                      : "The glass holds here"}
                   <span aria-hidden="true">&rarr;</span>
                 </button>
               </footer>
@@ -1737,59 +1791,83 @@ export function CourtOfFoxesExperience() {
       ) : null}
 
       {stage === "choice" ? (
-        <section className="cof-choice-screen" aria-label="A Choice of Paths">
+        <section className="cof-choice-screen" aria-label={isChapterTenFork ? "Chapter Ten route choice" : "A Choice of Paths"}>
           <div className="cof-choice-copy">
-            <p className="cof-kicker">The Fork / A Choice of Paths</p>
-            <h2>The Scale has broken into two halves across the city.</h2>
+            <p className="cof-kicker">{isChapterTenFork ? "The Fork / Chapter Ten" : "The Fork / A Choice of Paths"}</p>
+            <h2>{isChapterTenFork ? "Which half do we steal first?" : "The Scale has broken into two halves across the city."}</h2>
             <p>
-              You cannot carry both halves alone. One fox may cross the dark with you, or Jem may choose the dangerous third way.
+              {isChapterTenFork
+                ? "The Menagerie waits below. The courthouse waits across the river. The glass will remember which hand Jem takes."
+                : "You cannot carry both halves alone. One fox may cross the dark with you, or Jem may choose the dangerous third way."}
             </p>
           </div>
           <figure className="cof-choice-art">
-            <img src="/a-court-of-foxes/assets/trio.png" alt="Jem standing between Marok and Kitsu in a luminous celestial court" />
+            <img
+              src={isChapterTenFork ? "/a-court-of-foxes/assets/ch10-two-halves-one-choice.png" : "/a-court-of-foxes/assets/trio.png"}
+              alt={
+                isChapterTenFork
+                  ? "Jem standing between Marok and Kitsu as both offer their hands and the paths divide"
+                  : "Jem standing between Marok and Kitsu in a luminous celestial court"
+              }
+            />
           </figure>
           <div className="cof-choice-options">
             <button
-              {...tooltipProps("choice-marok", "Choose Marok's spark, risk, and dangerous sincerity.")}
+              {...tooltipProps(
+                "choice-marok",
+                isChapterTenFork
+                  ? "Go below the Menagerie with Marok first."
+                  : "Choose Marok's spark, risk, and dangerous sincerity.",
+              )}
               className={`${choice === "marok" ? "is-selected " : ""}cof-tooltip`}
               type="button"
               onClick={() => setChoice("marok")}
             >
               <span className="cof-dot cof-dot-green" />
               <strong>Go with Marok</strong>
-              <em>War's fox. Spark, ruin, and dangerous sincerity.</em>
+              <em>{isChapterTenFork ? "Below the Menagerie. Velvet, want, and green fire." : "War's fox. Spark, ruin, and dangerous sincerity."}</em>
             </button>
             <button
-              {...tooltipProps("choice-kitsu", "Choose Kitsu's restraint, truth, and steady protection.")}
+              {...tooltipProps(
+                "choice-kitsu",
+                isChapterTenFork
+                  ? "Cross to the courthouse with Kitsu first."
+                  : "Choose Kitsu's restraint, truth, and steady protection.",
+              )}
               className={`${choice === "kitsu" ? "is-selected " : ""}cof-tooltip`}
               type="button"
               onClick={() => setChoice("kitsu")}
             >
               <span className="cof-dot cof-dot-gold" />
               <strong>Go with Kitsu</strong>
-              <em>Justice's fox. Restraint, truth, and a hand that stays.</em>
+              <em>{isChapterTenFork ? "Across the river. Law, grief, and gold light." : "Justice's fox. Restraint, truth, and a hand that stays."}</em>
             </button>
-            <button
-              {...tooltipProps("choice-both", "Choose the triune bond: no claiming, no hierarchy.")}
-              className={`${choice === "both" ? "is-selected " : ""}cof-tooltip`}
-              type="button"
-              onClick={() => setChoice("both")}
-            >
-              <span className="cof-dot cof-dot-rose" />
-              <strong>Choose both</strong>
-              <em>The triune bond. No claiming. No hierarchy.</em>
-            </button>
+            {!isChapterTenFork ? (
+              <button
+                {...tooltipProps("choice-both", "Choose the triune bond: no claiming, no hierarchy.")}
+                className={`${choice === "both" ? "is-selected " : ""}cof-tooltip`}
+                type="button"
+                onClick={() => setChoice("both")}
+              >
+                <span className="cof-dot cof-dot-rose" />
+                <strong>Choose both</strong>
+                <em>The triune bond. No claiming. No hierarchy.</em>
+              </button>
+            ) : null}
           </div>
           {choice ? (
             <div className="cof-choice-confirm" ref={choiceConfirmRef}>
-              <p>{choiceConfirmation(choice)}</p>
+              <p>{isChapterTenFork ? routeChoiceConfirmation(choice) : choiceConfirmation(choice)}</p>
               <button
-                {...tooltipProps("cross-dark", "Reveal the ending shaped by your chosen path.")}
+                {...tooltipProps(
+                  "cross-dark",
+                  isChapterTenFork ? "Read Chapter Ten with this route." : "Reveal the ending shaped by your chosen path.",
+                )}
                 className="cof-primary-action cof-tooltip"
                 type="button"
-                onClick={() => setStage("ending")}
+                onClick={completeChoice}
               >
-                Cross the dark
+                {isChapterTenFork ? "Enter Chapter Ten" : "Cross the dark"}
                 <span aria-hidden="true">&rarr;</span>
               </button>
             </div>
@@ -1799,13 +1877,13 @@ export function CourtOfFoxesExperience() {
 
       {stage === "ending" ? (
         <section className="cof-ending-screen" aria-label="Ending reveal">
-          <p className="cof-kicker">The Glass Remembers</p>
+          <p className="cof-kicker">The Glass Holds Here</p>
           <div className={`cof-ending-braid cof-ending-${choice ?? "kitsu"}`} aria-hidden="true">
             <span />
             <span />
             <span />
           </div>
-          <span className="cof-ending-label">The ending you wove</span>
+          <span className="cof-ending-label">The path remembered</span>
           <h2>{ending.title}</h2>
           <p>{ending.body}</p>
           <strong>{ending.thread}</strong>
