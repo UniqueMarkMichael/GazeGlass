@@ -1120,30 +1120,6 @@
     ],
     "scenes": [
       {
-<<<<<<< HEAD
-        "after": 1,
-        "src": "/a-court-of-foxes/assets/ch12-memory-glass-stair-descent.png",
-        "alt": "Jem walks between Marok and Kitsu down a memory-glass stairway as broken Scale halves glow above them",
-        "caption": "The first stair tasted like blood."
-      },
-      {
-        "after": 27,
-        "src": "/a-court-of-foxes/assets/ch12-court-house-gates.png",
-        "alt": "Jem, Marok, and Kitsu pass from the drowned flower district toward the hidden Court House gates",
-        "caption": "No welcome. No invitation. Only permission sharpened into a doorway."
-      },
-      {
-        "after": 35,
-        "src": "/a-court-of-foxes/assets/ch12-panless-scales-hall.png",
-        "alt": "Jem, Marok, and Kitsu enter a black marble Court House hall where broken Scale halves hover before panless scales",
-        "caption": "The hall woke around them."
-      },
-      {
-        "after": 45,
-        "src": "/a-court-of-foxes/assets/ch12-false-commencement-lattice.png",
-        "alt": "Kitsu's golden tail trapped behind a gold lattice beside a false commencement document as Jem and Marok stand near him",
-        "caption": "FALSE COMMENCEMENT AUTHORIZED."
-=======
         "after": 11,
         "src": "/a-court-of-foxes/assets/ch12-memory-glass-stair-descent.png",
         "alt": "Jem, Marok, and Kitsu descend through memory-glass walls filled with mortal prayers while the broken Scale halves float ahead",
@@ -1166,33 +1142,10 @@
         "src": "/a-court-of-foxes/assets/ch12-false-commencement-lattice.png",
         "alt": "Kitsu faces his golden tail trapped behind a gold lattice and woven through a black parchment scroll while Jem and Marok stand behind him",
         "caption": "Beautiful forgery. Law with a stolen spine."
->>>>>>> 51bda70d2a0919464e26cd3a983911d112f4b393
       },
       {
         "after": 47,
         "src": "/a-court-of-foxes/assets/ch12-beauty-sight-scroll-throat.png",
-<<<<<<< HEAD
-        "alt": "Jem opens Beauty sight and reveals the false scroll as a throat with Kitsu, Marok, and Jem before it",
-        "caption": "The gold lattice became ribs. The scroll became a throat."
-      },
-      {
-        "after": 100,
-        "src": "/a-court-of-foxes/assets/ch12-break-the-law-anchor.png",
-        "alt": "Jem, Kitsu, and Marok join hands in the Court House as rose, gold, and green magic braid between them",
-        "caption": "Justice took War’s hand."
-      },
-      {
-        "after": 120,
-        "src": "/a-court-of-foxes/assets/ch12-kitsu-tail-restored-confession.png",
-        "alt": "Kitsu collapses against Marok as his golden fox tail is restored while Jem stands beside them in rose light",
-        "caption": "His tail slammed back into him."
-      },
-      {
-        "after": 174,
-        "src": "/a-court-of-foxes/assets/ch12-undercourt-door-veyr-tail.png",
-        "alt": "Jem, Marok, and Kitsu face an undercourt door where Veyr waits with Jem’s magenta tail beyond blackened-gold teeth",
-        "caption": "Beyond it, the undercourt waited."
-=======
         "alt": "Beauty sight reveals the gold lattice as ribs and the black scroll as a living throat threaded with Kitsu's tail",
         "caption": "The chamber rotted."
       },
@@ -1213,7 +1166,6 @@
         "src": "/a-court-of-foxes/assets/ch12-undercourt-door-veyr-tail.png",
         "alt": "Jem stands between Marok and Kitsu before the undercourt door where Veyr waits with Jem's magenta tail and a silver Bell-tongue",
         "caption": "Then let us be rude."
->>>>>>> 51bda70d2a0919464e26cd3a983911d112f4b393
       }
     ]
   }
