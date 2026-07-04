@@ -934,6 +934,7 @@
     "number": "12",
     "label": "Chapter Twelve",
     "title": "The Court Where Lies Cannot Enter",
+<<<<<<< HEAD
     "readTime": "~13 min",
     "question": "What truth remains when no lie can survive the Court House?",
     "hero": "/a-court-of-foxes/assets/ch12-memory-glass-stair-descent.png",
@@ -941,6 +942,15 @@
     "accent": "gold",
     "summary": "Kitsu's tail is restored inside the Court House, truth forces the triangle into the open, and the undercourt reveals Veyr holding Jem's magenta tail.",
     "hook": "Beyond the undercourt door, Veyr waits with Jem's tail.",
+=======
+    "readTime": "~12 min",
+    "question": "What truth survives in the only court where lies scrape the tongue?",
+    "hero": "/a-court-of-foxes/assets/ch12-memory-glass-stair-descent.png",
+    "heroAlt": "Jem, Marok, and Kitsu descend through a memory-glass stairway with broken Scale halves floating ahead",
+    "accent": "gold",
+    "summary": "The Court House forces truth into the open, Kitsu breaks procedure to reclaim his tail, and Jem chooses the bond without letting it become a verdict.",
+    "hook": "Beyond the door, the undercourt waits with Veyr and Jem's magenta tail.",
+>>>>>>> 51bda70d2a0919464e26cd3a983911d112f4b393
     "body": [
       "The first stair tasted like blood. Not mine. Not yet.",
       "The Court House announced itself through the tongue before the eye, which felt excessive and therefore exactly like court. One foot on the blackened-gold stair, and copper bloomed along my teeth. The next step scraped something invisible against the roof of my mouth, as if the building had reached in with one polished nail and tested how easily I might lie.",
@@ -1120,6 +1130,7 @@
     ],
     "scenes": [
       {
+<<<<<<< HEAD
         "after": 1,
         "src": "/a-court-of-foxes/assets/ch12-memory-glass-stair-descent.png",
         "alt": "Jem walks between Marok and Kitsu down a memory-glass stairway as broken Scale halves glow above them",
@@ -1142,10 +1153,35 @@
         "src": "/a-court-of-foxes/assets/ch12-false-commencement-lattice.png",
         "alt": "Kitsu's golden tail trapped behind a gold lattice beside a false commencement document as Jem and Marok stand near him",
         "caption": "FALSE COMMENCEMENT AUTHORIZED."
+=======
+        "after": 11,
+        "src": "/a-court-of-foxes/assets/ch12-memory-glass-stair-descent.png",
+        "alt": "Jem, Marok, and Kitsu descend through memory-glass walls filled with mortal prayers while the broken Scale halves float ahead",
+        "caption": "Each pane held a prayer pressed flat against the other side."
+      },
+      {
+        "after": 26,
+        "src": "/a-court-of-foxes/assets/ch12-court-house-gates.png",
+        "alt": "Jem, Marok, and Kitsu stand amid drowned prayers and flowers before the Court House threshold",
+        "caption": "Permission sharpened into a doorway."
+      },
+      {
+        "after": 34,
+        "src": "/a-court-of-foxes/assets/ch12-panless-scales-hall.png",
+        "alt": "The vast black marble Court House hall with witness chairs, panless scales, and two broken Scale halves hovering down the aisle",
+        "caption": "The hall woke around them."
+      },
+      {
+        "after": 44,
+        "src": "/a-court-of-foxes/assets/ch12-false-commencement-lattice.png",
+        "alt": "Kitsu faces his golden tail trapped behind a gold lattice and woven through a black parchment scroll while Jem and Marok stand behind him",
+        "caption": "Beautiful forgery. Law with a stolen spine."
+>>>>>>> 51bda70d2a0919464e26cd3a983911d112f4b393
       },
       {
         "after": 47,
         "src": "/a-court-of-foxes/assets/ch12-beauty-sight-scroll-throat.png",
+<<<<<<< HEAD
         "alt": "Jem opens Beauty sight and reveals the false scroll as a throat with Kitsu, Marok, and Jem before it",
         "caption": "The gold lattice became ribs. The scroll became a throat."
       },
@@ -1166,6 +1202,28 @@
         "src": "/a-court-of-foxes/assets/ch12-undercourt-door-veyr-tail.png",
         "alt": "Jem, Marok, and Kitsu face an undercourt door where Veyr waits with Jem’s magenta tail beyond blackened-gold teeth",
         "caption": "Beyond it, the undercourt waited."
+=======
+        "alt": "Beauty sight reveals the gold lattice as ribs and the black scroll as a living throat threaded with Kitsu's tail",
+        "caption": "The chamber rotted."
+      },
+      {
+        "after": 99,
+        "src": "/a-court-of-foxes/assets/ch12-break-the-law-anchor.png",
+        "alt": "Jem, Kitsu, and Marok join hands as rose, gold, and green magic braid together while witness chairs turn toward them",
+        "caption": "May I hold your hand while I break the law?"
+      },
+      {
+        "after": 126,
+        "src": "/a-court-of-foxes/assets/ch12-kitsu-tail-restored-confession.png",
+        "alt": "Kitsu's golden tail restores in radiant fire as Marok catches him and Jem reaches toward them in the dark Court House",
+        "caption": "His tail slammed back into him."
+      },
+      {
+        "after": 173,
+        "src": "/a-court-of-foxes/assets/ch12-undercourt-door-veyr-tail.png",
+        "alt": "Jem stands between Marok and Kitsu before the undercourt door where Veyr waits with Jem's magenta tail and a silver Bell-tongue",
+        "caption": "Then let us be rude."
+>>>>>>> 51bda70d2a0919464e26cd3a983911d112f4b393
       }
     ]
   }
