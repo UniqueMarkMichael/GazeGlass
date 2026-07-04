@@ -59,14 +59,14 @@ export const regionMeta: Record<ObservationRegion, {
   description: string;
 }> = {
   gods: {
-    title: "The Gods",
+    title: "Gods",
     instrument: "The Orb",
     subtitle: "The scale of the divine.",
     description:
       "Stories connected to prophecy, judgment, cosmic pressure, and the forces that move before mortals know they have been moved.",
   },
   spirits: {
-    title: "The Spirits",
+    title: "Spirits",
     instrument: "The Stained Glass",
     subtitle: "Memory turned into light.",
     description:

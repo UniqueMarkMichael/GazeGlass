@@ -5,14 +5,14 @@ import { JsonLd } from "../components/JsonLd";
 import { SeerCircleForm } from "../components/SeerCircleForm";
 
 export const metadata: Metadata = {
-  title: "The Celestial Codex",
+  title: "Celestial Codex",
   description:
     "Enter the Celestial Codex and learn the laws behind mortal worlds: witness, consequence, surrender, pressure, memory, devotion, and return.",
   alternates: {
     canonical: "/celestial-codex",
   },
   openGraph: {
-    title: "The Celestial Codex | Gaze Glass",
+    title: "Celestial Codex | Gaze Glass",
     description:
       "A ceremonial reading experience from Gaze Glass, revealing the deeper order beneath gods, spirits, mortals, and observation.",
     url: "/celestial-codex",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Celestial Codex | Gaze Glass",
+    title: "Celestial Codex | Gaze Glass",
     description:
       "Learn the laws behind mortal worlds in the mythic archive of Gaze Glass.",
     images: ["/codex/sigil-law-witness.webp"],
@@ -147,7 +147,7 @@ const codexPageData = {
   "@type": "CreativeWork",
   "@id": "https://www.gazeglass.com/celestial-codex#webpage",
   url: "https://www.gazeglass.com/celestial-codex",
-  name: "The Celestial Codex | Gaze Glass",
+  name: "Celestial Codex | Gaze Glass",
   description:
     "A ceremonial fantasy archive revealing the seven laws beneath the seen world of Gaze Glass.",
   isPartOf: {
@@ -176,7 +176,7 @@ export default function CelestialCodex() {
       <section className="codex-hero" aria-labelledby="codex-title">
         <div className="stars" aria-hidden="true" />
         <div className="codex-hero-copy reveal">
-          <p className="eyebrow">The Celestial Codex</p>
+          <p className="eyebrow">Celestial Codex</p>
           <h1 id="codex-title">Learn the laws behind mortal worlds.</h1>
           <div className="codex-invocation">
             <p>There are truths the Glass does not explain at first.</p>

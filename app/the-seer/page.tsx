@@ -3,14 +3,14 @@ import { GlassMenu } from "../components/GlassMenu";
 import { JsonLd } from "../components/JsonLd";
 
 export const metadata: Metadata = {
-  title: "The Seer",
+  title: "Seer",
   description:
     "Meet the Seer behind Gaze Glass, the keeper who witnesses gods, spirits, mortals, and the sacred stories that pass through the glass.",
   alternates: {
     canonical: "/the-seer",
   },
   openGraph: {
-    title: "The Seer | Gaze Glass",
+    title: "Seer | Gaze Glass",
     description:
       "The mythic about page for Gaze Glass: the keeper behind the glass, the work of witnessing, and the invitation to readers.",
     url: "/the-seer",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Seer | Gaze Glass",
+    title: "Seer | Gaze Glass",
     description:
       "Meet the keeper behind Gaze Glass, where gods, spirits, and mortals are witnessed through sacred story.",
     images: ["/seer/seer-and-marok.webp"],
@@ -37,7 +37,7 @@ const seerPageData = {
   "@type": "AboutPage",
   "@id": "https://www.gazeglass.com/the-seer#webpage",
   url: "https://www.gazeglass.com/the-seer",
-  name: "The Seer | Gaze Glass",
+  name: "Seer | Gaze Glass",
   description:
     "The keeper behind Gaze Glass, a fantasy story world where gods, spirits, and mortals are witnessed through sacred observations.",
   isPartOf: {
@@ -75,7 +75,7 @@ export default function TheSeer() {
         </figure>
         <div className="mortal-hero-copy reveal">
           <p className="eyebrow">The Keeper Behind the Glass</p>
-          <h1>The Seer</h1>
+          <h1>Seer</h1>
           <p>
             You came to watch the gods. The glass turned, and now it watches you.
             That is where every Gaze Glass story begins.
@@ -94,7 +94,7 @@ export default function TheSeer() {
       </section>
 
       <section className="cosmology-note reveal">
-        <p className="eyebrow">The Seer Records</p>
+        <p className="eyebrow">Seer Records</p>
         <h2>What Passes Through the Glass.</h2>
         <div>
           {work.map((item) => (

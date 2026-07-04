@@ -5,7 +5,7 @@ import { JsonLd } from "../components/JsonLd";
 import { getCasesBySpirit, getObservationHref, type SpiritId } from "../observations/data";
 
 export const metadata: Metadata = {
-  title: "The Spirits",
+  title: "Spirits",
   description:
     "Meet the fox spirits of Gaze Glass: Kitsu, Marok, Jem, Sindren, and Saroka, divine assistants who carry truth, judgment, beauty, love, and fortune through a mythic fantasy world.",
   alternates: {
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     "fox spirits in fantasy stories",
   ],
   openGraph: {
-    title: "The Spirits | Gaze Glass",
+    title: "Spirits | Gaze Glass",
     description:
       "Meet the fox spirits who sit beside divine power in Gaze Glass: Kitsu, Marok, Jem, Sindren, and Saroka.",
     url: "/the-spirits",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Spirits | Gaze Glass",
+    title: "Spirits | Gaze Glass",
     description:
       "Meet Kitsu, Marok, Jem, Sindren, and Saroka, the fox spirits who serve beside the gods of Gaze Glass.",
     images: ["/og/gaze-glass.png"],
@@ -97,7 +97,7 @@ const spiritsPageData = {
   "@type": "CollectionPage",
   "@id": "https://www.gazeglass.com/the-spirits#webpage",
   url: "https://www.gazeglass.com/the-spirits",
-  name: "The Spirits | Gaze Glass",
+  name: "Spirits | Gaze Glass",
   description:
     "A fantasy character archive of the fox spirits in Gaze Glass: Kitsu, Marok, Jem, Sindren, and Saroka.",
   isPartOf: {
@@ -140,7 +140,7 @@ export default function TheSpirits() {
         </div>
         <div className="archive-hero-copy reveal">
           <p className="eyebrow">The Spirit Archive</p>
-          <h1>The Spirits</h1>
+          <h1>Spirits</h1>
           <p>
             The gods may carry the pressure of creation, but the spirits carry the
             whisper: counsel, witness, mischief, and memory at the edge of power.
