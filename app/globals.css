@@ -525,11 +525,16 @@ a {
   display: grid;
   align-content: start;
   gap: 18px;
+  width: 100%;
+  min-width: 0;
   min-height: 0;
 }
 
 .cof-rail-art {
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   margin: 0;
   aspect-ratio: 16 / 10;
   overflow: hidden;
@@ -584,6 +589,9 @@ a {
 
 .cof-chapter-list {
   display: grid;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   gap: 6px;
 }
 
@@ -593,6 +601,7 @@ a {
   gap: 12px;
   align-items: center;
   width: 100%;
+  min-width: 0;
   padding: 12px 13px;
   border: 1px solid rgba(237, 227, 204, 0.1);
   border-radius: 8px;
@@ -615,6 +624,8 @@ a {
 }
 
 .cof-progress {
+  width: 100%;
+  min-width: 0;
   height: 5px;
   overflow: hidden;
   border-radius: 999px;
@@ -630,6 +641,8 @@ a {
 }
 
 .cof-choice-status {
+  width: 100%;
+  min-width: 0;
   margin: 0;
   color: rgba(237, 227, 204, 0.48);
   font-size: 0.66rem;
