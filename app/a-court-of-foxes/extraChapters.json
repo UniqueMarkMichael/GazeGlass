@@ -934,15 +934,6 @@
     "number": "12",
     "label": "Chapter Twelve",
     "title": "The Court Where Lies Cannot Enter",
-<<<<<<< HEAD
-    "readTime": "~13 min",
-    "question": "What truth remains when no lie can survive the Court House?",
-    "hero": "/a-court-of-foxes/assets/ch12-memory-glass-stair-descent.png",
-    "heroAlt": "Jem, Marok, and Kitsu descend a memory-glass stairway toward the Court House beneath the city",
-    "accent": "gold",
-    "summary": "Kitsu's tail is restored inside the Court House, truth forces the triangle into the open, and the undercourt reveals Veyr holding Jem's magenta tail.",
-    "hook": "Beyond the undercourt door, Veyr waits with Jem's tail.",
-=======
     "readTime": "~12 min",
     "question": "What truth survives in the only court where lies scrape the tongue?",
     "hero": "/a-court-of-foxes/assets/ch12-memory-glass-stair-descent.png",
@@ -950,7 +941,6 @@
     "accent": "gold",
     "summary": "The Court House forces truth into the open, Kitsu breaks procedure to reclaim his tail, and Jem chooses the bond without letting it become a verdict.",
     "hook": "Beyond the door, the undercourt waits with Veyr and Jem's magenta tail.",
->>>>>>> 51bda70d2a0919464e26cd3a983911d112f4b393
     "body": [
       "The first stair tasted like blood. Not mine. Not yet.",
       "The Court House announced itself through the tongue before the eye, which felt excessive and therefore exactly like court. One foot on the blackened-gold stair, and copper bloomed along my teeth. The next step scraped something invisible against the roof of my mouth, as if the building had reached in with one polished nail and tested how easily I might lie.",
