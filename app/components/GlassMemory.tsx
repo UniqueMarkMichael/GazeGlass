@@ -27,11 +27,11 @@ const MAX_MEMORY_ENTRIES = 18;
 const homeSections = [
   { hash: "#home", id: "first-glass", label: "The First Glass", href: "/#home", realm: "threshold" },
   { hash: "#gaze-into-glass", id: "glass-portal", label: "Gaze Into The Glass", href: "/#gaze-into-glass", realm: "threshold" },
-  { hash: "#the-seer", id: "seer-records", label: "The Seer Records", href: "/#the-seer", realm: "seer" },
+  { hash: "#the-seer", id: "seer-records", label: "Seer Records", href: "/#the-seer", realm: "seer" },
   { hash: "#the-mortals", id: "mortal-threshold", label: "Mortals Pray", href: "/#the-mortals", realm: "mortal" },
   { hash: "#featured-gods", id: "gods-watch", label: "Gods Watch", href: "/#featured-gods", realm: "god" },
   { hash: "#the-spirits", id: "spirits-remember", label: "Spirits Remember", href: "/#the-spirits", realm: "spirit" },
-  { hash: "#behind-the-glass", id: "behind-the-glass", label: "The Seer Speaks", href: "/#behind-the-glass", realm: "seer" },
+  { hash: "#behind-the-glass", id: "behind-the-glass", label: "Seer Speaks", href: "/#behind-the-glass", realm: "seer" },
   { hash: "#the-seer-circle", id: "seer-circle", label: "The Circle Listens", href: "/#the-seer-circle", realm: "seer" },
 ] as const;
 
@@ -120,7 +120,7 @@ function getMemoryForLocation({ pathname, hash }: MemoryLocation): Omit<GlassMem
     return {
       id: mortal?.id ?? "mortal-archive",
       label: mortal?.label ?? "The Mortal Archive",
-      href: mortal?.href ?? "/the-mortals",
+      href: mortal?.href ?? "/observations/mortals",
       realm: "mortal",
     };
   }
@@ -147,7 +147,7 @@ function getMemoryForLocation({ pathname, hash }: MemoryLocation): Omit<GlassMem
   if (pathname === "/the-seer") {
     return {
       id: "the-seer",
-      label: "The Seer",
+      label: "Seer",
       href: "/the-seer",
       realm: "seer",
     };
@@ -157,7 +157,7 @@ function getMemoryForLocation({ pathname, hash }: MemoryLocation): Omit<GlassMem
     const law = matchHash(codexLaws, hash);
     return {
       id: law?.id ?? "celestial-codex",
-      label: law?.label ?? "The Celestial Codex",
+      label: law?.label ?? "Celestial Codex",
       href: law?.href ?? "/celestial-codex",
       realm: "codex",
     };

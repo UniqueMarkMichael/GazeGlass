@@ -4,7 +4,7 @@ import { GlassMenu } from "../components/GlassMenu";
 import { getCasesByGod, getObservationHref, type GodId } from "../observations/data";
 
 export const metadata: Metadata = {
-  title: "The Gods",
+  title: "Gods",
   description:
     "Meet the gods of Gaze Glass: Love, War, Justice, Beauty, Death, Fortune, Story, Wisdom, Mercy, and Chaos in a mythic fantasy archive for readers.",
   alternates: {
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     "Gaze Glass gods",
   ],
   openGraph: {
-    title: "The Gods | Gaze Glass",
+    title: "Gods | Gaze Glass",
     description:
       "Enter the divine archive of Gaze Glass and witness a fantasy pantheon of gods whose choices bend mortal lives.",
     url: "/the-gods",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Gods | Gaze Glass",
+    title: "Gods | Gaze Glass",
     description:
       "Meet the gods of Gaze Glass: a mythic fantasy pantheon of love, war, justice, beauty, death, fortune, story, wisdom, mercy, and chaos.",
     images: ["/og/gaze-glass-gods.png"],
@@ -169,7 +169,7 @@ const godsPageData = {
   "@type": "CollectionPage",
   "@id": "https://www.gazeglass.com/the-gods#webpage",
   url: "https://www.gazeglass.com/the-gods",
-  name: "The Gods | Gaze Glass",
+  name: "Gods | Gaze Glass",
   description:
     "A mythic fantasy archive of the gods in Gaze Glass, including Love, War, Justice, Beauty, Death, Fortune, Story, Wisdom, Mercy, and Chaos.",
   isPartOf: {
@@ -212,7 +212,7 @@ export default function TheGods() {
         </div>
         <div className="archive-hero-copy reveal">
           <p className="eyebrow">The Divine Archive</p>
-          <h1>The Gods</h1>
+          <h1>Gods</h1>
           <p>
             These are not distant idols. They are living pressures upon the world,
             immense enough to be mistaken for weather, law, memory, or fate.
@@ -224,7 +224,7 @@ export default function TheGods() {
         <p className="eyebrow">Epic View</p>
         <h2>Gold Light Enters Darkness.</h2>
         <p>
-          The Gods are viewed through the orb: immense, slow, and dangerous to
+          Gods are viewed through the orb: immense, slow, and dangerous to
           simplify. Each record is a pressure reading from the divine weather.
         </p>
       </section>

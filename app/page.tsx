@@ -139,12 +139,12 @@ const sacredViews = [
 ];
 
 const chapters = [
-  { number: "01", label: "The Seer Records", href: "#the-seer" },
+  { number: "01", label: "Seer Records", href: "#the-seer" },
   { number: "02", label: "The Glass Opens", href: "#glass-opens" },
   { number: "03", label: "Mortals Pray", href: "#the-mortals" },
   { number: "04", label: "Gods Watch", href: "#featured-gods" },
   { number: "05", label: "Spirits Remember", href: "#the-spirits" },
-  { number: "06", label: "The Seer Speaks", href: "#behind-the-glass" },
+  { number: "06", label: "Seer Speaks", href: "#behind-the-glass" },
   { number: "07", label: "The Glass Broadcasts", href: "#tiktok-transmissions" },
   { number: "08", label: "The Circle Listens", href: "#the-seer-circle" },
 ];
@@ -241,9 +241,9 @@ export default function Home() {
       </section>
 
       <section className="section seer-prologue reveal" id="the-seer" aria-label="The Seer introduces Gaze Glass">
-        <span className="chapter-stamp">01 / The Seer Records</span>
-        <p className="eyebrow">The Seer Records.</p>
-        <h2>The Seer Records What the Glass Reveals.</h2>
+        <span className="chapter-stamp">01 / Seer Records</span>
+        <p className="eyebrow">Seer Records.</p>
+        <h2>Seer Records What the Glass Reveals.</h2>
         <p>
           Gaze Glass is an immersive fantasy world brought to life through an
           interactive website that gives mortals the power to conjure meaning from
@@ -390,8 +390,8 @@ export default function Home() {
           <img src="/seer/seer-and-marok.webp" alt="The Seer and Marok observing a sacred glass orb" />
         </figure>
         <div className="seer-copy">
-          <span className="chapter-stamp">06 / The Seer Speaks</span>
-          <p className="eyebrow">The Seer</p>
+          <span className="chapter-stamp">06 / Seer Speaks</span>
+          <p className="eyebrow">Seer</p>
           <h2>The Keeper Behind the Glass.</h2>
           <p>
             The Seer observes the dance between mortals, spirits, and gods, then

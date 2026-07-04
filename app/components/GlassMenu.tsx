@@ -7,18 +7,12 @@ import { playGlassSound } from "./glassSound";
 
 const menuItems = [
   { label: "Home", href: "/#home", detail: "Begin where the Glass first opens.", action: "Open Home" },
-  { label: "The Gods", href: "/the-gods", detail: "Meet the powers shaping mortal lives.", action: "Open The Gods" },
-  { label: "The Spirits", href: "/the-spirits", detail: "Meet the fox spirits between worlds.", action: "Open The Spirits" },
-  {
-    label: "The Mortals",
-    href: "/the-mortals",
-    detail: "Read the lives touched by the divine.",
-    action: "Open The Mortals",
-  },
+  { label: "Gods", href: "/the-gods", detail: "Meet the powers shaping mortal lives.", action: "Open Gods" },
+  { label: "Spirits", href: "/the-spirits", detail: "Meet the fox spirits between worlds.", action: "Open Spirits" },
   {
     label: "Observations",
     href: "/observations",
-    detail: "Read short stories seen through the Glass.",
+    detail: "Read mortal lives and sacred incidents seen through the Glass.",
     action: "Open Observations",
   },
   {
@@ -28,12 +22,12 @@ const menuItems = [
     action: "Open A Court of Foxes",
   },
   {
-    label: "The Celestial Codex",
+    label: "Celestial Codex",
     href: "/celestial-codex",
     detail: "Discover the seven laws beneath the seen world.",
-    action: "Open The Celestial Codex",
+    action: "Open Celestial Codex",
   },
-  { label: "The Seer", href: "/the-seer", detail: "Meet the voice recording what the Glass reveals.", action: "Meet The Seer" },
+  { label: "Seer", href: "/the-seer", detail: "Meet the voice recording what the Glass reveals.", action: "Meet Seer" },
   {
     label: "TikTok",
     href: "/#tiktok-transmissions",

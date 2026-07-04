@@ -67,24 +67,29 @@ const regionCards = [
     region: "gods" as const,
     href: "/observations/gods",
     instrument: "The Orb",
-    label: "The Gods",
+    label: "Gods",
     symbol: "orb",
   },
   {
     region: "mortals" as const,
     href: "/observations/mortals",
     instrument: "The Mirror",
-    label: "The Mortals",
+    label: "Mortals",
     symbol: "mirror",
   },
   {
     region: "spirits" as const,
     href: "/observations/spirits",
     instrument: "The Stained Glass",
-    label: "The Spirits",
+    label: "Spirits",
     symbol: "glass",
   },
 ];
+
+const marcellaMirrorPanels = Array.from({ length: 9 }, (_value, index) => ({
+  src: `/mortals/marcella/mirror-story/panel-${index + 1}.jpg`,
+  alt: "",
+}));
 
 export default function ObservationsPage() {
   return (
@@ -109,6 +114,25 @@ export default function ObservationsPage() {
           </p>
           <a className="text-link" href={getObservationHref(startHereObservation)}>
             New here? Start with this Observation
+          </a>
+          <a
+            className="observation-start-mirror"
+            href={getObservationHref(startHereObservation)}
+            aria-label="Begin with Marcella's mirrored observation"
+          >
+            <div className="marcella-mirror" role="img" aria-label="The Glass opens Marcella's mirrored record">
+              <div className="marcella-mirror-images" aria-hidden="true">
+                {marcellaMirrorPanels.map((panel, index) => (
+                  <img
+                    alt={panel.alt}
+                    className={`marcella-mirror-panel panel-${index + 1}`}
+                    key={panel.src}
+                    loading={index === 0 ? "eager" : "lazy"}
+                    src={panel.src}
+                  />
+                ))}
+              </div>
+            </div>
           </a>
         </div>
       </section>
