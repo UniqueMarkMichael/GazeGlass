@@ -309,6 +309,23 @@ export default function Home() {
 
       <ReceiveVision />
 
+      <section className="naming-invitation reveal" aria-labelledby="naming-invitation-title">
+        <div>
+          <p className="eyebrow">Personal Witness</p>
+          <h2 id="naming-invitation-title">Let the Glass Name Your Witness.</h2>
+          <p>
+            Take a short ritual quiz to discover which deity watches you, which fox
+            spirit remembers you, and where the archive wants you to go next.
+          </p>
+          <a className="text-link" href="/the-glass-names-you">
+            Begin the naming rite
+          </a>
+        </div>
+        <figure>
+          <img src="/brand/sacred-mirror.webp" alt="A sacred golden mirror glowing with celestial light" />
+        </figure>
+      </section>
+
       <section className="beauty-blessing-section reveal" aria-labelledby="beauty-blessing-title">
         <figure className="beauty-blessing-frame">
           <video
@@ -380,9 +397,27 @@ export default function Home() {
             </article>
           ))}
         </div>
-        <a className="text-link" href="/the-spirits">
-          Enter the spirit archive
-        </a>
+        <article className="court-promo" aria-labelledby="home-court-promo-title">
+          <figure className="court-promo-art">
+            <img src="/a-court-of-foxes/assets/cover.png" alt="A Court of Foxes cover art with Jem, Marok, and Kitsu" />
+          </figure>
+          <div className="court-promo-copy">
+            <p className="eyebrow">A Gaze Glass Chronicle</p>
+            <h3 id="home-court-promo-title">The foxes step out of the archive.</h3>
+            <p>
+              Begin the candlelit chronicle where Beauty, War, and Justice braid
+              into one dangerous night beside Kitsu, Marok, and Jem.
+            </p>
+            <div className="court-promo-actions">
+              <a className="text-link" href="/a-court-of-foxes">
+                Enter A Court of Foxes
+              </a>
+              <a className="text-link muted-link" href="/the-spirits">
+                Meet the spirits first
+              </a>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section className="section seer reveal" id="behind-the-glass">

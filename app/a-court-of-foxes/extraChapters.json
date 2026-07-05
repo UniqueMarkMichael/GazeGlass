@@ -1892,31 +1892,25 @@
         "And between War and Justice, with Beauty restored to herself, I stood at the threshold and did not count exits."
       ]
     },
-    "scenesByChoice": {
-      "marok": [
-        {
-          "after": 68,
-          "src": "/a-court-of-foxes/assets/ch16-marok-witness-chosen.png",
-          "alt": "Jem and Marok as small fox spirits touch foreheads in the Celestial Court while Kitsu witnesses nearby and the restored Scale glows above them",
-          "caption": "The fox who stays when the joke would be easier."
-        }
-      ],
-      "kitsu": [
-        {
-          "after": 61,
-          "src": "/a-court-of-foxes/assets/ch16-kitsu-witness-chosen.png",
-          "alt": "Jem and Kitsu as small fox spirits touch foreheads in the Celestial Court while Marok witnesses nearby and gold law-light glows around them",
-          "caption": "The fox who stands beside her when truth becomes difficult."
-        }
-      ],
-      "both": [
-        {
-          "after": 70,
-          "src": "/a-court-of-foxes/assets/ch16-triune-witness-accepted.png",
-          "alt": "Jem, Kitsu, and Marok as small fox spirits stand side by side beneath the restored Scale with rose, green, and gold witness-light around them",
-          "caption": "Not one before. Not one behind."
-        }
-      ]
-    }
+    "scenes": [
+      {
+        "after": 21,
+        "src": "/a-court-of-foxes/assets/ch16-kitsu-witness-chosen.png",
+        "alt": "Jem and Kitsu as small fox spirits touch foreheads in the Celestial Court while Marok witnesses nearby and gold law-light glows around them",
+        "caption": "Justice. The fox who stands beside her when truth becomes difficult."
+      },
+      {
+        "after": 21,
+        "src": "/a-court-of-foxes/assets/ch16-marok-witness-chosen.png",
+        "alt": "Jem and Marok as small fox spirits touch foreheads in the Celestial Court while Kitsu witnesses nearby and the restored Scale glows above them",
+        "caption": "War. The fox who stays when the joke would be easier."
+      },
+      {
+        "after": 21,
+        "src": "/a-court-of-foxes/assets/ch16-triune-witness-accepted.png",
+        "alt": "Jem, Kitsu, and Marok as small fox spirits stand side by side beneath the restored Scale with rose, green, and gold witness-light around them",
+        "caption": "Both. Not one before. Not one behind."
+      }
+    ]
   }
 ]

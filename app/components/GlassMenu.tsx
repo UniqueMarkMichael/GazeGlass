@@ -16,6 +16,12 @@ const menuItems = [
     action: "Open Observations",
   },
   {
+    label: "Glass Naming",
+    href: "/the-glass-names-you",
+    detail: "Find the deity and fox spirit matched to you.",
+    action: "Open Glass Naming",
+  },
+  {
     label: "A Court of Foxes",
     href: "/a-court-of-foxes",
     detail: "Enter the branching romantasy reader.",

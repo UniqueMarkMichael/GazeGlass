@@ -172,6 +172,15 @@ function getMemoryForLocation({ pathname, hash }: MemoryLocation): Omit<GlassMem
     };
   }
 
+  if (pathname === "/the-glass-names-you") {
+    return {
+      id: "glass-naming",
+      label: "Glass Naming",
+      href: "/the-glass-names-you",
+      realm: "threshold",
+    };
+  }
+
   if (pathname.startsWith("/observations/")) {
     const slug = pathname.split("/").filter(Boolean).at(-1) ?? "observation";
     return {
