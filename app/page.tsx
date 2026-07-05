@@ -326,6 +326,23 @@ export default function Home() {
         </figure>
       </section>
 
+      <section className="constellation-invitation reveal" aria-labelledby="home-constellation-title">
+        <figure>
+          <img src="/brand/ritual-map-background.jpg" alt="A celestial ritual map glowing in deep blue and gold" />
+        </figure>
+        <div>
+          <p className="eyebrow">Constellation Map</p>
+          <h2 id="home-constellation-title">Follow the lines the Glass already sees.</h2>
+          <p>
+            Watch gods, fox spirits, mortal Observations, sacred laws, and your own naming result arrange into one
+            living path.
+          </p>
+          <a className="text-link" href="/constellation-map">
+            Open the map
+          </a>
+        </div>
+      </section>
+
       <section className="beauty-blessing-section reveal" aria-labelledby="beauty-blessing-title">
         <figure className="beauty-blessing-frame">
           <video

@@ -213,6 +213,15 @@ function getMemoryForLocation({ pathname, hash }: MemoryLocation): Omit<GlassMem
     };
   }
 
+  if (pathname === "/constellation-map") {
+    return {
+      id: "constellation-map",
+      label: "Constellation Map",
+      href: "/constellation-map",
+      realm: "codex",
+    };
+  }
+
   if (pathname.startsWith("/observations/")) {
     const slug = pathname.split("/").filter(Boolean).at(-1) ?? "observation";
     return {

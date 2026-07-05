@@ -22,6 +22,12 @@ const menuItems = [
     action: "Open Glass Naming",
   },
   {
+    label: "Constellation Map",
+    href: "/constellation-map",
+    detail: "Follow the hidden lines between gods, spirits, laws, and witnessed lives.",
+    action: "Open Constellation Map",
+  },
+  {
     label: "A Court of Foxes",
     href: "/a-court-of-foxes",
     detail: "Enter the branching romantasy reader.",
