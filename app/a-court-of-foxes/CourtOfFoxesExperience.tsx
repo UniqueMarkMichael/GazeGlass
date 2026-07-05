@@ -1564,8 +1564,8 @@ export function CourtOfFoxesExperience() {
               {chapters.map((item, index) => (
                 <button
                   key={item.number}
-                  {...tooltipProps(`chapter-${item.number}`, `Jump to ${item.label}: ${tooltipSentenceFragment(item.title)}.`, "bottom")}
-                  className={`${index === chapterIndex ? "is-active " : ""}cof-tooltip`}
+                  aria-label={`Jump to ${item.label}: ${item.title}`}
+                  className={index === chapterIndex ? "is-active" : ""}
                   type="button"
                   onClick={() => setChapterIndex(index)}
                 >
