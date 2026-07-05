@@ -528,6 +528,28 @@ a {
   width: 100%;
   min-width: 0;
   min-height: 0;
+  max-height: 100%;
+  padding-right: 8px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: rgba(201, 162, 39, 0.48) rgba(237, 227, 204, 0.06);
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+}
+
+.cof-reading-rail::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cof-reading-rail::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgba(237, 227, 204, 0.06);
+}
+
+.cof-reading-rail::-webkit-scrollbar-thumb {
+  border: 2px solid rgba(14, 12, 31, 0.78);
+  border-radius: 999px;
+  background: rgba(201, 162, 39, 0.58);
 }
 
 .cof-rail-art {
@@ -1264,6 +1286,10 @@ a {
   .cof-reading-rail {
     grid-template-columns: minmax(220px, 0.6fr) minmax(320px, 1fr);
     align-items: end;
+    max-height: none;
+    padding-right: 0;
+    overflow: visible;
+    scrollbar-gutter: auto;
   }
 
   .cof-rail-art {
