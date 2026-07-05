@@ -973,22 +973,22 @@ const chapters: Chapter[] = [...baseChapters, ...(extraChaptersData as Chapter[]
 
 const endingCopy = {
   marok: {
-    title: "Velvet and Green Fire",
+    title: "War May Answer Without Command",
     body:
-      "You went below the Menagerie with Marok first. The Scale half came back marked with velvet, green fire, and a want Jem refused to mistake for freedom.",
-    thread: "Beauty's rose and War's green return to the bridge, carrying one half of Judgment.",
+      "Jem chose Marok as the witness who stays. War's fox answered without command, without debt, and without turning desire into another door he built without her.",
+    thread: "Rose and green remain recorded: no debt, no cover, no exit hidden inside a joke.",
   },
   kitsu: {
-    title: "Law and Gold Grief",
+    title: "No Witness May Be Claimed",
     body:
-      "You crossed to the courthouse with Kitsu first. The Scale half came back marked with law, gold grief, and a promise to return for what Justice left behind.",
-    thread: "Beauty's rose and Justice's gold return to the bridge, carrying one half of Judgment.",
+      "Jem chose Kitsu as the witness who stands beside her when truth becomes difficult. Justice's fox refused to return to being a place before he had finished being a person.",
+    thread: "Rose and gold remain recorded: true choice rewrites the law no claim may cross.",
   },
   both: {
-    title: "The Third Promise",
+    title: "Triune Witness Accepted",
     body:
-      "The both route is still ahead. Jem has named the rule: no claiming, no hierarchy, and no one becomes the prettiest excuse for someone else's fear.",
-    thread: "Beauty's rose, War's green, and Justice's gold are not finished braiding.",
+      "Jem refused the simple shape of a verdict. Kitsu, Marok, and Jem carried witness forward together: no hierarchy, no claim, and no silence disguised as protection.",
+    thread: "Rose, green, and gold remain recorded as trouble, romance, procedure, and beginning.",
   },
 };
 
@@ -1078,7 +1078,7 @@ export function CourtOfFoxesExperience() {
   const tooltipClickBlockRef = useRef<{ key: string; until: number } | null>(null);
 
   const chapter = chapters[chapterIndex];
-  const selectedRoute: Choice = choice ?? "marok";
+  const selectedRoute: Choice = choice ?? "both";
   const chapterBody = chapter.bodyByChoice?.[selectedRoute] ?? chapter.body;
   const chapterScenes = useMemo(
     () => [
@@ -1089,7 +1089,7 @@ export function CourtOfFoxesExperience() {
     [chapter, selectedRoute],
   );
   const isChapterTenFork = stage === "choice" && chapter.number === "09";
-  const ending = endingCopy[choice ?? "kitsu"];
+  const ending = endingCopy[choice ?? "both"];
   const progress = stage === "cover" ? 0 : stage === "ending" ? 100 : Math.round(((chapterIndex + 1) / chapters.length) * 82);
 
   const fontClass = useMemo(() => `cof-font-${fontStep}`, [fontStep]);
