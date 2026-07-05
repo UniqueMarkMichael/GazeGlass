@@ -207,18 +207,9 @@ function getMemoryForLocation({ pathname, hash }: MemoryLocation): Omit<GlassMem
   if (pathname === "/the-glass-names-you") {
     return {
       id: "glass-naming",
-      label: "Glass Naming",
+      label: "Sorting Glass",
       href: "/the-glass-names-you",
       realm: "threshold",
-    };
-  }
-
-  if (pathname === "/constellation-map") {
-    return {
-      id: "constellation-map",
-      label: "Constellation Map",
-      href: "/constellation-map",
-      realm: "codex",
     };
   }
 

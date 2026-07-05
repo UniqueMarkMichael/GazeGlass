@@ -73,7 +73,7 @@ export function RegionPage({ region }: RegionPageProps) {
         <p>{meta.description}</p>
       </section>
 
-      <section className="region-constellation reveal" aria-label={`${meta.title} constellation`}>
+      <section className="region-constellation reveal" aria-label={`${meta.title} record cluster`}>
         <div className="constellation-map" aria-hidden="true">
           {records.map((record, index) => (
             <span className={`magnitude-${record.magnitude}`} key={record.slug} style={{ "--i": index } as CSSProperties} />

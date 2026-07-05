@@ -16,16 +16,10 @@ const menuItems = [
     action: "Open Observations",
   },
   {
-    label: "Glass Naming",
+    label: "Sorting Glass",
     href: "/the-glass-names-you",
     detail: "Find the deity and fox spirit matched to you.",
-    action: "Open Glass Naming",
-  },
-  {
-    label: "Constellation Map",
-    href: "/constellation-map",
-    detail: "Follow the hidden lines between gods, spirits, laws, and witnessed lives.",
-    action: "Open Constellation Map",
+    action: "Open Sorting Glass",
   },
   {
     label: "A Court of Foxes",

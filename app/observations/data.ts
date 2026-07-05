@@ -101,7 +101,7 @@ export const magnitudeMeta: Record<ObservationMagnitude, {
   },
   novella: {
     label: "Novella",
-    symbol: "Constellation",
+    symbol: "Record cluster",
     description: "A connected cluster of records.",
     weight: 3,
   },
@@ -173,7 +173,7 @@ export const observations: Observation[] = [
       {
         id: "patricia-walking",
         src: "/mortals/patricia/patricia-walking.png",
-        alt: "Patricia surrounded by golden constellations as Wisdom watches over the city",
+        alt: "Patricia surrounded by golden star patterns as Wisdom watches over the city",
         caption: "The going was already folded into the seeing.",
         afterParagraph: 19,
       },

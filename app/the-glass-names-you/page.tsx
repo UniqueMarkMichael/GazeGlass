@@ -4,14 +4,14 @@ import { JsonLd } from "../components/JsonLd";
 import { GlassNamingQuiz } from "./GlassNamingQuiz";
 
 export const metadata: Metadata = {
-  title: "Glass Names You",
+  title: "Sorting Glass",
   description:
     "Take the Gaze Glass quiz and be matched with a deity, a fox spirit, and a story path through the archive.",
   alternates: {
     canonical: "/the-glass-names-you",
   },
   openGraph: {
-    title: "Glass Names You | Gaze Glass",
+    title: "Sorting Glass | Gaze Glass",
     description:
       "Answer a short ritual quiz and discover which deity watches you, which fox spirit witnesses you, and where the Glass sends you next.",
     url: "/the-glass-names-you",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Glass Names You | Gaze Glass",
+    title: "Sorting Glass | Gaze Glass",
     description:
       "Let the Glass match you with a deity, a fox spirit, and your next Gaze Glass story path.",
     images: ["/og/gaze-glass.png"],
@@ -38,7 +38,7 @@ const glassNamingData = {
   "@type": "WebPage",
   "@id": "https://www.gazeglass.com/the-glass-names-you#webpage",
   url: "https://www.gazeglass.com/the-glass-names-you",
-  name: "Glass Names You | Gaze Glass",
+  name: "Sorting Glass | Gaze Glass",
   description:
     "An interactive Gaze Glass quiz matching readers with a deity, a fox spirit, and a recommended story path.",
   isPartOf: {
@@ -59,18 +59,18 @@ export default function GlassNamesYouPage() {
         <GlassMenu />
       </header>
 
-      <section className="naming-hero" aria-label="Glass naming ritual">
+      <section className="naming-hero" aria-label="Sorting Glass ritual">
         <div className="stars" aria-hidden="true" />
         <div className="naming-hero-copy reveal">
           <p className="eyebrow">Personal Witness</p>
-          <h1>Let the Glass Name Your Witness.</h1>
+          <h1>Gaze Into the Sorting Glass.</h1>
           <p>
-            Answer seven questions. The Glass will match you with the deity shaping
+            Answer seven questions. The Sorting Glass will match you with the deity shaping
             your pressure, the fox spirit who would notice what others miss, and the
             first path waiting in the archive.
           </p>
           <a className="text-link" href="#glass-naming-quiz">
-            Begin the naming rite
+            Begin the sorting
           </a>
         </div>
         <figure className="naming-hero-art">
@@ -80,7 +80,7 @@ export default function GlassNamesYouPage() {
 
       <GlassNamingQuiz />
 
-      <section className="archive-threshold naming-afterword reveal" aria-label="After the Glass names you">
+      <section className="archive-threshold naming-afterword reveal" aria-label="After the Sorting Glass chooses you">
         <p className="eyebrow">The Record Remains</p>
         <h2>Every Match Opens a Door.</h2>
         <p>

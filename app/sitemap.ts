@@ -38,12 +38,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.93,
     },
     {
-      url: `${baseUrl}/constellation-map`,
-      lastModified: new Date("2026-07-05"),
-      changeFrequency: "weekly",
-      priority: 0.91,
-    },
-    {
       url: `${baseUrl}/a-court-of-foxes`,
       lastModified: new Date("2026-07-01"),
       changeFrequency: "weekly",

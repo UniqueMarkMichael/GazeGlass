@@ -775,12 +775,12 @@ export function GlassNamingQuiz() {
     const spirit = spiritProfiles[result.spiritKey];
 
     return (
-      <section className="naming-quiz naming-result-shell reveal" id="glass-naming-quiz" aria-label="Your Glass naming result">
+      <section className="naming-quiz naming-result-shell reveal" id="glass-naming-quiz" aria-label="Your Sorting Glass result">
         <div className="naming-progress" aria-hidden="true">
           <span style={{ width: `${progress}%` }} />
         </div>
         <div className="naming-result-intro">
-          <p className="eyebrow">The Glass Has Named You</p>
+          <p className="eyebrow">The Sorting Glass Has Chosen</p>
           <h2>{deity.shortName} watches. {spirit.name} remembers.</h2>
           <p>{deity.summary} {spirit.result}</p>
         </div>
@@ -810,7 +810,7 @@ export function GlassNamingQuiz() {
         </div>
 
         <div className="naming-result-paths" aria-label="Recommended paths">
-          <p className="eyebrow">Where the Glass Sends You</p>
+          <p className="eyebrow">Where the Sorting Glass Sends You</p>
           {resultLinks.map((link, index) => (
             <a href={link.href} key={`${link.href}-${index}`}>
               <span>{String(index + 1).padStart(2, "0")}</span>
@@ -825,7 +825,7 @@ export function GlassNamingQuiz() {
             {copied ? "Result link copied" : "Copy result link"}
           </button>
           <button className="naming-secondary-action" type="button" onClick={retakeRite}>
-            Retake the rite
+            Retake the sorting
           </button>
         </div>
       </section>
@@ -833,7 +833,7 @@ export function GlassNamingQuiz() {
   }
 
   return (
-    <section className="naming-quiz reveal" id="glass-naming-quiz" aria-label="Glass naming quiz">
+    <section className="naming-quiz reveal" id="glass-naming-quiz" aria-label="Sorting Glass quiz">
       <div className="naming-progress" aria-label={`${progress}% complete`}>
         <span style={{ width: `${progress}%` }} />
       </div>
@@ -841,13 +841,13 @@ export function GlassNamingQuiz() {
       {!hasStarted ? (
         <div className="naming-intro-card">
           <p className="eyebrow">Seven Questions</p>
-          <h2>The Glass reads by pressure, not personality.</h2>
+          <h2>The Sorting Glass reads by pressure, not personality.</h2>
           <p>
             There are no wrong answers. Each choice tilts the reading toward a deity,
             a fox spirit, and a path through the Gaze Glass archive.
           </p>
           <button className="naming-primary-action" type="button" onClick={beginRite}>
-            Begin the rite
+            Begin the sorting
           </button>
         </div>
       ) : (

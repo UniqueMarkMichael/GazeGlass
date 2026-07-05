@@ -312,35 +312,18 @@ export default function Home() {
       <section className="naming-invitation reveal" aria-labelledby="naming-invitation-title">
         <div>
           <p className="eyebrow">Personal Witness</p>
-          <h2 id="naming-invitation-title">Let the Glass Name Your Witness.</h2>
+          <h2 id="naming-invitation-title">Gaze Into the Sorting Glass.</h2>
           <p>
             Take a short ritual quiz to discover which deity watches you, which fox
             spirit remembers you, and where the archive wants you to go next.
           </p>
           <a className="text-link" href="/the-glass-names-you">
-            Begin the naming rite
+            Begin the sorting
           </a>
         </div>
         <figure>
           <img src="/brand/sacred-mirror.webp" alt="A sacred golden mirror glowing with celestial light" />
         </figure>
-      </section>
-
-      <section className="constellation-invitation reveal" aria-labelledby="home-constellation-title">
-        <figure>
-          <img src="/brand/ritual-map-background.jpg" alt="A celestial ritual map glowing in deep blue and gold" />
-        </figure>
-        <div>
-          <p className="eyebrow">Constellation Map</p>
-          <h2 id="home-constellation-title">Follow the lines the Glass already sees.</h2>
-          <p>
-            Watch gods, fox spirits, mortal Observations, sacred laws, and your own naming result arrange into one
-            living path.
-          </p>
-          <a className="text-link" href="/constellation-map">
-            Open the map
-          </a>
-        </div>
       </section>
 
       <section className="beauty-blessing-section reveal" aria-labelledby="beauty-blessing-title">

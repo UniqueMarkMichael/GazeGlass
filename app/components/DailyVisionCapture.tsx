@@ -40,6 +40,8 @@ const DAILY_VISION_DISMISSED_UNTIL_KEY = "gaze-glass.daily-vision.dismissed-unti
 const DAILY_VISION_LAST_SHOWN_KEY = "gaze-glass.daily-vision.last-shown.v1";
 const NAMING_RESULT_KEY = "gaze-glass.naming-result.v1";
 const SHOW_DELAY_MS = 2200;
+const HOME_VISION_VIEWPORT_PROGRESS = 0.45;
+const HOME_VISION_SETTLE_DELAY_MS = 800;
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const godNames: Record<GodKey, string> = {
@@ -197,8 +199,25 @@ function shouldSkipDailyVision() {
   );
 }
 
+function isHomePage() {
+  return window.location.pathname === "/";
+}
+
 function isDailyVisionPreview() {
   return new URLSearchParams(window.location.search).get("daily-vision") === "preview";
+}
+
+function getHomeViewportProgress() {
+  const pageHeight = Math.max(
+    document.body.scrollHeight,
+    document.documentElement.scrollHeight,
+  );
+
+  if (pageHeight <= window.innerHeight) {
+    return 1;
+  }
+
+  return (window.scrollY + window.innerHeight / 2) / pageHeight;
 }
 
 function rememberDailyVision(vision: DailyVision, dayKey: string) {
@@ -242,6 +261,8 @@ export function DailyVisionCapture() {
   useEffect(() => {
     setNamingResult(readNamingResult());
     const isPreview = isDailyVisionPreview();
+    let showTimer: number | null = null;
+    let hasQueuedHomeVision = false;
 
     function hideForSubscriber() {
       setIsVisible(false);
@@ -249,7 +270,7 @@ export function DailyVisionCapture() {
 
     window.addEventListener(EMAIL_CAPTURED_EVENT, hideForSubscriber);
 
-    if (!isPreview && (shouldSkipDailyVision() || hasSubmittedEmail())) {
+    if (!isPreview && (!isHomePage() || shouldSkipDailyVision() || hasSubmittedEmail())) {
       return () => window.removeEventListener(EMAIL_CAPTURED_EVENT, hideForSubscriber);
     }
 
@@ -260,7 +281,7 @@ export function DailyVisionCapture() {
       return () => window.removeEventListener(EMAIL_CAPTURED_EVENT, hideForSubscriber);
     }
 
-    const showTimer = window.setTimeout(() => {
+    function showDailyVision() {
       if (!isPreview && (shouldSkipDailyVision() || hasSubmittedEmail())) {
         return;
       }
@@ -272,10 +293,57 @@ export function DailyVisionCapture() {
       setIsVisible(true);
       rememberDailyVision(vision, dayKey);
       playGlassSound("open");
-    }, isPreview ? 240 : SHOW_DELAY_MS);
+    }
+
+    if (isPreview) {
+      showTimer = window.setTimeout(showDailyVision, 240);
+    } else {
+      function clearQueuedShow() {
+        if (showTimer !== null) {
+          window.clearTimeout(showTimer);
+          showTimer = null;
+        }
+      }
+
+      function maybeShowFromHomeScroll() {
+        if (hasQueuedHomeVision || shouldSkipDailyVision() || hasSubmittedEmail()) {
+          return;
+        }
+
+        if (getHomeViewportProgress() < HOME_VISION_VIEWPORT_PROGRESS) {
+          return;
+        }
+
+        hasQueuedHomeVision = true;
+        showTimer = window.setTimeout(() => {
+          if (getHomeViewportProgress() < HOME_VISION_VIEWPORT_PROGRESS) {
+            hasQueuedHomeVision = false;
+            clearQueuedShow();
+            return;
+          }
+
+          showDailyVision();
+        }, HOME_VISION_SETTLE_DELAY_MS);
+      }
+
+      window.addEventListener("scroll", maybeShowFromHomeScroll, { passive: true });
+      window.addEventListener("resize", maybeShowFromHomeScroll);
+      window.addEventListener("hashchange", maybeShowFromHomeScroll);
+      window.setTimeout(maybeShowFromHomeScroll, SHOW_DELAY_MS);
+
+      return () => {
+        clearQueuedShow();
+        window.removeEventListener("scroll", maybeShowFromHomeScroll);
+        window.removeEventListener("resize", maybeShowFromHomeScroll);
+        window.removeEventListener("hashchange", maybeShowFromHomeScroll);
+        window.removeEventListener(EMAIL_CAPTURED_EVENT, hideForSubscriber);
+      };
+    }
 
     return () => {
-      window.clearTimeout(showTimer);
+      if (showTimer !== null) {
+        window.clearTimeout(showTimer);
+      }
       window.removeEventListener(EMAIL_CAPTURED_EVENT, hideForSubscriber);
     };
   }, [dayKey, vision]);

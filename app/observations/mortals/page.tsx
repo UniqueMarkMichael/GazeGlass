@@ -140,7 +140,7 @@ export default function MortalObservationsPage() {
         </p>
       </section>
 
-      <section className="region-constellation reveal" aria-label="Mortal observation constellation">
+      <section className="region-constellation reveal" aria-label="Mortal observation record cluster">
         <div className="constellation-map" aria-hidden="true">
           {mortalRecords.map((record, index) => (
             <span className={`magnitude-${record.magnitude}`} key={record.slug} style={{ "--i": index } as CSSProperties} />
