@@ -8625,9 +8625,19 @@ body:has(.press-gallery-page)::before {
   min-height: 100vh;
   overflow: clip;
   color: var(--press-ink-indigo);
-  background:
+  background-color: var(--press-parchment-bone);
+  background-image:
     linear-gradient(180deg, rgba(26, 23, 51, 0.04), rgba(237, 227, 204, 0) 460px),
-    var(--press-parchment-bone);
+    url("/press-assets/textures/gazeglass-parchment-hairline-texture.png");
+  background-position:
+    top center,
+    top center;
+  background-repeat:
+    no-repeat,
+    repeat-y;
+  background-size:
+    auto,
+    min(1672px, 140vw) auto;
   font-family: "Mulish", system-ui, sans-serif;
 }
 
@@ -8839,6 +8849,9 @@ body:has(.press-gallery-page)::before {
 .press-work-copy dd,
 .press-asset-copy dd {
   margin: 0;
+  color: rgba(26, 23, 51, 0.9);
+  font-family: "Mulish", system-ui, sans-serif;
+  font-size: 0.98rem;
   font-weight: 800;
   line-height: 1.45;
 }
@@ -8875,12 +8888,12 @@ body:has(.press-gallery-page)::before {
 
 .press-work-image {
   display: grid;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 2 / 3;
   place-items: center;
   overflow: hidden;
   border-bottom: 1px solid rgba(26, 23, 51, 0.18);
   color: rgba(26, 23, 51, 0.72);
-  background: rgba(26, 23, 51, 0.08);
+  background: rgba(26, 23, 51, 0.94);
   font-size: 0.74rem;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -8891,7 +8904,7 @@ body:has(.press-gallery-page)::before {
 .press-work-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .press-work-copy,
@@ -9047,6 +9060,13 @@ body:has(.press-gallery-page)::before {
 
 .press-founder-image {
   aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.press-founder-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .press-quote-card {
@@ -9121,6 +9141,23 @@ body:has(.press-gallery-page)::before {
   border-bottom: 1px solid rgba(26, 23, 51, 0.18);
   border-radius: 0;
   object-fit: cover;
+}
+
+.press-asset-card.is-cover-asset > img {
+  aspect-ratio: 2 / 3;
+  background: rgba(26, 23, 51, 0.94);
+  object-fit: contain;
+}
+
+.press-asset-card.is-square-asset > img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.press-asset-card.is-character-asset > img {
+  aspect-ratio: 4 / 3;
+  background: rgba(26, 23, 51, 0.94);
+  object-fit: contain;
 }
 
 .press-download-links {
@@ -9290,5 +9327,158 @@ body:has(.press-gallery-page)::before {
   .press-empty-state,
   .press-kit-callout {
     padding: 18px;
+  }
+}
+
+@media print {
+  @page {
+    size: letter;
+    margin: 0.28in;
+  }
+
+  body:has(.press-gallery-page) {
+    background: #ede3cc;
+  }
+
+  .press-gallery-page {
+    overflow: visible;
+    background-color: var(--press-parchment-bone);
+    background-image:
+      linear-gradient(180deg, rgba(26, 23, 51, 0.04), rgba(237, 227, 204, 0) 460px),
+      url("/press-assets/textures/gazeglass-parchment-hairline-texture.png");
+    background-repeat: no-repeat, repeat-y;
+    background-size: auto, 100% auto;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .press-masthead {
+    min-height: 6.15in;
+  }
+
+  .press-masthead-content,
+  .press-nutgraph,
+  .press-section,
+  .press-footer {
+    width: min(100% - 0.55in, 1120px);
+    margin-inline: auto;
+  }
+
+  .press-masthead-content {
+    padding: 0.95in 0 0.56in;
+  }
+
+  .press-masthead h1 {
+    max-width: 7.1in;
+    font-size: 4.3rem;
+  }
+
+  .press-sanctioned-line,
+  .press-masthead-meta {
+    max-width: 7.1in;
+  }
+
+  .press-nutgraph {
+    padding: 0.34in 0 0.36in;
+  }
+
+  .press-nutgraph p {
+    font-size: 1.36rem;
+    line-height: 1.18;
+  }
+
+  .press-section {
+    break-before: page;
+    padding: 0.55in 0 0.35in;
+  }
+
+  .press-section-header {
+    margin-bottom: 0.28in;
+  }
+
+  .press-fact-grid,
+  .press-works-grid,
+  .press-download-grid,
+  .press-copy-grid,
+  .press-quote-grid,
+  .press-founder-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .press-work-card,
+  .press-asset-card,
+  .press-copy-block,
+  .press-quote-card,
+  .press-founder-card,
+  .press-kit-callout,
+  .press-contact-card,
+  .press-empty-state {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .press-work-card,
+  .press-asset-card {
+    display: grid;
+    grid-template-columns: minmax(0, 0.36fr) minmax(0, 0.64fr);
+  }
+
+  .press-work-image,
+  .press-asset-card > img,
+  .press-asset-pending {
+    min-height: 2.6in;
+    height: 100%;
+    aspect-ratio: auto;
+    border-right: 1px solid rgba(26, 23, 51, 0.18);
+    border-bottom: 0;
+  }
+
+  .press-work-image img,
+  .press-asset-card > img,
+  .press-asset-card.is-cover-asset > img,
+  .press-asset-card.is-character-asset > img {
+    aspect-ratio: auto;
+    object-fit: contain;
+  }
+
+  .press-asset-card.is-square-asset > img {
+    object-fit: cover;
+  }
+
+  .press-work-copy,
+  .press-asset-copy,
+  .press-founder-card,
+  .press-copy-block,
+  .press-quote-card,
+  .press-contact-card,
+  .press-empty-state,
+  .press-kit-callout {
+    padding: 0.18in;
+  }
+
+  .press-work-copy h3,
+  .press-copy-block h3,
+  .press-founder-card h3,
+  .press-quote-card h3,
+  .press-asset-copy h3,
+  .press-kit-callout h3,
+  .press-contact-card h3 {
+    font-size: 1.28rem;
+  }
+
+  .press-work-copy dl,
+  .press-founder-card dl,
+  .press-asset-copy dl {
+    gap: 0.08in;
+    margin-bottom: 0.12in;
+  }
+
+  .press-work-logline,
+  .press-copy-block > p,
+  .press-angle-list p,
+  .press-asset-copy > p,
+  .press-contact-card p,
+  .press-empty-state {
+    line-height: 1.45;
   }
 }

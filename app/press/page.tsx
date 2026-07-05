@@ -143,6 +143,8 @@ function DownloadLinks({
 export default function PressGalleryPage() {
   const lastUpdated = formatLastUpdated();
   const currentYear = new Date().getFullYear();
+  const founderHeadshot = pressGalleryContent.founder.headshot;
+  const hasFounderHeadshot = !founderHeadshot.src.startsWith("[");
 
   return (
     <main className="press-gallery-page">
@@ -286,7 +288,11 @@ export default function PressGalleryPage() {
         <div className="press-founder-layout">
           <aside className="press-founder-card">
             <div className="press-founder-image">
-              <span>[MARK_HEADSHOT_SRC_TBD]</span>
+              {hasFounderHeadshot ? (
+                <img loading="lazy" src={founderHeadshot.src} alt={founderHeadshot.alt} />
+              ) : (
+                <span>[MARK_HEADSHOT_SRC_TBD]</span>
+              )}
             </div>
             <h3>{pressGalleryContent.founder.displayName}</h3>
             <p>{pressGalleryContent.founder.title}</p>
@@ -355,9 +361,20 @@ export default function PressGalleryPage() {
               const printSrc = "printSrc" in asset ? asset.printSrc : undefined;
               const dimensions = "dimensions" in asset ? asset.dimensions : undefined;
               const format = "format" in asset ? asset.format : undefined;
+              const isCoverAsset = asset.id.endsWith("-cover");
+              const isSquareAsset = asset.id === "founder-headshot";
+              const isCharacterAsset = asset.category === "Character feature assets";
+              const assetCardClassName = [
+                "press-asset-card",
+                isCoverAsset ? "is-cover-asset" : "",
+                isSquareAsset ? "is-square-asset" : "",
+                isCharacterAsset ? "is-character-asset" : "",
+              ]
+                .filter(Boolean)
+                .join(" ");
 
               return (
-                <article className="press-asset-card" key={asset.id}>
+                <article className={assetCardClassName} key={asset.id}>
                   {thumbnailSrc ? (
                     <img loading="lazy" src={thumbnailSrc} alt={asset.alt} />
                   ) : (
