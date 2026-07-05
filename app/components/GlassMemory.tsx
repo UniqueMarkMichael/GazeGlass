@@ -23,6 +23,38 @@ type MemoryLocation = {
 
 const LOCATION_EVENT = "gaze-glass:location-change";
 const MAX_MEMORY_ENTRIES = 18;
+const MAX_VISIBLE_MEMORY_ENTRIES = 5;
+
+const realmDetails: Record<GlassRealm, { label: string; summary: string }> = {
+  threshold: {
+    label: "Threshold",
+    summary: "You keep returning to openings, choices, and the rituals that name a path.",
+  },
+  mortal: {
+    label: "Mortal",
+    summary: "Mortal lives are pulling strongest. The Glass is showing you consequence through human scale.",
+  },
+  god: {
+    label: "God",
+    summary: "The divine archive is calling. Power, law, and blessing are becoming your current pattern.",
+  },
+  spirit: {
+    label: "Spirit",
+    summary: "The fox spirits are close. Your path keeps circling memory, counsel, and the space between worlds.",
+  },
+  seer: {
+    label: "Seer",
+    summary: "You are drawn to the keeper of the record: messages, omens, and the voice behind the Glass.",
+  },
+  codex: {
+    label: "Codex",
+    summary: "The sacred laws are gathering around you. The Glass is asking you to read the structure beneath the story.",
+  },
+  observation: {
+    label: "Observation",
+    summary: "The witnessed archive is your center. You are following stories as evidence.",
+  },
+};
 
 const homeSections = [
   { hash: "#home", id: "first-glass", label: "The First Glass", href: "/#home", realm: "threshold" },
@@ -234,6 +266,45 @@ function getLocation() {
   };
 }
 
+function formatMemoryTime(timestamp: number) {
+  const difference = Date.now() - timestamp;
+  const minute = 60 * 1000;
+  const hour = 60 * minute;
+  const day = 24 * hour;
+
+  if (difference < minute) {
+    return "Just now";
+  }
+
+  if (difference < hour) {
+    const minutes = Math.max(1, Math.floor(difference / minute));
+    return `${minutes}m ago`;
+  }
+
+  if (difference < day) {
+    const hours = Math.max(1, Math.floor(difference / hour));
+    return `${hours}h ago`;
+  }
+
+  const days = Math.max(1, Math.floor(difference / day));
+  return `${days}d ago`;
+}
+
+function getDominantRealm(entries: GlassMemoryEntry[]) {
+  if (!entries.length) {
+    return "threshold";
+  }
+
+  const counts = entries.reduce<Partial<Record<GlassRealm, number>>>((total, entry) => {
+    total[entry.realm] = (total[entry.realm] ?? 0) + 1;
+    return total;
+  }, {});
+
+  return entries.reduce<GlassRealm>((dominant, entry) => {
+    return (counts[entry.realm] ?? 0) > (counts[dominant] ?? 0) ? entry.realm : dominant;
+  }, entries[0].realm);
+}
+
 function useGlassMemory() {
   const [entries, setEntries] = useState<GlassMemoryEntry[]>([]);
   const [isReady, setIsReady] = useState(false);
@@ -303,6 +374,9 @@ export function GlassMemory() {
   const { entries, isReady, clearMemory } = useGlassMemory();
   const [isExpanded, setIsExpanded] = useState(false);
   const latest = entries[0];
+  const recentEntries = useMemo(() => entries.slice(0, MAX_VISIBLE_MEMORY_ENTRIES), [entries]);
+  const dominantRealm = useMemo(() => getDominantRealm(entries), [entries]);
+  const dominantDetails = realmDetails[dominantRealm];
 
   const countText = useMemo(() => {
     if (entries.length === 1) {
@@ -356,14 +430,48 @@ export function GlassMemory() {
           >
             Close
           </button>
-          <p>The Glass Remembers</p>
-          <strong>{countText}</strong>
-          <span>
-            Latest: <a href={latest.href}>{latest.label}</a>
-          </span>
-          <button className="glass-memory-forget" type="button" onClick={clearMemory}>
-            Let the Glass Forget
-          </button>
+          <div className="glass-memory-header">
+            <p>The Glass Remembers</p>
+            <strong>{countText}</strong>
+            <span>Private to this browser. No account. No cross-device memory.</span>
+          </div>
+
+          <a className="glass-memory-latest" href={latest.href}>
+            <small>Return to the latest vision</small>
+            <strong>{latest.label}</strong>
+            <span>
+              {realmDetails[latest.realm].label} / {formatMemoryTime(latest.lastSeenAt)}
+            </span>
+          </a>
+
+          <div className="glass-memory-signal">
+            <small>Path signal</small>
+            <strong>{dominantDetails.label}</strong>
+            <span>{dominantDetails.summary}</span>
+          </div>
+
+          <div className="glass-memory-trail" aria-label="Recent witnessed path">
+            <small>Recent path</small>
+            <ol>
+              {recentEntries.map((entry, index) => (
+                <li key={entry.id}>
+                  <a href={entry.href}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <strong>{entry.label}</strong>
+                    <em>
+                      {realmDetails[entry.realm].label} / {formatMemoryTime(entry.lastSeenAt)}
+                    </em>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="glass-memory-actions">
+            <button className="glass-memory-forget" type="button" onClick={clearMemory}>
+              Let the Glass Forget
+            </button>
+          </div>
         </aside>
       ) : null}
     </div>

@@ -2032,6 +2032,334 @@ body.menu-open .glass-memory-shell {
   transform: translateY(10px) scale(0.98);
 }
 
+body.daily-vision-open {
+  overflow: hidden;
+}
+
+.daily-vision-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+  isolation: isolate;
+}
+
+.daily-vision-scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-height: 100%;
+  padding: 0;
+  border: 0;
+  background:
+    linear-gradient(135deg, rgba(8, 7, 18, 0.92), rgba(26, 23, 51, 0.78)),
+    rgba(4, 3, 12, 0.84);
+  cursor: pointer;
+  backdrop-filter: blur(18px);
+}
+
+.daily-vision-dialog {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(260px, 0.58fr) minmax(0, 1fr);
+  gap: 0;
+  width: min(1060px, calc(100vw - 36px));
+  max-height: min(780px, calc(100svh - 36px));
+  overflow: auto;
+  border: 1px solid rgba(201, 162, 39, 0.32);
+  border-radius: 8px;
+  background:
+    linear-gradient(132deg, rgba(237, 227, 204, 0.055), transparent 42%),
+    linear-gradient(180deg, rgba(16, 14, 34, 0.98), rgba(8, 7, 19, 0.96));
+  box-shadow:
+    0 42px 160px rgba(3, 2, 11, 0.74),
+    inset 0 0 0 1px rgba(237, 227, 204, 0.055);
+  animation: dailyVisionArrives 560ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.daily-vision-dialog:focus {
+  outline: none;
+}
+
+.daily-vision-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 3;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid rgba(237, 227, 204, 0.18);
+  border-radius: 999px;
+  color: rgba(237, 227, 204, 0.78);
+  background: rgba(9, 8, 22, 0.66);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  box-shadow: 0 14px 32px rgba(4, 3, 12, 0.32);
+  backdrop-filter: blur(14px);
+}
+
+.daily-vision-close:hover,
+.daily-vision-close:focus-visible {
+  color: var(--pearl);
+  border-color: rgba(201, 162, 39, 0.54);
+}
+
+.daily-vision-art {
+  position: relative;
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #090816;
+}
+
+.daily-vision-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 0 50%, rgba(8, 7, 19, 0.62)),
+    linear-gradient(180deg, transparent 42%, rgba(4, 3, 12, 0.78));
+  pointer-events: none;
+}
+
+.daily-vision-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 620px;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.92) contrast(1.06) brightness(0.82);
+  transform: scale(1.02);
+}
+
+.daily-vision-art figcaption {
+  position: absolute;
+  left: clamp(20px, 3vw, 34px);
+  right: clamp(20px, 3vw, 34px);
+  bottom: clamp(22px, 3vw, 36px);
+  z-index: 2;
+  display: grid;
+  gap: 8px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(201, 162, 39, 0.3);
+  color: rgba(237, 227, 204, 0.82);
+}
+
+.daily-vision-art figcaption span,
+.daily-vision-thread span:first-child,
+.daily-vision-form label {
+  font-family: "Mulish", system-ui, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.daily-vision-art figcaption strong {
+  color: var(--pearl);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: clamp(1.44rem, 2.4vw, 2rem);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
+.daily-vision-copy {
+  display: grid;
+  align-content: center;
+  gap: clamp(18px, 2.5vw, 28px);
+  padding: clamp(34px, 5vw, 74px);
+  padding-right: clamp(34px, 6vw, 86px);
+}
+
+.daily-vision-copy h2 {
+  max-width: 620px;
+  margin: 0;
+  font-size: clamp(2.8rem, 6vw, 6.3rem);
+  line-height: 0.92;
+}
+
+.daily-vision-omen {
+  max-width: 600px;
+  margin: 0;
+  color: var(--pearl);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: clamp(1.4rem, 2.4vw, 2.05rem);
+  font-style: italic;
+  line-height: 1.32;
+}
+
+.daily-vision-thread {
+  display: grid;
+  gap: 8px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(201, 162, 39, 0.2);
+  border-bottom: 1px solid rgba(201, 162, 39, 0.14);
+}
+
+.daily-vision-thread span:first-child {
+  color: var(--gold);
+}
+
+.daily-vision-thread span:last-child,
+.daily-vision-instruction {
+  color: var(--dim-bone);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: clamp(1.08rem, 1.8vw, 1.34rem);
+  line-height: 1.48;
+}
+
+.daily-vision-instruction {
+  max-width: 560px;
+  margin: 0;
+}
+
+.daily-vision-form {
+  display: grid;
+  gap: 12px;
+  width: min(100%, 600px);
+}
+
+.daily-vision-form label {
+  margin: 0;
+  color: rgba(237, 227, 204, 0.62);
+}
+
+.daily-vision-form .daily-vision-input-row {
+  display: flex;
+  gap: 10px;
+  padding: 8px;
+  border: 1px solid rgba(201, 162, 39, 0.24);
+  border-radius: 999px;
+  background: rgba(10, 8, 24, 0.56);
+  box-shadow: inset 0 0 24px rgba(237, 227, 204, 0.035);
+}
+
+.daily-vision-form input {
+  min-width: 0;
+}
+
+.daily-vision-form button {
+  min-height: 48px;
+  border-radius: 999px;
+  color: #171224;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  background: linear-gradient(135deg, var(--pearl), var(--gold));
+}
+
+.daily-vision-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 22px;
+  align-items: center;
+}
+
+.daily-vision-secondary {
+  min-height: auto;
+  padding: 0;
+  color: rgba(237, 227, 204, 0.54);
+  background: transparent;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.daily-vision-secondary:hover,
+.daily-vision-secondary:focus-visible {
+  color: var(--gold);
+}
+
+@keyframes dailyVisionArrives {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 920px) {
+  .daily-vision-dialog {
+    grid-template-columns: 1fr;
+    width: min(680px, calc(100vw - 28px));
+  }
+
+  .daily-vision-art {
+    min-height: 260px;
+  }
+
+  .daily-vision-art img {
+    min-height: 260px;
+    max-height: 34svh;
+  }
+
+  .daily-vision-art::after {
+    background: linear-gradient(180deg, transparent 18%, rgba(4, 3, 12, 0.78));
+  }
+
+  .daily-vision-copy {
+    padding: 30px 24px 28px;
+  }
+}
+
+@media (max-width: 620px) {
+  .daily-vision-layer {
+    padding: 12px;
+  }
+
+  .daily-vision-dialog {
+    width: calc(100vw - 24px);
+    max-height: calc(100svh - 24px);
+  }
+
+  .daily-vision-close {
+    top: 14px;
+    right: 14px;
+    min-height: 36px;
+    padding: 0 13px;
+    font-size: 0.56rem;
+  }
+
+  .daily-vision-copy h2 {
+    font-size: clamp(2.4rem, 13vw, 4rem);
+  }
+
+  .daily-vision-omen {
+    font-size: clamp(1.24rem, 6vw, 1.54rem);
+  }
+
+  .daily-vision-form .daily-vision-input-row {
+    display: grid;
+    border-radius: 8px;
+  }
+
+  .daily-vision-form input,
+  .daily-vision-form button {
+    min-height: 48px;
+  }
+
+  .daily-vision-form button {
+    width: 100%;
+  }
+
+  .daily-vision-actions {
+    display: grid;
+    justify-items: start;
+  }
+}
+
 .opening-rite {
   position: fixed;
   inset: 0;
@@ -9236,5 +9564,203 @@ form div {
 
   .vision-result {
     padding: 22px;
+  }
+}
+
+.glass-memory {
+  width: min(392px, calc(100vw - 36px));
+  max-height: min(620px, calc(100svh - 142px));
+  overflow: auto;
+  padding: 18px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 162, 39, 0.38) rgba(9, 8, 22, 0.42);
+}
+
+.glass-memory-header,
+.glass-memory-latest,
+.glass-memory-signal,
+.glass-memory-trail,
+.glass-memory-actions {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-memory-header {
+  padding: 10px 34px 0 0;
+}
+
+.glass-memory-header p {
+  margin-bottom: 8px;
+}
+
+.glass-memory-header strong {
+  margin-bottom: 8px;
+  color: var(--pearl);
+  font-size: 1.24rem;
+}
+
+.glass-memory-header span,
+.glass-memory-signal span,
+.glass-memory-trail em,
+.glass-memory-latest span {
+  color: rgba(237, 227, 204, 0.58);
+  font-family: "Mulish", system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-style: normal;
+  line-height: 1.55;
+}
+
+.glass-memory-latest {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 15px;
+  border: 1px solid rgba(201, 162, 39, 0.26);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(201, 162, 39, 0.15), transparent 8rem),
+    rgba(237, 227, 204, 0.045);
+  text-decoration: none;
+}
+
+.glass-memory-latest,
+.glass-memory-latest:hover {
+  border-bottom: 1px solid rgba(201, 162, 39, 0.26);
+}
+
+.glass-memory-latest:hover,
+.glass-memory-latest:focus-visible {
+  border-color: rgba(201, 162, 39, 0.58);
+  background:
+    radial-gradient(circle at 18% 22%, rgba(201, 162, 39, 0.2), transparent 8rem),
+    rgba(237, 227, 204, 0.06);
+}
+
+.glass-memory-latest small,
+.glass-memory-signal small,
+.glass-memory-trail small {
+  color: rgba(201, 162, 39, 0.78);
+  font-family: "Mulish", system-ui, sans-serif;
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.17em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.glass-memory-latest strong {
+  margin: 0;
+  color: var(--bone);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.glass-memory-signal {
+  display: grid;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 14px 0 15px;
+  border-top: 1px solid rgba(237, 227, 204, 0.08);
+  border-bottom: 1px solid rgba(237, 227, 204, 0.08);
+}
+
+.glass-memory-signal strong {
+  margin: 0;
+  color: var(--gold);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.36rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.glass-memory-trail {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.glass-memory-trail ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.glass-memory-trail a {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 4px 10px;
+  align-items: start;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(237, 227, 204, 0.075);
+}
+
+.glass-memory-trail a:hover,
+.glass-memory-trail a:focus-visible {
+  color: var(--gold);
+  border-bottom-color: rgba(201, 162, 39, 0.34);
+}
+
+.glass-memory-trail a > span {
+  grid-row: span 2;
+  color: rgba(201, 162, 39, 0.76);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 1rem;
+  font-style: italic;
+  line-height: 1;
+}
+
+.glass-memory-trail strong {
+  margin: 0;
+  overflow: hidden;
+  color: rgba(237, 227, 204, 0.9);
+  font-family: "Mulish", system-ui, sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.glass-memory-trail em {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.glass-memory-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.glass-memory-forget {
+  width: auto;
+}
+
+@media (max-width: 820px) {
+  .glass-memory {
+    width: min(360px, calc(100vw - 36px));
+    max-height: min(560px, calc(100svh - 118px));
+    padding: 16px;
+  }
+
+  .glass-memory button {
+    width: auto;
+  }
+
+  .glass-memory-header strong {
+    font-size: 1.08rem;
+  }
+
+  .glass-memory-latest {
+    padding: 13px;
+  }
+
+  .glass-memory-trail strong {
+    white-space: normal;
   }
 }

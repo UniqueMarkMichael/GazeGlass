@@ -197,6 +197,10 @@ function shouldSkipDailyVision() {
   );
 }
 
+function isDailyVisionPreview() {
+  return new URLSearchParams(window.location.search).get("daily-vision") === "preview";
+}
+
 function rememberDailyVision(vision: DailyVision, dayKey: string) {
   const now = Date.now();
 
@@ -237,6 +241,7 @@ export function DailyVisionCapture() {
 
   useEffect(() => {
     setNamingResult(readNamingResult());
+    const isPreview = isDailyVisionPreview();
 
     function hideForSubscriber() {
       setIsVisible(false);
@@ -244,27 +249,30 @@ export function DailyVisionCapture() {
 
     window.addEventListener(EMAIL_CAPTURED_EVENT, hideForSubscriber);
 
-    if (shouldSkipDailyVision() || hasSubmittedEmail()) {
+    if (!isPreview && (shouldSkipDailyVision() || hasSubmittedEmail())) {
       return () => window.removeEventListener(EMAIL_CAPTURED_EVENT, hideForSubscriber);
     }
 
     const dismissedUntil = Number(window.localStorage.getItem(DAILY_VISION_DISMISSED_UNTIL_KEY) || 0);
     const lastShownDay = window.localStorage.getItem(DAILY_VISION_LAST_SHOWN_KEY);
 
-    if (dismissedUntil > Date.now() || lastShownDay === dayKey) {
+    if (!isPreview && (dismissedUntil > Date.now() || lastShownDay === dayKey)) {
       return () => window.removeEventListener(EMAIL_CAPTURED_EVENT, hideForSubscriber);
     }
 
     const showTimer = window.setTimeout(() => {
-      if (shouldSkipDailyVision() || hasSubmittedEmail()) {
+      if (!isPreview && (shouldSkipDailyVision() || hasSubmittedEmail())) {
         return;
       }
 
-      window.localStorage.setItem(DAILY_VISION_LAST_SHOWN_KEY, dayKey);
+      if (!isPreview) {
+        window.localStorage.setItem(DAILY_VISION_LAST_SHOWN_KEY, dayKey);
+      }
+
       setIsVisible(true);
       rememberDailyVision(vision, dayKey);
       playGlassSound("open");
-    }, SHOW_DELAY_MS);
+    }, isPreview ? 240 : SHOW_DELAY_MS);
 
     return () => {
       window.clearTimeout(showTimer);
@@ -333,12 +341,14 @@ export function DailyVisionCapture() {
       const result = (await response.json()) as { message?: string };
 
       if (response.ok) {
-        rememberSubscribedEmail(normalizedEmail);
         rememberDailyVision(vision, dayKey);
         setEmail("");
         setFormState("success");
         playGlassSound("success");
-        window.setTimeout(() => setIsVisible(false), 1600);
+        window.setTimeout(() => {
+          rememberSubscribedEmail(normalizedEmail);
+          setIsVisible(false);
+        }, 1600);
         return;
       }
 
