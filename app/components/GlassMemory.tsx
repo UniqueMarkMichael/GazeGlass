@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
 import { playGlassSound } from "./glassSound";
 
 export const GLASS_MEMORY_KEY = "gaze-glass.memory.v1";
@@ -291,6 +292,7 @@ function useGlassMemory() {
 }
 
 export function GlassMemory() {
+  const pathname = usePathname();
   const { entries, isReady, clearMemory } = useGlassMemory();
   const [isExpanded, setIsExpanded] = useState(false);
   const latest = entries[0];
@@ -303,7 +305,7 @@ export function GlassMemory() {
     return `${entries.length} visions have been witnessed.`;
   }, [entries.length]);
 
-  if (!isReady || !latest) {
+  if (pathname === "/press" || !isReady || !latest) {
     return null;
   }
 
