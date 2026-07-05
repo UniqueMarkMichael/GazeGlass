@@ -8,6 +8,8 @@ type Choice = "marok" | "kitsu" | "both";
 type ReaderTheme = "day" | "night";
 type FocusMode = "off" | "spotlight" | "band" | "ruler";
 type ReadingPace = "drift" | "focus" | "sprint" | "rest";
+type WitnessThread = "sight" | "spark" | "law" | "mercy" | "triune";
+type WitnessChoices = Record<string, string>;
 
 type ResumeBookmark = {
   chapterIndex: number;
@@ -39,6 +41,24 @@ type Chapter = {
   scene?: ChapterScene;
   scenes?: ChapterScene[];
   scenesByChoice?: Partial<Record<Choice, ChapterScene[]>>;
+};
+
+type WitnessOption = {
+  id: string;
+  label: string;
+  detail: string;
+  confirmation: string;
+  thread: WitnessThread;
+};
+
+type WitnessPrompt = {
+  eyebrow: string;
+  prompt: string;
+  options: WitnessOption[];
+};
+
+type WitnessMark = WitnessOption & {
+  chapterNumber: string;
 };
 
 const baseChapters: Chapter[] = [
@@ -992,8 +1012,175 @@ const endingCopy = {
   },
 };
 
+const witnessChoicePrompts: Record<string, WitnessPrompt> = {
+  "01": {
+    eyebrow: "Witness Choice",
+    prompt: "What does the Glass ask you to notice first?",
+    options: [
+      {
+        id: "count-exits",
+        label: "Count the exits",
+        detail: "You see the cage before the glitter.",
+        confirmation: "The Glass records a witness who sees the door before the decoration.",
+        thread: "sight",
+      },
+      {
+        id: "watch-war",
+        label: "Watch War's fox",
+        detail: "You follow the trouble that smiles.",
+        confirmation: "The Glass records a witness drawn to dangerous sincerity.",
+        thread: "spark",
+      },
+      {
+        id: "watch-justice",
+        label: "Watch Justice's fox",
+        detail: "You trust the one who notices every exit too.",
+        confirmation: "The Glass records a witness who trusts restraint before display.",
+        thread: "law",
+      },
+    ],
+  },
+  "03": {
+    eyebrow: "Witness Choice",
+    prompt: "Whose hand do you trust when the music gets too loud?",
+    options: [
+      {
+        id: "marok-hand",
+        label: "Marok's hand",
+        detail: "Heat, gravity, and a risk that asks.",
+        confirmation: "The Glass records a witness who lets danger become honest before it becomes safe.",
+        thread: "spark",
+      },
+      {
+        id: "kitsu-hand",
+        label: "Kitsu's hand",
+        detail: "Careful pressure, restraint, and room to refuse.",
+        confirmation: "The Glass records a witness who recognizes care when it refuses to claim.",
+        thread: "law",
+      },
+      {
+        id: "no-hand-yet",
+        label: "No hand yet",
+        detail: "Want can wait until it knows its own name.",
+        confirmation: "The Glass records a witness who protects the self before answering desire.",
+        thread: "sight",
+      },
+    ],
+  },
+  "06": {
+    eyebrow: "Witness Choice",
+    prompt: "How should Justice answer when someone is already bleeding?",
+    options: [
+      {
+        id: "answer-mercy",
+        label: "With mercy",
+        detail: "Hold the wound before naming the fault.",
+        confirmation: "The Glass records a witness who tends the wound before counting the debt.",
+        thread: "mercy",
+      },
+      {
+        id: "answer-wrath",
+        label: "With wrath",
+        detail: "Burn the cage before it learns another name.",
+        confirmation: "The Glass records a witness who believes some locks deserve fire.",
+        thread: "spark",
+      },
+      {
+        id: "answer-restraint",
+        label: "With restraint",
+        detail: "Bind the harm without becoming it.",
+        confirmation: "The Glass records a witness who knows power is most dangerous when it feels righteous.",
+        thread: "law",
+      },
+    ],
+  },
+  "12": {
+    eyebrow: "Witness Choice",
+    prompt: "Which testimony should the court be forced to hear?",
+    options: [
+      {
+        id: "jem-testimony",
+        label: "Jem's",
+        detail: "The one who was displayed finally speaks.",
+        confirmation: "The Glass records a witness who lets Beauty testify against its own cage.",
+        thread: "sight",
+      },
+      {
+        id: "fox-testimony",
+        label: "Every missing fox",
+        detail: "No judgment without the ones made to watch.",
+        confirmation: "The Glass records a witness who refuses a court built on missing voices.",
+        thread: "triune",
+      },
+      {
+        id: "veyr-testimony",
+        label: "Veyr's",
+        detail: "Even the monster may be evidence.",
+        confirmation: "The Glass records a witness who can hear the reason without excusing the wound.",
+        thread: "mercy",
+      },
+    ],
+  },
+  "16": {
+    eyebrow: "Final Witness",
+    prompt: "What truth does the Glass record at the end?",
+    options: [
+      {
+        id: "no-claim",
+        label: "No claim",
+        detail: "Love cannot be ownership in ceremonial clothes.",
+        confirmation: "The Glass records the old leash breaking cleanly in the light.",
+        thread: "sight",
+      },
+      {
+        id: "no-debt",
+        label: "No debt",
+        detail: "A hand can be offered without making a ledger.",
+        confirmation: "The Glass records a bond that does not ask to be repaid.",
+        thread: "spark",
+      },
+      {
+        id: "no-witness-claimed",
+        label: "No witness claimed",
+        detail: "Witness is sacred because it remains free.",
+        confirmation: "The Glass records the forbidden answer: no hierarchy, no silence, no claim.",
+        thread: "triune",
+      },
+    ],
+  },
+};
+
+const witnessThreadCopy: Record<WitnessThread, { title: string; body: string }> = {
+  sight: {
+    title: "One Who Sees Beneath Ornament",
+    body: "You kept choosing the hidden door, the rot under the flowers, and the truth Beauty tried to dress as devotion.",
+  },
+  spark: {
+    title: "One Who Trusts Dangerous Sincerity",
+    body: "You reached toward heat when it learned to ask first, and the Glass marked every risk that became honest instead of hungry.",
+  },
+  law: {
+    title: "One Who Honors Restraint",
+    body: "You trusted the hand that stops before claiming, and the Glass remembered restraint as a form of devotion.",
+  },
+  mercy: {
+    title: "One Who Holds The Wounded Witness",
+    body: "You chose to tend the wound before the verdict, and the Glass remembered mercy without letting harm go unnamed.",
+  },
+  triune: {
+    title: "One Who Refuses A Single Verdict",
+    body: "You would not make witness choose one shape when rose, green, and gold were all telling the truth.",
+  },
+};
+
+const unwrittenWitnessCopy = {
+  title: "One Whose Record Is Still Forming",
+  body: "The Glass has your path, but the smaller witness marks are still waiting inside the chapters.",
+};
+
 const readerPrefsKey = "cof-reader-prefs-v2";
 const readerBookmarkKey = "cof-reader-bookmark-v2";
+const witnessChoicesKey = "cof-witness-choices-v1";
 const tooltipClickBlockMs = 900;
 
 function tooltipSentenceFragment(text: string) {
@@ -1012,6 +1199,46 @@ function focusLabel(mode: FocusMode) {
   if (mode === "band") return "Band";
   if (mode === "ruler") return "Ruler";
   return "Focus";
+}
+
+function witnessMarkLabel(count: number) {
+  if (count === 1) return "1 witness mark";
+  return `${count} witness marks`;
+}
+
+function cleanWitnessChoices(value: unknown): WitnessChoices {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+
+  return Object.entries(value).reduce<WitnessChoices>((record, [chapterNumber, optionId]) => {
+    const prompt = witnessChoicePrompts[chapterNumber];
+    if (typeof optionId === "string" && prompt?.options.some((option) => option.id === optionId)) {
+      record[chapterNumber] = optionId;
+    }
+    return record;
+  }, {});
+}
+
+function getWitnessMarks(choices: WitnessChoices): WitnessMark[] {
+  return Object.entries(witnessChoicePrompts).reduce<WitnessMark[]>((marks, [chapterNumber, prompt]) => {
+    const option = prompt.options.find((item) => item.id === choices[chapterNumber]);
+    if (option) marks.push({ ...option, chapterNumber });
+    return marks;
+  }, []);
+}
+
+function getDominantWitnessThread(marks: WitnessMark[]): WitnessThread | null {
+  if (!marks.length) return null;
+
+  const scores = marks.reduce<Record<WitnessThread, number>>(
+    (record, mark) => {
+      record[mark.thread] += 1;
+      return record;
+    },
+    { sight: 0, spark: 0, law: 0, mercy: 0, triune: 0 },
+  );
+
+  const order: WitnessThread[] = ["triune", "sight", "spark", "law", "mercy"];
+  return order.reduce<WitnessThread>((winner, thread) => (scores[thread] > scores[winner] ? thread : winner), order[0]);
 }
 
 function choiceLabel(choice: Choice | null) {
@@ -1067,6 +1294,7 @@ export function CourtOfFoxesExperience() {
   const [activeParagraphIndex, setActiveParagraphIndex] = useState(0);
   const [resumeBookmark, setResumeBookmark] = useState<ResumeBookmark | null>(null);
   const [choice, setChoice] = useState<Choice | null>(null);
+  const [witnessChoices, setWitnessChoices] = useState<WitnessChoices>({});
   const [beautySight, setBeautySight] = useState(false);
   const [joined, setJoined] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
@@ -1091,6 +1319,11 @@ export function CourtOfFoxesExperience() {
   const isChapterTenFork = stage === "choice" && chapter.number === "09";
   const ending = endingCopy[choice ?? "both"];
   const progress = stage === "cover" ? 0 : stage === "ending" ? 100 : Math.round(((chapterIndex + 1) / chapters.length) * 82);
+  const witnessPrompt = witnessChoicePrompts[chapter.number];
+  const selectedWitnessOption = witnessPrompt?.options.find((option) => option.id === witnessChoices[chapter.number]) ?? null;
+  const witnessMarks = useMemo(() => getWitnessMarks(witnessChoices), [witnessChoices]);
+  const dominantWitnessThread = useMemo(() => getDominantWitnessThread(witnessMarks), [witnessMarks]);
+  const witnessRecord = dominantWitnessThread ? witnessThreadCopy[dominantWitnessThread] : unwrittenWitnessCopy;
 
   const fontClass = useMemo(() => `cof-font-${fontStep}`, [fontStep]);
   const supportStatus = `${focusLabel(focusMode)} ${Math.min(activeParagraphIndex + 1, chapterBody.length)}/${chapterBody.length}`;
@@ -1144,6 +1377,11 @@ export function CourtOfFoxesExperience() {
           });
         }
       }
+
+      const rawWitnessChoices = window.localStorage.getItem(witnessChoicesKey);
+      if (rawWitnessChoices) {
+        setWitnessChoices(cleanWitnessChoices(JSON.parse(rawWitnessChoices)));
+      }
     } catch {
       // Reader support is additive; storage failures should never block the story.
     }
@@ -1157,6 +1395,12 @@ export function CourtOfFoxesExperience() {
       );
     } catch {}
   }, [theme, fontStep, pace, focusMode, showImages]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(witnessChoicesKey, JSON.stringify(witnessChoices));
+    } catch {}
+  }, [witnessChoices]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -1412,6 +1656,12 @@ export function CourtOfFoxesExperience() {
     scrollParagraphIntoView(activeParagraphIndex);
   }
 
+  function recordWitnessChoice(chapterNumber: string, optionId: string) {
+    const prompt = witnessChoicePrompts[chapterNumber];
+    if (!prompt?.options.some((option) => option.id === optionId)) return;
+    setWitnessChoices((current) => ({ ...current, [chapterNumber]: optionId }));
+  }
+
   function updateActiveParagraph() {
     const reader = readerRef.current;
     if (!reader) return;
@@ -1451,6 +1701,7 @@ export function CourtOfFoxesExperience() {
     setStage("cover");
     setChapterIndex(0);
     setChoice(null);
+    setWitnessChoices({});
     setJoined(false);
     setReadWithMe(false);
     setActiveParagraphIndex(0);
@@ -1577,7 +1828,9 @@ export function CourtOfFoxesExperience() {
             <div className="cof-progress" aria-label={`Reader progress ${progress}%`}>
               <span style={{ width: `${progress}%` }} />
             </div>
-            <p className="cof-choice-status">{choiceLabel(choice)}</p>
+            <p className="cof-choice-status">
+              {choiceLabel(choice)} · {witnessMarkLabel(witnessMarks.length)}
+            </p>
           </aside>
 
           <article
@@ -1710,6 +1963,38 @@ export function CourtOfFoxesExperience() {
                 <span>Hold this question</span>
                 <p>{chapter.question}</p>
               </div>
+              {witnessPrompt ? (
+                <section className="cof-witness-choice" aria-label={`${chapter.label} witness choice`}>
+                  <div className="cof-witness-choice-header">
+                    <span>{witnessPrompt.eyebrow}</span>
+                    <p>{witnessPrompt.prompt}</p>
+                  </div>
+                  <div className="cof-witness-options">
+                    {witnessPrompt.options.map((option) => {
+                      const selected = selectedWitnessOption?.id === option.id;
+
+                      return (
+                        <button
+                          key={option.id}
+                          aria-pressed={selected}
+                          className={`cof-witness-option is-${option.thread} ${selected ? "is-selected" : ""}`}
+                          type="button"
+                          onClick={() => recordWitnessChoice(chapter.number, option.id)}
+                        >
+                          <span className="cof-witness-thread" aria-hidden="true" />
+                          <strong>{option.label}</strong>
+                          <em>{option.detail}</em>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {selectedWitnessOption ? (
+                    <p className={`cof-witness-confirmation is-${selectedWitnessOption.thread}`}>
+                      {selectedWitnessOption.confirmation}
+                    </p>
+                  ) : null}
+                </section>
+              ) : null}
               <div className="cof-prose">
                 {chapterBody.map((paragraph, index) => {
                   const hidden = readWithMe && index > readWithMeIndex;
@@ -1890,6 +2175,20 @@ export function CourtOfFoxesExperience() {
           <h2>{ending.title}</h2>
           <p>{ending.body}</p>
           <strong>{ending.thread}</strong>
+          <div className={`cof-ending-witness ${dominantWitnessThread ? `is-${dominantWitnessThread}` : ""}`}>
+            <span className="cof-ending-label">The Glass Remembers You As</span>
+            <strong>{witnessRecord.title}</strong>
+            <p>{witnessRecord.body}</p>
+            {witnessMarks.length ? (
+              <div className="cof-ending-witness-marks" aria-label="Witness marks recorded">
+                {witnessMarks.map((mark) => (
+                  <span key={`${mark.chapterNumber}-${mark.id}`} className={`is-${mark.thread}`}>
+                    {mark.label}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+          </div>
           <div className="cof-ending-actions">
             {joined ? (
               <p className="cof-joined">Your name is recorded. The glass keeps nothing it was not given.</p>
