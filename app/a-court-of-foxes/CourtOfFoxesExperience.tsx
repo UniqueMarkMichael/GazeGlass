@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
 import extraChaptersData from "./extraChapters.json";
 
 type Stage = "cover" | "reading" | "choice" | "ending";
@@ -60,6 +60,8 @@ type WitnessPrompt = {
 type WitnessMark = WitnessOption & {
   chapterNumber: string;
 };
+
+const paceOptions = ["drift", "focus", "sprint", "rest"] as const;
 
 const baseChapters: Chapter[] = [
   {
@@ -1299,6 +1301,7 @@ export function CourtOfFoxesExperience() {
   const [joined, setJoined] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const readerRef = useRef<HTMLDivElement | null>(null);
+  const readerHeadingRef = useRef<HTMLHeadingElement | null>(null);
   const paragraphRefs = useRef<Array<HTMLParagraphElement | null>>([]);
   const pendingResumeRef = useRef<ResumeBookmark | null>(null);
   const choiceConfirmRef = useRef<HTMLDivElement | null>(null);
@@ -1339,6 +1342,16 @@ export function CourtOfFoxesExperience() {
     readerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
     setActiveParagraphIndex(0);
     setReadWithMeIndex(0);
+  }, [chapterIndex, stage]);
+
+  useEffect(() => {
+    if (stage !== "reading") return;
+
+    const frame = window.requestAnimationFrame(() => {
+      readerHeadingRef.current?.focus({ preventScroll: true });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
   }, [chapterIndex, stage]);
 
   useEffect(() => {
@@ -1404,11 +1417,18 @@ export function CourtOfFoxesExperience() {
 
   useEffect(() => {
     const root = document.documentElement;
+    root.classList.add("cof-experience-active");
+    root.classList.toggle("cof-reader-reading-active", stage === "reading");
     root.classList.toggle("cof-reader-choice-active", stage === "choice");
     root.classList.toggle("cof-reader-ending-active", stage === "ending");
 
     return () => {
-      root.classList.remove("cof-reader-choice-active", "cof-reader-ending-active");
+      root.classList.remove(
+        "cof-experience-active",
+        "cof-reader-reading-active",
+        "cof-reader-choice-active",
+        "cof-reader-ending-active",
+      );
     };
   }, [stage]);
 
@@ -1602,6 +1622,25 @@ export function CourtOfFoxesExperience() {
     setFontStep(preset.fontStep);
   }
 
+  function handlePaceKeyDown(event: KeyboardEvent<HTMLButtonElement>, value: ReadingPace) {
+    const currentIndex = paceOptions.indexOf(value);
+    let nextIndex = currentIndex;
+
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") nextIndex = (currentIndex + 1) % paceOptions.length;
+    if (event.key === "ArrowLeft" || event.key === "ArrowUp") nextIndex = (currentIndex - 1 + paceOptions.length) % paceOptions.length;
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = paceOptions.length - 1;
+
+    if (nextIndex === currentIndex) return;
+
+    event.preventDefault();
+    const nextPace = paceOptions[nextIndex];
+    setPace(nextPace);
+    window.requestAnimationFrame(() => {
+      document.querySelector<HTMLButtonElement>(`[data-pace-option="${nextPace}"]`)?.focus();
+    });
+  }
+
   function toggleFocus(value: FocusMode) {
     setFocusMode((current) => (current === value ? "off" : value));
   }
@@ -1654,6 +1693,26 @@ export function CourtOfFoxesExperience() {
 
   function findPlace() {
     scrollParagraphIntoView(activeParagraphIndex);
+  }
+
+  function showBeautySight() {
+    if (chapterIndex === 0) setBeautySight(true);
+  }
+
+  function hideBeautySight() {
+    setBeautySight(false);
+  }
+
+  function handleBeautySightKeyDown(event: KeyboardEvent<HTMLElement>) {
+    if (chapterIndex !== 0 || (event.key !== " " && event.key !== "Enter")) return;
+    event.preventDefault();
+    setBeautySight(true);
+  }
+
+  function handleBeautySightKeyUp(event: KeyboardEvent<HTMLElement>) {
+    if (chapterIndex !== 0 || (event.key !== " " && event.key !== "Enter")) return;
+    event.preventDefault();
+    setBeautySight(true);
   }
 
   function recordWitnessChoice(chapterNumber: string, optionId: string) {
@@ -1713,6 +1772,11 @@ export function CourtOfFoxesExperience() {
       <div className="cof-backdrop" aria-hidden="true">
         <img src={stage === "cover" ? "/a-court-of-foxes/assets/cover.png" : chapter.hero} alt="" />
       </div>
+      {stage === "reading" ? (
+        <a className="cof-skip-link" href="#cof-reader-heading">
+          Skip to story text
+        </a>
+      ) : null}
 
       <header className="cof-topbar">
         <a className="cof-home-link" href="/" aria-label="Return to Gaze Glass home">
@@ -1741,6 +1805,8 @@ export function CourtOfFoxesExperience() {
           </button>
           <button
             {...tooltipProps("theme", theme === "day" ? "Switch to the darker night reader." : "Switch to the brighter day reader.", "bottom")}
+            aria-label={theme === "day" ? "Switch to night reader" : "Switch to day reader"}
+            aria-pressed={theme === "night"}
             type="button"
             onClick={() => setTheme((value) => (value === "day" ? "night" : "day"))}
           >
@@ -1797,9 +1863,16 @@ export function CourtOfFoxesExperience() {
           <aside className="cof-reading-rail" aria-label="Story progress">
             <figure
               className={`cof-rail-art ${beautySight ? "is-revealed" : ""}`}
-              onPointerDown={() => chapterIndex === 0 && setBeautySight(true)}
-              onPointerUp={() => setBeautySight(false)}
-              onPointerLeave={() => setBeautySight(false)}
+              role={chapterIndex === 0 ? "button" : undefined}
+              tabIndex={chapterIndex === 0 ? 0 : undefined}
+              aria-label={chapterIndex === 0 ? "Reveal the Beauty-sight image beneath the glamour" : undefined}
+              onBlur={hideBeautySight}
+              onFocus={showBeautySight}
+              onKeyDown={handleBeautySightKeyDown}
+              onKeyUp={handleBeautySightKeyUp}
+              onPointerDown={showBeautySight}
+              onPointerUp={hideBeautySight}
+              onPointerLeave={hideBeautySight}
             >
               <img src={chapter.hero} alt={chapter.heroAlt} />
               {chapterIndex === 0 ? (
@@ -1816,6 +1889,7 @@ export function CourtOfFoxesExperience() {
                 <button
                   key={item.number}
                   aria-label={`Jump to ${item.label}: ${item.title}`}
+                  aria-current={index === chapterIndex ? "page" : undefined}
                   className={index === chapterIndex ? "is-active" : ""}
                   type="button"
                   onClick={() => setChapterIndex(index)}
@@ -1825,7 +1899,15 @@ export function CourtOfFoxesExperience() {
                 </button>
               ))}
             </nav>
-            <div className="cof-progress" aria-label={`Reader progress ${progress}%`}>
+            <div
+              className="cof-progress"
+              role="progressbar"
+              aria-label="Reader progress"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={progress}
+              aria-valuetext={`${progress}% through the chronicle`}
+            >
               <span style={{ width: `${progress}%` }} />
             </div>
             <p className="cof-choice-status">
@@ -1840,11 +1922,12 @@ export function CourtOfFoxesExperience() {
             data-read-with-me={readWithMe ? "on" : "off"}
             onScroll={updateActiveParagraph}
             ref={readerRef}
+            id="cof-reader-content"
           >
             <div className="cof-reader-inner">
-              <div className="cof-support-dock" aria-label="ADHD reader supports">
+              <div className="cof-support-dock" aria-label="Reader support tools">
                 <div className="cof-pace-strip" role="radiogroup" aria-label="Story pace mode">
-                  {(["drift", "focus", "sprint", "rest"] as ReadingPace[]).map((item) => (
+                  {paceOptions.map((item) => (
                     <button
                       key={item}
                       {...tooltipProps(
@@ -1861,8 +1944,11 @@ export function CourtOfFoxesExperience() {
                       aria-checked={pace === item}
                       className="cof-pace-button cof-tooltip"
                       data-active={pace === item}
+                      data-pace-option={item}
                       onClick={() => setPace(item)}
+                      onKeyDown={(event) => handlePaceKeyDown(event, item)}
                       role="radio"
+                      tabIndex={pace === item ? 0 : -1}
                       type="button"
                     >
                       {item === "focus" ? "Focus" : item}
@@ -1956,7 +2042,9 @@ export function CourtOfFoxesExperience() {
                 A COURT OF FOXES <span aria-hidden="true">→</span> {chapter.label}: {chapter.title}
               </p>
               <div className="cof-reader-heading">
-                <h2>{chapter.title}</h2>
+                <h2 id="cof-reader-heading" tabIndex={-1} ref={readerHeadingRef}>
+                  {chapter.title}
+                </h2>
                 <span>{chapter.readTime}</span>
               </div>
               <div className="cof-focus-prompt">
@@ -1989,7 +2077,7 @@ export function CourtOfFoxesExperience() {
                     })}
                   </div>
                   {selectedWitnessOption ? (
-                    <p className={`cof-witness-confirmation is-${selectedWitnessOption.thread}`}>
+                    <p className={`cof-witness-confirmation is-${selectedWitnessOption.thread}`} role="status" aria-live="polite">
                       {selectedWitnessOption.confirmation}
                     </p>
                   ) : null}
@@ -2105,6 +2193,7 @@ export function CourtOfFoxesExperience() {
                   : "Choose Marok's spark, risk, and dangerous sincerity.",
               )}
               className={`${choice === "marok" ? "is-selected " : ""}cof-tooltip`}
+              aria-pressed={choice === "marok"}
               type="button"
               onClick={() => setChoice("marok")}
             >
@@ -2120,6 +2209,7 @@ export function CourtOfFoxesExperience() {
                   : "Choose Kitsu's restraint, truth, and steady protection.",
               )}
               className={`${choice === "kitsu" ? "is-selected " : ""}cof-tooltip`}
+              aria-pressed={choice === "kitsu"}
               type="button"
               onClick={() => setChoice("kitsu")}
             >
@@ -2135,6 +2225,7 @@ export function CourtOfFoxesExperience() {
                   : "Choose the triune bond: no claiming, no hierarchy.",
               )}
               className={`${choice === "both" ? "is-selected " : ""}cof-tooltip`}
+              aria-pressed={choice === "both"}
               type="button"
               onClick={() => setChoice("both")}
             >
@@ -2144,7 +2235,7 @@ export function CourtOfFoxesExperience() {
             </button>
           </div>
           {choice ? (
-            <div className="cof-choice-confirm" ref={choiceConfirmRef}>
+            <div className="cof-choice-confirm" ref={choiceConfirmRef} role="status" aria-live="polite">
               <p>{isChapterTenFork ? routeChoiceConfirmation(choice) : choiceConfirmation(choice)}</p>
               <button
                 {...tooltipProps(
@@ -2166,7 +2257,7 @@ export function CourtOfFoxesExperience() {
       {stage === "ending" ? (
         <section className="cof-ending-screen" aria-label="Ending reveal">
           <p className="cof-kicker">The Glass Holds Here</p>
-          <div className={`cof-ending-braid cof-ending-${choice ?? "kitsu"}`} aria-hidden="true">
+          <div className={`cof-ending-braid cof-ending-${choice ?? "both"}`} aria-hidden="true">
             <span />
             <span />
             <span />
@@ -2191,7 +2282,9 @@ export function CourtOfFoxesExperience() {
           </div>
           <div className="cof-ending-actions">
             {joined ? (
-              <p className="cof-joined">Your name is recorded. The glass keeps nothing it was not given.</p>
+              <p className="cof-joined" role="status" aria-live="polite">
+                Your name is recorded. The glass keeps nothing it was not given.
+              </p>
             ) : (
               <button
                 {...tooltipProps("record-name", "Mark this ending as witnessed in this reading session.")}
