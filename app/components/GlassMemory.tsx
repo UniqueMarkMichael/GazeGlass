@@ -23,7 +23,7 @@ type GodKey =
   | "wisdom"
   | "mercy"
   | "chaos";
-type SpiritKey = "kitsu" | "marok" | "jem" | "sindren" | "saroka";
+type SpiritKey = "marok" | "kitsu" | "jem" | "saroka" | "sindren" | "prose" | "reaper" | "solace";
 type WitnessThread = "sight" | "spark" | "law" | "mercy" | "triune";
 
 export type GlassMemoryEntry = {
@@ -116,6 +116,9 @@ const spiritDetails: Record<SpiritKey, { label: string; summary: string }> = {
   jem: { label: "Jem", summary: "Jem notices the ache under radiance and the radiance under ache." },
   sindren: { label: "Sindren", summary: "Sindren notices the bond everyone else underestimates." },
   saroka: { label: "Saroka", summary: "Saroka notices the exit, the opening, and the lucky mistake." },
+  prose: { label: "Prose", summary: "Prose notices where the truth began before power revised the page." },
+  solace: { label: "Solace", summary: "Solace notices pain before it has language and stays until breath returns." },
+  reaper: { label: "Reaper", summary: "Reaper notices the threshold and remembers every name carried through it." },
 };
 
 const witnessOptionThreads: Record<string, WitnessThread> = {
@@ -179,11 +182,14 @@ const mortalCases = [
 ] as const;
 
 const spirits = [
-  { hash: "#kitsu", id: "kitsu", label: "Kitsu", href: "/the-spirits#kitsu" },
   { hash: "#marok", id: "marok", label: "Marok", href: "/the-spirits#marok" },
+  { hash: "#kitsu", id: "kitsu", label: "Kitsu", href: "/the-spirits#kitsu" },
   { hash: "#jem", id: "jem", label: "Jem", href: "/the-spirits#jem" },
-  { hash: "#sindren", id: "sindren", label: "Sindren", href: "/the-spirits#sindren" },
   { hash: "#saroka", id: "saroka", label: "Saroka", href: "/the-spirits#saroka" },
+  { hash: "#sindren", id: "sindren", label: "Sindren", href: "/the-spirits#sindren" },
+  { hash: "#prose", id: "prose", label: "Prose", href: "/the-spirits#prose" },
+  { hash: "#reaper", id: "reaper", label: "Reaper", href: "/the-spirits#reaper" },
+  { hash: "#solace", id: "solace", label: "Solace", href: "/the-spirits#solace" },
 ] as const;
 
 const codexLaws = [

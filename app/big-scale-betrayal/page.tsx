@@ -64,6 +64,7 @@ const chapterMedia = [
     after: 2,
     type: "video",
     src: `${assetBase}/chapter1.mp4`,
+    fit: "contain",
     caption: "The armored guardian of the royal library of Kemet, bells at its throat, incense at its brow.",
   },
   {
@@ -71,6 +72,7 @@ const chapterMedia = [
     after: 3,
     type: "image",
     src: `${assetBase}/heba-intro.png`,
+    fit: "contain",
     alt: "Heba carrying cabbages down the temple steps of Kemet",
     caption: "Heba, daughter of a vegetable merchant, before the gods finished naming her fate.",
   },
@@ -79,6 +81,7 @@ const chapterMedia = [
     after: 20,
     type: "image",
     src: `${assetBase}/market.png`,
+    fit: "contain",
     alt: "Heba and a young thief near a cabbage stall in the market of Kemet",
     caption: "The market of Kemet, the hour before the chase.",
   },
@@ -87,6 +90,7 @@ const chapterMedia = [
     after: 33,
     type: "video",
     src: `${assetBase}/feather.mp4`,
+    fit: "contain",
     caption: "A feather for the oracle, a hand for the boy.",
   },
   {
@@ -94,6 +98,7 @@ const chapterMedia = [
     after: 44,
     type: "video",
     src: `${assetBase}/chapter1-end.mp4`,
+    fit: "contain",
     caption: "Destined to sell cabbage, or so she believed.",
   },
 ];
@@ -122,7 +127,7 @@ function ChapterMedia({ after, chapterNumber }: { after: number; chapterNumber: 
 
   return (
     <figure className="bsb-story-figure">
-      <div className="bsb-media-frame">
+      <div className={`bsb-media-frame${item.fit === "contain" ? " is-contained" : ""}`}>
         {item.type === "video" ? (
           <video src={item.src} autoPlay muted loop playsInline preload="metadata" />
         ) : (

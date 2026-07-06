@@ -46,7 +46,10 @@ const spiritLabels: Record<string, string> = {
   jem: "Jem",
   kitsu: "Kitsu",
   marok: "Marok",
+  prose: "Prose",
+  reaper: "Reaper",
   saroka: "Saroka",
+  solace: "Solace",
   sindren: "Sindren",
 };
 

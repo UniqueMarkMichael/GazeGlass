@@ -45,6 +45,30 @@ const visions: Vision[] = [
       "A scarlet spirit who sits beside Fortune and snickers when panic mistakes itself for prophecy.",
   },
   {
+    title: "Prose, Spirit of Story",
+    realm: "Spirit Vision",
+    signal: "Story",
+    href: "/the-spirits#prose",
+    description:
+      "A fox of ink and parchment who protects every tale before power can revise it.",
+  },
+  {
+    title: "Solace, Spirit of Mercy",
+    realm: "Spirit Vision",
+    signal: "Mercy",
+    href: "/the-spirits#solace",
+    description:
+      "A pearl-white spirit who senses pain before it is spoken and stays until the heart becomes lighter.",
+  },
+  {
+    title: "Reaper, Spirit of Death",
+    realm: "Spirit Vision",
+    signal: "Death",
+    href: "/the-spirits#reaper",
+    description:
+      "A solemn guide who remembers every name entrusted to him and brings peace to the final passage.",
+  },
+  {
     title: "The Law of Witness",
     realm: "Codex Vision",
     signal: "Law I",

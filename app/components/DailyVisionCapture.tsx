@@ -21,7 +21,7 @@ type GodKey =
   | "wisdom"
   | "mercy"
   | "chaos";
-type SpiritKey = "kitsu" | "marok" | "jem" | "sindren" | "saroka";
+type SpiritKey = "marok" | "kitsu" | "jem" | "saroka" | "sindren" | "prose" | "reaper" | "solace";
 type NamingResult = {
   godKey: GodKey;
   spiritKey: SpiritKey;
@@ -63,6 +63,9 @@ const spiritNames: Record<SpiritKey, string> = {
   jem: "Jem",
   sindren: "Sindren",
   saroka: "Saroka",
+  prose: "Prose",
+  solace: "Solace",
+  reaper: "Reaper",
 };
 
 const dailyVisions: DailyVision[] = [
@@ -135,6 +138,36 @@ const dailyVisions: DailyVision[] = [
     instruction: "Enter A Court of Foxes when you want the spirits to step out of the archive and into the room.",
     href: "/a-court-of-foxes",
     cta: "Enter A Court of Foxes",
+  },
+  {
+    id: "story-keeps-beginning",
+    title: "The beginning refuses revision.",
+    signal: "Story / Prose",
+    omen:
+      "Someone may try to smooth the record today. Return to the first true sentence before power edits the page.",
+    instruction: "Meet Prose when you need the part of the story that survived before anyone renamed it.",
+    href: "/the-spirits#prose",
+    cta: "Meet Prose",
+  },
+  {
+    id: "mercy-shard-lightens",
+    title: "A shard of mercy stays warm.",
+    signal: "Mercy / Solace",
+    omen:
+      "A wound may not need solving today. It may need witness, breath, and someone willing to stay beside it.",
+    instruction: "Meet Solace when tenderness needs to become endurance instead of explanation.",
+    href: "/the-spirits#solace",
+    cta: "Meet Solace",
+  },
+  {
+    id: "death-path-through",
+    title: "The dark becomes a passage.",
+    signal: "Death / Reaper",
+    omen:
+      "An ending may ask to be honored instead of resisted. Let what is complete become a door.",
+    instruction: "Meet Reaper when passage, release, and peace need a solemn guide.",
+    href: "/the-spirits#reaper",
+    cta: "Meet Reaper",
   },
 ];
 

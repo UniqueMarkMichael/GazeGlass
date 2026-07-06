@@ -16,7 +16,7 @@ type GodKey =
   | "mercy"
   | "chaos";
 
-type SpiritKey = "kitsu" | "marok" | "jem" | "sindren" | "saroka";
+type SpiritKey = "marok" | "kitsu" | "jem" | "saroka" | "sindren" | "prose" | "reaper" | "solace";
 
 type ScoreMap<T extends string> = Partial<Record<T, number>>;
 
@@ -61,7 +61,7 @@ const godOrder: GodKey[] = [
   "chaos",
 ];
 
-const spiritOrder: SpiritKey[] = ["kitsu", "marok", "jem", "sindren", "saroka"];
+const spiritOrder: SpiritKey[] = ["marok", "kitsu", "jem", "saroka", "sindren", "prose", "reaper", "solace"];
 
 const deityProfiles: Record<GodKey, {
   archiveHref: string;
@@ -278,6 +278,33 @@ const spiritProfiles: Record<SpiritKey, {
     result:
       "Saroka would sit beside your record because timing keeps bending around you on purpose.",
   },
+  prose: {
+    name: "Prose",
+    role: "Assistant to the God of Story",
+    image: "/spirits/prose.png",
+    archiveHref: "/the-spirits#prose",
+    signal: "Prose notices where the truth began before power revised the page.",
+    result:
+      "Prose would sit beside your record because you know every ending depends on who protected the first true sentence.",
+  },
+  reaper: {
+    name: "Reaper",
+    role: "Assistant to the God of Death",
+    image: "/spirits/reaper.png",
+    archiveHref: "/the-spirits#reaper",
+    signal: "Reaper notices the threshold and remembers every name carried through it.",
+    result:
+      "Reaper would sit beside your record because you can honor an ending without mistaking it for erasure.",
+  },
+  solace: {
+    name: "Solace",
+    role: "Assistant to the God of Mercy",
+    image: "/spirits/solace.png",
+    archiveHref: "/the-spirits#solace",
+    signal: "Solace notices pain before it has language and stays until breath returns.",
+    result:
+      "Solace would sit beside your record because you understand that not every wound asks to be fixed before it is held.",
+  },
 };
 
 const questions: QuizQuestion[] = [
@@ -291,7 +318,7 @@ const questions: QuizQuestion[] = [
         label: "Proof",
         text: "The exact evidence that makes denial impossible.",
         godScores: { justice: 3, story: 1 },
-        spiritScores: { kitsu: 3 },
+        spiritScores: { kitsu: 3, prose: 1 },
       },
       {
         id: "leverage",
@@ -305,14 +332,14 @@ const questions: QuizQuestion[] = [
         label: "The heart",
         text: "The wound beneath the behavior, even if it complicates the verdict.",
         godScores: { love: 2, mercy: 2 },
-        spiritScores: { sindren: 3 },
+        spiritScores: { sindren: 2, solace: 2 },
       },
       {
         id: "pattern",
         label: "The pattern",
         text: "The larger story that explains why this keeps happening.",
         godScores: { wisdom: 2, story: 2 },
-        spiritScores: { kitsu: 1, jem: 1 },
+        spiritScores: { prose: 3, kitsu: 1 },
       },
     ],
   },
@@ -326,7 +353,7 @@ const questions: QuizQuestion[] = [
         label: "A voice",
         text: "So the record can finally say your name correctly.",
         godScores: { story: 3, justice: 1 },
-        spiritScores: { jem: 2, kitsu: 1 },
+        spiritScores: { prose: 3, kitsu: 1 },
       },
       {
         id: "weapon",
@@ -347,7 +374,7 @@ const questions: QuizQuestion[] = [
         label: "A second chance",
         text: "So what was almost lost can return changed.",
         godScores: { mercy: 3, love: 1 },
-        spiritScores: { sindren: 2, saroka: 1 },
+        spiritScores: { solace: 3, sindren: 1 },
       },
     ],
   },
@@ -361,7 +388,7 @@ const questions: QuizQuestion[] = [
         label: "Beauty that survives",
         text: "The kind that remains radiant after it should have been ruined.",
         godScores: { beauty: 3, mercy: 1 },
-        spiritScores: { jem: 3 },
+        spiritScores: { jem: 3, solace: 1 },
       },
       {
         id: "order",
@@ -399,6 +426,13 @@ const questions: QuizQuestion[] = [
         spiritScores: { kitsu: 4 },
       },
       {
+        id: "first-sentence",
+        label: "The first sentence",
+        text: "The place where the truth began before anyone revised it.",
+        godScores: { story: 2 },
+        spiritScores: { prose: 4 },
+      },
+      {
         id: "challenge",
         label: "The real challenge",
         text: "The fight beneath the fight, where the outcome is actually decided.",
@@ -424,7 +458,14 @@ const questions: QuizQuestion[] = [
         label: "The tremor",
         text: "The emotional truth moving under a calm face.",
         godScores: { love: 1, mercy: 1 },
-        spiritScores: { sindren: 4 },
+        spiritScores: { sindren: 3, solace: 2 },
+      },
+      {
+        id: "final-door",
+        label: "The final door",
+        text: "The ending everyone fears because no one has named the passage yet.",
+        godScores: { death: 2, mercy: 1 },
+        spiritScores: { reaper: 4 },
       },
     ],
   },
@@ -438,14 +479,14 @@ const questions: QuizQuestion[] = [
         label: "A name",
         text: "Credit, authorship, and the right record.",
         godScores: { justice: 2, story: 2 },
-        spiritScores: { kitsu: 2 },
+        spiritScores: { prose: 2, kitsu: 2 },
       },
       {
         id: "beloved",
         label: "A beloved",
         text: "The person or bond everyone else calls too fragile.",
         godScores: { love: 3, mercy: 1 },
-        spiritScores: { sindren: 3 },
+        spiritScores: { sindren: 2, solace: 2 },
       },
       {
         id: "future",
@@ -473,7 +514,7 @@ const questions: QuizQuestion[] = [
         label: "The archive",
         text: "There is always a record, if you can learn how to read it.",
         godScores: { wisdom: 3, story: 2 },
-        spiritScores: { kitsu: 1, sindren: 1 },
+        spiritScores: { prose: 3, kitsu: 1 },
       },
       {
         id: "mirror",
@@ -487,7 +528,7 @@ const questions: QuizQuestion[] = [
         label: "The threshold",
         text: "The place between one life and the next.",
         godScores: { death: 3, mercy: 1 },
-        spiritScores: { saroka: 1, sindren: 1 },
+        spiritScores: { reaper: 3, solace: 1 },
       },
       {
         id: "storm",
@@ -515,7 +556,7 @@ const questions: QuizQuestion[] = [
         label: "I returned changed.",
         text: "Something in me survived the crossing.",
         godScores: { mercy: 3, death: 1 },
-        spiritScores: { sindren: 2, saroka: 1 },
+        spiritScores: { solace: 3, reaper: 1 },
       },
       {
         id: "chosen",
@@ -536,7 +577,7 @@ const questions: QuizQuestion[] = [
         label: "I fought clean.",
         text: "The trial found me afraid, but not absent.",
         godScores: { war: 3, story: 1 },
-        spiritScores: { marok: 3 },
+        spiritScores: { marok: 3, prose: 1 },
       },
     ],
   },
