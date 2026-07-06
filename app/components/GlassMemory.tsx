@@ -3,10 +3,28 @@
 import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { playGlassSound } from "./glassSound";
+import {
+  GLASS_SCROLL_OMEN_EVENT,
+  GLASS_SCROLL_OMEN_KEY,
+  type GlassScrollOmen,
+} from "./glassSignals";
 
 export const GLASS_MEMORY_KEY = "gaze-glass.memory.v1";
 
 type GlassRealm = "threshold" | "mortal" | "god" | "spirit" | "seer" | "codex" | "observation";
+type GodKey =
+  | "love"
+  | "fortune"
+  | "beauty"
+  | "war"
+  | "justice"
+  | "story"
+  | "death"
+  | "wisdom"
+  | "mercy"
+  | "chaos";
+type SpiritKey = "kitsu" | "marok" | "jem" | "sindren" | "saroka";
+type WitnessThread = "sight" | "spark" | "law" | "mercy" | "triune";
 
 export type GlassMemoryEntry = {
   id: string;
@@ -23,8 +41,30 @@ type MemoryLocation = {
 };
 
 const LOCATION_EVENT = "gaze-glass:location-change";
+const NAMING_RESULT_KEY = "gaze-glass.naming-result.v1";
+const COF_WITNESS_CHOICES_KEY = "cof-witness-choices-v1";
 const MAX_MEMORY_ENTRIES = 18;
 const MAX_VISIBLE_MEMORY_ENTRIES = 5;
+
+type NamedMatch = {
+  href: string;
+  label: string;
+  summary: string;
+};
+
+type WitnessSummary = {
+  count: number;
+  href: string;
+  label: string;
+  summary: string;
+  thread: WitnessThread;
+};
+
+type RememberedSignals = {
+  namingMatch: NamedMatch | null;
+  scrollOmen: GlassScrollOmen | null;
+  witnessSummary: WitnessSummary | null;
+};
 
 const realmDetails: Record<GlassRealm, { label: string; summary: string }> = {
   threshold: {
@@ -54,6 +94,68 @@ const realmDetails: Record<GlassRealm, { label: string; summary: string }> = {
   observation: {
     label: "Observation",
     summary: "The witnessed archive is your center. You are following stories as evidence.",
+  },
+};
+
+const godDetails: Record<GodKey, { label: string; summary: string }> = {
+  love: { label: "Love", summary: "Devotion is your blessing." },
+  fortune: { label: "Fortune", summary: "Timing is your blessing." },
+  beauty: { label: "Beauty", summary: "Radiance is your blessing." },
+  war: { label: "War", summary: "Trial is your blessing." },
+  justice: { label: "Justice", summary: "Accuracy is your blessing." },
+  story: { label: "Story", summary: "Memory is your blessing." },
+  death: { label: "Death", summary: "Passage is your blessing." },
+  wisdom: { label: "Wisdom", summary: "Seeing is your blessing." },
+  mercy: { label: "Mercy", summary: "Return is your blessing." },
+  chaos: { label: "Chaos", summary: "The unknown is your blessing." },
+};
+
+const spiritDetails: Record<SpiritKey, { label: string; summary: string }> = {
+  kitsu: { label: "Kitsu", summary: "Kitsu notices what the room hopes no one can prove." },
+  marok: { label: "Marok", summary: "Marok notices the trial before the trial admits its name." },
+  jem: { label: "Jem", summary: "Jem notices the ache under radiance and the radiance under ache." },
+  sindren: { label: "Sindren", summary: "Sindren notices the bond everyone else underestimates." },
+  saroka: { label: "Saroka", summary: "Saroka notices the exit, the opening, and the lucky mistake." },
+};
+
+const witnessOptionThreads: Record<string, WitnessThread> = {
+  "count-exits": "sight",
+  "watch-war": "spark",
+  "watch-justice": "law",
+  "marok-hand": "spark",
+  "kitsu-hand": "law",
+  "no-hand-yet": "sight",
+  "answer-mercy": "mercy",
+  "answer-wrath": "spark",
+  "answer-restraint": "law",
+  "jem-testimony": "sight",
+  "fox-testimony": "triune",
+  "veyr-testimony": "mercy",
+  "no-claim": "sight",
+  "no-debt": "spark",
+  "no-witness-claimed": "triune",
+};
+
+const witnessThreadDetails: Record<WitnessThread, { label: string; summary: string }> = {
+  sight: {
+    label: "Sees Beneath Ornament",
+    summary: "You keep choosing the hidden door and the truth under the glamour.",
+  },
+  spark: {
+    label: "Trusts Dangerous Sincerity",
+    summary: "You reach toward heat once it learns to ask before it burns.",
+  },
+  law: {
+    label: "Honors Restraint",
+    summary: "You notice the hand that stops before it claims.",
+  },
+  mercy: {
+    label: "Holds The Wounded Witness",
+    summary: "You tend the wound without letting harm go unnamed.",
+  },
+  triune: {
+    label: "Refuses A Single Verdict",
+    summary: "You keep rose, green, and gold in the record together.",
   },
 };
 
@@ -118,6 +220,110 @@ function readMemory() {
   } catch {
     return [];
   }
+}
+
+function isGodKey(value: unknown): value is GodKey {
+  return typeof value === "string" && value in godDetails;
+}
+
+function isSpiritKey(value: unknown): value is SpiritKey {
+  return typeof value === "string" && value in spiritDetails;
+}
+
+function isGlassScrollOmen(value: unknown): value is GlassScrollOmen {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as GlassScrollOmen).href === "string" &&
+    typeof (value as GlassScrollOmen).label === "string" &&
+    typeof (value as GlassScrollOmen).message === "string" &&
+    typeof (value as GlassScrollOmen).progress === "number" &&
+    typeof (value as GlassScrollOmen).seenAt === "number"
+  );
+}
+
+function readScrollOmen() {
+  try {
+    const raw = window.localStorage.getItem(GLASS_SCROLL_OMEN_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+    return isGlassScrollOmen(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function readNamedMatch(): NamedMatch | null {
+  try {
+    const raw = window.localStorage.getItem(NAMING_RESULT_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+    const godKey = parsed?.godKey;
+    const spiritKey = parsed?.spiritKey;
+
+    if (!isGodKey(godKey) || !isSpiritKey(spiritKey)) {
+      return null;
+    }
+
+    const god = godDetails[godKey];
+    const spirit = spiritDetails[spiritKey];
+
+    return {
+      href: `/the-glass-names-you?god=${godKey}&spirit=${spiritKey}`,
+      label: `${god.label} / ${spirit.label}`,
+      summary: `${god.summary} ${spirit.summary}`,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function readWitnessSummary(): WitnessSummary | null {
+  try {
+    const raw = window.localStorage.getItem(COF_WITNESS_CHOICES_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return null;
+    }
+
+    const threads = Object.values(parsed)
+      .map((choiceId) => (typeof choiceId === "string" ? witnessOptionThreads[choiceId] : null))
+      .filter((thread): thread is WitnessThread => Boolean(thread));
+
+    if (!threads.length) {
+      return null;
+    }
+
+    const scores = threads.reduce<Record<WitnessThread, number>>(
+      (record, thread) => {
+        record[thread] += 1;
+        return record;
+      },
+      { sight: 0, spark: 0, law: 0, mercy: 0, triune: 0 },
+    );
+    const order: WitnessThread[] = ["triune", "sight", "spark", "law", "mercy"];
+    const dominantThread = order.reduce<WitnessThread>(
+      (winner, thread) => (scores[thread] > scores[winner] ? thread : winner),
+      order[0],
+    );
+    const details = witnessThreadDetails[dominantThread];
+
+    return {
+      count: threads.length,
+      href: "/a-court-of-foxes",
+      label: details.label,
+      summary: `${threads.length} witness ${threads.length === 1 ? "mark" : "marks"} recorded. ${details.summary}`,
+      thread: dominantThread,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function readRememberedSignals(): RememberedSignals {
+  return {
+    namingMatch: readNamedMatch(),
+    scrollOmen: readScrollOmen(),
+    witnessSummary: readWitnessSummary(),
+  };
 }
 
 function writeMemory(entries: GlassMemoryEntry[]) {
@@ -306,6 +512,77 @@ function getDominantRealm(entries: GlassMemoryEntry[]) {
   }, entries[0].realm);
 }
 
+function getRealmBalance(entries: GlassMemoryEntry[]) {
+  if (!entries.length) {
+    return [];
+  }
+
+  const counts = entries.reduce<Partial<Record<GlassRealm, number>>>((total, entry) => {
+    total[entry.realm] = (total[entry.realm] ?? 0) + 1;
+    return total;
+  }, {});
+  const highest = Math.max(...Object.values(counts).map((value) => value ?? 0), 1);
+
+  return Object.entries(counts)
+    .map(([realm, value]) => ({
+      count: value ?? 0,
+      percent: Math.max(14, Math.round(((value ?? 0) / highest) * 100)),
+      realm: realm as GlassRealm,
+    }))
+    .filter((item) => item.count > 0)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 4);
+}
+
+function useRememberedSignals() {
+  const [signals, setSignals] = useState<RememberedSignals>({
+    namingMatch: null,
+    scrollOmen: null,
+    witnessSummary: null,
+  });
+
+  function refreshSignals() {
+    setSignals(readRememberedSignals());
+  }
+
+  useEffect(() => {
+    function refreshFromStorage(event: StorageEvent) {
+      if (
+        event.key === GLASS_SCROLL_OMEN_KEY ||
+        event.key === NAMING_RESULT_KEY ||
+        event.key === COF_WITNESS_CHOICES_KEY
+      ) {
+        refreshSignals();
+      }
+    }
+
+    function refreshFromOmen(event: Event) {
+      const detail = event instanceof CustomEvent ? event.detail : null;
+      if (isGlassScrollOmen(detail)) {
+        setSignals((current) => ({ ...current, scrollOmen: detail }));
+        return;
+      }
+
+      refreshSignals();
+    }
+
+    refreshSignals();
+    window.addEventListener(GLASS_SCROLL_OMEN_EVENT, refreshFromOmen);
+    window.addEventListener("gaze-glass:memory-update", refreshSignals);
+    window.addEventListener("focus", refreshSignals);
+    window.addEventListener("storage", refreshFromStorage);
+
+    return () => {
+      window.removeEventListener(GLASS_SCROLL_OMEN_EVENT, refreshFromOmen);
+      window.removeEventListener("gaze-glass:memory-update", refreshSignals);
+      window.removeEventListener("focus", refreshSignals);
+      window.removeEventListener("storage", refreshFromStorage);
+    };
+  }, []);
+
+  return { refreshSignals, signals };
+}
+
 function useGlassMemory() {
   const [entries, setEntries] = useState<GlassMemoryEntry[]>([]);
   const [isReady, setIsReady] = useState(false);
@@ -374,11 +651,13 @@ function useGlassMemory() {
 export function GlassMemory() {
   const pathname = usePathname();
   const { entries, isReady, clearMemory } = useGlassMemory();
+  const { refreshSignals, signals } = useRememberedSignals();
   const [isExpanded, setIsExpanded] = useState(false);
   const latest = entries[0];
   const recentEntries = useMemo(() => entries.slice(0, MAX_VISIBLE_MEMORY_ENTRIES), [entries]);
   const dominantRealm = useMemo(() => getDominantRealm(entries), [entries]);
   const dominantDetails = realmDetails[dominantRealm];
+  const realmBalance = useMemo(() => getRealmBalance(entries), [entries]);
 
   const countText = useMemo(() => {
     if (entries.length === 1) {
@@ -401,6 +680,9 @@ export function GlassMemory() {
         aria-controls="glass-memory-panel"
         onClick={() => {
           const nextValue = !isExpanded;
+          if (nextValue) {
+            refreshSignals();
+          }
           setIsExpanded(nextValue);
           playGlassSound(nextValue ? "open" : "close");
         }}
@@ -446,11 +728,64 @@ export function GlassMemory() {
             </span>
           </a>
 
+          <div className="glass-memory-omen">
+            <small>Current omen</small>
+            <strong>{signals.scrollOmen?.label ?? dominantDetails.label}</strong>
+            <span>
+              {signals.scrollOmen?.message ?? "The surface is waiting for the next place your gaze slows."}
+            </span>
+          </div>
+
           <div className="glass-memory-signal">
             <small>Path signal</small>
             <strong>{dominantDetails.label}</strong>
             <span>{dominantDetails.summary}</span>
           </div>
+
+          <div className="glass-memory-personal-grid" aria-label="Remembered signals">
+            {signals.namingMatch ? (
+              <a className="glass-memory-personal-card" href={signals.namingMatch.href}>
+                <small>Sorting Glass</small>
+                <strong>{signals.namingMatch.label}</strong>
+                <span>{signals.namingMatch.summary}</span>
+              </a>
+            ) : (
+              <a className="glass-memory-personal-card" href="/the-glass-names-you">
+                <small>Sorting Glass</small>
+                <strong>No match recorded yet</strong>
+                <span>Gaze into the Sorting Glass to name the deity and fox spirit nearest your path.</span>
+              </a>
+            )}
+
+            {signals.witnessSummary ? (
+              <a className={`glass-memory-personal-card is-${signals.witnessSummary.thread}`} href={signals.witnessSummary.href}>
+                <small>A Court of Foxes</small>
+                <strong>{signals.witnessSummary.label}</strong>
+                <span>{signals.witnessSummary.summary}</span>
+              </a>
+            ) : (
+              <a className="glass-memory-personal-card" href="/a-court-of-foxes">
+                <small>A Court of Foxes</small>
+                <strong>No witness marks yet</strong>
+                <span>Enter the story and let the Glass record the choices you make inside the court.</span>
+              </a>
+            )}
+          </div>
+
+          {realmBalance.length ? (
+            <div className="glass-memory-balance" aria-label="Realm balance">
+              <small>Realm balance</small>
+              {realmBalance.map((item) => (
+                <div className="glass-memory-realm-row" key={item.realm}>
+                  <span>{realmDetails[item.realm].label}</span>
+                  <i aria-hidden="true">
+                    <span style={{ width: `${item.percent}%` }} />
+                  </i>
+                  <em>{item.count}</em>
+                </div>
+              ))}
+            </div>
+          ) : null}
 
           <div className="glass-memory-trail" aria-label="Recent witnessed path">
             <small>Recent path</small>
