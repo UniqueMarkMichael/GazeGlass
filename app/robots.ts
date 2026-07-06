@@ -5,6 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
+      disallow: "/press", // TODO_MARK_PRESS_SLUG
     },
     sitemap: "https://www.gazeglass.com/sitemap.xml",
     host: "https://www.gazeglass.com",

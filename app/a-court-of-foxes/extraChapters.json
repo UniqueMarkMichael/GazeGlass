@@ -6,9 +6,9 @@
     "readTime": "~14 min",
     "question": "What does trust become when oath, war, and beauty hold the same thread?",
     "hero": "/a-court-of-foxes/assets/ch9-kitsu-handwriting-mirror.png",
-    "heroAlt": "Jem, Marok, and Kitsu facing a dark mirror written in Kitsu's golden legal hand",
+    "heroAlt": "Jem, Marok, and Kitsu facing a dark mirror written in Kitsu’s golden legal hand",
     "accent": "gold",
-    "summary": "Kitsu's stolen oath-thread is reclaimed, Marok and Justice finally name the wound between them, and Jem refuses to be anyone's prize.",
+    "summary": "Kitsu’s stolen oath-thread is reclaimed, Marok and Justice finally name the wound between them, and Jem refuses to be anyone’s prize.",
     "hook": "Which half do they steal first: the Menagerie below, or the courthouse across the river?",
     "body": [
       "The mirror wore Kitsu’s handwriting like a stolen face. Not ink. Not paint. Gold script burned across the dark glass in the exact legal hand I had watched him use in court: precise, merciless, so neat it made elegance look undisciplined.",
@@ -74,7 +74,7 @@
       "My mouth went dry. Marok saw the reflections too. Of course he did. His restored tail lowered.",
       "“Kitsu,” he said, quieter now.",
       "Kitsu’s gaze remained fixed on the mirror. “Do not.”",
-      "“I was not—“",
+      "“I was not—”",
       "“Do not be kind because the room has become cruel.”",
       "Marok’s face tightened. “That is not the only time I can manage it.”",
       "Kitsu laughed once. No humor. Just a blade finding stone. “Forgive me. I had not noticed your excellent consistency.”",
@@ -150,7 +150,7 @@
       "I had tolerated many things tonight. This was not going on the list.",
       "“Both of you,” I said.",
       "They turned. “No.” I pointed between them. “At each other.”",
-      "Marok blinked. “Jem—“",
+      "Marok blinked. “Jem—”",
       "“Do not Jem me in that tone. I have been dragged through mirrors, markets, false law, two kisses, and at least three emotional revelations I did not order. I am tired.”",
       "Kitsu’s mouth tightened. “We do not have time for this.”",
       "“That sentence is what cowards say when they are afraid honesty will take longer than survival.”",
@@ -198,13 +198,13 @@
       {
         "after": 2,
         "src": "/a-court-of-foxes/assets/ch9-kitsu-handwriting-mirror.png",
-        "alt": "Kitsu's golden handwriting burns across a dark Menagerie mirror while Jem and Marok look on",
-        "caption": "The mirror wore Kitsu's handwriting like a stolen face."
+        "alt": "Kitsu’s golden handwriting burns across a dark Menagerie mirror while Jem and Marok look on",
+        "caption": "The mirror wore Kitsu’s handwriting like a stolen face."
       },
       {
         "after": 33,
         "src": "/a-court-of-foxes/assets/ch9-beauty-sight-oath-thread.png",
-        "alt": "Jem opens Beauty sight and reveals a silver oath-thread beneath Kitsu's golden script",
+        "alt": "Jem opens Beauty sight and reveals a silver oath-thread beneath Kitsu’s golden script",
         "caption": "The hand is yours. The will is not."
       },
       {
@@ -368,9 +368,9 @@
         "Annoying. Accurate. Unforgivable.",
         "“The thread is under the reflection,” I said.",
         "Marok stepped beside me. Green fire gathered in his palms. “Tell me where to burn.”",
-        "“If I say stop—“",
+        "“If I say stop—”",
         "“I stop.”",
-        "“If you start dying impressively—“",
+        "“If you start dying impressively—”",
         "“You will be cross.”",
         "“I will be furious.”",
         "His smile flickered. “Better.”",
@@ -726,7 +726,7 @@
     "hero": "/a-court-of-foxes/assets/ch11-scale-halves-bridge.png",
     "heroAlt": "Jem, Marok, and Kitsu stand on a rain-lashed bridge beneath two broken Scale halves",
     "accent": "rose",
-    "summary": "The broken Scale leads Jem, Kitsu, and Marok beneath the city's beautiful lie, where Glasswater's drowned prayers reveal the hidden Court House below.",
+    "summary": "The broken Scale leads Jem, Kitsu, and Marok beneath the city’s beautiful lie, where Glasswater’s drowned prayers reveal the hidden Court House below.",
     "hook": "Ahead, the Court House opens its mouth.",
     "body": [
       "The Scale halves followed us like two angry moons.",
@@ -772,7 +772,7 @@
       "I gasped. Marok said something vicious under his breath. Kitsu did not speak at all.",
       "I hated that I understood Veyr more now than I had one street ago. Understanding was not forgiveness. It was worse. It was a blade placed carefully in your hand with no instruction about where to point it.",
       "“The city is wearing Glasswater,” I said.",
-      "Kitsu’s face went still. “Impossible. Glasswater was—“",
+      "Kitsu’s face went still. “Impossible. Glasswater was—”",
       "“Drowned,” Marok said softly.",
       "“Buried,” I corrected. “Under flowers. Under lamps. Under a district pretty enough that no one asks what it cost.”",
       "The Scale halves hummed between us. Rose light crawled along the broken edges. Green answered from Marok’s tail. Gold from Kitsu’s closed fist. For one breath, the braid tried to form around the pieces and failed.",
@@ -831,7 +831,7 @@
       "A beautiful lie.",
       "“Move the flowers,” I said.",
       "Marok did not ask why. He released my hand only when I nodded, then began lifting buckets away from the seam. Kitsu helped with the careful horror of a man committing petty vandalism in service of divine emergency.",
-      "The vendor blinked. “Excuse me—“",
+      "The vendor blinked. “Excuse me—”",
       "I turned Beauty on her.",
       "Not performance. Not polish. Not the soft arrangement my goddess had made of my face for centuries. True Beauty. The kind that reveals what a thing has cost to remain lovely.",
       "The vendor saw the drowned woman beneath herself.",
@@ -913,7 +913,7 @@
       {
         "after": 89,
         "src": "/a-court-of-foxes/assets/ch11-three-hand-anchor.png",
-        "alt": "Jem holds Marok's and Kitsu's hands as rose, green, and gold magic braid between them beneath the broken Scale halves",
+        "alt": "Jem holds Marok’s and Kitsu’s hands as rose, green, and gold magic braid between them beneath the broken Scale halves",
         "caption": "No one pulled. No one claimed. They held."
       },
       {
@@ -925,7 +925,7 @@
       {
         "after": 145,
         "src": "/a-court-of-foxes/assets/ch11-court-house-stairway.png",
-        "alt": "Jem descends a memory-glass stairway holding both Marok and Kitsu's hands as the Scale halves float toward blackened-gold gates",
+        "alt": "Jem descends a memory-glass stairway holding both Marok and Kitsu’s hands as the Scale halves float toward blackened-gold gates",
         "caption": "Ahead, the Court House opened its mouth."
       }
     ]
@@ -940,7 +940,7 @@
     "heroAlt": "Jem, Marok, and Kitsu descend through a memory-glass stairway with broken Scale halves floating ahead",
     "accent": "gold",
     "summary": "The Court House forces truth into the open, Kitsu breaks procedure to reclaim his tail, and Jem chooses the bond without letting it become a verdict.",
-    "hook": "Beyond the door, the undercourt waits with Veyr and Jem's magenta tail.",
+    "hook": "Beyond the door, the undercourt waits with Veyr and Jem’s magenta tail.",
     "body": [
       "The first stair tasted like blood. Not mine. Not yet.",
       "The Court House announced itself through the tongue before the eye, which felt excessive and therefore exactly like court. One foot on the blackened-gold stair, and copper bloomed along my teeth. The next step scraped something invisible against the roof of my mouth, as if the building had reached in with one polished nail and tested how easily I might lie.",
@@ -1021,7 +1021,7 @@
       "Kitsu flinched. Tiny. Terrible. My heart heard it anyway.",
       "He lifted his hand. Gold law gathered around his fingers, careful and exact. “I can file an emergency challenge.”",
       "His voice scraped on can. A bead of blood appeared at the corner of his mouth. I stared at it.",
-      "Kitsu wiped it away before either of us could move. “I can—“",
+      "Kitsu wiped it away before either of us could move. “I can—”",
       "More blood.",
       "The Court House chimed again. Not agreement this time. Warning.",
       "“You do not believe that,” I said.",
@@ -1146,7 +1146,7 @@
       {
         "after": 47,
         "src": "/a-court-of-foxes/assets/ch12-beauty-sight-scroll-throat.png",
-        "alt": "Beauty sight reveals the gold lattice as ribs and the black scroll as a living throat threaded with Kitsu's tail",
+        "alt": "Beauty sight reveals the gold lattice as ribs and the black scroll as a living throat threaded with Kitsu’s tail",
         "caption": "The chamber rotted."
       },
       {
@@ -1158,13 +1158,13 @@
       {
         "after": 126,
         "src": "/a-court-of-foxes/assets/ch12-kitsu-tail-restored-confession.png",
-        "alt": "Kitsu's golden tail restores in radiant fire as Marok catches him and Jem reaches toward them in the dark Court House",
+        "alt": "Kitsu’s golden tail restores in radiant fire as Marok catches him and Jem reaches toward them in the dark Court House",
         "caption": "His tail slammed back into him."
       },
       {
         "after": 173,
         "src": "/a-court-of-foxes/assets/ch12-undercourt-door-veyr-tail.png",
-        "alt": "Jem stands between Marok and Kitsu before the undercourt door where Veyr waits with Jem's magenta tail and a silver Bell-tongue",
+        "alt": "Jem stands between Marok and Kitsu before the undercourt door where Veyr waits with Jem’s magenta tail and a silver Bell-tongue",
         "caption": "Then let us be rude."
       }
     ]
