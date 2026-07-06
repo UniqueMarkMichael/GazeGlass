@@ -9485,6 +9485,19 @@ body::after {
     inset: 0;
     animation-name: beautyVeilDriftMobile;
   }
+
+  .section,
+  .glass-threshold,
+  .vision-oracle,
+  .tiktok-transmissions,
+  .observation,
+  .seer-prologue,
+  .observations-hero,
+  .marcella-mirror,
+  .instrument-card,
+  .observation-row {
+    overflow-x: hidden;
+  }
 }
 
 a:focus-visible,
