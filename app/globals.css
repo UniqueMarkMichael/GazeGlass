@@ -3487,6 +3487,20 @@ body.daily-vision-open {
   animation-direction: reverse;
 }
 
+@media (max-width: 700px) {
+  body::after {
+    inset: 0;
+    animation-name: beautyVeilDriftMobile;
+  }
+
+  .stars::before,
+  .stars::after {
+    inset: 0;
+    animation: none;
+    transform: none;
+  }
+}
+
 .sphere-wrap {
   position: absolute;
   z-index: 1;
@@ -9466,6 +9480,13 @@ body::after {
   animation: beautyVeilDrift 26s ease-in-out infinite;
 }
 
+@media (max-width: 700px) {
+  body::after {
+    inset: 0;
+    animation-name: beautyVeilDriftMobile;
+  }
+}
+
 a:focus-visible,
 button:focus-visible,
 select:focus-visible,
@@ -10044,6 +10065,19 @@ form div {
   50% {
     transform: translate3d(1%, 1%, 0) rotate(4deg);
     opacity: 0.82;
+  }
+}
+
+@keyframes beautyVeilDriftMobile {
+  0%,
+  100% {
+    transform: translate3d(0, -1%, 0);
+    opacity: 0.54;
+  }
+
+  50% {
+    transform: translate3d(0, 1%, 0);
+    opacity: 0.78;
   }
 }
 
