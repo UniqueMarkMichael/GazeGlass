@@ -112,7 +112,7 @@ export function GlassSurfaceScroll() {
   const pulseTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (pathname === "/press") return;
+    if (pathname === "/press" || pathname.startsWith("/big-scale-betrayal")) return;
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (reduceMotion.matches) return;
@@ -202,7 +202,7 @@ export function GlassSurfaceScroll() {
     };
   }, [pathname]);
 
-  if (pathname === "/press") {
+  if (pathname === "/press" || pathname.startsWith("/big-scale-betrayal")) {
     return null;
   }
 
