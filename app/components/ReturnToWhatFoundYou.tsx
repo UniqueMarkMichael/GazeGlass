@@ -27,6 +27,7 @@ type NamingResult = {
 
 const READER_BOOKMARK_KEY = "cof-reader-bookmark-v2";
 const NAMING_RESULT_KEY = "gaze-glass.naming-result.v1";
+const RETURN_MOMENT_DISMISSED_KEY = "gaze-glass.return-moment-dismissed.v1";
 
 const godLabels: Record<string, string> = {
   beauty: "Beauty",
@@ -184,12 +185,25 @@ function getReturnMoment() {
   return memoryEntry ? buildMemoryMoment(memoryEntry) : null;
 }
 
+function getMomentSignature(moment: ReturnMoment) {
+  return `${moment.href}::${moment.title}::${moment.signal}`;
+}
+
+function isMomentDismissed(moment: ReturnMoment) {
+  try {
+    return window.localStorage.getItem(RETURN_MOMENT_DISMISSED_KEY) === getMomentSignature(moment);
+  } catch {
+    return false;
+  }
+}
+
 export function ReturnToWhatFoundYou() {
   const [moment, setMoment] = useState<ReturnMoment | null>(null);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    setMoment(getReturnMoment());
+    const nextMoment = getReturnMoment();
+    setMoment(nextMoment && !isMomentDismissed(nextMoment) ? nextMoment : null);
     setIsReady(true);
   }, []);
 
@@ -197,22 +211,40 @@ export function ReturnToWhatFoundYou() {
     return null;
   }
 
-  const actionLabel = `${moment.cta}: ${moment.title}`;
+  const activeMoment = moment;
+  const actionLabel = `${activeMoment.cta}: ${activeMoment.title}`;
+
+  function dismissMoment() {
+    try {
+      window.localStorage.setItem(RETURN_MOMENT_DISMISSED_KEY, getMomentSignature(activeMoment));
+    } catch {}
+
+    setMoment(null);
+    playGlassSound("close");
+  }
 
   return (
     <aside className="return-moment" aria-label="Return to what found you">
+      <button
+        className="return-moment-dismiss"
+        type="button"
+        aria-label="Close this return message"
+        onClick={dismissMoment}
+      >
+        <span aria-hidden="true">×</span>
+      </button>
       <div className="return-moment-orb" aria-hidden="true">
         <span />
       </div>
       <div className="return-moment-copy">
-        <p>{moment.eyebrow}</p>
-        <strong>{moment.title}</strong>
-        <span>{moment.body}</span>
+        <p>{activeMoment.eyebrow}</p>
+        <strong>{activeMoment.title}</strong>
+        <span>{activeMoment.body}</span>
       </div>
       <div className="return-moment-action">
-        <small>{moment.signal}</small>
-        <a href={moment.href} aria-label={actionLabel} onClick={() => playGlassSound("travel")}>
-          {moment.cta}
+        <small>{activeMoment.signal}</small>
+        <a href={activeMoment.href} aria-label={actionLabel} onClick={() => playGlassSound("travel")}>
+          {activeMoment.cta}
         </a>
       </div>
     </aside>
