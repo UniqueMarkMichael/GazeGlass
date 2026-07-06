@@ -503,7 +503,13 @@ export function DailyVisionCapture() {
         aria-labelledby="daily-vision-title"
         tabIndex={-1}
       >
-        <button className="daily-vision-close" type="button" onClick={dismissForToday}>
+        <button
+          className="daily-vision-close"
+          type="button"
+          aria-label="Close Daily Vision"
+          onPointerDown={dismissForToday}
+          onClick={dismissForToday}
+        >
           Close
         </button>
 

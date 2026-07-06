@@ -2803,7 +2803,7 @@ body.daily-vision-open {
 .daily-vision-layer {
   position: fixed;
   inset: 0;
-  z-index: 70;
+  z-index: 220;
   display: grid;
   place-items: center;
   padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
