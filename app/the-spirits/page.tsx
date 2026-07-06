@@ -155,6 +155,11 @@ export default function TheSpirits() {
           Each assistant is more than a companion. They are witnesses close enough
           to hear what the gods do not say aloud.
         </p>
+        <div className="court-threshold-actions">
+          <a className="text-link" href="/a-court-of-foxes">
+            Enter A Court of Foxes
+          </a>
+        </div>
       </section>
 
       <section className="section spirits reveal" aria-label="Fox spirit records">
@@ -185,6 +190,25 @@ export default function TheSpirits() {
             </article>
           ))}
         </div>
+        <article className="court-promo" aria-labelledby="spirit-court-promo-title">
+          <figure className="court-promo-art">
+            <img src="/a-court-of-foxes/assets/cover.png" alt="A Court of Foxes cover art with Jem, Marok, and Kitsu" />
+          </figure>
+          <div className="court-promo-copy">
+            <p className="eyebrow">A Gaze Glass Chronicle</p>
+            <h3 id="spirit-court-promo-title">Their story has already begun.</h3>
+            <p>
+              Kitsu, Marok, and Jem move from the spirit records into a branching
+              romantasy reader where divine courts, broken judgment, and sacred
+              choices turn memory into consequence.
+            </p>
+            <div className="court-promo-actions">
+              <a className="text-link" href="/a-court-of-foxes">
+                Enter A Court of Foxes
+              </a>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section className="archive-threshold reveal" aria-label="Return from the spirit archive">

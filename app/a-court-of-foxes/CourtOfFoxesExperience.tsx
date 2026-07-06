@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
 import extraChaptersData from "./extraChapters.json";
 
 type Stage = "cover" | "reading" | "choice" | "ending";
@@ -8,6 +8,8 @@ type Choice = "marok" | "kitsu" | "both";
 type ReaderTheme = "day" | "night";
 type FocusMode = "off" | "spotlight" | "band" | "ruler";
 type ReadingPace = "drift" | "focus" | "sprint" | "rest";
+type WitnessThread = "sight" | "spark" | "law" | "mercy" | "triune";
+type WitnessChoices = Record<string, string>;
 
 type ResumeBookmark = {
   chapterIndex: number;
@@ -40,6 +42,26 @@ type Chapter = {
   scenes?: ChapterScene[];
   scenesByChoice?: Partial<Record<Choice, ChapterScene[]>>;
 };
+
+type WitnessOption = {
+  id: string;
+  label: string;
+  detail: string;
+  confirmation: string;
+  thread: WitnessThread;
+};
+
+type WitnessPrompt = {
+  eyebrow: string;
+  prompt: string;
+  options: WitnessOption[];
+};
+
+type WitnessMark = WitnessOption & {
+  chapterNumber: string;
+};
+
+const paceOptions = ["drift", "focus", "sprint", "rest"] as const;
 
 const baseChapters: Chapter[] = [
   {
@@ -1132,27 +1154,194 @@ const chapters: Chapter[] = [...baseChapters, ...(extraChaptersData as Chapter[]
 
 const endingCopy = {
   marok: {
-    title: "Velvet and Green Fire",
+    title: "War May Answer Without Command",
     body:
-      "You went below the Menagerie with Marok first. The Scale half came back marked with velvet, green fire, and a want Jem refused to mistake for freedom.",
-    thread: "Beauty's rose and War's green return to the bridge, carrying one half of Judgment.",
+      "Jem chose Marok as the witness who stays. War's fox answered without command, without debt, and without turning desire into another door he built without her.",
+    thread: "Rose and green remain recorded: no debt, no cover, no exit hidden inside a joke.",
   },
   kitsu: {
-    title: "Law and Gold Grief",
+    title: "No Witness May Be Claimed",
     body:
-      "You crossed to the courthouse with Kitsu first. The Scale half came back marked with law, gold grief, and a promise to return for what Justice left behind.",
-    thread: "Beauty's rose and Justice's gold return to the bridge, carrying one half of Judgment.",
+      "Jem chose Kitsu as the witness who stands beside her when truth becomes difficult. Justice's fox refused to return to being a place before he had finished being a person.",
+    thread: "Rose and gold remain recorded: true choice rewrites the law no claim may cross.",
   },
   both: {
-    title: "The Third Promise",
+    title: "Triune Witness Accepted",
     body:
-      "The both route is still ahead. Jem has named the rule: no claiming, no hierarchy, and no one becomes the prettiest excuse for someone else's fear.",
-    thread: "Beauty's rose, War's green, and Justice's gold are not finished braiding.",
+      "Jem refused the simple shape of a verdict. Kitsu, Marok, and Jem carried witness forward together: no hierarchy, no claim, and no silence disguised as protection.",
+    thread: "Rose, green, and gold remain recorded as trouble, romance, procedure, and beginning.",
   },
+};
+
+const witnessChoicePrompts: Record<string, WitnessPrompt> = {
+  "01": {
+    eyebrow: "Witness Choice",
+    prompt: "What does the Glass ask you to notice first?",
+    options: [
+      {
+        id: "count-exits",
+        label: "Count the exits",
+        detail: "You see the cage before the glitter.",
+        confirmation: "The Glass records a witness who sees the door before the decoration.",
+        thread: "sight",
+      },
+      {
+        id: "watch-war",
+        label: "Watch War's fox",
+        detail: "You follow the trouble that smiles.",
+        confirmation: "The Glass records a witness drawn to dangerous sincerity.",
+        thread: "spark",
+      },
+      {
+        id: "watch-justice",
+        label: "Watch Justice's fox",
+        detail: "You trust the one who notices every exit too.",
+        confirmation: "The Glass records a witness who trusts restraint before display.",
+        thread: "law",
+      },
+    ],
+  },
+  "03": {
+    eyebrow: "Witness Choice",
+    prompt: "Whose hand do you trust when the music gets too loud?",
+    options: [
+      {
+        id: "marok-hand",
+        label: "Marok's hand",
+        detail: "Heat, gravity, and a risk that asks.",
+        confirmation: "The Glass records a witness who lets danger become honest before it becomes safe.",
+        thread: "spark",
+      },
+      {
+        id: "kitsu-hand",
+        label: "Kitsu's hand",
+        detail: "Careful pressure, restraint, and room to refuse.",
+        confirmation: "The Glass records a witness who recognizes care when it refuses to claim.",
+        thread: "law",
+      },
+      {
+        id: "no-hand-yet",
+        label: "No hand yet",
+        detail: "Want can wait until it knows its own name.",
+        confirmation: "The Glass records a witness who protects the self before answering desire.",
+        thread: "sight",
+      },
+    ],
+  },
+  "06": {
+    eyebrow: "Witness Choice",
+    prompt: "How should Justice answer when someone is already bleeding?",
+    options: [
+      {
+        id: "answer-mercy",
+        label: "With mercy",
+        detail: "Hold the wound before naming the fault.",
+        confirmation: "The Glass records a witness who tends the wound before counting the debt.",
+        thread: "mercy",
+      },
+      {
+        id: "answer-wrath",
+        label: "With wrath",
+        detail: "Burn the cage before it learns another name.",
+        confirmation: "The Glass records a witness who believes some locks deserve fire.",
+        thread: "spark",
+      },
+      {
+        id: "answer-restraint",
+        label: "With restraint",
+        detail: "Bind the harm without becoming it.",
+        confirmation: "The Glass records a witness who knows power is most dangerous when it feels righteous.",
+        thread: "law",
+      },
+    ],
+  },
+  "12": {
+    eyebrow: "Witness Choice",
+    prompt: "Which testimony should the court be forced to hear?",
+    options: [
+      {
+        id: "jem-testimony",
+        label: "Jem's",
+        detail: "The one who was displayed finally speaks.",
+        confirmation: "The Glass records a witness who lets Beauty testify against its own cage.",
+        thread: "sight",
+      },
+      {
+        id: "fox-testimony",
+        label: "Every missing fox",
+        detail: "No judgment without the ones made to watch.",
+        confirmation: "The Glass records a witness who refuses a court built on missing voices.",
+        thread: "triune",
+      },
+      {
+        id: "veyr-testimony",
+        label: "Veyr's",
+        detail: "Even the monster may be evidence.",
+        confirmation: "The Glass records a witness who can hear the reason without excusing the wound.",
+        thread: "mercy",
+      },
+    ],
+  },
+  "16": {
+    eyebrow: "Final Witness",
+    prompt: "What truth does the Glass record at the end?",
+    options: [
+      {
+        id: "no-claim",
+        label: "No claim",
+        detail: "Love cannot be ownership in ceremonial clothes.",
+        confirmation: "The Glass records the old leash breaking cleanly in the light.",
+        thread: "sight",
+      },
+      {
+        id: "no-debt",
+        label: "No debt",
+        detail: "A hand can be offered without making a ledger.",
+        confirmation: "The Glass records a bond that does not ask to be repaid.",
+        thread: "spark",
+      },
+      {
+        id: "no-witness-claimed",
+        label: "No witness claimed",
+        detail: "Witness is sacred because it remains free.",
+        confirmation: "The Glass records the forbidden answer: no hierarchy, no silence, no claim.",
+        thread: "triune",
+      },
+    ],
+  },
+};
+
+const witnessThreadCopy: Record<WitnessThread, { title: string; body: string }> = {
+  sight: {
+    title: "One Who Sees Beneath Ornament",
+    body: "You kept choosing the hidden door, the rot under the flowers, and the truth Beauty tried to dress as devotion.",
+  },
+  spark: {
+    title: "One Who Trusts Dangerous Sincerity",
+    body: "You reached toward heat when it learned to ask first, and the Glass marked every risk that became honest instead of hungry.",
+  },
+  law: {
+    title: "One Who Honors Restraint",
+    body: "You trusted the hand that stops before claiming, and the Glass remembered restraint as a form of devotion.",
+  },
+  mercy: {
+    title: "One Who Holds The Wounded Witness",
+    body: "You chose to tend the wound before the verdict, and the Glass remembered mercy without letting harm go unnamed.",
+  },
+  triune: {
+    title: "One Who Refuses A Single Verdict",
+    body: "You would not make witness choose one shape when rose, green, and gold were all telling the truth.",
+  },
+};
+
+const unwrittenWitnessCopy = {
+  title: "One Whose Record Is Still Forming",
+  body: "The Glass has your path, but the smaller witness marks are still waiting inside the chapters.",
 };
 
 const readerPrefsKey = "cof-reader-prefs-v2";
 const readerBookmarkKey = "cof-reader-bookmark-v2";
+const witnessChoicesKey = "cof-witness-choices-v1";
 const tooltipClickBlockMs = 900;
 
 function tooltipSentenceFragment(text: string) {
@@ -1171,6 +1360,46 @@ function focusLabel(mode: FocusMode) {
   if (mode === "band") return "Band";
   if (mode === "ruler") return "Ruler";
   return "Focus";
+}
+
+function witnessMarkLabel(count: number) {
+  if (count === 1) return "1 witness mark";
+  return `${count} witness marks`;
+}
+
+function cleanWitnessChoices(value: unknown): WitnessChoices {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+
+  return Object.entries(value).reduce<WitnessChoices>((record, [chapterNumber, optionId]) => {
+    const prompt = witnessChoicePrompts[chapterNumber];
+    if (typeof optionId === "string" && prompt?.options.some((option) => option.id === optionId)) {
+      record[chapterNumber] = optionId;
+    }
+    return record;
+  }, {});
+}
+
+function getWitnessMarks(choices: WitnessChoices): WitnessMark[] {
+  return Object.entries(witnessChoicePrompts).reduce<WitnessMark[]>((marks, [chapterNumber, prompt]) => {
+    const option = prompt.options.find((item) => item.id === choices[chapterNumber]);
+    if (option) marks.push({ ...option, chapterNumber });
+    return marks;
+  }, []);
+}
+
+function getDominantWitnessThread(marks: WitnessMark[]): WitnessThread | null {
+  if (!marks.length) return null;
+
+  const scores = marks.reduce<Record<WitnessThread, number>>(
+    (record, mark) => {
+      record[mark.thread] += 1;
+      return record;
+    },
+    { sight: 0, spark: 0, law: 0, mercy: 0, triune: 0 },
+  );
+
+  const order: WitnessThread[] = ["triune", "sight", "spark", "law", "mercy"];
+  return order.reduce<WitnessThread>((winner, thread) => (scores[thread] > scores[winner] ? thread : winner), order[0]);
 }
 
 function choiceLabel(choice: Choice | null) {
@@ -1226,10 +1455,12 @@ export function CourtOfFoxesExperience() {
   const [activeParagraphIndex, setActiveParagraphIndex] = useState(0);
   const [resumeBookmark, setResumeBookmark] = useState<ResumeBookmark | null>(null);
   const [choice, setChoice] = useState<Choice | null>(null);
+  const [witnessChoices, setWitnessChoices] = useState<WitnessChoices>({});
   const [beautySight, setBeautySight] = useState(false);
   const [joined, setJoined] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const readerRef = useRef<HTMLDivElement | null>(null);
+  const readerHeadingRef = useRef<HTMLHeadingElement | null>(null);
   const paragraphRefs = useRef<Array<HTMLParagraphElement | null>>([]);
   const pendingResumeRef = useRef<ResumeBookmark | null>(null);
   const choiceConfirmRef = useRef<HTMLDivElement | null>(null);
@@ -1237,7 +1468,7 @@ export function CourtOfFoxesExperience() {
   const tooltipClickBlockRef = useRef<{ key: string; until: number } | null>(null);
 
   const chapter = chapters[chapterIndex];
-  const selectedRoute: Choice = choice ?? "marok";
+  const selectedRoute: Choice = choice ?? "both";
   const chapterBody = chapter.bodyByChoice?.[selectedRoute] ?? chapter.body;
   const chapterScenes = useMemo(
     () => [
@@ -1248,8 +1479,13 @@ export function CourtOfFoxesExperience() {
     [chapter, selectedRoute],
   );
   const isChapterTenFork = stage === "choice" && chapter.number === "09";
-  const ending = endingCopy[choice ?? "kitsu"];
+  const ending = endingCopy[choice ?? "both"];
   const progress = stage === "cover" ? 0 : stage === "ending" ? 100 : Math.round(((chapterIndex + 1) / chapters.length) * 82);
+  const witnessPrompt = witnessChoicePrompts[chapter.number];
+  const selectedWitnessOption = witnessPrompt?.options.find((option) => option.id === witnessChoices[chapter.number]) ?? null;
+  const witnessMarks = useMemo(() => getWitnessMarks(witnessChoices), [witnessChoices]);
+  const dominantWitnessThread = useMemo(() => getDominantWitnessThread(witnessMarks), [witnessMarks]);
+  const witnessRecord = dominantWitnessThread ? witnessThreadCopy[dominantWitnessThread] : unwrittenWitnessCopy;
 
   const fontClass = useMemo(() => `cof-font-${fontStep}`, [fontStep]);
   const supportStatus = `${focusLabel(focusMode)} ${Math.min(activeParagraphIndex + 1, chapterBody.length)}/${chapterBody.length}`;
@@ -1265,6 +1501,16 @@ export function CourtOfFoxesExperience() {
     readerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
     setActiveParagraphIndex(0);
     setReadWithMeIndex(0);
+  }, [chapterIndex, stage]);
+
+  useEffect(() => {
+    if (stage !== "reading") return;
+
+    const frame = window.requestAnimationFrame(() => {
+      readerHeadingRef.current?.focus({ preventScroll: true });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
   }, [chapterIndex, stage]);
 
   useEffect(() => {
@@ -1303,6 +1549,11 @@ export function CourtOfFoxesExperience() {
           });
         }
       }
+
+      const rawWitnessChoices = window.localStorage.getItem(witnessChoicesKey);
+      if (rawWitnessChoices) {
+        setWitnessChoices(cleanWitnessChoices(JSON.parse(rawWitnessChoices)));
+      }
     } catch {
       // Reader support is additive; storage failures should never block the story.
     }
@@ -1318,12 +1569,25 @@ export function CourtOfFoxesExperience() {
   }, [theme, fontStep, pace, focusMode, showImages]);
 
   useEffect(() => {
+    try {
+      window.localStorage.setItem(witnessChoicesKey, JSON.stringify(witnessChoices));
+    } catch {}
+  }, [witnessChoices]);
+
+  useEffect(() => {
     const root = document.documentElement;
+    root.classList.add("cof-experience-active");
+    root.classList.toggle("cof-reader-reading-active", stage === "reading");
     root.classList.toggle("cof-reader-choice-active", stage === "choice");
     root.classList.toggle("cof-reader-ending-active", stage === "ending");
 
     return () => {
-      root.classList.remove("cof-reader-choice-active", "cof-reader-ending-active");
+      root.classList.remove(
+        "cof-experience-active",
+        "cof-reader-reading-active",
+        "cof-reader-choice-active",
+        "cof-reader-ending-active",
+      );
     };
   }, [stage]);
 
@@ -1517,6 +1781,25 @@ export function CourtOfFoxesExperience() {
     setFontStep(preset.fontStep);
   }
 
+  function handlePaceKeyDown(event: KeyboardEvent<HTMLButtonElement>, value: ReadingPace) {
+    const currentIndex = paceOptions.indexOf(value);
+    let nextIndex = currentIndex;
+
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") nextIndex = (currentIndex + 1) % paceOptions.length;
+    if (event.key === "ArrowLeft" || event.key === "ArrowUp") nextIndex = (currentIndex - 1 + paceOptions.length) % paceOptions.length;
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = paceOptions.length - 1;
+
+    if (nextIndex === currentIndex) return;
+
+    event.preventDefault();
+    const nextPace = paceOptions[nextIndex];
+    setPace(nextPace);
+    window.requestAnimationFrame(() => {
+      document.querySelector<HTMLButtonElement>(`[data-pace-option="${nextPace}"]`)?.focus();
+    });
+  }
+
   function toggleFocus(value: FocusMode) {
     setFocusMode((current) => (current === value ? "off" : value));
   }
@@ -1571,6 +1854,32 @@ export function CourtOfFoxesExperience() {
     scrollParagraphIntoView(activeParagraphIndex);
   }
 
+  function showBeautySight() {
+    if (chapterIndex === 0) setBeautySight(true);
+  }
+
+  function hideBeautySight() {
+    setBeautySight(false);
+  }
+
+  function handleBeautySightKeyDown(event: KeyboardEvent<HTMLElement>) {
+    if (chapterIndex !== 0 || (event.key !== " " && event.key !== "Enter")) return;
+    event.preventDefault();
+    setBeautySight(true);
+  }
+
+  function handleBeautySightKeyUp(event: KeyboardEvent<HTMLElement>) {
+    if (chapterIndex !== 0 || (event.key !== " " && event.key !== "Enter")) return;
+    event.preventDefault();
+    setBeautySight(true);
+  }
+
+  function recordWitnessChoice(chapterNumber: string, optionId: string) {
+    const prompt = witnessChoicePrompts[chapterNumber];
+    if (!prompt?.options.some((option) => option.id === optionId)) return;
+    setWitnessChoices((current) => ({ ...current, [chapterNumber]: optionId }));
+  }
+
   function updateActiveParagraph() {
     const reader = readerRef.current;
     if (!reader) return;
@@ -1610,6 +1919,7 @@ export function CourtOfFoxesExperience() {
     setStage("cover");
     setChapterIndex(0);
     setChoice(null);
+    setWitnessChoices({});
     setJoined(false);
     setReadWithMe(false);
     setActiveParagraphIndex(0);
@@ -1621,6 +1931,11 @@ export function CourtOfFoxesExperience() {
       <div className="cof-backdrop" aria-hidden="true">
         <img src={stage === "cover" ? "/a-court-of-foxes/assets/cover.png" : chapter.hero} alt="" />
       </div>
+      {stage === "reading" ? (
+        <a className="cof-skip-link" href="#cof-reader-heading">
+          Skip to story text
+        </a>
+      ) : null}
 
       <header className="cof-topbar">
         <a className="cof-home-link" href="/" aria-label="Return to Gaze Glass home">
@@ -1649,6 +1964,8 @@ export function CourtOfFoxesExperience() {
           </button>
           <button
             {...tooltipProps("theme", theme === "day" ? "Switch to the darker night reader." : "Switch to the brighter day reader.", "bottom")}
+            aria-label={theme === "day" ? "Switch to night reader" : "Switch to day reader"}
+            aria-pressed={theme === "night"}
             type="button"
             onClick={() => setTheme((value) => (value === "day" ? "night" : "day"))}
           >
@@ -1705,9 +2022,16 @@ export function CourtOfFoxesExperience() {
           <aside className="cof-reading-rail" aria-label="Story progress">
             <figure
               className={`cof-rail-art ${beautySight ? "is-revealed" : ""}`}
-              onPointerDown={() => chapterIndex === 0 && setBeautySight(true)}
-              onPointerUp={() => setBeautySight(false)}
-              onPointerLeave={() => setBeautySight(false)}
+              role={chapterIndex === 0 ? "button" : undefined}
+              tabIndex={chapterIndex === 0 ? 0 : undefined}
+              aria-label={chapterIndex === 0 ? "Reveal the Beauty-sight image beneath the glamour" : undefined}
+              onBlur={hideBeautySight}
+              onFocus={showBeautySight}
+              onKeyDown={handleBeautySightKeyDown}
+              onKeyUp={handleBeautySightKeyUp}
+              onPointerDown={showBeautySight}
+              onPointerUp={hideBeautySight}
+              onPointerLeave={hideBeautySight}
             >
               <img src={chapter.hero} alt={chapter.heroAlt} />
               {chapterIndex === 0 ? (
@@ -1723,8 +2047,9 @@ export function CourtOfFoxesExperience() {
               {chapters.map((item, index) => (
                 <button
                   key={item.number}
-                  {...tooltipProps(`chapter-${item.number}`, `Jump to ${item.label}: ${tooltipSentenceFragment(item.title)}.`, "bottom")}
-                  className={`${index === chapterIndex ? "is-active " : ""}cof-tooltip`}
+                  aria-label={`Jump to ${item.label}: ${item.title}`}
+                  aria-current={index === chapterIndex ? "page" : undefined}
+                  className={index === chapterIndex ? "is-active" : ""}
                   type="button"
                   onClick={() => setChapterIndex(index)}
                 >
@@ -1733,10 +2058,20 @@ export function CourtOfFoxesExperience() {
                 </button>
               ))}
             </nav>
-            <div className="cof-progress" aria-label={`Reader progress ${progress}%`}>
+            <div
+              className="cof-progress"
+              role="progressbar"
+              aria-label="Reader progress"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={progress}
+              aria-valuetext={`${progress}% through the chronicle`}
+            >
               <span style={{ width: `${progress}%` }} />
             </div>
-            <p className="cof-choice-status">{choiceLabel(choice)}</p>
+            <p className="cof-choice-status">
+              {choiceLabel(choice)} · {witnessMarkLabel(witnessMarks.length)}
+            </p>
           </aside>
 
           <article
@@ -1746,11 +2081,12 @@ export function CourtOfFoxesExperience() {
             data-read-with-me={readWithMe ? "on" : "off"}
             onScroll={updateActiveParagraph}
             ref={readerRef}
+            id="cof-reader-content"
           >
             <div className="cof-reader-inner">
-              <div className="cof-support-dock" aria-label="ADHD reader supports">
+              <div className="cof-support-dock" aria-label="Reader support tools">
                 <div className="cof-pace-strip" role="radiogroup" aria-label="Story pace mode">
-                  {(["drift", "focus", "sprint", "rest"] as ReadingPace[]).map((item) => (
+                  {paceOptions.map((item) => (
                     <button
                       key={item}
                       {...tooltipProps(
@@ -1767,8 +2103,11 @@ export function CourtOfFoxesExperience() {
                       aria-checked={pace === item}
                       className="cof-pace-button cof-tooltip"
                       data-active={pace === item}
+                      data-pace-option={item}
                       onClick={() => setPace(item)}
+                      onKeyDown={(event) => handlePaceKeyDown(event, item)}
                       role="radio"
+                      tabIndex={pace === item ? 0 : -1}
                       type="button"
                     >
                       {item === "focus" ? "Focus" : item}
@@ -1862,13 +2201,47 @@ export function CourtOfFoxesExperience() {
                 A COURT OF FOXES <span aria-hidden="true">→</span> {chapter.label}: {chapter.title}
               </p>
               <div className="cof-reader-heading">
-                <h2>{chapter.title}</h2>
+                <h2 id="cof-reader-heading" tabIndex={-1} ref={readerHeadingRef}>
+                  {chapter.title}
+                </h2>
                 <span>{chapter.readTime}</span>
               </div>
               <div className="cof-focus-prompt">
                 <span>Hold this question</span>
                 <p>{chapter.question}</p>
               </div>
+              {witnessPrompt ? (
+                <section className="cof-witness-choice" aria-label={`${chapter.label} witness choice`}>
+                  <div className="cof-witness-choice-header">
+                    <span>{witnessPrompt.eyebrow}</span>
+                    <p>{witnessPrompt.prompt}</p>
+                  </div>
+                  <div className="cof-witness-options">
+                    {witnessPrompt.options.map((option) => {
+                      const selected = selectedWitnessOption?.id === option.id;
+
+                      return (
+                        <button
+                          key={option.id}
+                          aria-pressed={selected}
+                          className={`cof-witness-option is-${option.thread} ${selected ? "is-selected" : ""}`}
+                          type="button"
+                          onClick={() => recordWitnessChoice(chapter.number, option.id)}
+                        >
+                          <span className="cof-witness-thread" aria-hidden="true" />
+                          <strong>{option.label}</strong>
+                          <em>{option.detail}</em>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {selectedWitnessOption ? (
+                    <p className={`cof-witness-confirmation is-${selectedWitnessOption.thread}`} role="status" aria-live="polite">
+                      {selectedWitnessOption.confirmation}
+                    </p>
+                  ) : null}
+                </section>
+              ) : null}
               <div className="cof-prose">
                 {chapterBody.map((paragraph, index) => {
                   const hidden = readWithMe && index > readWithMeIndex;
@@ -1979,6 +2352,7 @@ export function CourtOfFoxesExperience() {
                   : "Choose Marok's spark, risk, and dangerous sincerity.",
               )}
               className={`${choice === "marok" ? "is-selected " : ""}cof-tooltip`}
+              aria-pressed={choice === "marok"}
               type="button"
               onClick={() => setChoice("marok")}
             >
@@ -1994,6 +2368,7 @@ export function CourtOfFoxesExperience() {
                   : "Choose Kitsu's restraint, truth, and steady protection.",
               )}
               className={`${choice === "kitsu" ? "is-selected " : ""}cof-tooltip`}
+              aria-pressed={choice === "kitsu"}
               type="button"
               onClick={() => setChoice("kitsu")}
             >
@@ -2009,6 +2384,7 @@ export function CourtOfFoxesExperience() {
                   : "Choose the triune bond: no claiming, no hierarchy.",
               )}
               className={`${choice === "both" ? "is-selected " : ""}cof-tooltip`}
+              aria-pressed={choice === "both"}
               type="button"
               onClick={() => setChoice("both")}
             >
@@ -2018,7 +2394,7 @@ export function CourtOfFoxesExperience() {
             </button>
           </div>
           {choice ? (
-            <div className="cof-choice-confirm" ref={choiceConfirmRef}>
+            <div className="cof-choice-confirm" ref={choiceConfirmRef} role="status" aria-live="polite">
               <p>{isChapterTenFork ? routeChoiceConfirmation(choice) : choiceConfirmation(choice)}</p>
               <button
                 {...tooltipProps(
@@ -2040,7 +2416,7 @@ export function CourtOfFoxesExperience() {
       {stage === "ending" ? (
         <section className="cof-ending-screen" aria-label="Ending reveal">
           <p className="cof-kicker">The Glass Holds Here</p>
-          <div className={`cof-ending-braid cof-ending-${choice ?? "kitsu"}`} aria-hidden="true">
+          <div className={`cof-ending-braid cof-ending-${choice ?? "both"}`} aria-hidden="true">
             <span />
             <span />
             <span />
@@ -2049,9 +2425,25 @@ export function CourtOfFoxesExperience() {
           <h2>{ending.title}</h2>
           <p>{ending.body}</p>
           <strong>{ending.thread}</strong>
+          <div className={`cof-ending-witness ${dominantWitnessThread ? `is-${dominantWitnessThread}` : ""}`}>
+            <span className="cof-ending-label">The Glass Remembers You As</span>
+            <strong>{witnessRecord.title}</strong>
+            <p>{witnessRecord.body}</p>
+            {witnessMarks.length ? (
+              <div className="cof-ending-witness-marks" aria-label="Witness marks recorded">
+                {witnessMarks.map((mark) => (
+                  <span key={`${mark.chapterNumber}-${mark.id}`} className={`is-${mark.thread}`}>
+                    {mark.label}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+          </div>
           <div className="cof-ending-actions">
             {joined ? (
-              <p className="cof-joined">Your name is recorded. The glass keeps nothing it was not given.</p>
+              <p className="cof-joined" role="status" aria-live="polite">
+                Your name is recorded. The glass keeps nothing it was not given.
+              </p>
             ) : (
               <button
                 {...tooltipProps("record-name", "Mark this ending as witnessed in this reading session.")}

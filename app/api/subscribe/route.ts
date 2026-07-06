@@ -7,10 +7,24 @@ export const runtime = "nodejs";
 
 type SubscribeRequest = {
   email?: unknown;
+  source?: unknown;
+  vision?: unknown;
+  deity?: unknown;
+  spirit?: unknown;
 };
 
 function getServerPrefix(apiKey: string) {
   return process.env.MAILCHIMP_SERVER_PREFIX || apiKey.split("-")[1];
+}
+
+function buildTags(body: SubscribeRequest) {
+  const tags = new Set(["Seer Circle"]);
+
+  if (body.source === "daily-vision") {
+    tags.add("Daily Vision");
+  }
+
+  return Array.from(tags);
 }
 
 export async function POST(request: Request) {
@@ -54,7 +68,7 @@ export async function POST(request: Request) {
     body: JSON.stringify({
       email_address: email,
       status_if_new: "subscribed",
-      tags: ["Seer Circle"],
+      tags: buildTags(body),
     }),
   });
 

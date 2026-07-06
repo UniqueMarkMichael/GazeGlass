@@ -12,8 +12,14 @@ const menuItems = [
   {
     label: "Observations",
     href: "/observations",
-    detail: "Read mortal lives and sacred incidents seen through the Glass.",
+    detail: "Witness mortal lives transformed by unseen cosmic forces.",
     action: "Open Observations",
+  },
+  {
+    label: "Sorting Glass",
+    href: "/the-glass-names-you",
+    detail: "Find the deity and fox spirit matched to you.",
+    action: "Open Sorting Glass",
   },
   {
     label: "A Court of Foxes",

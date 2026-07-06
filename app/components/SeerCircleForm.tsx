@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { playGlassSound } from "./glassSound";
+import { rememberSubscribedEmail } from "./subscriptionStorage";
 
 type FormState = "idle" | "loading" | "success" | "invalid" | "duplicate" | "error" | "unconfigured";
 
@@ -39,12 +40,13 @@ export function SeerCircleForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: normalizedEmail }),
+        body: JSON.stringify({ email: normalizedEmail, source: "seer-circle" }),
       });
 
       const result = (await response.json()) as { message?: string };
 
       if (response.ok) {
+        rememberSubscribedEmail(normalizedEmail);
         setSavedEmail(normalizedEmail);
         setEmail("");
         setFormState("success");
