@@ -6754,6 +6754,12 @@ dd {
   overflow: hidden;
 }
 
+@supports selector(html:has(.bsb-page)) {
+  html:has(.bsb-page) {
+    scroll-behavior: auto;
+  }
+}
+
 .bsb-hero,
 .bsb-chapter-hero {
   position: relative;
@@ -7324,6 +7330,10 @@ dd {
 
   .bsb-reading-head {
     flex-wrap: wrap;
+  }
+
+  .bsb-chapter-record {
+    scroll-margin-top: 260px;
   }
 
   .bsb-reading-head::before,
