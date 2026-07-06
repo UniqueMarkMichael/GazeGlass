@@ -3,6 +3,7 @@ import { FieldNote } from "./components/FieldNote";
 import { JsonLd } from "./components/JsonLd";
 import { GlassMenu } from "./components/GlassMenu";
 import { ReceiveVision } from "./components/ReceiveVision";
+import { ReturnToWhatFoundYou } from "./components/ReturnToWhatFoundYou";
 import { SeerCircleForm } from "./components/SeerCircleForm";
 import { TikTokTransmissions } from "./components/TikTokTransmissions";
 
@@ -211,6 +212,7 @@ export default function Home() {
           <p className="eyebrow">Gaze into the glass</p>
           <h1>Every mortal soul leaves a story behind.</h1>
           <p className="subhead">Start with one witnessed mortal. The Glass will show you what opens next.</p>
+          <ReturnToWhatFoundYou />
           <div className="hero-vow" aria-hidden="true">
             <span>Gods Watch.</span>
             <span>Mortals Pray.</span>
