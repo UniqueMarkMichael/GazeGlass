@@ -595,10 +595,7 @@ const baseChapters: Chapter[] = [
       "I feigned a yawn. “Many things are. I still meet them socially.”",
       "Marok stepped closer, but not close enough to touch. His hand hovered, then fell at his side. Good. He was learning. “Jem,” he said, very quietly. “No debt. No cover. No clever turn of phrase. Tell us what you need.” That was unfair. Decency should not be allowed to arrive after betrayal. It confused the architecture. I looked at the water. “If I fall, catch me.” Kitsu’s answer came immediately. “Yes.” Marok’s came softer. “Always.” I did not look at either of them. I touched the water.",
       "The glamour opened like an eye. The chamber disappeared. Noise struck me first. Not tavern noise. Not laughter or music. This noise was sharper, meaner, made of whispers and cages rattling and coins clinking against teeth. The air smelled of wet iron, burned sugar, cheap violets, and animal fear. I stood in a narrow alley roofed with torn red cloth. Lanterns swung overhead, each one holding a tiny flame shaped like a tail. Iron cages lined the walls. Inside them burned ribbons of spirit-light. Scarlet. Cobalt. Green. Gold. Magenta. My tail glowed in the nearest cage, curled on itself like a sleeping thing pretending not to be terrified.",
-      "Marok stepped closer, but not close enough to touch. His hand hovered, then fell at his side. Good. He was learning. “Jem,” he said, very quietly. “No debt. No cover. No clever turn of phrase. Tell us what you need.”",
-      "That was unfair. Decency should not be allowed to arrive after betrayal. It confused the architecture. I looked at the water. “If I fall, catch me.”",
-      "Kitsu’s answer came immediately. “Yes.”",
-      "Marok’s came softer. “Always.” I did not look at either of them. I touched the water.",
+      "I tried to reach for it. A hand caught my wrist. Not Kitsu’s. Not Marok’s. Silver fingers, cold as moonlit glass. The silver-tailed fox leaned close from behind a curtain of mirrors. In this vision they were almost human and not human at all, a face made of beautiful wrong angles, eyes pale with old amusement. Their mouth opened. “No foxes,” they whispered. Their breath smelled like extinguished candles. “No Judgment.” I yanked free. The alley shattered.",
       "I came back screaming. Not elegantly. Not prettily. With teeth. Marok caught my hand. Kitsu caught my waist. Rose light sparked between us, sharper this time. Green answered too fast. Gold wrapped around both and held. The braided thread burned for one breath, and the pain behind my spine loosened enough for me to drag air into my lungs. Neither male let go until I nodded. That mattered. I hated that it mattered.",
       "“I saw them,” I said.",
       "Kitsu’s voice was low. “The tails?”",
@@ -634,7 +631,7 @@ const baseChapters: Chapter[] = [
         "caption": "Silver fingers, cold as moonlit glass. “No foxes. No Judgment.”"
       },
       {
-        "after": 95,
+        "after": 92,
         "src": "/a-court-of-foxes/assets/ch5-door.png",
         "alt": "The three of them at the chamber door — heading into the city",
         "caption": "Marok had brought them into the night. Now he would lead them through its teeth."

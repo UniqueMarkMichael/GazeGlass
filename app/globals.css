@@ -1586,6 +1586,10 @@ a {
     padding: 16px;
   }
 
+  .cof-backdrop img {
+    transform: none;
+  }
+
   .cof-topbar {
     gap: 12px;
   }
@@ -9941,7 +9945,6 @@ form div {
   }
 }
 
-<<<<<<< HEAD
 body:has(.press-gallery-page) {
   background: #ede3cc;
   color: #1a1733;
@@ -10813,7 +10816,9 @@ body:has(.press-gallery-page)::before {
   .press-contact-card p,
   .press-empty-state {
     line-height: 1.45;
-=======
+  }
+}
+
 .glass-memory {
   width: min(392px, calc(100vw - 36px));
   max-height: min(620px, calc(100svh - 142px));
@@ -11009,6 +11014,5 @@ body:has(.press-gallery-page)::before {
 
   .glass-memory-trail strong {
     white-space: normal;
->>>>>>> 9d8c221630d9f86751d50d43cb23a52cb74a69a3
   }
 }
