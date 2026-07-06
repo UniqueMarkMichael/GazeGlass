@@ -28,7 +28,7 @@ const menuItems = [
     action: "Open A Court of Foxes",
   },
   {
-    label: "Prequel: Big Scale Betrayal",
+    label: "Big Scale Betrayal",
     href: "/big-scale-betrayal",
     detail: "Witness the mortal prequel before A Family of Mortals.",
     action: "Open Big Scale Betrayal",

@@ -10,7 +10,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
     "number": 1,
     "label": "Chapter 1",
-    "title": "Copper Bells and Crocodiles",
+    "title": "Chapter 1",
     "deck": "The guardian watches the cabbage stall before fate finds Heba.",
     "paragraphs": [
       "Copper bells lulled the fourteen-foot-long armored crocodile perched atop polished limestone stairs leading up to the royal library of Kemet - a forty-foot-tall pyramid made of sandstone. Wisps of white sandalwood incense, offerings to the gods, wafted out from the granite entranceway, forming loose loops above the royal guard's leathery head as their yellow eyes assessed sweaty travelers from distant lands scuttling in from shadowy alleyways like mice.",
@@ -62,7 +62,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
     "number": 2,
     "label": "Chapter 2",
-    "title": "The Sacred Scales",
+    "title": "Chapter 2",
     "deck": "A merchant's daughter tests her scales and discovers the cost of a stolen kiss.",
     "paragraphs": [
       "An hour had passed since the oracle and Fashad left the cabbage cart.",
@@ -110,7 +110,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
     "number": 3,
     "label": "Chapter 3",
-    "title": "A Useful Gift",
+    "title": "Chapter 3",
     "deck": "The royal guard arrives, and Heba's gift refuses to remain quiet.",
     "paragraphs": [
       "Clay pots and cabbages fell from the stall as the crocodiles thrashed the man from side to side. His toga, once as soft and purple as a sunrise, turned crimson as the marketplace filled with gasps, screams, and shrieks. Before Heba could move or speak, a whirlwind of sand rose from the center of the marketplace into the sky.",
@@ -208,7 +208,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
     "number": 4,
     "label": "Chapter 4",
-    "title": "The Palace Wakes",
+    "title": "Chapter 4",
     "deck": "The palace opens around Heba with splendor, danger, and impossible Heka.",
     "paragraphs": [
       "Heba winced at the bright, golden light when she opened her eyes. The merchant's daughter stared at a golden chandelier, her gaze shifting to the mural of gods framing the ceiling fixture. An amber-colored silk sleeve came into her vision, followed by a black hand adorned with golden tattoos: geometric seals, serpents, and the Eye of Horus. Heba turned her head and found the prince smiling at her. \"You're awake!\" the prince exclaimed.",
@@ -296,7 +296,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
     "number": 5,
     "label": "Chapter 5",
-    "title": "The Royal Court",
+    "title": "Chapter 5",
     "deck": "The royal family names Heba's place before she understands the price.",
     "paragraphs": [
       "The prince and princesses bickered on their thrones as the Pharaoh circled Heba.",
@@ -407,7 +407,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
     "number": 6,
     "label": "Chapter 6",
-    "title": "Chapter Six",
+    "title": "Chapter 6",
     "deck": "A royal sorcerer names the wound beneath Heba's grief, and the palace offers its first clue.",
     "paragraphs": [
       "The maids of the royal house pretended to sleep.",
@@ -747,7 +747,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
     "number": 7,
     "label": "Chapter 7",
-    "title": "Chapter Seven",
+    "title": "Chapter 7",
     "deck": "The kitchens keep singing, and the dead leave Heba's name in black sand.",
     "paragraphs": [
       "The palace kitchens never slept, but tonight they were pretending.",
@@ -853,7 +853,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
     "number": 8,
     "label": "Chapter 8",
-    "title": "Chapter Eight",
+    "title": "Chapter 8",
     "deck": "The hall of trials opens, and the palace begins counting down.",
     "paragraphs": [
       "Mata swept Heba's name off the threshold with a broom made of river reeds, and she did it the way a priest handles a body.",
@@ -945,7 +945,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
     "number": 9,
     "label": "Chapter 9",
-    "title": "Chapter Nine",
+    "title": "Chapter 9",
     "deck": "The palace lies in small ways before the countdown reaches the royal table.",
     "paragraphs": [
       "The palace had begun to lie about small things.",
@@ -1052,7 +1052,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
       "number": 10,
       "label": "Chapter 10",
-      "title": "Chapter Ten",
+      "title": "Chapter 10",
       "deck": "A rooftop almost lets Heba be seventeen before the mirror smiles back.",
       "paragraphs": [
           "The prince chose his moment like a pickpocket.",
@@ -1129,7 +1129,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
       "number": 11,
       "label": "Chapter 11",
-      "title": "Chapter Eleven",
+      "title": "Chapter 11",
       "deck": "The third trial offers Heba the life she wants, and the countdown reaches two.",
       "paragraphs": [
           "Nobody would say where the third trial was held.",
@@ -1223,7 +1223,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
       "number": 12,
       "label": "Chapter 12",
-      "title": "Chapter Twelve",
+      "title": "Chapter 12",
       "deck": "Match Day names Heba before the palace plants the book where it can hurt most.",
       "paragraphs": [
           "The Nile arrived drunk.",
@@ -1324,7 +1324,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
       "number": 13,
       "label": "Chapter 13",
-      "title": "Chapter Thirteen",
+      "title": "Chapter 13",
       "deck": "Heba brings Nahara the faceless doll, and the betrayal finally tells the truth.",
       "paragraphs": [
           "Heba walked to the cells with a faceless doll under her arm.",
@@ -1415,7 +1415,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
       "number": 14,
       "label": "Chapter 14",
-      "title": "Chapter Fourteen",
+      "title": "Chapter 14",
       "deck": "The royal family performs perfection on the river stairs while the book shows what waits beneath.",
       "paragraphs": [
           "The palace woke up lying.",
@@ -1518,7 +1518,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
       "number": 15,
       "label": "Chapter 15",
-      "title": "Chapter Fifteen",
+      "title": "Chapter 15",
       "deck": "Heba brings the family to the scale, and the palace finally kneels before the doors it forgot.",
       "paragraphs": [
           "The sun rose early that morning. It did not want to miss the weighing.",
@@ -1606,7 +1606,7 @@ export const bigScaleChapters: BigScaleChapter[] = [
   {
       "number": 16,
       "label": "Chapter 16",
-      "title": "Chapter Sixteen",
+      "title": "Chapter 16",
       "deck": "The dead enter first, the scale finishes its account, and the lie that made history begins.",
       "paragraphs": [
           "The dead came first.",
