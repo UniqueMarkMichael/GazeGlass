@@ -218,7 +218,7 @@ export default function BigScaleBetrayalPage() {
         <img src={`${assetBase}/hero.png`} alt="" />
         <div>
           <p className="eyebrow">Reader Record</p>
-          <h2>Chapters One Through Nine</h2>
+          <h2>Chapters One Through Fourteen</h2>
           <p>Look through the glass, mortal. The guardian is watching.</p>
         </div>
       </section>
@@ -252,9 +252,9 @@ export default function BigScaleBetrayalPage() {
         ))}
       </section>
 
-      <section className="bsb-threshold" aria-label="End of chapter nine">
-        <p className="eyebrow">End of Chapter Nine</p>
-        <h2>It was seated at the table.</h2>
+      <section className="bsb-threshold" aria-label="End of chapter fourteen">
+        <p className="eyebrow">End of Chapter Fourteen</p>
+        <h2>The linen against Heba's ribs began to beat, and did not stop until morning.</h2>
         <p>There are many lives yet to witness. The next chapter is being recorded.</p>
         <a href="#big-scale-betrayal">Return to the steps</a>
       </section>

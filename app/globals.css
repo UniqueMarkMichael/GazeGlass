@@ -2115,11 +2115,11 @@ a {
 
 .glass-scroll-omen {
   position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 92px);
-  right: clamp(18px, 3vw, 38px);
+  top: calc(env(safe-area-inset-top, 0px) + clamp(164px, 13vw, 208px));
+  right: clamp(22px, 6vw, 92px);
   display: grid;
   gap: 4px;
-  width: min(270px, calc(100vw - 36px));
+  width: min(300px, calc(100vw - 44px));
   padding: 12px 14px;
   border: 1px solid rgba(201, 162, 39, 0.24);
   color: rgba(237, 227, 204, 0.82);
@@ -2174,6 +2174,258 @@ body.daily-vision-open .glass-surface-scroll,
 html.observation-mode-active .glass-surface-scroll,
 html.cof-reader-reading-active .glass-surface-scroll,
 html.cof-reader-choice-active .glass-surface-scroll {
+  display: none;
+}
+
+html[data-glass-realm] {
+  --realm-accent: rgba(201, 162, 39, 0.32);
+  --realm-secondary: rgba(95, 183, 196, 0.2);
+  --realm-warmth: rgba(216, 162, 106, 0.18);
+  --realm-line: rgba(255, 244, 220, 0.24);
+  --realm-grid: rgba(237, 227, 204, 0.026);
+  --realm-opacity: 0.32;
+  --realm-mark-opacity: 0.28;
+  --realm-mark-size: clamp(130px, 20vw, 270px);
+  --realm-mark-radius: 50%;
+  --realm-tempo: 28s;
+  --realm-trace-tempo: 9s;
+  --realm-trace-tilt: -7deg;
+  --realm-trace-y: 44%;
+}
+
+html[data-glass-realm="god"] {
+  --realm-accent: rgba(201, 162, 39, 0.42);
+  --realm-secondary: rgba(255, 244, 220, 0.2);
+  --realm-warmth: rgba(224, 160, 48, 0.2);
+  --realm-line: rgba(255, 244, 220, 0.32);
+  --realm-grid: rgba(201, 162, 39, 0.035);
+  --realm-opacity: 0.44;
+  --realm-mark-opacity: 0.38;
+  --realm-mark-size: clamp(180px, 26vw, 360px);
+  --realm-tempo: 38s;
+  --realm-trace-tempo: 13s;
+  --realm-trace-tilt: -3deg;
+  --realm-trace-y: 31%;
+}
+
+html[data-glass-realm="spirit"] {
+  --realm-accent: rgba(95, 183, 196, 0.34);
+  --realm-secondary: rgba(216, 162, 106, 0.24);
+  --realm-warmth: rgba(201, 162, 39, 0.18);
+  --realm-line: rgba(191, 232, 222, 0.34);
+  --realm-grid: rgba(95, 183, 196, 0.032);
+  --realm-opacity: 0.4;
+  --realm-mark-opacity: 0.26;
+  --realm-mark-size: clamp(112px, 15vw, 210px);
+  --realm-tempo: 18s;
+  --realm-trace-tempo: 5.8s;
+  --realm-trace-tilt: -13deg;
+  --realm-trace-y: 58%;
+}
+
+html[data-glass-realm="mortal"] {
+  --realm-accent: rgba(216, 162, 106, 0.24);
+  --realm-secondary: rgba(237, 227, 204, 0.18);
+  --realm-warmth: rgba(217, 130, 146, 0.18);
+  --realm-line: rgba(237, 227, 204, 0.24);
+  --realm-grid: rgba(216, 162, 106, 0.026);
+  --realm-opacity: 0.28;
+  --realm-mark-opacity: 0.2;
+  --realm-mark-size: clamp(120px, 17vw, 230px);
+  --realm-tempo: 34s;
+  --realm-trace-tempo: 11s;
+  --realm-trace-tilt: 4deg;
+  --realm-trace-y: 62%;
+}
+
+html[data-glass-realm="observation"] {
+  --realm-accent: rgba(201, 162, 39, 0.32);
+  --realm-secondary: rgba(237, 227, 204, 0.18);
+  --realm-warmth: rgba(217, 130, 146, 0.14);
+  --realm-line: rgba(255, 244, 220, 0.25);
+  --realm-grid: rgba(201, 162, 39, 0.03);
+  --realm-opacity: 0.32;
+  --realm-mark-opacity: 0.26;
+  --realm-tempo: 26s;
+  --realm-trace-y: 48%;
+}
+
+html[data-glass-realm="seer"] {
+  --realm-accent: rgba(191, 232, 222, 0.3);
+  --realm-secondary: rgba(181, 23, 158, 0.18);
+  --realm-warmth: rgba(201, 162, 39, 0.18);
+  --realm-line: rgba(255, 244, 220, 0.27);
+  --realm-grid: rgba(191, 232, 222, 0.03);
+  --realm-opacity: 0.36;
+  --realm-mark-opacity: 0.32;
+  --realm-tempo: 24s;
+  --realm-trace-tempo: 8s;
+  --realm-trace-tilt: 8deg;
+  --realm-trace-y: 38%;
+}
+
+html[data-glass-realm="codex"] {
+  --realm-accent: rgba(201, 162, 39, 0.34);
+  --realm-secondary: rgba(95, 183, 196, 0.18);
+  --realm-warmth: rgba(255, 244, 220, 0.12);
+  --realm-line: rgba(201, 162, 39, 0.36);
+  --realm-grid: rgba(255, 244, 220, 0.038);
+  --realm-opacity: 0.34;
+  --realm-mark-opacity: 0.28;
+  --realm-mark-size: clamp(118px, 16vw, 230px);
+  --realm-mark-radius: 8px;
+  --realm-tempo: 30s;
+  --realm-trace-tempo: 10s;
+  --realm-trace-tilt: 0deg;
+  --realm-trace-y: 42%;
+}
+
+html[data-glass-realm="court"] {
+  --realm-accent: rgba(217, 130, 146, 0.28);
+  --realm-secondary: rgba(95, 183, 196, 0.2);
+  --realm-warmth: rgba(201, 162, 39, 0.24);
+  --realm-line: rgba(255, 244, 220, 0.3);
+  --realm-grid: rgba(217, 130, 146, 0.026);
+  --realm-opacity: 0.34;
+  --realm-mark-opacity: 0.24;
+  --realm-tempo: 22s;
+  --realm-trace-tempo: 7s;
+  --realm-trace-tilt: -9deg;
+  --realm-trace-y: 50%;
+}
+
+.realm-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: var(--realm-opacity);
+  mix-blend-mode: screen;
+  contain: paint;
+}
+
+.realm-atmosphere span {
+  position: absolute;
+  pointer-events: none;
+}
+
+.realm-atmosphere-field {
+  inset: -18%;
+  background:
+    linear-gradient(112deg, transparent 0 34%, var(--realm-secondary) 46%, transparent 58% 100%),
+    conic-gradient(from 128deg at var(--realm-pointer-x, 52%) var(--realm-pointer-y, 36%), transparent 0 20%, var(--realm-accent) 27%, transparent 34% 58%, var(--realm-warmth) 66%, transparent 75% 100%),
+    repeating-linear-gradient(90deg, transparent 0 55px, var(--realm-grid) 56px 57px),
+    repeating-linear-gradient(0deg, transparent 0 55px, var(--realm-grid) 56px 57px);
+  opacity: 0.82;
+  transform: translate3d(-1.5%, -1%, 0) rotate(-1.2deg) scale(1.03);
+  animation: realmFieldDrift var(--realm-tempo) ease-in-out infinite alternate;
+}
+
+.realm-atmosphere-mark {
+  top: clamp(84px, 16vh, 170px);
+  right: clamp(18px, 8vw, 150px);
+  width: var(--realm-mark-size);
+  aspect-ratio: 1;
+  border: 1px solid var(--realm-line);
+  border-radius: var(--realm-mark-radius);
+  background:
+    conic-gradient(from 18deg, transparent 0 18%, var(--realm-line) 19% 20%, transparent 21% 47%, var(--realm-secondary) 48% 49%, transparent 50% 100%),
+    repeating-radial-gradient(circle, transparent 0 28px, rgba(255, 244, 220, 0.055) 29px 30px);
+  opacity: var(--realm-mark-opacity);
+  transform: translate3d(0, 0, 0) rotate(6deg);
+  animation: realmMarkBreathe calc(var(--realm-tempo) * 0.78) ease-in-out infinite alternate;
+}
+
+.realm-atmosphere-trace {
+  left: -18vw;
+  top: var(--realm-trace-y);
+  width: 58vw;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--realm-line), var(--realm-secondary), transparent);
+  box-shadow:
+    0 0 18px var(--realm-accent),
+    0 0 42px var(--realm-secondary);
+  opacity: 0;
+  transform: rotate(var(--realm-trace-tilt));
+  animation: realmTraceCross var(--realm-trace-tempo) ease-in-out infinite;
+}
+
+html[data-glass-realm="codex"] .realm-atmosphere-field {
+  background:
+    linear-gradient(90deg, transparent 0 49.7%, var(--realm-line) 50%, transparent 50.3% 100%),
+    linear-gradient(0deg, transparent 0 49.7%, var(--realm-secondary) 50%, transparent 50.3% 100%),
+    repeating-linear-gradient(90deg, transparent 0 43px, var(--realm-grid) 44px 45px),
+    repeating-linear-gradient(0deg, transparent 0 43px, var(--realm-grid) 44px 45px);
+}
+
+html[data-glass-realm="spirit"] .realm-atmosphere-mark {
+  border-radius: 44% 56% 48% 52%;
+}
+
+html[data-glass-realm="god"] .god-record:hover .god-plate,
+html[data-glass-realm="god"] .lineage:hover figure {
+  border-color: rgba(255, 244, 220, 0.42);
+  box-shadow:
+    0 34px 110px rgba(4, 3, 12, 0.48),
+    0 0 64px rgba(201, 162, 39, 0.18),
+    inset 0 0 0 1px rgba(255, 244, 220, 0.08);
+}
+
+html[data-glass-realm="spirit"] .spirit-record:hover figure,
+html[data-glass-realm="spirit"] .court-promo:hover {
+  border-color: rgba(191, 232, 222, 0.42);
+  box-shadow:
+    0 30px 100px rgba(4, 3, 12, 0.44),
+    0 0 46px rgba(95, 183, 196, 0.15),
+    inset 0 0 0 1px rgba(255, 244, 220, 0.06);
+}
+
+html[data-glass-realm="mortal"] .observation:hover .observation-portrait,
+html[data-glass-realm="mortal"] .mortal-observation:hover figure {
+  border-color: rgba(237, 227, 204, 0.36);
+  box-shadow:
+    0 30px 96px rgba(4, 3, 12, 0.42),
+    0 0 48px rgba(216, 162, 106, 0.13),
+    inset 0 0 0 1px rgba(255, 244, 220, 0.055);
+}
+
+html[data-glass-realm="observation"] .observation-start-mirror:hover,
+html[data-glass-realm="observation"] .mortal-observation:hover figure {
+  filter: saturate(1.04) contrast(1.04);
+  box-shadow:
+    0 32px 96px rgba(4, 3, 12, 0.42),
+    0 0 46px rgba(201, 162, 39, 0.13);
+}
+
+html[data-glass-realm="seer"] .seer-plate:hover,
+html[data-glass-realm="seer"] .seer-prologue:hover {
+  filter: saturate(1.04) brightness(1.02);
+  text-shadow: 0 0 26px rgba(191, 232, 222, 0.11);
+}
+
+html[data-glass-realm="codex"] .codex-law:hover .codex-law-sigil {
+  border-color: rgba(201, 162, 39, 0.42);
+  box-shadow:
+    0 30px 112px rgba(4, 3, 12, 0.5),
+    0 0 0 1px rgba(95, 183, 196, 0.12),
+    0 0 54px rgba(201, 162, 39, 0.11);
+}
+
+html[data-glass-realm="court"] .cof-cover-art:hover,
+html[data-glass-realm="court"] .cof-reader:hover,
+html[data-glass-realm="court"] .cof-choice-screen:hover {
+  box-shadow:
+    0 34px 110px rgba(4, 3, 12, 0.5),
+    0 0 60px rgba(217, 130, 146, 0.12),
+    inset 0 0 0 1px rgba(255, 244, 220, 0.05);
+}
+
+body.menu-open .realm-atmosphere,
+body.daily-vision-open .realm-atmosphere,
+html.observation-mode-active .realm-atmosphere,
+html.cof-reader-reading-active .realm-atmosphere,
+html.cof-reader-choice-active .realm-atmosphere {
   display: none;
 }
 
@@ -7284,6 +7536,47 @@ dd {
   }
 }
 
+@keyframes realmFieldDrift {
+  0% {
+    opacity: 0.58;
+    transform: translate3d(-1.5%, -1%, 0) rotate(-1.2deg) scale(1.03);
+  }
+  100% {
+    opacity: 0.86;
+    transform: translate3d(1.3%, 1%, 0) rotate(1.2deg) scale(1.06);
+  }
+}
+
+@keyframes realmMarkBreathe {
+  0% {
+    opacity: calc(var(--realm-mark-opacity) * 0.56);
+    filter: blur(0.5px);
+    transform: translate3d(0, 0, 0) rotate(-4deg) scale(0.94);
+  }
+  100% {
+    opacity: var(--realm-mark-opacity);
+    filter: blur(0);
+    transform: translate3d(-2%, 1.5%, 0) rotate(8deg) scale(1.03);
+  }
+}
+
+@keyframes realmTraceCross {
+  0%,
+  18%,
+  100% {
+    opacity: 0;
+    transform: translate3d(-24vw, 0, 0) rotate(var(--realm-trace-tilt));
+  }
+  42%,
+  54% {
+    opacity: 0.62;
+  }
+  78% {
+    opacity: 0;
+    transform: translate3d(132vw, -18px, 0) rotate(var(--realm-trace-tilt));
+  }
+}
+
 @keyframes riteCurtain {
   0%,
   84% {
@@ -12101,7 +12394,7 @@ body:has(.press-gallery-page)::before {
 
 @media (max-width: 820px) {
   .glass-scroll-omen {
-    top: calc(env(safe-area-inset-top, 0px) + 76px);
+    top: calc(env(safe-area-inset-top, 0px) + 116px);
     right: 18px;
     width: min(250px, calc(100vw - 36px));
   }
