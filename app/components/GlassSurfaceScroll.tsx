@@ -8,7 +8,7 @@ import {
   type GlassScrollOmen,
 } from "./glassSignals";
 
-const SECTION_SELECTOR = "section[id], article[id], main > div[id], main > header[id]";
+const SECTION_SELECTOR = "main section, main article[id], main > div[id], main > header[id]";
 const OMEN_VISIBLE_MS = 3200;
 
 function titleFromId(id: string) {
@@ -56,6 +56,10 @@ function findCurrentSection() {
   }
 
   return best?.section ?? null;
+}
+
+function getSectionKey(section: HTMLElement) {
+  return section.id || getSectionLabel(section).toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }
 
 function getOmenMessage(pathname: string, label: string, progress: number) {
@@ -145,21 +149,24 @@ export function GlassSurfaceScroll() {
       }
 
       const currentSection = findCurrentSection();
-      if (!currentSection?.id) return;
+      if (!currentSection) return;
+
+      const sectionKey = getSectionKey(currentSection);
+      if (!sectionKey) return;
 
       if (!activeSectionRef.current) {
-        activeSectionRef.current = currentSection.id;
+        activeSectionRef.current = sectionKey;
         return;
       }
 
-      if (currentSection.id !== activeSectionRef.current) {
-        activeSectionRef.current = currentSection.id;
+      if (sectionKey !== activeSectionRef.current) {
+        activeSectionRef.current = sectionKey;
         if (!hasScrolledRef.current) return;
 
         const label = getSectionLabel(currentSection);
         const nextOmen: GlassScrollOmen = {
-          id: `${pathname}-${currentSection.id}-${Date.now()}`,
-          href: `${pathname}#${currentSection.id}`,
+          id: `${pathname}-${sectionKey}-${Date.now()}`,
+          href: currentSection.id ? `${pathname}#${currentSection.id}` : pathname,
           label,
           message: getOmenMessage(pathname, label, progress),
           progress: Math.round(progress * 100),

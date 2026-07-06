@@ -6601,6 +6601,53 @@ dd {
   padding-top: clamp(56px, 8vh, 90px);
 }
 
+.bsb-reader-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 0 auto clamp(54px, 9vh, 86px);
+}
+
+.bsb-reader-nav a {
+  display: grid;
+  gap: 8px;
+  min-height: 88px;
+  padding: 14px;
+  border: 1px solid rgba(237, 227, 204, 0.12);
+  border-top-color: rgba(201, 162, 39, 0.42);
+  border-radius: 8px;
+  color: rgba(237, 227, 204, 0.72);
+  background: rgba(10, 8, 24, 0.42);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.15;
+}
+
+.bsb-reader-nav a:hover,
+.bsb-reader-nav a:focus-visible {
+  border-color: rgba(201, 162, 39, 0.68);
+  color: var(--pearl);
+  background: rgba(201, 162, 39, 0.08);
+}
+
+.bsb-reader-nav span {
+  color: var(--gold);
+  font-family: "Mulish", system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.bsb-chapter-record {
+  scroll-margin-top: 120px;
+}
+
+.bsb-chapter-record + .bsb-chapter-record {
+  margin-top: clamp(82px, 14vh, 140px);
+  padding-top: clamp(58px, 10vh, 96px);
+  border-top: 1px solid rgba(237, 227, 204, 0.12);
+}
+
 .bsb-reading-head {
   display: flex;
   justify-content: center;
@@ -6622,6 +6669,17 @@ dd {
   font-size: 0.72rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
+}
+
+.bsb-chapter-deck {
+  width: min(640px, 100%);
+  margin: 18px auto 0;
+  color: rgba(237, 227, 204, 0.66);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: clamp(1.1rem, 1.8vw, 1.32rem);
+  font-style: italic;
+  line-height: 1.45;
+  text-align: center;
 }
 
 .bsb-drop::first-letter {
@@ -6740,6 +6798,10 @@ dd {
     grid-template-columns: 1fr;
   }
 
+  .bsb-reader-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .bsb-synopsis-lens {
     min-height: min(118vw, 500px);
   }
@@ -6765,6 +6827,14 @@ dd {
 
   .bsb-hero-actions a {
     width: 100%;
+  }
+
+  .bsb-reader-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .bsb-reader-nav a {
+    min-height: auto;
   }
 
   .bsb-synopsis,

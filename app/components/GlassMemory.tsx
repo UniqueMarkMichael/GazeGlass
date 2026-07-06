@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { playGlassSound } from "./glassSound";
 import {
@@ -541,9 +541,9 @@ function useRememberedSignals() {
     witnessSummary: null,
   });
 
-  function refreshSignals() {
+  const refreshSignals = useCallback(() => {
     setSignals(readRememberedSignals());
-  }
+  }, []);
 
   useEffect(() => {
     function refreshFromStorage(event: StorageEvent) {
@@ -578,7 +578,7 @@ function useRememberedSignals() {
       window.removeEventListener("focus", refreshSignals);
       window.removeEventListener("storage", refreshFromStorage);
     };
-  }, []);
+  }, [refreshSignals]);
 
   return { refreshSignals, signals };
 }

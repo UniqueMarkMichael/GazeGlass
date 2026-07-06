@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { GlassMenu } from "../components/GlassMenu";
 import { JsonLd } from "../components/JsonLd";
+import { bigScaleChapters } from "./chapters";
 
 const assetBase = "/big-scale-betrayal/assets";
 
@@ -57,61 +58,16 @@ const synopsisBeats = [
   },
 ];
 
-const chapterParagraphs = [
-  "Copper bells lulled the fourteen-foot-long armored crocodile perched atop polished limestone stairs leading up to the royal library of Kemet, a forty-foot-tall pyramid made of sandstone.",
-  "Wisps of white sandalwood incense, offerings to the gods, wafted out from the granite entranceway, forming loose loops above the royal guard's leathery head as their yellow eyes assessed sweaty travelers from distant lands scuttling in from shadowy alleyways like mice.",
-  "Heba, daughter of a vegetable merchant, lifted a rubbery cabbage from a barrel made of woven dried grass and nodded to her mother, Amunet, a plump woman with an even larger headdress fashioned from goose feathers. Unlike her mother, Heba did not obsess over her beauty. She was content with her beige gown, long black braids, and unpainted dark skin.",
-  "\"Look! Do you see what Matu's daughter looks like?\" Amunet asked, raising her tattooed finger swiftly. Heba's head remained still, but her eyes shifted to the right of the wooden stall she clasped with a tight grip.",
-  "\"Nanu does not crush gemstones every morning for customers. She applies a shimmer above her eyes to gain the favor of Mekhab. She hopes he will be her first kiss,\" Heba replied.",
-  "\"The doctor's son?\" Amunet asked. \"He's educated and handsome. You should kiss him!\"",
-  "\"My first kiss will come after we've paid our debts. And I have no desire to think otherwise until that day comes,\" Heba said sternly.",
-  "\"What if royalty courted you?\"",
-  "\"I would - I would refuse.\"",
-  "Amunet turned away from her daughter, hugged herself, and kissed the air loudly.",
-  "\"Oh! Son of my king! Please kiss me! But I'll never accept your wealth or a crown!\"",
-  "Heba's face became as hot as the scarlet sun above. \"Love doesn't fix everything. Love is - a - burden,\" she added.",
-  "Amunet winked. Heba pulled her shoulders away from her ears. Then she furrowed her brows. \"I have weighed my options.\"",
-  "Just then, a woman with hair as fair as moonlight, barely taller than the wooden stand, approached the cabbage cart. The crone adjusted her teal dress and held her wrinkly hand toward Amunet and Heba. A slab of jagged amethyst sparkled lavender, lilac, and white as it sipped sunlight.",
-  "\"The spirits say otherwise,\" the crone warned, with a mischievous smile.",
-  "Heba's lips parted at the sight of her milky eyes.",
-  "\"They used to be as green as emeralds before -\" she started to say.",
-  "\"I didn't mean to stare!\" Heba interrupted. \"And... what spirits?\"",
-  "\"Are you an oracle?\" Amunet asked, just as Heba reached for the amethyst.",
-  "A heartbeat later, a child no older than eight ran through the market. He dashed between people, pickpocketing them as street performers created melodies with wooden flutes. Before Heba could touch the woman's stone, a monstrous roar grabbed her ears.",
-  "The young thief squeezed between two women, then dove under the cabbage cart. He crawled quickly, using his elbows and forearms to propel himself forward.",
-  "\"When will that boy learn?\" Amunet asked, groaning. She smiled at Heba before covering the cart with a burlap sheet. \"That boy is going to get himself killed.\"",
-  "\"Have you seen a boy come through here?\" the enraged man asked.",
-  "\"You'll have to be more specific,\" Heba replied, batting her long lashes.",
-  "Blood rushed to the man's face. He yelled profanities before reaching for the burlap covering. When the oracle grabbed his wrist, Amunet narrowed her eyes and smiled.",
-  "\"You come here when we are closed and reach for our crops?\" Heba growled.",
-  "\"We should report you to the guards!\" Amunet cried.",
-  "The man broke free from the crone's grip, grunted, and spat on the ground before marching toward a fruit stall down the road. Seconds later, Heba knelt and sighed.",
-  "\"Why did you take his money?\" Heba demanded.",
-  "\"He has too much of it!\" the boy answered.",
-  "Heba chuckled and motioned for the thief to come out.",
-  "\"You need to worry about the royal guard,\" Heba said with a smile. \"Those crocodiles will eat you for lunch if you continue stealing.\"",
-  "Amunet plucked a goose feather from her headpiece and extended it toward the woman with the amethyst as Heba offered her hand to the boy.",
-  "\"What is your name... oracle?\" Amunet asked.",
-  "\"I am called Namoot... lady of the valley,\" the oracle replied.",
-  "At her name, Heba shifted her gaze to the oracle and forgot her grip; the boy fell back onto the ground and groaned.",
-  "\"Oh! Sorry, Fashad,\" Heba apologized. \"Come. Let's have some soup.\"",
-  "Namoot took the feather and threw it above her head. A gust of hot wind lifted it. The feather circled the sun five times before gliding back to Amunet.",
-  "\"Five!\" Namoot said.",
-  "Heba swatted dirt and dust off the boy's face, dipped an orange rag into a small clay pot filled with cool water, and narrowed her eyes.",
-  "\"Do you think I'm a bad person?\" Fashad asked.",
-  "Heba faced the boy and stroked his cheek. \"I cannot judge you.\"",
-  "\"Why?\" the boy asked, an eyebrow raised.",
-  "\"I'm only a merchant's daughter,\" Heba admitted, smiling. \"Destined to sell cabbage.\"",
-];
-
 const chapterMedia = [
   {
+    chapterNumber: 1,
     after: 2,
     type: "video",
     src: `${assetBase}/chapter1.mp4`,
     caption: "The armored guardian of the royal library of Kemet, bells at its throat, incense at its brow.",
   },
   {
+    chapterNumber: 1,
     after: 3,
     type: "image",
     src: `${assetBase}/heba-intro.png`,
@@ -119,6 +75,7 @@ const chapterMedia = [
     caption: "Heba, daughter of a vegetable merchant, before the gods finished naming her fate.",
   },
   {
+    chapterNumber: 1,
     after: 20,
     type: "image",
     src: `${assetBase}/market.png`,
@@ -126,12 +83,14 @@ const chapterMedia = [
     caption: "The market of Kemet, the hour before the chase.",
   },
   {
+    chapterNumber: 1,
     after: 33,
     type: "video",
     src: `${assetBase}/feather.mp4`,
     caption: "A feather for the oracle, a hand for the boy.",
   },
   {
+    chapterNumber: 1,
     after: 44,
     type: "video",
     src: `${assetBase}/chapter1-end.mp4`,
@@ -154,8 +113,8 @@ const bigScaleBetrayalData = {
   image: `https://www.gazeglass.com${assetBase}/cover.png`,
 };
 
-function ChapterMedia({ after }: { after: number }) {
-  const item = chapterMedia.find((entry) => entry.after === after);
+function ChapterMedia({ after, chapterNumber }: { after: number; chapterNumber: number }) {
+  const item = chapterMedia.find((entry) => entry.chapterNumber === chapterNumber && entry.after === after);
 
   if (!item) {
     return null;
@@ -196,7 +155,7 @@ export default function BigScaleBetrayalPage() {
           <p>The scale is set. Let the betrayal begin.</p>
           <div className="bsb-hero-actions" aria-label="Big Scale Betrayal sections">
             <a href="#bsb-letter">Open the letter</a>
-            <a href="#bsb-chapter">Begin Chapter One</a>
+            <a href="#bsb-chapters">Begin Chapter One</a>
           </div>
         </div>
       </section>
@@ -255,37 +214,48 @@ export default function BigScaleBetrayalPage() {
         </div>
       </section>
 
-      <section className="bsb-chapter-hero" id="bsb-chapter">
+      <section className="bsb-chapter-hero" id="bsb-chapters">
         <img src={`${assetBase}/hero.png`} alt="" />
         <div>
-          <p className="eyebrow">Chapter One</p>
-          <h2>Copper Bells and Crocodiles</h2>
+          <p className="eyebrow">Reader Record</p>
+          <h2>Chapters One Through Nine</h2>
           <p>Look through the glass, mortal. The guardian is watching.</p>
         </div>
       </section>
 
-      <section className="bsb-reading" aria-label="Chapter One reading">
-        <div className="bsb-reading-head">
-          <span>01</span>
-          <h2>The Guardian on the Steps</h2>
-        </div>
-        <article className="bsb-prose">
-          {chapterParagraphs.map((paragraph, index) => (
-            <div key={`${index}-${paragraph.slice(0, 20)}`}>
-              <p className={index === 0 ? "bsb-drop" : undefined}>{paragraph}</p>
-              <ChapterMedia after={index + 1} />
-              {index === 11 ? (
-                <blockquote>"Your inability to weigh your options is what burdens you, child."</blockquote>
-              ) : null}
-            </div>
+      <section className="bsb-reading" aria-label="Big Scale Betrayal reader">
+        <nav className="bsb-reader-nav" aria-label="Big Scale Betrayal chapters">
+          {bigScaleChapters.map((chapter) => (
+            <a href={`#chapter-${chapter.number}`} key={chapter.number}>
+              <span>{String(chapter.number).padStart(2, "0")}</span>
+              {chapter.title}
+            </a>
           ))}
-        </article>
+        </nav>
+
+        {bigScaleChapters.map((chapter) => (
+          <article className="bsb-chapter-record" id={`chapter-${chapter.number}`} key={chapter.number}>
+            <div className="bsb-reading-head">
+              <span>{String(chapter.number).padStart(2, "0")}</span>
+              <h2>{chapter.title}</h2>
+            </div>
+            <p className="bsb-chapter-deck">{chapter.deck}</p>
+            <div className="bsb-prose">
+              {chapter.paragraphs.map((paragraph, index) => (
+                <div key={`${chapter.number}-${index}-${paragraph.slice(0, 20)}`}>
+                  <p className={index === 0 ? "bsb-drop" : undefined}>{paragraph}</p>
+                  <ChapterMedia after={index + 1} chapterNumber={chapter.number} />
+                </div>
+              ))}
+            </div>
+          </article>
+        ))}
       </section>
 
-      <section className="bsb-threshold" aria-label="End of chapter one">
-        <p className="eyebrow">End of Chapter One</p>
-        <h2>Chapter Two: The Library Remembers</h2>
-        <p>There are many lives yet to witness. The next is being recorded.</p>
+      <section className="bsb-threshold" aria-label="End of chapter nine">
+        <p className="eyebrow">End of Chapter Nine</p>
+        <h2>It was seated at the table.</h2>
+        <p>There are many lives yet to witness. The next chapter is being recorded.</p>
         <a href="#big-scale-betrayal">Return to the steps</a>
       </section>
 
