@@ -5,6 +5,7 @@ import { GlassMenu } from "./components/GlassMenu";
 import { ReceiveVision } from "./components/ReceiveVision";
 import { SeerCircleForm } from "./components/SeerCircleForm";
 import { TikTokTransmissions } from "./components/TikTokTransmissions";
+import { OpeningRite } from "./components/OpeningRite";
 
 export const metadata: Metadata = {
   title: "Gaze Glass | Fantasy Stories of Gods, Spirits, and Mortals",
@@ -166,11 +167,7 @@ export default function Home() {
         <GlassMenu />
       </header>
 
-      <div className="opening-rite" aria-hidden="true">
-        <span>Behold.</span>
-        <span>The glass wakes.</span>
-        <span>A soul appears.</span>
-      </div>
+      <OpeningRite />
 
       <aside className="chapter-rail" aria-label="Observatory chapters">
         {chapters.map((chapter) => (

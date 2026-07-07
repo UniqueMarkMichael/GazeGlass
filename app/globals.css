@@ -2736,11 +2736,23 @@ body.daily-vision-open {
   z-index: 30;
   display: grid;
   place-items: center;
-  pointer-events: none;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  color: inherit;
   background:
     radial-gradient(circle at 50% 50%, rgba(201, 162, 39, 0.18), transparent 22rem),
     rgba(7, 6, 18, 0.98);
   animation: riteCurtain 4200ms ease both;
+  cursor: pointer;
+  letter-spacing: 0;
+  text-transform: none;
+  touch-action: manipulation;
+}
+
+.opening-rite:focus-visible {
+  outline: 1px solid rgba(201, 162, 39, 0.82);
+  outline-offset: -18px;
 }
 
 .opening-rite span {
