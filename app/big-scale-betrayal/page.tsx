@@ -140,6 +140,21 @@ function ChapterMedia({ after, chapterNumber }: { after: number; chapterNumber: 
   );
 }
 
+function getProseClassName(index: number, paragraph: string) {
+  const classNames: string[] = [];
+  const trimmed = paragraph.trim();
+
+  if (index === 0) {
+    classNames.push("bsb-drop");
+  }
+
+  if (index > 0 && trimmed.length <= 46 && !trimmed.includes("\"")) {
+    classNames.push("bsb-prose-beat");
+  }
+
+  return classNames.length ? classNames.join(" ") : undefined;
+}
+
 export default function BigScaleBetrayalPage() {
   return (
     <main className="bsb-page">
@@ -238,23 +253,34 @@ export default function BigScaleBetrayalPage() {
           ))}
         </nav>
 
-        {bigScaleChapters.map((chapter) => (
-          <article className="bsb-chapter-record" id={`chapter-${chapter.number}`} key={chapter.number}>
-            <div className="bsb-reading-head">
-              <span>{String(chapter.number).padStart(2, "0")}</span>
-              <h2>{chapter.title}</h2>
-            </div>
-            <p className="bsb-chapter-deck">{chapter.deck}</p>
-            <div className="bsb-prose">
-              {chapter.paragraphs.map((paragraph, index) => (
-                <div key={`${chapter.number}-${index}-${paragraph.slice(0, 20)}`}>
-                  <p className={index === 0 ? "bsb-drop" : undefined}>{paragraph}</p>
-                  <ChapterMedia after={index + 1} chapterNumber={chapter.number} />
+        <div className="bsb-chapter-stack">
+          {bigScaleChapters.map((chapter) => {
+            const chapterTitleId = `chapter-${chapter.number}-title`;
+
+            return (
+              <article
+                className="bsb-chapter-record"
+                id={`chapter-${chapter.number}`}
+                key={chapter.number}
+                aria-labelledby={chapterTitleId}
+              >
+                <div className="bsb-reading-head">
+                  <span>{String(chapter.number).padStart(2, "0")}</span>
+                  <h2 id={chapterTitleId}>{chapter.title}</h2>
                 </div>
-              ))}
-            </div>
-          </article>
-        ))}
+                <p className="bsb-chapter-deck">{chapter.deck}</p>
+                <div className="bsb-prose">
+                  {chapter.paragraphs.map((paragraph, index) => (
+                    <div className="bsb-prose-block" key={`${chapter.number}-${index}-${paragraph.slice(0, 20)}`}>
+                      <p className={getProseClassName(index, paragraph)}>{paragraph}</p>
+                      <ChapterMedia after={index + 1} chapterNumber={chapter.number} />
+                    </div>
+                  ))}
+                </div>
+              </article>
+            );
+          })}
+        </div>
       </section>
 
       <section className="bsb-threshold" aria-label="End of chapter sixteen">
