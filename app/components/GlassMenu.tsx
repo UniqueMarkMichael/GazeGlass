@@ -28,6 +28,12 @@ const menuItems = [
     action: "Open A Court of Foxes",
   },
   {
+    label: "Big Scale Betrayal",
+    href: "/big-scale-betrayal",
+    detail: "Witness the mortal prequel before A Family of Mortals.",
+    action: "Open Big Scale Betrayal",
+  },
+  {
     label: "Celestial Codex",
     href: "/celestial-codex",
     detail: "Discover the seven laws beneath the seen world.",

@@ -3,7 +3,9 @@ import Script from "next/script";
 import { DailyVisionCapture } from "./components/DailyVisionCapture";
 import { GlassMemory } from "./components/GlassMemory";
 import { GlassSoundToggle } from "./components/GlassSoundToggle";
+import { GlassSurfaceScroll } from "./components/GlassSurfaceScroll";
 import { JsonLd } from "./components/JsonLd";
+import { RealmAtmosphere } from "./components/RealmAtmosphere";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -129,6 +131,8 @@ export default function RootLayout({
           `}
         </Script>
         {children}
+        <RealmAtmosphere />
+        <GlassSurfaceScroll />
         <DailyVisionCapture />
         <GlassMemory />
         <GlassSoundToggle />

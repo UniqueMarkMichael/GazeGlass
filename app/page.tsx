@@ -3,6 +3,7 @@ import { FieldNote } from "./components/FieldNote";
 import { JsonLd } from "./components/JsonLd";
 import { GlassMenu } from "./components/GlassMenu";
 import { ReceiveVision } from "./components/ReceiveVision";
+import { ReturnToWhatFoundYou } from "./components/ReturnToWhatFoundYou";
 import { SeerCircleForm } from "./components/SeerCircleForm";
 import { TikTokTransmissions } from "./components/TikTokTransmissions";
 import { OpeningRite } from "./components/OpeningRite";
@@ -82,18 +83,18 @@ const gods = [
 
 const spirits = [
   {
-    name: "Kitsu",
-    role: "Assistant to the God of Justice",
-    image: "/spirits/kitsu.webp",
-    text: "The dutiful fox sits beside the God of Justice at every divine briefing. Kitsu does not posture. Kitsu watches, and in the space between accusation and verdict, truth finds its way to the light.",
-    note: "Field Note: The quietest witness is often the one the room should fear.",
-  },
-  {
     name: "Marok",
     role: "Assistant to the God of War",
     image: "/spirits/marok.webp",
     text: "A top graduate of the Academy of Fate and Destiny, Marok designs the trials that bring mortals to their knees while keeping a fox's unnerving joy at the edge of judgment.",
     note: "Field Note: He designs the trials that break mortals, and wags his tail doing it.",
+  },
+  {
+    name: "Kitsu",
+    role: "Assistant to the God of Justice",
+    image: "/spirits/kitsu.webp",
+    text: "The dutiful fox sits beside the God of Justice at every divine briefing. Kitsu does not posture. Kitsu watches, and in the space between accusation and verdict, truth finds its way to the light.",
+    note: "Field Note: The quietest witness is often the one the room should fear.",
   },
   {
     name: "Jem",
@@ -103,6 +104,13 @@ const spirits = [
     note: "Field Note: Beauty can destroy or create. Jem knows which one the moment requires.",
   },
   {
+    name: "Saroka",
+    role: "Assistant to the God of Fortune",
+    image: "/spirits/saroka.png",
+    text: "Scarlet-furred with a cream chest, white-tipped tail, gold-dipped paws, and ember eyes, Saroka serves Fortune with a calm smile and a devious little snicker whenever mortals confuse panic for prophecy.",
+    note: "Field Note: Luck has teeth, gold paws, and impeccable timing.",
+  },
+  {
     name: "Sindren",
     role: "Assistant to the God of Love",
     image: "/spirits/sindren.webp",
@@ -110,11 +118,25 @@ const spirits = [
     note: "Field Note: The gentlest god keeps the sharpest company.",
   },
   {
-    name: "Saroka",
-    role: "Assistant to the God of Fortune",
-    image: "/spirits/saroka.png",
-    text: "Scarlet-furred with a cream chest, white-tipped tail, gold-dipped paws, and ember eyes, Saroka serves Fortune with a calm smile and a devious little snicker whenever mortals confuse panic for prophecy.",
-    note: "Field Note: Luck has teeth, gold paws, and impeccable timing.",
+    name: "Prose",
+    role: "Assistant to the God of Story",
+    image: "/spirits/prose.png",
+    text: "A fox of ink and parchment, Prose slips between chapters to gather the truths mortals forget and the gods would rather leave unwritten.",
+    note: "Field Note: Prose does not write the ending. She remembers where the truth began.",
+  },
+  {
+    name: "Reaper",
+    role: "Assistant to the God of Death",
+    image: "/spirits/reaper.png",
+    text: "Black as the quiet between heartbeats, Reaper walks beside endings and guides souls into their final passage with solemn care.",
+    note: "Field Note: He does not fear the dark. He is the path through it.",
+  },
+  {
+    name: "Solace",
+    role: "Assistant to the God of Mercy",
+    image: "/spirits/solace.png",
+    text: "Pearl-white and prismatic, Solace goes where suffering has grown too heavy for words and leaves Mercy-Shards in her wake.",
+    note: "Field Note: She does not fix. She does not judge. She stays until the heart becomes lighter.",
   },
 ];
 
@@ -208,6 +230,7 @@ export default function Home() {
           <p className="eyebrow">Gaze into the glass</p>
           <h1>Every mortal soul leaves a story behind.</h1>
           <p className="subhead">Start with one witnessed mortal. The Glass will show you what opens next.</p>
+          <ReturnToWhatFoundYou />
           <div className="hero-vow" aria-hidden="true">
             <span>Gods Watch.</span>
             <span>Mortals Pray.</span>
