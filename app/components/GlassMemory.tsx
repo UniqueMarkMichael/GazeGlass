@@ -656,6 +656,7 @@ function useGlassMemory() {
 
 export function GlassMemory() {
   const pathname = usePathname();
+  const isQuietPage = pathname === "/press" || pathname.startsWith("/big-scale-betrayal");
   const { entries, isReady, clearMemory } = useGlassMemory();
   const { refreshSignals, signals } = useRememberedSignals();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -673,7 +674,7 @@ export function GlassMemory() {
     return `${entries.length} visions have been witnessed.`;
   }, [entries.length]);
 
-  if (pathname === "/press" || !isReady || !latest) {
+  if (isQuietPage || !isReady || !latest) {
     return null;
   }
 

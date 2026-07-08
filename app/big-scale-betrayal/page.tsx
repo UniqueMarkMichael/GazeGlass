@@ -73,6 +73,46 @@ const bigScaleBetrayalData = {
   image: `https://www.gazeglass.com${assetBase}/cover.png`,
 };
 
+<<<<<<< HEAD
+=======
+function ChapterMedia({ after, chapterNumber }: { after: number; chapterNumber: number }) {
+  const item = chapterMedia.find((entry) => entry.chapterNumber === chapterNumber && entry.after === after);
+
+  if (!item) {
+    return null;
+  }
+
+  return (
+    <figure className="bsb-story-figure">
+      <div className={`bsb-media-frame${item.fit === "contain" ? " is-contained" : ""}`}>
+        {item.type === "video" ? (
+          <video src={item.src} autoPlay muted loop playsInline preload="metadata" />
+        ) : (
+          <img src={item.src} alt={item.alt ?? ""} />
+        )}
+        <span>Witnessed</span>
+      </div>
+      <figcaption>{item.caption}</figcaption>
+    </figure>
+  );
+}
+
+function getProseClassName(index: number, paragraph: string) {
+  const classNames: string[] = [];
+  const trimmed = paragraph.trim();
+
+  if (index === 0) {
+    classNames.push("bsb-drop");
+  }
+
+  if (index > 0 && trimmed.length <= 46 && !trimmed.includes("\"")) {
+    classNames.push("bsb-prose-beat");
+  }
+
+  return classNames.length ? classNames.join(" ") : undefined;
+}
+
+>>>>>>> 3756407a962395d699c75521c2b95c32e6883ef0
 export default function BigScaleBetrayalPage() {
   return (
     <main className="bsb-page">
@@ -161,7 +201,56 @@ export default function BigScaleBetrayalPage() {
         </div>
       </section>
 
+<<<<<<< HEAD
       <BigScaleBetrayalReader />
+=======
+      <section className="bsb-reading" aria-label="Big Scale Betrayal reader">
+        <nav className="bsb-reader-nav" aria-label="Big Scale Betrayal chapters">
+          {bigScaleChapters.map((chapter) => (
+            <a href={`#chapter-${chapter.number}`} key={chapter.number}>
+              <span>{String(chapter.number).padStart(2, "0")}</span>
+              {chapter.title}
+            </a>
+          ))}
+        </nav>
+
+        <div className="bsb-chapter-stack">
+          {bigScaleChapters.map((chapter) => {
+            const chapterTitleId = `chapter-${chapter.number}-title`;
+
+            return (
+              <article
+                className="bsb-chapter-record"
+                id={`chapter-${chapter.number}`}
+                key={chapter.number}
+                aria-labelledby={chapterTitleId}
+              >
+                <div className="bsb-reading-head">
+                  <span>{String(chapter.number).padStart(2, "0")}</span>
+                  <h2 id={chapterTitleId}>{chapter.title}</h2>
+                </div>
+                <p className="bsb-chapter-deck">{chapter.deck}</p>
+                <div className="bsb-prose">
+                  {chapter.paragraphs.map((paragraph, index) => (
+                    <div className="bsb-prose-block" key={`${chapter.number}-${index}-${paragraph.slice(0, 20)}`}>
+                      <p className={getProseClassName(index, paragraph)}>{paragraph}</p>
+                      <ChapterMedia after={index + 1} chapterNumber={chapter.number} />
+                    </div>
+                  ))}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="bsb-threshold" aria-label="End of chapter sixteen">
+        <p className="eyebrow">End of Chapter Sixteen</p>
+        <h2>They are almost sure no one will find it.</h2>
+        <p>The record is complete. The Glass remembers what the world misnames.</p>
+        <a href="#big-scale-betrayal">Return to the steps</a>
+      </section>
+>>>>>>> 3756407a962395d699c75521c2b95c32e6883ef0
 
       <footer className="site-footer" aria-label="Gaze Glass ritual line">
         <span>Gods Watch.</span>

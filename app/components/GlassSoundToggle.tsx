@@ -18,14 +18,14 @@ const tooltipClickBlockMs = 900;
 
 export function GlassSoundToggle() {
   const pathname = usePathname();
-  const isPressPage = pathname === "/press";
+  const isQuietPage = pathname === "/press" || pathname.startsWith("/big-scale-betrayal");
   const [isEnabled, setIsEnabled] = useState(true);
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const tooltipTimerRef = useRef<number | null>(null);
   const tooltipClickBlockRef = useRef<{ key: string; until: number } | null>(null);
 
   useEffect(() => {
-    if (isPressPage) {
+    if (isQuietPage) {
       return;
     }
 
@@ -38,10 +38,10 @@ export function GlassSoundToggle() {
 
     window.addEventListener(GLASS_SOUND_EVENT, syncSoundState);
     return () => window.removeEventListener(GLASS_SOUND_EVENT, syncSoundState);
-  }, [isPressPage]);
+  }, [isQuietPage]);
 
   useEffect(() => {
-    if (isPressPage) {
+    if (isQuietPage) {
       return;
     }
 
@@ -71,7 +71,7 @@ export function GlassSoundToggle() {
       observer.disconnect();
       document.removeEventListener("visibilitychange", syncForVisibility);
     };
-  }, [isPressPage]);
+  }, [isQuietPage]);
 
   useEffect(() => {
     return () => {
@@ -137,7 +137,7 @@ export function GlassSoundToggle() {
 
   const tooltipLabel = isEnabled ? "Mute site sounds." : "Turn on site sounds.";
 
-  if (isPressPage) {
+  if (isQuietPage) {
     return null;
   }
 
