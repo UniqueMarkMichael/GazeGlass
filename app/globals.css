@@ -328,6 +328,7 @@ a {
   justify-self: start;
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   padding: 10px 14px;
   border: 1px solid rgba(201, 162, 39, 0.34);
   color: rgba(237, 227, 204, 0.82);
@@ -3188,7 +3189,9 @@ body.daily-vision-open {
   grid-template-columns: 28px 1fr;
   gap: 10px;
   align-items: baseline;
+  min-height: 44px;
   max-width: 168px;
+  padding: 10px 0;
   color: rgba(237, 227, 204, 0.5);
   font-size: 0.68rem;
   letter-spacing: 0.12em;
@@ -5536,7 +5539,10 @@ h2 {
 
 .text-link {
   display: inline-block;
+  min-height: 44px;
   width: fit-content;
+  padding-top: 9px;
+  padding-bottom: 9px;
   color: var(--gold);
   font-size: 0.78rem;
   letter-spacing: 0.18em;
@@ -9628,7 +9634,9 @@ dd {
 }
 
 .back-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   width: fit-content;
   color: rgba(201, 162, 39, 0.78);
   font-size: 0.72rem;
@@ -9667,6 +9675,10 @@ dd {
 }
 
 .observation-sidebar a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
   color: var(--bone);
   text-decoration-color: rgba(201, 162, 39, 0.42);
   text-underline-offset: 0.22em;
@@ -9703,7 +9715,7 @@ dd {
 .story-actions span,
 .story-actions button {
   width: auto;
-  min-height: auto;
+  min-height: 44px;
   padding: 9px 12px;
   border: 1px solid rgba(201, 162, 39, 0.18);
   color: rgba(237, 227, 204, 0.66);
