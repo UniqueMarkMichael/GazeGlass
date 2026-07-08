@@ -176,6 +176,7 @@ export const COMPONENT_STYLES = `
   --om-accent: #c9a227;
   --om-selection: rgba(201, 162, 39, 0.3);
   --om-measure: 38rem;
+  --om-font-body: Georgia, serif;
   --om-fs-body: 1.18rem;
   --om-lh-body: 1.7;
   --om-dur: 280ms;
@@ -200,6 +201,16 @@ export const COMPONENT_STYLES = `
   opacity: 0;
   pointer-events: none;
   transition: opacity 280ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.om-root[data-font-style="readable"] {
+  --om-font-body: "Atkinson Hyperlegible", "Lexend", Verdana, Arial, system-ui, sans-serif;
+  --om-lh-body: 1.78;
+}
+
+.om-root[data-font-style="dyslexia"] {
+  --om-font-body: "OpenDyslexic", "Atkinson Hyperlegible", Verdana, Arial, system-ui, sans-serif;
+  --om-lh-body: 1.86;
 }
 
 .om-root[data-om-theme="parchment"] {
@@ -379,10 +390,19 @@ export const COMPONENT_STYLES = `
     6rem clamp(1rem, 4vw, 2rem)
     calc(8rem + env(safe-area-inset-bottom))
     clamp(1rem, 4vw, 2rem);
-  font-family: Georgia, serif;
+  font-family: var(--om-font-body);
   font-size: var(--om-fs-body);
   line-height: var(--om-lh-body);
   outline: none;
+}
+
+.om-root[data-font-style="readable"] .om-reading {
+  letter-spacing: 0;
+}
+
+.om-root[data-font-style="dyslexia"] .om-reading {
+  letter-spacing: 0.01em;
+  word-spacing: 0.08em;
 }
 
 .om-root[data-spacing-mode="on"] .om-reading {

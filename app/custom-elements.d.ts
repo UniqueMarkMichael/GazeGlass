@@ -8,6 +8,7 @@ declare module "react" {
         "reading-time-min"?: number;
         "data-flag-second-gaze"?: "off" | "on";
         "data-flag-change-lens"?: "off" | "on";
+        "hide-entry"?: "true";
       };
     }
   }

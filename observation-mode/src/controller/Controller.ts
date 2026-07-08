@@ -21,6 +21,7 @@ type ReaderState = "distracted" | "tired" | "curious" | "overwhelmed" | "returni
 type PagePromise = "scene" | "time" | "finish";
 type PleasureMode = "wonder" | "calm" | "intensity" | "tenderness";
 type ObservationTheme = "obsidian" | "parchment" | "moonlight" | "aurora";
+type ReaderFontStyle = "literary" | "readable" | "dyslexia";
 type ReadAloudMode = "voice-follow" | "spoken-playback";
 type ReadAloudRecognitionConstructor = new () => ReadAloudRecognition;
 type ReadAloudRecognitionAlternative = {
@@ -88,6 +89,7 @@ type ReaderPrefs = {
   pagePromise?: PagePromise;
   pleasureMode?: PleasureMode;
   observationTheme?: ObservationTheme;
+  fontStyle?: ReaderFontStyle;
   textSizeRem?: number;
   generousSpacing?: boolean;
   showImages?: boolean;
@@ -113,11 +115,13 @@ const READER_STATES = new Set<ReaderState>([
 const PAGE_PROMISES = new Set<PagePromise>(["scene", "time", "finish"]);
 const PLEASURE_MODES = new Set<PleasureMode>(["wonder", "calm", "intensity", "tenderness"]);
 const OBSERVATION_THEMES = new Set<ObservationTheme>(["obsidian", "parchment", "moonlight", "aurora"]);
+const FONT_STYLES = new Set<ReaderFontStyle>(["literary", "readable", "dyslexia"]);
 const DEFAULT_READING_TRACK_ID: ReadingTrackId = "reading-mode";
 const DEFAULT_READING_PACE: ReadingPace = "drift";
 const DEFAULT_READER_STATE: ReaderState = "curious";
 const DEFAULT_PAGE_PROMISE: PagePromise = "scene";
 const DEFAULT_PLEASURE_MODE: PleasureMode = "wonder";
+const DEFAULT_FONT_STYLE: ReaderFontStyle = "literary";
 const PAGE_PROMISE_DURATION_MS = 5 * 60 * 1000;
 const HELP_LONG_PRESS_MS = 820;
 const JOLT_IDLE_MS = 45 * 1000;
@@ -310,6 +314,7 @@ export class ObservationModeController {
   private pagePromise: PagePromise = DEFAULT_PAGE_PROMISE;
   private pleasureMode: PleasureMode = DEFAULT_PLEASURE_MODE;
   private observationTheme: ObservationTheme = PLEASURE_PRESETS[DEFAULT_PLEASURE_MODE].theme;
+  private fontStyle: ReaderFontStyle = DEFAULT_FONT_STYLE;
   private textSizeRem = 1.18;
   private generousSpacing = false;
   private showImages = false;
@@ -491,6 +496,13 @@ export class ObservationModeController {
   }
 
   private renderEntryButton(): void {
+    if (this.options.host.hasAttribute("hide-entry")) {
+      this.entryMount.hidden = true;
+      this.entryMount.replaceChildren();
+      return;
+    }
+
+    this.entryMount.hidden = false;
     const label = `Immersive reading · ${this.getReadingTime()} min`;
     const existingButton = this.entryMount.querySelector<HTMLButtonElement>(".om-entry");
     if (existingButton) {
@@ -801,6 +813,12 @@ export class ObservationModeController {
           <button type="button" data-theme="parchment" aria-label="${COPY.parchmentAria}">${COPY.parchment}</button>
           <button type="button" data-theme="moonlight" aria-label="${COPY.moonlightAria}">${COPY.moonlight}</button>
         </div>
+        <p class="om-panel-field-label">${COPY.fontStyle}</p>
+        <div class="om-panel-actions om-font-options" role="radiogroup" aria-label="${COPY.fontStyleGroupAria}">
+          <button type="button" role="radio" aria-checked="false" data-font-style="literary" aria-label="${COPY.literaryFontAria}">${COPY.literaryFont}</button>
+          <button type="button" role="radio" aria-checked="false" data-font-style="readable" aria-label="${COPY.readableFontAria}">${COPY.readableFont}</button>
+          <button type="button" role="radio" aria-checked="false" data-font-style="dyslexia" aria-label="${COPY.dyslexiaFontAria}">${COPY.dyslexiaFont}</button>
+        </div>
         <div class="om-panel-field">
           <span>${COPY.size}</span>
           <div class="om-stepper" role="group" aria-label="${COPY.sizeGroupAria}">
@@ -830,6 +848,11 @@ export class ObservationModeController {
         this.applyPrefsToRoot();
         this.savePrefs();
         this.showToast(`${button.textContent ?? "Theme"} selected.`);
+      });
+    });
+    panel.querySelectorAll<HTMLButtonElement>("[data-font-style]").forEach((button) => {
+      button.addEventListener("click", () => {
+        this.setFontStyle(button.dataset.fontStyle);
       });
     });
     panel.querySelectorAll<HTMLButtonElement>("[data-size]").forEach((button) => {
@@ -1120,6 +1143,10 @@ export class ObservationModeController {
     return OBSERVATION_THEMES.has(value as ObservationTheme) ? (value as ObservationTheme) : "obsidian";
   }
 
+  private parseFontStyle(value: string | undefined): ReaderFontStyle {
+    return FONT_STYLES.has(value as ReaderFontStyle) ? (value as ReaderFontStyle) : DEFAULT_FONT_STYLE;
+  }
+
   private parseTextSize(value: number | undefined, fallback = 1.18): number {
     return typeof value === "number" && Number.isFinite(value) ? Math.min(1.6, Math.max(1, value)) : fallback;
   }
@@ -1169,6 +1196,17 @@ export class ObservationModeController {
     this.updateSceneStatus();
     this.savePrefs();
     const message = this.pleasureToast(this.pleasureMode);
+    this.showToast(message);
+    this.announce(message);
+  }
+
+  private setFontStyle(value: string | undefined): void {
+    this.fontStyle = this.parseFontStyle(value);
+    this.playInterfaceSound("select");
+    this.applyPrefsToRoot();
+    this.updateFocusControls();
+    this.savePrefs();
+    const message = this.fontStyleToast(this.fontStyle);
     this.showToast(message);
     this.announce(message);
   }
@@ -1253,6 +1291,12 @@ export class ObservationModeController {
     return COPY.pleasureWonderToast;
   }
 
+  private fontStyleToast(style: ReaderFontStyle): string {
+    if (style === "readable") return COPY.readableFontToast;
+    if (style === "dyslexia") return COPY.dyslexiaFontToast;
+    return COPY.literaryFontToast;
+  }
+
   private loadPrefs(): void {
     try {
       const prefs = JSON.parse(window.localStorage.getItem(PREFS_KEY) ?? "{}") as ReaderPrefs;
@@ -1264,6 +1308,7 @@ export class ObservationModeController {
         typeof prefs.observationTheme === "string"
           ? this.parseObservationTheme(prefs.observationTheme)
           : PLEASURE_PRESETS[this.pleasureMode].theme;
+      this.fontStyle = this.parseFontStyle(prefs.fontStyle);
       this.textSizeRem = this.parseTextSize(prefs.textSizeRem, READING_PACE_PRESETS[this.readingPace].fontSizeRem);
       this.focusMode = this.parseFocusMode(prefs.focusMode);
       this.generousSpacing = Boolean(prefs.generousSpacing);
@@ -1277,6 +1322,7 @@ export class ObservationModeController {
       this.pagePromise = DEFAULT_PAGE_PROMISE;
       this.pleasureMode = DEFAULT_PLEASURE_MODE;
       this.observationTheme = PLEASURE_PRESETS[DEFAULT_PLEASURE_MODE].theme;
+      this.fontStyle = DEFAULT_FONT_STYLE;
       this.textSizeRem = READING_PACE_PRESETS[DEFAULT_READING_PACE].fontSizeRem;
       this.focusMode = "off";
       this.generousSpacing = false;
@@ -1298,6 +1344,7 @@ export class ObservationModeController {
           pagePromise: this.pagePromise,
           pleasureMode: this.pleasureMode,
           observationTheme: this.observationTheme,
+          fontStyle: this.fontStyle,
           textSizeRem: this.textSizeRem,
           generousSpacing: this.generousSpacing,
           showImages: this.showImages,
@@ -1317,6 +1364,7 @@ export class ObservationModeController {
     this.root.dataset.pleasureMode = this.pleasureMode;
     this.root.dataset.focusMode = this.focusMode;
     this.root.dataset.paceMode = this.readingPace;
+    this.root.dataset.fontStyle = this.fontStyle;
     this.root.dataset.spacingMode = this.generousSpacing ? "on" : "off";
     this.root.dataset.imagesMode = this.showImages ? "on" : "off";
     this.root.dataset.audioMode = this.audioMuted ? "muted" : "on";
@@ -1386,6 +1434,11 @@ export class ObservationModeController {
 
     this.root.querySelectorAll<HTMLButtonElement>("[data-pace]").forEach((button) => {
       const selected = this.parseReadingPace(button.dataset.pace) === this.readingPace;
+      button.setAttribute("aria-checked", String(selected));
+    });
+
+    this.root.querySelectorAll<HTMLButtonElement>("[data-font-style]").forEach((button) => {
+      const selected = this.parseFontStyle(button.dataset.fontStyle) === this.fontStyle;
       button.setAttribute("aria-checked", String(selected));
     });
 

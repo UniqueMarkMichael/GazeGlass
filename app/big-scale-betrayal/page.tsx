@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { GlassMenu } from "../components/GlassMenu";
 import { JsonLd } from "../components/JsonLd";
-import { bigScaleChapters } from "./chapters";
+import { BigScaleBetrayalReader } from "./BigScaleBetrayalReader";
 
 const assetBase = "/big-scale-betrayal/assets";
 
@@ -58,51 +58,6 @@ const synopsisBeats = [
   },
 ];
 
-const chapterMedia = [
-  {
-    chapterNumber: 1,
-    after: 2,
-    type: "video",
-    src: `${assetBase}/chapter1.mp4`,
-    fit: "contain",
-    caption: "The armored guardian of the royal library of Kemet, bells at its throat, incense at its brow.",
-  },
-  {
-    chapterNumber: 1,
-    after: 3,
-    type: "image",
-    src: `${assetBase}/heba-intro.png`,
-    fit: "contain",
-    alt: "Heba carrying cabbages down the temple steps of Kemet",
-    caption: "Heba, daughter of a vegetable merchant, before the gods finished naming her fate.",
-  },
-  {
-    chapterNumber: 1,
-    after: 20,
-    type: "image",
-    src: `${assetBase}/market.png`,
-    fit: "contain",
-    alt: "Heba and a young thief near a cabbage stall in the market of Kemet",
-    caption: "The market of Kemet, the hour before the chase.",
-  },
-  {
-    chapterNumber: 1,
-    after: 33,
-    type: "video",
-    src: `${assetBase}/feather.mp4`,
-    fit: "contain",
-    caption: "A feather for the oracle, a hand for the boy.",
-  },
-  {
-    chapterNumber: 1,
-    after: 44,
-    type: "video",
-    src: `${assetBase}/chapter1-end.mp4`,
-    fit: "contain",
-    caption: "Destined to sell cabbage, or so she believed.",
-  },
-];
-
 const bigScaleBetrayalData = {
   "@context": "https://schema.org",
   "@type": "CreativeWork",
@@ -117,28 +72,6 @@ const bigScaleBetrayalData = {
     "A Gaze Glass prequel to A Family of Mortals about Heba, the God of Order, palace corruption, and divine judgment in Kemet.",
   image: `https://www.gazeglass.com${assetBase}/cover.png`,
 };
-
-function ChapterMedia({ after, chapterNumber }: { after: number; chapterNumber: number }) {
-  const item = chapterMedia.find((entry) => entry.chapterNumber === chapterNumber && entry.after === after);
-
-  if (!item) {
-    return null;
-  }
-
-  return (
-    <figure className="bsb-story-figure">
-      <div className={`bsb-media-frame${item.fit === "contain" ? " is-contained" : ""}`}>
-        {item.type === "video" ? (
-          <video src={item.src} autoPlay muted loop playsInline preload="metadata" />
-        ) : (
-          <img src={item.src} alt={item.alt ?? ""} />
-        )}
-        <span>Witnessed</span>
-      </div>
-      <figcaption>{item.caption}</figcaption>
-    </figure>
-  );
-}
 
 export default function BigScaleBetrayalPage() {
   return (
@@ -228,41 +161,7 @@ export default function BigScaleBetrayalPage() {
         </div>
       </section>
 
-      <section className="bsb-reading" aria-label="Big Scale Betrayal reader">
-        <nav className="bsb-reader-nav" aria-label="Big Scale Betrayal chapters">
-          {bigScaleChapters.map((chapter) => (
-            <a href={`#chapter-${chapter.number}`} key={chapter.number}>
-              <span>{String(chapter.number).padStart(2, "0")}</span>
-              {chapter.title}
-            </a>
-          ))}
-        </nav>
-
-        {bigScaleChapters.map((chapter) => (
-          <article className="bsb-chapter-record" id={`chapter-${chapter.number}`} key={chapter.number}>
-            <div className="bsb-reading-head">
-              <span>{String(chapter.number).padStart(2, "0")}</span>
-              <h2>{chapter.title}</h2>
-            </div>
-            <p className="bsb-chapter-deck">{chapter.deck}</p>
-            <div className="bsb-prose">
-              {chapter.paragraphs.map((paragraph, index) => (
-                <div key={`${chapter.number}-${index}-${paragraph.slice(0, 20)}`}>
-                  <p className={index === 0 ? "bsb-drop" : undefined}>{paragraph}</p>
-                  <ChapterMedia after={index + 1} chapterNumber={chapter.number} />
-                </div>
-              ))}
-            </div>
-          </article>
-        ))}
-      </section>
-
-      <section className="bsb-threshold" aria-label="End of chapter sixteen">
-        <p className="eyebrow">End of Chapter Sixteen</p>
-        <h2>They are almost sure no one will find it.</h2>
-        <p>The record is complete. The Glass remembers what the world misnames.</p>
-        <a href="#big-scale-betrayal">Return to the steps</a>
-      </section>
+      <BigScaleBetrayalReader />
 
       <footer className="site-footer" aria-label="Gaze Glass ritual line">
         <span>Gods Watch.</span>
