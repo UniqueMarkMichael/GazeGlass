@@ -803,10 +803,10 @@ export function BigScaleBetrayalReader() {
                     <p>{chapterQuestions[chapterIndex] ?? chapter.deck}</p>
                   </div>
                   {showWhispers ? (
-                    <aside className="bsb-palace-whisper" aria-label={`Chapter ${chapter.number} field note`}>
+                    <div className="bsb-palace-whisper" role="note" aria-label={`Chapter ${chapter.number} field note`}>
                       <span>Field Note</span>
                       <p>{fieldNotes[chapterIndex] ?? "The record is listening for what power tries to rename."}</p>
-                    </aside>
+                    </div>
                   ) : null}
                   <div className="bsb-prose">
                     {chapter.paragraphs.map((paragraph, paragraphIndex) => (

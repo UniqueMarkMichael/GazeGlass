@@ -7673,12 +7673,14 @@ dd {
   align-items: start;
   width: min(var(--bsb-reader-max), 100%);
   margin: 0 auto;
+  min-width: 0;
 }
 
 .bsb-chapter-rail,
 .bsb-reading-oracle {
   position: sticky;
   top: 274px;
+  min-width: 0;
   max-height: calc(100svh - 296px);
   overflow: auto;
   scrollbar-width: thin;
@@ -7762,20 +7764,30 @@ dd {
 
 .bsb-reader-scroll {
   min-width: 0;
+  max-width: 100%;
 }
 
 .bsb-reader-scroll observation-mode {
   display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .bsb-immersive-scroll {
   display: grid;
   gap: clamp(38px, 7vh, 72px);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .bsb-immersive-chapter {
   scroll-margin-top: 320px;
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: clamp(22px, 3vw, 38px);
   border: 1px solid rgba(201, 162, 39, 0.22);
   border-radius: 8px;
@@ -8160,7 +8172,7 @@ dd {
 @media (max-width: 1180px) {
   .bsb-reader-command,
   .bsb-reader-stage {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .bsb-reader-command {
@@ -8182,6 +8194,8 @@ dd {
   .bsb-chapter-rail nav {
     display: flex;
     gap: 10px;
+    width: 100%;
+    max-width: 100%;
     overflow-x: auto;
     padding-bottom: 8px;
     scroll-snap-type: x proximity;
