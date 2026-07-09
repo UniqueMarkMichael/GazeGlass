@@ -370,7 +370,6 @@ export function BigScaleBetrayalReader() {
     [],
   );
   const [activeChapter, setActiveChapter] = useState(1);
-  const [progress, setProgress] = useState(0);
   const [theme, setTheme] = useState<ReaderTheme>("night");
   const [focusMode, setFocusMode] = useState<FocusMode>("ruler");
   const [fontStyle, setFontStyle] = useState<FontStyle>("literary");
@@ -384,7 +383,6 @@ export function BigScaleBetrayalReader() {
   const [voiceFollowOn, setVoiceFollowOn] = useState(false);
   const [voiceFollowStatus, setVoiceFollowStatus] = useState<VoiceFollowStatus>("idle");
   const [litParagraphKey, setLitParagraphKey] = useState<string | null>(null);
-  const chapterRefs = useRef<Array<HTMLElement | null>>([]);
   const chapterRailRef = useRef<HTMLElement | null>(null);
   const observationModeRef = useRef<ObservationModeElementApi | null>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
@@ -420,46 +418,6 @@ export function BigScaleBetrayalReader() {
   }, [theme, focusMode, fontStyle, showImages, showWhispers, fontStep]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-        if (!visible?.target) return;
-        const nextChapter = Number((visible.target as HTMLElement).dataset.chapterNumber);
-        if (!Number.isFinite(nextChapter)) return;
-
-        setActiveChapter(nextChapter);
-      },
-      { rootMargin: "-22% 0px -55% 0px", threshold: [0.08, 0.18, 0.32] },
-    );
-
-    chapterRefs.current.forEach((chapter) => {
-      if (chapter) observer.observe(chapter);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    function updateProgress() {
-      const scrollable = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - window.innerHeight;
-      const nextProgress = scrollable <= 0 ? 100 : Math.round((window.scrollY / scrollable) * 100);
-      setProgress(Math.max(0, Math.min(100, nextProgress)));
-    }
-
-    updateProgress();
-    window.addEventListener("scroll", updateProgress, { passive: true });
-    window.addEventListener("resize", updateProgress);
-
-    return () => {
-      window.removeEventListener("scroll", updateProgress);
-      window.removeEventListener("resize", updateProgress);
-    };
-  }, []);
-
-  useEffect(() => {
     try {
       window.localStorage.setItem(BSB_BOOKMARK_KEY, String(activeChapter));
     } catch {}
@@ -476,11 +434,22 @@ export function BigScaleBetrayalReader() {
 
   function jumpToChapter(chapterNumber: number) {
     playGlassSound("select");
-    document.getElementById(`chapter-${chapterNumber}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setActiveChapter(chapterNumber);
+    setLitParagraphKey(null);
+    window.setTimeout(() => {
+      document.getElementById(`chapter-${chapterNumber}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
   }
 
   function resumeChapter() {
     jumpToChapter(activeChapter);
+  }
+
+  function goToNextChapter() {
+    const nextChapterNumber = activeChapter + 1;
+    if (nextChapterNumber > bigScaleChapters.length) return;
+
+    jumpToChapter(nextChapterNumber);
   }
 
   async function openObservationMode() {
@@ -560,10 +529,12 @@ export function BigScaleBetrayalReader() {
 
       setLitParagraphKey(match.key);
       setActiveChapter(match.chapterNumber);
-      document.getElementById(`voice-paragraph-${match.key}`)?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+      window.setTimeout(() => {
+        document.getElementById(`voice-paragraph-${match.key}`)?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 0);
     };
     recognition.onerror = (event) => {
       voiceFollowWantedRef.current = false;
@@ -635,7 +606,11 @@ export function BigScaleBetrayalReader() {
   }
 
   const activeChapterData = bigScaleChapters[activeChapter - 1] ?? bigScaleChapters[0];
+  const activeChapterIndex = bigScaleChapters.findIndex((chapter) => chapter.number === activeChapter);
+  const activeIndex = activeChapterIndex >= 0 ? activeChapterIndex : 0;
   const activeMedia = chapterMedia.filter((item) => item.chapterNumber === activeChapter);
+  const progress = Math.round(((activeIndex + 1) / bigScaleChapters.length) * 100);
+  const nextChapter = bigScaleChapters[activeIndex + 1] ?? null;
 
   return (
     <section
@@ -799,8 +774,7 @@ export function BigScaleBetrayalReader() {
                 onClick={() => jumpToChapter(chapter.number)}
               >
                 <span>{String(chapter.number).padStart(2, "0")}</span>
-                <strong>{chapter.title}</strong>
-                <em>{chapter.deck}</em>
+                <strong>{chapter.label}</strong>
               </button>
             ))}
           </nav>
@@ -816,53 +790,60 @@ export function BigScaleBetrayalReader() {
             hide-entry="true"
           >
             <article className="bsb-immersive-scroll om-source">
-              {bigScaleChapters.map((chapter, chapterIndex) => (
-                <section
-                  className="bsb-immersive-chapter"
-                  data-chapter-number={chapter.number}
-                  id={`chapter-${chapter.number}`}
-                  key={chapter.number}
-                  ref={(node) => {
-                    chapterRefs.current[chapterIndex] = node;
-                  }}
-                >
-                  <div className="bsb-chapter-record-head">
-                    <span>{String(chapter.number).padStart(2, "0")}</span>
-                    <div>
-                      <p className="eyebrow">Scale Record</p>
-                      <h2>{chapter.title}</h2>
+              <section
+                className="bsb-immersive-chapter"
+                data-chapter-number={activeChapterData.number}
+                id={`chapter-${activeChapterData.number}`}
+                key={activeChapterData.number}
+              >
+                <div className="bsb-chapter-record-head">
+                  <span>{String(activeChapterData.number).padStart(2, "0")}</span>
+                  <div>
+                    <p className="eyebrow">Scale Record</p>
+                    <h2>{activeChapterData.title}</h2>
+                  </div>
+                </div>
+                <p className="bsb-chapter-deck">{activeChapterData.deck}</p>
+                <div className="bsb-hold-question">
+                  <span>Hold this question</span>
+                  <p>{chapterQuestions[activeIndex] ?? activeChapterData.deck}</p>
+                </div>
+                {showWhispers ? (
+                  <div className="bsb-palace-whisper" role="note" aria-label={`Chapter ${activeChapterData.number} field note`}>
+                    <span>Field Note</span>
+                    <p>{fieldNotes[activeIndex] ?? "The record is listening for what power tries to rename."}</p>
+                  </div>
+                ) : null}
+                <div className="bsb-prose">
+                  {activeChapterData.paragraphs.map((paragraph, paragraphIndex) => (
+                    <div
+                      className={`bsb-prose-block${litParagraphKey === `${activeChapterData.number}-${paragraphIndex}` ? " is-voice-lit" : ""}`}
+                      key={`${activeChapterData.number}-${paragraphIndex}-${paragraph.slice(0, 20)}`}
+                    >
+                      <p className={paragraphIndex === 0 ? "bsb-drop" : undefined} id={`voice-paragraph-${activeChapterData.number}-${paragraphIndex}`}>
+                        {paragraph}
+                      </p>
+                      <ChapterMediaBlock
+                        after={paragraphIndex + 1}
+                        chapterNumber={activeChapterData.number}
+                        showImages={showImages}
+                      />
                     </div>
-                  </div>
-                  <p className="bsb-chapter-deck">{chapter.deck}</p>
-                  <div className="bsb-hold-question">
-                    <span>Hold this question</span>
-                    <p>{chapterQuestions[chapterIndex] ?? chapter.deck}</p>
-                  </div>
-                  {showWhispers ? (
-                    <div className="bsb-palace-whisper" role="note" aria-label={`Chapter ${chapter.number} field note`}>
-                      <span>Field Note</span>
-                      <p>{fieldNotes[chapterIndex] ?? "The record is listening for what power tries to rename."}</p>
-                    </div>
-                  ) : null}
-                  <div className="bsb-prose">
-                    {chapter.paragraphs.map((paragraph, paragraphIndex) => (
-                      <div
-                        className={`bsb-prose-block${litParagraphKey === `${chapter.number}-${paragraphIndex}` ? " is-voice-lit" : ""}`}
-                        key={`${chapter.number}-${paragraphIndex}-${paragraph.slice(0, 20)}`}
-                      >
-                        <p className={paragraphIndex === 0 ? "bsb-drop" : undefined} id={`voice-paragraph-${chapter.number}-${paragraphIndex}`}>
-                          {paragraph}
-                        </p>
-                        <ChapterMediaBlock
-                          after={paragraphIndex + 1}
-                          chapterNumber={chapter.number}
-                          showImages={showImages}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              ))}
+                  ))}
+                </div>
+                <div className="bsb-chapter-turn" aria-label="Chapter navigation">
+                  {nextChapter ? (
+                    <button type="button" onClick={goToNextChapter}>
+                      Continue to {nextChapter.label}
+                      <span aria-hidden="true">→</span>
+                    </button>
+                  ) : (
+                    <a href="#big-scale-betrayal" onClick={() => playGlassSound("travel")}>
+                      Return to the steps
+                    </a>
+                  )}
+                </div>
+              </section>
             </article>
           </observation-mode>
         </div>
@@ -896,14 +877,16 @@ export function BigScaleBetrayalReader() {
         </aside>
       </div>
 
-      <section className="bsb-threshold" aria-label="End of chapter sixteen">
-        <p className="eyebrow">End of Chapter Sixteen</p>
-        <h2>They are almost sure no one will find it.</h2>
-        <p>The record is complete. The Glass remembers what the world misnames.</p>
-        <a href="#big-scale-betrayal" onClick={() => playGlassSound("travel")}>
-          Return to the steps
-        </a>
-      </section>
+      {!nextChapter ? (
+        <section className="bsb-threshold" aria-label="End of chapter sixteen">
+          <p className="eyebrow">End of Chapter Sixteen</p>
+          <h2>They are almost sure no one will find it.</h2>
+          <p>The record is complete. The Glass remembers what the world misnames.</p>
+          <a href="#big-scale-betrayal" onClick={() => playGlassSound("travel")}>
+            Return to the steps
+          </a>
+        </section>
+      ) : null}
     </section>
   );
 }

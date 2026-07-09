@@ -7768,6 +7768,50 @@ dd {
   line-height: 1.28;
 }
 
+.bsb-chapter-turn {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(38px, 7vh, 68px);
+}
+
+.bsb-chapter-turn button,
+.bsb-chapter-turn a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 48px;
+  max-width: 100%;
+  padding: 14px 22px;
+  border: 1px solid rgba(201, 162, 39, 0.64);
+  border-radius: 999px;
+  color: var(--pearl);
+  background:
+    radial-gradient(circle at 18% 20%, rgba(95, 183, 196, 0.16), transparent 42%),
+    rgba(201, 162, 39, 0.12);
+  font-family: "Mulish", system-ui, sans-serif;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  box-shadow: 0 20px 56px rgba(3, 2, 11, 0.28);
+  cursor: pointer;
+}
+
+.bsb-chapter-turn button:hover,
+.bsb-chapter-turn button:focus-visible,
+.bsb-chapter-turn a:hover,
+.bsb-chapter-turn a:focus-visible {
+  border-color: rgba(237, 227, 204, 0.84);
+  background:
+    radial-gradient(circle at 18% 20%, rgba(95, 183, 196, 0.22), transparent 42%),
+    rgba(201, 162, 39, 0.2);
+  transform: translateY(-1px);
+}
+
 .bsb-reader-scroll {
   min-width: 0;
   max-width: 100%;
