@@ -106,6 +106,42 @@ const chapterMedia: ChapterMedia[] = [
     fit: "contain",
     caption: "Destined to sell cabbage, or so she believed.",
   },
+  {
+    chapterNumber: 2,
+    after: 12,
+    type: "image",
+    src: `${assetBase}/chapter2-scale-presented.png`,
+    fit: "cover",
+    alt: "Amunet presents Heba's handmade scale at the cabbage stall in the market of Kemet",
+    caption: "Amunet presents the scale, and Heba begins to understand what her hands have made.",
+  },
+  {
+    chapterNumber: 2,
+    after: 15,
+    type: "image",
+    src: `${assetBase}/chapter2-materials-vision.png`,
+    fit: "cover",
+    alt: "Heba sees raw market materials become rings, braids, and future offerings",
+    caption: "Raw materials answer Heba's sight, becoming rings, braids, and market futures in the air.",
+  },
+  {
+    chapterNumber: 2,
+    after: 38,
+    type: "image",
+    src: `${assetBase}/chapter2-scale-awakens.png`,
+    fit: "cover",
+    alt: "Heba's scale wakes with a glowing feather and burning heart after the stolen kiss",
+    caption: "The scale wakes in public, feather and heart burning before anyone can pretend not to see.",
+  },
+  {
+    chapterNumber: 2,
+    after: 40,
+    type: "image",
+    src: `${assetBase}/chapter2-crocodiles-answer.png`,
+    fit: "cover",
+    alt: "Two armored crocodile guardians answer Heba's scale in the crowded market",
+    caption: "Matu and Nefer answer the scale, and the market learns the crocodiles are listening.",
+  },
 ];
 
 const chapterQuestions = [
