@@ -142,6 +142,33 @@ const chapterMedia: ChapterMedia[] = [
     alt: "Two armored crocodile guardians answer Heba's scale in the crowded market",
     caption: "Matu and Nefer answer the scale, and the market learns the crocodiles are listening.",
   },
+  {
+    chapterNumber: 3,
+    after: 2,
+    type: "image",
+    src: `${assetBase}/chapter3-image-1.png`,
+    fit: "cover",
+    alt: "Heba and Amunet watch Sate arrive in a sandstorm between two armored crocodiles in the Kemet market",
+    caption: "Sate rises from the sand, and Matu and Nefer turn the market toward judgment.",
+  },
+  {
+    chapterNumber: 3,
+    after: 41,
+    type: "image",
+    src: `${assetBase}/chapter3-image-2.png`,
+    fit: "cover",
+    alt: "Prince Ahmose rises from a wave of dark red wine while Sate lies defeated in the market",
+    caption: "Ahmose steps out of the wine, and the marketplace learns another kind of power has arrived.",
+  },
+  {
+    chapterNumber: 3,
+    after: 78,
+    type: "image",
+    src: `${assetBase}/chapter3-image-3.png`,
+    fit: "cover",
+    alt: "A translucent ice hawk spreads its wings before Heba, Amunet, and the crocodile guardians in the Kemet market",
+    caption: "Water becomes a hawk of ice, and Heba sees Heka answer in public.",
+  },
 ];
 
 const chapterQuestions = [

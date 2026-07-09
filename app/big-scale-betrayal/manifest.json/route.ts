@@ -59,6 +59,33 @@ const chapterMedia: ChapterMedia[] = [
     alt: "Heba at the end of Chapter One",
     wide: true,
   },
+  {
+    chapterNumber: 3,
+    after: 2,
+    type: "image",
+    src: `${assetBase}/chapter3-image-1.png`,
+    alt: "Heba and Amunet watch Sate arrive in a sandstorm between two armored crocodiles in the Kemet market",
+    caption: "Sate rises from the sand, and Matu and Nefer turn the market toward judgment.",
+    wide: true,
+  },
+  {
+    chapterNumber: 3,
+    after: 41,
+    type: "image",
+    src: `${assetBase}/chapter3-image-2.png`,
+    alt: "Prince Ahmose rises from a wave of dark red wine while Sate lies defeated in the market",
+    caption: "Ahmose steps out of the wine, and the marketplace learns another kind of power has arrived.",
+    wide: true,
+  },
+  {
+    chapterNumber: 3,
+    after: 78,
+    type: "image",
+    src: `${assetBase}/chapter3-image-3.png`,
+    alt: "A translucent ice hawk spreads its wings before Heba, Amunet, and the crocodile guardians in the Kemet market",
+    caption: "Water becomes a hawk of ice, and Heba sees Heka answer in public.",
+    wide: true,
+  },
 ];
 
 function wordCount() {
