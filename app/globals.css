@@ -7687,9 +7687,16 @@ dd {
   position: sticky;
   top: 274px;
   min-width: 0;
+  scrollbar-width: thin;
+}
+
+.bsb-chapter-rail {
+  overflow: visible;
+}
+
+.bsb-reading-oracle {
   max-height: calc(100svh - 296px);
   overflow: auto;
-  scrollbar-width: thin;
 }
 
 .bsb-resume-mark {
@@ -7721,15 +7728,18 @@ dd {
 
 .bsb-chapter-rail nav {
   display: grid;
-  gap: 9px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .bsb-chapter-rail nav button {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr);
-  gap: 8px 12px;
+  grid-template-columns: 28px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px 9px;
   width: 100%;
-  padding: 12px;
+  min-height: 52px;
+  padding: 9px 10px;
   border: 1px solid rgba(237, 227, 204, 0.1);
   border-radius: 8px;
   color: rgba(237, 227, 204, 0.72);
@@ -7748,15 +7758,15 @@ dd {
 .bsb-chapter-rail nav span {
   color: var(--gold);
   font-family: "EB Garamond", Georgia, serif;
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   font-style: italic;
 }
 
 .bsb-chapter-rail nav strong {
   color: var(--pearl);
-  font-size: 0.78rem;
+  font-size: 0.68rem;
   font-weight: 900;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
