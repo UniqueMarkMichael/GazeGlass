@@ -6812,7 +6812,8 @@ dd {
     radial-gradient(circle at 18% 18%, rgba(224, 160, 48, 0.16), transparent 28rem),
     radial-gradient(circle at 82% 36%, rgba(95, 183, 196, 0.12), transparent 24rem),
     linear-gradient(180deg, #090814 0%, #17122a 42%, #0d0b1d 100%);
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 @supports selector(html:has(.bsb-page)) {
@@ -7495,11 +7496,10 @@ dd {
 }
 
 .bsb-reader-command {
-  position: sticky;
-  top: 172px;
-  z-index: 20;
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: minmax(220px, 0.5fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(18px, 3vw, 34px);
   align-items: center;
   width: min(var(--bsb-reader-max), 100%);
@@ -7542,21 +7542,20 @@ dd {
 }
 
 .bsb-reader-toolbox {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .bsb-reader-tool-panel {
   display: grid;
-  gap: 12px;
+  gap: 14px;
 }
 
 .bsb-reader-toolbox button,
 .bsb-reader-toolbox .copy-link-button,
 .bsb-resume-mark,
-.bsb-reading-oracle button {
+.bsb-reader-controls button {
   min-height: 42px;
   border: 1px solid rgba(201, 162, 39, 0.28);
   border-radius: 999px;
@@ -7574,6 +7573,12 @@ dd {
 .bsb-reader-toolbox .copy-link-button {
   padding: 10px 13px;
   white-space: normal;
+}
+
+.bsb-reader-toolbox .is-wide,
+.bsb-reader-toolbox .copy-link-button,
+.bsb-reader-toolbox .bsb-open-glass {
+  grid-column: 1 / -1;
 }
 
 .bsb-reader-toolbox button[aria-pressed="true"],
@@ -7641,7 +7646,7 @@ dd {
 .bsb-immersive-reader[data-theme="papyrus"] .bsb-reader-toolbox button,
 .bsb-immersive-reader[data-theme="papyrus"] .bsb-reader-toolbox .copy-link-button,
 .bsb-immersive-reader[data-theme="papyrus"] .bsb-resume-mark,
-.bsb-immersive-reader[data-theme="papyrus"] .bsb-reading-oracle button {
+.bsb-immersive-reader[data-theme="papyrus"] .bsb-reader-controls button {
   color: #211a26;
   border-color: rgba(33, 26, 38, 0.28);
   background: rgba(255, 250, 238, 0.48);
@@ -7672,9 +7677,34 @@ dd {
     linear-gradient(135deg, rgba(255, 250, 238, 0.72), rgba(237, 227, 204, 0.48));
 }
 
+.bsb-immersive-reader[data-theme="papyrus"] .bsb-reader-controls {
+  color: #211a26;
+  border-color: rgba(116, 86, 24, 0.24);
+  border-top-color: rgba(116, 86, 24, 0.52);
+  background:
+    radial-gradient(circle at 22% 0%, rgba(201, 162, 39, 0.18), transparent 9rem),
+    radial-gradient(circle at 100% 26%, rgba(95, 183, 196, 0.16), transparent 8rem),
+    linear-gradient(180deg, rgba(255, 250, 238, 0.82), rgba(237, 227, 204, 0.64));
+}
+
+.bsb-immersive-reader[data-theme="papyrus"] .bsb-reader-controls-head {
+  border-bottom-color: rgba(116, 86, 24, 0.22);
+}
+
+.bsb-immersive-reader[data-theme="papyrus"] .bsb-reader-controls-head h3 {
+  color: #211a26;
+}
+
+.bsb-immersive-reader[data-theme="papyrus"] .bsb-reader-control-group {
+  border-color: rgba(116, 86, 24, 0.16);
+  background:
+    linear-gradient(135deg, rgba(255, 250, 238, 0.52), rgba(237, 227, 204, 0.36)),
+    rgba(255, 250, 238, 0.22);
+}
+
 .bsb-reader-stage {
   display: grid;
-  grid-template-columns: minmax(220px, 0.62fr) minmax(0, 1.7fr) minmax(210px, 0.58fr);
+  grid-template-columns: minmax(220px, 0.62fr) minmax(0, 1.66fr) minmax(248px, 0.66fr);
   gap: clamp(18px, 2.4vw, 34px);
   align-items: start;
   width: min(var(--bsb-reader-max), 100%);
@@ -7683,9 +7713,9 @@ dd {
 }
 
 .bsb-chapter-rail,
-.bsb-reading-oracle {
+.bsb-reader-controls {
   position: sticky;
-  top: 274px;
+  top: 148px;
   min-width: 0;
   scrollbar-width: thin;
 }
@@ -7694,9 +7724,65 @@ dd {
   overflow: visible;
 }
 
-.bsb-reading-oracle {
-  max-height: calc(100svh - 296px);
+.bsb-reader-controls {
+  display: grid;
+  gap: 14px;
+  max-height: calc(100svh - 172px);
   overflow: auto;
+  padding: 16px;
+  border: 1px solid rgba(201, 162, 39, 0.24);
+  border-top-color: rgba(201, 162, 39, 0.56);
+  border-radius: 8px;
+  color: rgba(237, 227, 204, 0.76);
+  background:
+    radial-gradient(circle at 22% 0%, rgba(201, 162, 39, 0.16), transparent 9rem),
+    radial-gradient(circle at 100% 26%, rgba(95, 183, 196, 0.12), transparent 8rem),
+    linear-gradient(180deg, rgba(255, 244, 220, 0.055), rgba(10, 8, 24, 0.5)),
+    rgba(10, 8, 24, 0.74);
+  box-shadow:
+    0 28px 86px rgba(3, 2, 11, 0.34),
+    inset 0 0 0 1px rgba(237, 227, 204, 0.04);
+  backdrop-filter: blur(16px) saturate(1.08);
+}
+
+.bsb-reader-controls-head {
+  display: grid;
+  gap: 5px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.18);
+}
+
+.bsb-reader-controls-head h3 {
+  margin: 0;
+  color: var(--pearl);
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  line-height: 1;
+}
+
+.bsb-reader-control-group {
+  display: grid;
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid rgba(237, 227, 204, 0.1);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(237, 227, 204, 0.045), rgba(10, 8, 24, 0.14)),
+    rgba(10, 8, 24, 0.28);
+}
+
+.bsb-reader-control-group > span {
+  color: var(--gold);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.bsb-reader-control-group.is-return {
+  border-color: rgba(201, 162, 39, 0.22);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(201, 162, 39, 0.13), transparent 58%),
+    rgba(10, 8, 24, 0.38);
 }
 
 .bsb-resume-mark {
@@ -7710,7 +7796,7 @@ dd {
 }
 
 .bsb-resume-mark span,
-.bsb-oracle-card span {
+.bsb-reader-controls .bsb-tool-explainer span {
   color: var(--gold);
   font-size: 0.62rem;
   font-weight: 900;
@@ -7860,7 +7946,6 @@ dd {
 }
 
 .bsb-immersive-reader[data-theme="papyrus"] .bsb-immersive-chapter,
-.bsb-immersive-reader[data-theme="papyrus"] .bsb-oracle-card,
 .bsb-immersive-reader[data-theme="papyrus"] .bsb-chapter-rail nav button,
 .bsb-immersive-reader[data-theme="papyrus"] .bsb-resume-mark {
   color: #211a26;
@@ -7905,7 +7990,6 @@ dd {
 
 .bsb-immersive-reader[data-theme="papyrus"] .bsb-chapter-deck,
 .bsb-immersive-reader[data-theme="papyrus"] .bsb-chapter-rail nav em,
-.bsb-immersive-reader[data-theme="papyrus"] .bsb-oracle-card p,
 .bsb-immersive-reader[data-theme="papyrus"] .bsb-hold-question p,
 .bsb-immersive-reader[data-theme="papyrus"] .bsb-palace-whisper p,
 .bsb-immersive-reader[data-theme="papyrus"] .bsb-story-figure figcaption {
@@ -8057,53 +8141,6 @@ dd {
     0 0 0 1px rgba(116, 86, 24, 0.18);
 }
 
-.bsb-reading-oracle {
-  display: grid;
-  gap: 12px;
-}
-
-.bsb-oracle-card {
-  display: grid;
-  gap: 8px;
-  padding: 16px;
-  border: 1px solid rgba(237, 227, 204, 0.12);
-  border-top-color: rgba(201, 162, 39, 0.42);
-  border-radius: 8px;
-  color: rgba(237, 227, 204, 0.72);
-  background: rgba(10, 8, 24, 0.48);
-}
-
-.bsb-oracle-card strong {
-  color: var(--pearl);
-  font-family: "EB Garamond", Georgia, serif;
-  font-size: clamp(1.28rem, 2vw, 1.74rem);
-  font-style: italic;
-  font-weight: 400;
-  line-height: 1.1;
-}
-
-.bsb-oracle-card.is-scale strong {
-  font-size: clamp(2.2rem, 5vw, 4.4rem);
-  font-style: normal;
-}
-
-.bsb-oracle-card p {
-  margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.5;
-}
-
-.bsb-reading-oracle button {
-  width: 100%;
-  min-height: auto;
-  padding: 10px 12px;
-  border-radius: 8px;
-  text-align: left;
-  text-transform: none;
-  letter-spacing: 0;
-  line-height: 1.35;
-}
-
 @media (max-width: 860px) {
   .bsb-hero,
   .bsb-chapter-hero {
@@ -8235,20 +8272,25 @@ dd {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .bsb-reader-command {
-    top: 154px;
-  }
-
-  .bsb-reader-toolbox {
-    justify-content: flex-start;
-  }
-
   .bsb-chapter-rail,
-  .bsb-reading-oracle {
+  .bsb-reader-controls {
     position: relative;
     top: auto;
     max-height: none;
     overflow: visible;
+  }
+
+  .bsb-reader-controls {
+    order: -1;
+  }
+
+  .bsb-reader-controls .bsb-reader-tool-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .bsb-reader-controls .bsb-tool-explainer {
+    grid-column: 1 / -1;
   }
 
   .bsb-chapter-rail nav {
@@ -8266,9 +8308,6 @@ dd {
     scroll-snap-align: start;
   }
 
-  .bsb-reading-oracle {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 700px) {
@@ -8312,7 +8351,7 @@ dd {
     padding: 16px;
   }
 
-  .bsb-reading-oracle {
+  .bsb-reader-controls .bsb-reader-tool-panel {
     grid-template-columns: 1fr;
   }
 }

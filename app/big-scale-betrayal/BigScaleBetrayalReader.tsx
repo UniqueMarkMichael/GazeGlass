@@ -381,7 +381,7 @@ export function BigScaleBetrayalReader() {
     body: "Tap or press any tool to see what it does before the story changes.",
   });
   const [voiceFollowOn, setVoiceFollowOn] = useState(false);
-  const [voiceFollowStatus, setVoiceFollowStatus] = useState<VoiceFollowStatus>("idle");
+  const [, setVoiceFollowStatus] = useState<VoiceFollowStatus>("idle");
   const [litParagraphKey, setLitParagraphKey] = useState<string | null>(null);
   const chapterRailRef = useRef<HTMLElement | null>(null);
   const observationModeRef = useRef<ObservationModeElementApi | null>(null);
@@ -608,69 +608,37 @@ export function BigScaleBetrayalReader() {
   const activeChapterData = bigScaleChapters[activeChapter - 1] ?? bigScaleChapters[0];
   const activeChapterIndex = bigScaleChapters.findIndex((chapter) => chapter.number === activeChapter);
   const activeIndex = activeChapterIndex >= 0 ? activeChapterIndex : 0;
-  const activeMedia = chapterMedia.filter((item) => item.chapterNumber === activeChapter);
   const progress = Math.round(((activeIndex + 1) / bigScaleChapters.length) * 100);
   const nextChapter = bigScaleChapters[activeIndex + 1] ?? null;
-
-  return (
-    <section
-      className="bsb-immersive-reader"
-      data-focus={focusMode}
-      data-font-style={fontStyle}
-      data-font-step={fontStep}
-      data-theme={theme}
-      aria-label="Immersive Big Scale Betrayal reader"
-    >
-      <ObservationModeBoot />
-      <div className="bsb-scale-progress" aria-hidden="true">
-        <span style={{ width: `${progress}%` }} />
-      </div>
-
-      <header className="bsb-reader-command" aria-label="Big Scale Betrayal reader tools">
-        <div>
-          <p className="eyebrow">Reader Instrument</p>
-          <h2>The Scale Is Awake.</h2>
-          <span>
-            Chapter {activeChapter} / {bigScaleChapters.length} · {readingMinutes} min total
-          </span>
-        </div>
-        <div className="bsb-reader-tool-panel">
-          <div className="bsb-reader-toolbox">
-            <button
-              type="button"
-              onClick={() => {
-                setFontStep((value) => Math.max(0, value - 1));
-                setToolFeedback(readerToolCopy.fontDown);
-              }}
-              aria-label="Decrease text size"
-              {...toolPreview(readerToolCopy.fontDown)}
-            >
-              A-
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setFontStep((value) => Math.min(2, value + 1));
-                setToolFeedback(readerToolCopy.fontUp);
-              }}
-              aria-label="Increase text size"
-              {...toolPreview(readerToolCopy.fontUp)}
-            >
-              A+
-            </button>
+  const readerControls = (
+    <div className="bsb-reader-tool-panel">
+      <div className="bsb-reader-control-group">
+        <span>Text</span>
+        <div className="bsb-reader-toolbox">
           <button
             type="button"
-            aria-pressed={theme === "papyrus"}
-            {...toolPreview(readerToolCopy.theme)}
             onClick={() => {
-              setTheme((value) => (value === "night" ? "papyrus" : "night"));
-              setToolFeedback(readerToolCopy.theme);
-              playGlassSound("select");
+              setFontStep((value) => Math.max(0, value - 1));
+              setToolFeedback(readerToolCopy.fontDown);
             }}
+            aria-label="Decrease text size"
+            {...toolPreview(readerToolCopy.fontDown)}
           >
-            {theme === "night" ? "Day" : "Night"}
+            A-
           </button>
           <button
+            type="button"
+            onClick={() => {
+              setFontStep((value) => Math.min(2, value + 1));
+              setToolFeedback(readerToolCopy.fontUp);
+            }}
+            aria-label="Increase text size"
+            {...toolPreview(readerToolCopy.fontUp)}
+          >
+            A+
+          </button>
+          <button
+            className="is-wide"
             type="button"
             aria-label={`Change font style. Current font style is ${fontStyleLabels[fontStyle]}`}
             {...toolPreview(readerToolCopy.fontStyle)}
@@ -685,6 +653,23 @@ export function BigScaleBetrayalReader() {
             }}
           >
             Font: {fontStyleLabels[fontStyle]}
+          </button>
+        </div>
+      </div>
+      <div className="bsb-reader-control-group">
+        <span>Focus</span>
+        <div className="bsb-reader-toolbox">
+          <button
+            type="button"
+            aria-pressed={theme === "papyrus"}
+            {...toolPreview(readerToolCopy.theme)}
+            onClick={() => {
+              setTheme((value) => (value === "night" ? "papyrus" : "night"));
+              setToolFeedback(readerToolCopy.theme);
+              playGlassSound("select");
+            }}
+          >
+            {theme === "night" ? "Day" : "Night"}
           </button>
           <button
             type="button"
@@ -710,6 +695,11 @@ export function BigScaleBetrayalReader() {
           >
             Lantern
           </button>
+        </div>
+      </div>
+      <div className="bsb-reader-control-group">
+        <span>Glass</span>
+        <div className="bsb-reader-toolbox">
           <button
             type="button"
             aria-pressed={voiceFollowOn}
@@ -742,6 +732,11 @@ export function BigScaleBetrayalReader() {
           >
             Field Notes
           </button>
+        </div>
+      </div>
+      <div className="bsb-reader-control-group is-return">
+        <span>Return</span>
+        <div className="bsb-reader-toolbox">
           <CopyLinkButton
             onCopied={() => setToolFeedback(readerToolCopy.copyDone)}
             onPressStart={() => setToolFeedback(readerToolCopy.copy)}
@@ -750,10 +745,35 @@ export function BigScaleBetrayalReader() {
             All Story Controls
           </button>
         </div>
-        <div className="bsb-tool-explainer" id="bsb-tool-explainer" role="status" aria-live="polite">
-          <span>{toolFeedback.title}</span>
-          <p>{toolFeedback.body}</p>
-        </div>
+      </div>
+      <div className="bsb-tool-explainer" id="bsb-tool-explainer" role="status" aria-live="polite">
+        <span>{toolFeedback.title}</span>
+        <p>{toolFeedback.body}</p>
+      </div>
+    </div>
+  );
+
+  return (
+    <section
+      className="bsb-immersive-reader"
+      data-focus={focusMode}
+      data-font-style={fontStyle}
+      data-font-step={fontStep}
+      data-theme={theme}
+      aria-label="Immersive Big Scale Betrayal reader"
+    >
+      <ObservationModeBoot />
+      <div className="bsb-scale-progress" aria-hidden="true">
+        <span style={{ width: `${progress}%` }} />
+      </div>
+
+      <header className="bsb-reader-command" aria-label="Big Scale Betrayal reader status">
+        <div>
+          <p className="eyebrow">Reader Instrument</p>
+          <h2>The Scale Is Awake.</h2>
+          <span>
+            Chapter {activeChapter} / {bigScaleChapters.length} · {readingMinutes} min total
+          </span>
         </div>
       </header>
 
@@ -848,32 +868,12 @@ export function BigScaleBetrayalReader() {
           </observation-mode>
         </div>
 
-        <aside className="bsb-reading-oracle" aria-label="Current reader signals">
-          <div className="bsb-oracle-card is-scale">
-            <span>Scale Pulse</span>
-            <strong>{progress}%</strong>
-            <p>The record brightens as you move through Heba's testimony.</p>
+        <aside className="bsb-reader-controls" aria-label="Big Scale Betrayal reader controls">
+          <div className="bsb-reader-controls-head">
+            <p className="eyebrow">Reader Controls</p>
+            <h3>The Glass in Hand</h3>
           </div>
-          <div className="bsb-oracle-card">
-            <span>Current Chapter</span>
-            <strong>{activeChapterData.title}</strong>
-            <p>{activeChapterData.deck}</p>
-          </div>
-          <div className="bsb-oracle-card">
-            <span>Reading Support</span>
-            <strong>{voiceFollowStatus === "listening" ? "Voice Following" : fontStyleLabels[fontStyle]}</strong>
-            <p>{voiceFollowStatus === "listening" ? readerToolCopy.voiceListening.body : fontStyleDescriptions[fontStyle]}</p>
-          </div>
-          {activeMedia.length ? (
-            <div className="bsb-oracle-card">
-              <span>Witnessed Scenes</span>
-              {activeMedia.map((media) => (
-                <button key={`${media.chapterNumber}-${media.after}-${media.src}`} type="button" onClick={() => jumpToChapter(media.chapterNumber)}>
-                  {media.caption}
-                </button>
-              ))}
-            </div>
-          ) : null}
+          {readerControls}
         </aside>
       </div>
 
