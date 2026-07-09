@@ -153,6 +153,15 @@ const chapterMedia: ChapterMedia[] = [
   },
   {
     chapterNumber: 3,
+    after: 9,
+    type: "image",
+    src: `${assetBase}/chapter3-image-4.png`,
+    fit: "cover",
+    alt: "Heba studies her glowing scale with a white feather and living red heart in the quiet of the cabbage stall",
+    caption: "Heba watches the heart beat and the feather burn, understanding that the scale is still speaking.",
+  },
+  {
+    chapterNumber: 3,
     after: 41,
     type: "image",
     src: `${assetBase}/chapter3-image-2.png`,
