@@ -239,6 +239,33 @@ const chapterMedia: ChapterMedia[] = [
     caption: "At the threshold, black sand writes Heba's name and draws the shape that has been following her.",
     wide: true,
   },
+  {
+    chapterNumber: 8,
+    after: 15,
+    type: "image",
+    src: `${assetBase}/chapter8-userhat-trainees.png`,
+    alt: "Userhat stands before a line of temple trainees while Heba watches in the hall of trials",
+    caption: "Userhat walks the line of trainees, and Heba learns the hall of trials has already begun weighing her.",
+    wide: true,
+  },
+  {
+    chapterNumber: 8,
+    after: 20,
+    type: "image",
+    src: `${assetBase}/chapter8-chamber-revealed.png`,
+    alt: "Heba and the trainees stand before the vast golden chamber of judgment beneath the western temple",
+    caption: "The far wall opens, and the chamber of judgment reveals a floor that is already paying attention.",
+    wide: true,
+  },
+  {
+    chapterNumber: 8,
+    after: 34,
+    type: "image",
+    src: `${assetBase}/chapter8-heba-crosses-sand.png`,
+    alt: "Heba walks alone across the glowing sand floor of the chamber of judgment",
+    caption: "Heba steps onto the sand alone, and the floor begins to ask what she is made of.",
+    wide: true,
+  },
 ];
 
 function wordCount() {
