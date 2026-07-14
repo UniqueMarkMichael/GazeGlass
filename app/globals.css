@@ -20,6 +20,149 @@
   --page-gutter: clamp(30px, 7vw, 96px);
 }
 
+/* A Family of Mortals — cinematic novel reader */
+.afom-reader {
+  --reader-gold: #e3b961;
+  --reader-ivory: #eee6d7;
+  min-height: 100vh;
+  overflow-x: clip;
+  background: radial-gradient(circle at 50% 8%, rgba(103, 44, 109, 0.17), transparent 32rem), #08070d;
+  color: var(--reader-ivory);
+}
+
+.afom-reader-bar {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem clamp(1rem, 4vw, 4rem);
+  color: rgba(255, 248, 235, 0.86);
+  font: 600 0.72rem/1.2 "Mulish", system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.afom-reader-back { color: inherit; text-decoration: none; }
+.afom-reader-back:hover,
+.afom-reader-back:focus-visible { color: var(--reader-gold); }
+.afom-reader-progress { opacity: 0.7; }
+
+.afom-chapter-hero {
+  position: relative;
+  display: grid;
+  min-height: min(88vh, 56rem);
+  place-items: end center;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(227, 185, 97, 0.25);
+}
+
+.afom-chapter-video,
+.afom-chapter-veil { position: absolute; inset: 0; width: 100%; height: 100%; }
+.afom-chapter-video { object-fit: cover; }
+.afom-chapter-veil {
+  background: linear-gradient(180deg, rgba(6, 5, 11, 0.18) 20%, rgba(6, 5, 11, 0.45) 56%, #08070d 100%), linear-gradient(90deg, rgba(6, 5, 11, 0.35), transparent 30%, transparent 70%, rgba(6, 5, 11, 0.35));
+}
+
+.afom-chapter-titleblock {
+  position: relative;
+  z-index: 2;
+  width: min(90%, 46rem);
+  padding: 9rem 1rem 5rem;
+  text-align: center;
+  text-shadow: 0 2px 30px #000;
+}
+
+.afom-chapter-titleblock > p:first-child,
+.afom-chapter-titleblock > span {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: var(--reader-gold);
+  font: 600 0.72rem/1.2 "Mulish", system-ui, sans-serif;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.afom-chapter-titleblock h1 {
+  margin: 0;
+  color: #fff4df;
+  font: 500 clamp(4.4rem, 12vw, 8.5rem)/0.82 "Playfair Display", Georgia, serif;
+  letter-spacing: -0.04em;
+}
+
+.afom-chapter-sigil { margin: 1.5rem auto 1rem; color: var(--reader-gold); font-size: 0.75rem; }
+.afom-chapter-invitation { color: rgba(255, 248, 235, 0.75); font: italic 400 1.05rem/1.5 "EB Garamond", Georgia, serif; }
+
+.afom-prose {
+  width: min(calc(100% - 2.5rem), 43rem);
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 8rem) 0;
+  color: #e8e0d3;
+  font: 400 clamp(1.16rem, 1.7vw, 1.32rem)/1.85 "EB Garamond", Georgia, serif;
+}
+
+.afom-prose p { margin: 0 0 1.55em; }
+.afom-prose-beat { display: contents; }
+.afom-dropcap::first-letter {
+  float: left;
+  margin: 0.1em 0.12em 0 0;
+  color: var(--reader-gold);
+  font-size: 4.2em;
+  line-height: 0.72;
+}
+
+.afom-story-image {
+  width: min(86vw, 70rem);
+  margin: clamp(4rem, 10vw, 8rem) 50%;
+  transform: translateX(-50%);
+}
+.afom-story-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(227, 185, 97, 0.28);
+  box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.62), 0 0 4rem rgba(164, 62, 135, 0.11);
+}
+.afom-story-image-portrait { width: min(82vw, 40rem); }
+
+.afom-chapter-end {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 2rem 1.25rem 7rem;
+  text-align: center;
+}
+.afom-chapter-end > span { color: var(--reader-gold); }
+.afom-chapter-end p { margin: 0; font: 500 2rem/1 "Playfair Display", Georgia, serif; }
+.afom-chapter-end button {
+  min-height: 48px;
+  padding: 0.8rem 1.4rem;
+  border: 1px solid rgba(227, 185, 97, 0.25);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(238, 230, 215, 0.45);
+}
+.afom-chapter-end a { color: var(--reader-gold); }
+
+@media (max-width: 640px) {
+  .afom-reader-progress { display: none; }
+  .afom-chapter-hero { min-height: 76svh; }
+  .afom-chapter-titleblock { padding-bottom: 3.5rem; }
+  .afom-prose { width: min(calc(100% - 2.25rem), 39rem); line-height: 1.72; }
+  .afom-story-image { width: calc(100vw - 1rem); margin-block: 3.5rem; }
+  .afom-story-image-portrait { width: min(calc(100vw - 2rem), 31rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .afom-chapter-video { display: none; }
+  .afom-chapter-hero { background: url('/novels/a-family-of-mortals/chapter-1/marok-floating-over-foxnip.png') center / cover no-repeat; }
+}
+
 /* A Family of Mortals — unlisted commerce preview */
 .afom-page {
   --afom-ink: #090711;

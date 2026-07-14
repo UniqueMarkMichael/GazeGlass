@@ -71,8 +71,8 @@ export default function FamilyOfMortalsPreviewPage() {
           </p>
 
           <div className="afom-actions" aria-label="Novel actions">
-            <a className="afom-button afom-button-secondary" href="#sample">
-              Begin Witnessing
+            <a className="afom-button afom-button-secondary" href="/novels/a-family-of-mortals/read/chapter-1">
+              Read Chapter One
             </a>
             <button
               className="afom-button afom-button-primary"
@@ -107,9 +107,9 @@ export default function FamilyOfMortalsPreviewPage() {
             </li>
           ))}
         </ol>
-        <button className="afom-text-action" type="button" disabled>
-          The sample is being inscribed
-        </button>
+        <a className="afom-text-action" href="/novels/a-family-of-mortals/read/chapter-1">
+          Enter Chapter One
+        </a>
       </section>
 
       <section className="afom-promise" aria-labelledby="afom-promise-title">
