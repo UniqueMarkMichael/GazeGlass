@@ -11,7 +11,6 @@ const assetBase = "/big-scale-betrayal/assets";
 const BSB_BOOKMARK_KEY = "gaze-glass.bsb-bookmark.v1";
 const BSB_READER_STATE_KEY = "gaze-glass.bsb-reader-state.v3";
 
-type ReaderTheme = "night" | "papyrus";
 type FocusMode = "none" | "ruler" | "lantern";
 type FontStyle = "literary" | "readable" | "dyslexia";
 type VoiceFollowStatus = "idle" | "listening" | "unsupported" | "blocked";
@@ -726,10 +725,6 @@ const readerToolCopy = {
     title: "Reading ruler",
     body: "Adds a fine golden guide beneath each paragraph to help your eyes keep their place.",
   },
-  theme: {
-    title: "Day and night",
-    body: "Switches between the dark glass reader and a warmer papyrus reading surface.",
-  },
   voice: {
     title: "Follow Voice",
     body: "Listens through your browser and lights up the paragraph it recognizes while you read aloud.",
@@ -859,7 +854,6 @@ export function BigScaleBetrayalReader() {
     [],
   );
   const [activeChapter, setActiveChapter] = useState(1);
-  const [theme, setTheme] = useState<ReaderTheme>("night");
   const [focusMode, setFocusMode] = useState<FocusMode>("ruler");
   const [fontStyle, setFontStyle] = useState<FontStyle>("literary");
   const [showImages, setShowImages] = useState(true);
@@ -881,7 +875,6 @@ export function BigScaleBetrayalReader() {
     try {
       const rawState = window.localStorage.getItem(BSB_READER_STATE_KEY);
       const parsed = rawState ? JSON.parse(rawState) : null;
-      if (parsed?.theme === "papyrus" || parsed?.theme === "night") setTheme(parsed.theme);
       if (parsed?.focusMode === "none" || parsed?.focusMode === "ruler" || parsed?.focusMode === "lantern") {
         setFocusMode(parsed.focusMode);
       }
@@ -901,10 +894,10 @@ export function BigScaleBetrayalReader() {
     try {
       window.localStorage.setItem(
         BSB_READER_STATE_KEY,
-        JSON.stringify({ theme, focusMode, fontStyle, showImages, showWhispers, fontStep }),
+        JSON.stringify({ focusMode, fontStyle, showImages, showWhispers, fontStep }),
       );
     } catch {}
-  }, [theme, focusMode, fontStyle, showImages, showWhispers, fontStep]);
+  }, [focusMode, fontStyle, showImages, showWhispers, fontStep]);
 
   useEffect(() => {
     try {
@@ -1150,18 +1143,6 @@ export function BigScaleBetrayalReader() {
         <div className="bsb-reader-toolbox">
           <button
             type="button"
-            aria-pressed={theme === "papyrus"}
-            {...toolPreview(readerToolCopy.theme)}
-            onClick={() => {
-              setTheme((value) => (value === "night" ? "papyrus" : "night"));
-              setToolFeedback(readerToolCopy.theme);
-              playGlassSound("select");
-            }}
-          >
-            {theme === "night" ? "Day" : "Night"}
-          </button>
-          <button
-            type="button"
             aria-pressed={focusMode === "ruler"}
             {...toolPreview(readerToolCopy.ruler)}
             onClick={() => {
@@ -1248,7 +1229,7 @@ export function BigScaleBetrayalReader() {
       data-focus={focusMode}
       data-font-style={fontStyle}
       data-font-step={fontStep}
-      data-theme={theme}
+      data-theme="night"
       aria-label="Immersive Big Scale Betrayal reader"
     >
       <ObservationModeBoot />
