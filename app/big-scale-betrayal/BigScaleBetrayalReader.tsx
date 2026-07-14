@@ -326,6 +326,15 @@ const chapterMedia: ChapterMedia[] = [
   },
   {
     chapterNumber: 8,
+    after: 7,
+    type: "image",
+    src: `${assetBase}/chapter8-heba-nahara-room.png`,
+    fit: "cover",
+    alt: "Heba and Nahara stand across from each other in their first shared servant room",
+    caption: "Two narrow beds, one lamp, and a room honest enough not to pretend it is a throne.",
+  },
+  {
+    chapterNumber: 8,
     after: 15,
     type: "image",
     src: `${assetBase}/chapter8-userhat-trainees.png`,

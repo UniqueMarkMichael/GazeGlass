@@ -13,6 +13,15 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: "/novels/a-family-of-mortals/:path*",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive, noimageindex",
+          },
+        ],
+      },
     ];
   },
 };
