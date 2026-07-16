@@ -16,6 +16,21 @@ const images = [
     src: "/novels/a-family-of-mortals/chapter-3/tea-merchant.png",
     alt: "The Tea Merchant pours chai for Rashid and Jermaine at dusk while the rescued calf watches beside them.",
   },
+  {
+    after: 28,
+    src: "/novels/a-family-of-mortals/chapter-3/garland.png",
+    alt: "A grateful mother places a marigold and jasmine garland around Rashid's neck as Jermaine and her children gather beside the tea cart.",
+  },
+  {
+    after: 38,
+    src: "/novels/a-family-of-mortals/chapter-3/hooded-figure.png",
+    alt: "Rashid looks back at a faceless hooded figure in scarlet boots moving through the darkening marketplace beneath circling black birds.",
+  },
+  {
+    after: 65,
+    src: "/novels/a-family-of-mortals/chapter-3/rashid-pulls-hair.png",
+    alt: "Rashid weeps beneath the full moon, holding strands of his pulled hair as Jermaine reaches toward him and the rescued calf remains at his side.",
+  },
 ];
 
 const config = {
@@ -29,9 +44,9 @@ const config = {
     { key: "market", start: 5, label: "The Marketplace", invitation: "Cruelty tests Jermaine’s anger and Rashid’s instinct to retreat." },
     { key: "fracture", start: 13, label: "People Like Me", invitation: "One unfinished sentence opens an old and dangerous wound." },
     { key: "tea", start: 19, label: "The Tea Merchant", invitation: "A stranger offers warmth before anger consumes what love remains." },
-    { key: "hooded", start: 37, label: "The Hooded Figure", invitation: "Something impossible crosses Rashid’s path and vanishes into the crowd." },
-    { key: "family", start: 43, label: "The Shah Family", invitation: "Rashid names the shape of home—and why he longs to escape it." },
-    { key: "voice", start: 53, label: "Find Your Voice", invitation: "Jermaine asks Rashid to believe he is not powerless." },
+    { key: "hooded", start: 38, label: "The Hooded Figure", invitation: "Something impossible crosses Rashid’s path and vanishes into the crowd." },
+    { key: "family", start: 44, label: "The Shah Family", invitation: "Rashid names the shape of home—and why he longs to escape it." },
+    { key: "voice", start: 54, label: "Find Your Voice", invitation: "Jermaine asks Rashid to believe he is not powerless." },
   ],
   relicTitle: "Love Does Not Make You Small",
   relicQuote: "“Love doesn’t make you sad. Love doesn’t make you feel small.”",
