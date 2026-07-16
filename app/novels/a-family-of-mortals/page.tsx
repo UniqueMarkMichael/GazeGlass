@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { GlassMenu } from "../../components/GlassMenu";
+import { AFOM_ACCESS_COOKIE, hasAfomAccess } from "./access";
 
 export const metadata: Metadata = {
   title: "A Family of Mortals — Private Preview",
@@ -22,12 +24,15 @@ const sampleContents = [
   { marker: "PRO", title: "Prologue", detail: "Open" },
   { marker: "01", title: "Chapter One", detail: "Marok", href: "/novels/a-family-of-mortals/read/chapter-1" },
   { marker: "02", title: "Chapter Two", detail: "Sahil", href: "/novels/a-family-of-mortals/read/chapter-2" },
-  { marker: "03", title: "Chapter Three", detail: "Rashid", status: "In production" },
+  { marker: "03", title: "Chapter Three", detail: "Rashid", href: "/novels/a-family-of-mortals/read/chapter-3" },
   { marker: "04", title: "Chapter Four", detail: "Rashid", status: "In production" },
   { marker: "05", title: "Chapter Five", detail: "Jermaine", status: "In production" },
 ];
 
-export default function FamilyOfMortalsPreviewPage() {
+export default async function FamilyOfMortalsPreviewPage() {
+  const cookieStore = await cookies();
+  if (!hasAfomAccess(cookieStore.get(AFOM_ACCESS_COOKIE)?.value)) return null;
+
   return (
     <main className="afom-page">
       <header className="site-header afom-site-header" aria-label="Primary navigation">

@@ -36,7 +36,7 @@ const menuItems = [
   {
     label: "A Family of Mortals",
     href: "/novels/a-family-of-mortals",
-    detail: "Unseal the private preview of the first Gaze Glass novel.",
+    detail: "Experience The First Novel In The Saga.",
     action: "Open A Family of Mortals",
   },
   {

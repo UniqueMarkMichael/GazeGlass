@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import chapter from "./chapter-one.json";
 import { ChapterOneExperience } from "./ChapterOneExperience";
+import { AFOM_ACCESS_COOKIE, hasAfomAccess } from "../../access";
 
 export const metadata: Metadata = {
   title: "Chapter 1: Marok — A Family of Mortals",
@@ -16,6 +18,9 @@ const images = [
   { after: 73, src: "/novels/a-family-of-mortals/chapter-1/snakes-possessed.png", alt: "Two black cobras entwine outside a weathered farmhouse, glowing with crimson and violet divine possession." },
 ];
 
-export default function ChapterOnePage() {
+export default async function ChapterOnePage() {
+  const cookieStore = await cookies();
+  if (!hasAfomAccess(cookieStore.get(AFOM_ACCESS_COOKIE)?.value)) return null;
+
   return <ChapterOneExperience paragraphs={chapter.paragraphs} images={images} />;
 }

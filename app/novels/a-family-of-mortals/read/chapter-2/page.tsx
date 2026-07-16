@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { ChapterOneExperience } from "../chapter-1/ChapterOneExperience";
 import chapter from "./chapter-two.json";
+import { AFOM_ACCESS_COOKIE, hasAfomAccess } from "../../access";
 
 export const metadata: Metadata = {
   title: "Chapter 2: Sahil — A Family of Mortals",
@@ -23,6 +25,11 @@ const images = [
     after: 35,
     src: "/novels/a-family-of-mortals/chapter-2/sahil-meets-god-of-beauty.png",
     alt: "Sahil meets the radiant, ten-armed God of Beauty in the back of a poachers' truck as rain and black birds hang frozen around them.",
+  },
+  {
+    after: 56,
+    src: "/novels/a-family-of-mortals/chapter-2/sahil-turns-zatik.png",
+    alt: "Sahil radiates rose-colored divine power as Zatik transforms into black tourmaline and crumbles in the rain-soaked jungle.",
   },
 ];
 
@@ -48,6 +55,9 @@ const config = {
   focusDescription: "The youngest Shah. Restless, fearless, and chosen before he understands the cost.",
 };
 
-export default function ChapterTwoPage() {
+export default async function ChapterTwoPage() {
+  const cookieStore = await cookies();
+  if (!hasAfomAccess(cookieStore.get(AFOM_ACCESS_COOKIE)?.value)) return null;
+
   return <ChapterOneExperience paragraphs={chapter.paragraphs} images={images} config={config} />;
 }

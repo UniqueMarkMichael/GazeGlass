@@ -301,8 +301,8 @@ export function ChapterOneExperience({ paragraphs, images, config }: { paragraph
         {paragraphs.map((paragraph, index) => {
           const image = imagesByParagraph.get(index);
           const scene = chapterScenes.find((item) => item.start === index);
-          const isDivine = index === 22 || index === 23 || index === 53;
-          const isWar = index === 15 || index === 18 || index === 20;
+          const isDivine = chapterNumber === 1 && (index === 22 || index === 23 || index === 53);
+          const isWar = chapterNumber === 1 && (index === 15 || index === 18 || index === 20);
           return (
             <div className="afom-prose-beat" key={index} data-afom-scene={scene?.key}>
               {scene && index !== 0 ? <div className="afom-scene-threshold"><span>{scene.label}</span><p>{scene.invitation}</p><button type="button" disabled title="Narration master required">Listen from here · Voice master pending</button></div> : null}
@@ -320,7 +320,7 @@ export function ChapterOneExperience({ paragraphs, images, config }: { paragraph
                 data-afom-scene={scene?.key}
               >{renderEnchantedText(paragraph, index)}</p>
               {holdablePassages.has(index) ? <button className="afom-hold-passage" type="button" aria-pressed={heldPassages.includes(index)} onClick={() => toggleHeldPassage(index)}>{heldPassages.includes(index) ? "Held in the Glass" : "Hold this passage in the Glass"}</button> : null}
-              {secondGaze && (index === 15 || index === 53 || index === 73) ? <aside className="afom-second-gaze"><span>Second Gaze</span><p>{index === 15 ? "War watches Earth through a mirror, but the chapter is quietly asking who is truly being observed." : index === 53 ? "Their forms change while their recognition of one another does not. Divinity resides in the bond, not the vessel." : "The prayer is answered literally—and abandoned morally. Divine attention is not divine care."}</p></aside> : null}
+              {chapterNumber === 1 && secondGaze && (index === 15 || index === 53 || index === 73) ? <aside className="afom-second-gaze"><span>Second Gaze</span><p>{index === 15 ? "War watches Earth through a mirror, but the chapter is quietly asking who is truly being observed." : index === 53 ? "Their forms change while their recognition of one another does not. Divinity resides in the bond, not the vessel." : "The prayer is answered literally—and abandoned morally. Divine attention is not divine care."}</p></aside> : null}
             </div>
           );
         })}
