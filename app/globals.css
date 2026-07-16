@@ -139,7 +139,10 @@
 }
 .afom-chapter-end > span { color: var(--reader-gold); }
 .afom-chapter-end p { margin: 0; font: 500 2rem/1 "Playfair Display", Georgia, serif; }
-.afom-chapter-end button {
+.afom-chapter-end button,
+.afom-chapter-end .afom-next-chapter {
+  display: inline-flex;
+  align-items: center;
   min-height: 48px;
   padding: 0.8rem 1.4rem;
   border: 1px solid rgba(227, 185, 97, 0.25);
@@ -147,6 +150,7 @@
   background: transparent;
   color: rgba(238, 230, 215, 0.45);
 }
+.afom-chapter-end .afom-next-chapter { color: var(--reader-gold); text-decoration: none; }
 .afom-chapter-end a { color: var(--reader-gold); }
 
 @media (max-width: 640px) {

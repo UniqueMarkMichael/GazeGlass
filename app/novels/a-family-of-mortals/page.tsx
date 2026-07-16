@@ -26,7 +26,7 @@ const sampleContents = [
   { marker: "02", title: "Chapter Two", detail: "Sahil", href: "/novels/a-family-of-mortals/read/chapter-2" },
   { marker: "03", title: "Chapter Three", detail: "Rashid", href: "/novels/a-family-of-mortals/read/chapter-3" },
   { marker: "04", title: "Chapter Four", detail: "Rashid", href: "/novels/a-family-of-mortals/read/chapter-4" },
-  { marker: "05", title: "Chapter Five", detail: "Jermaine", status: "In production" },
+  { marker: "05", title: "Chapter Five", detail: "Jermaine", href: "/novels/a-family-of-mortals/read/chapter-5" },
 ];
 
 export default async function FamilyOfMortalsPreviewPage() {
@@ -124,7 +124,7 @@ export default async function FamilyOfMortalsPreviewPage() {
                 <>
                   <span>{item.marker}</span>
                   <strong>{item.title}</strong>
-                  <em>{item.detail}{item.status ? <small>{item.status}</small> : null}</em>
+                  <em>{item.detail}</em>
                 </>
               )}
             </li>

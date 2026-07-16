@@ -63,7 +63,7 @@ const defaults: Preferences = {
 };
 
 function numberWord(number: number) {
-  return ["Zero", "One", "Two", "Three", "Four", "Five"][number] ?? String(number);
+  return ["Zero", "One", "Two", "Three", "Four", "Five", "Six"][number] ?? String(number);
 }
 
 type ChapterConfig = {
@@ -335,7 +335,13 @@ export function ChapterOneExperience({ paragraphs, images, config }: { paragraph
 
       <footer className="afom-chapter-end">
         <span aria-hidden="true">✦</span><p>End of Chapter {numberWord(chapterNumber)}</p>
-        <button type="button" disabled>Chapter Two · Coming to the pilot</button>
+        {chapterNumber < 5 ? (
+          <Link className="afom-next-chapter" href={`/novels/a-family-of-mortals/read/chapter-${chapterNumber + 1}`}>
+            Enter Chapter {numberWord(chapterNumber + 1)}
+          </Link>
+        ) : (
+          <button type="button" disabled>Chapter Six · In production</button>
+        )}
         <Link href="/novels/a-family-of-mortals">Return to the sealed account</Link>
       </footer>
 
