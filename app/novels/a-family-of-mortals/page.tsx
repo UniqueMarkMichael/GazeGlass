@@ -21,7 +21,7 @@ const sampleContents = [
   { marker: "SYN", title: "Synopsis", detail: "Open" },
   { marker: "PRO", title: "Prologue", detail: "Open" },
   { marker: "01", title: "Chapter One", detail: "Marok", href: "/novels/a-family-of-mortals/read/chapter-1" },
-  { marker: "02", title: "Chapter Two", detail: "Sahil", status: "In production" },
+  { marker: "02", title: "Chapter Two", detail: "Sahil", href: "/novels/a-family-of-mortals/read/chapter-2" },
   { marker: "03", title: "Chapter Three", detail: "Rashid", status: "In production" },
   { marker: "04", title: "Chapter Four", detail: "Rashid", status: "In production" },
   { marker: "05", title: "Chapter Five", detail: "Jermaine", status: "In production" },

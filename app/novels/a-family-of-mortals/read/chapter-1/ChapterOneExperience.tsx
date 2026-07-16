@@ -7,7 +7,7 @@ import { playGlassSound } from "../../../../components/glassSound";
 type ReaderTheme = "night" | "moonstone" | "parchment";
 type ReaderFont = "literary" | "readable";
 type ReaderWidth = "intimate" | "balanced" | "expansive";
-type SceneKey = "paradise" | "war" | "beauty" | "mortal" | "possession";
+type SceneKey = string;
 type PanelKey = "reading" | "atmosphere" | "voice" | "archive";
 
 type StoryImage = {
@@ -28,9 +28,7 @@ type Preferences = {
 };
 
 const PREFS_KEY = "gaze-glass:afom:reader-preferences";
-const PLACE_KEY = "gaze-glass:afom:chapter-1-place";
 const SAVED_KEY = "gaze-glass:afom:held-passages";
-const RELIC_KEY = "gaze-glass:afom:chapter-1-relic";
 const SECOND_GAZE_KEY = "gaze-glass:afom:second-gaze";
 
 const scenes: Array<{ key: SceneKey; start: number; label: string; invitation: string }> = [
@@ -64,7 +62,31 @@ const defaults: Preferences = {
   focus: false,
 };
 
-export function ChapterOneExperience({ paragraphs, images }: { paragraphs: string[]; images: StoryImage[] }) {
+function numberWord(number: number) {
+  return ["Zero", "One", "Two", "Three", "Four", "Five"][number] ?? String(number);
+}
+
+type ChapterConfig = {
+  number: number;
+  title: string;
+  video: string;
+  poster: string;
+  invitation?: string;
+  scenes?: Array<{ key: SceneKey; start: number; label: string; invitation: string }>;
+  relicTitle?: string;
+  relicQuote?: string;
+  relicMeaning?: string;
+  focusKind?: string;
+  focusName?: string;
+  focusDescription?: string;
+};
+
+export function ChapterOneExperience({ paragraphs, images, config }: { paragraphs: string[]; images: StoryImage[]; config?: ChapterConfig }) {
+  const chapterNumber = config?.number ?? 1;
+  const chapterTitle = config?.title ?? "Marok";
+  const chapterScenes = config?.scenes ?? scenes;
+  const placeKey = `gaze-glass:afom:chapter-${chapterNumber}-place`;
+  const relicKey = `gaze-glass:afom:chapter-${chapterNumber}-relic`;
   const [prefs, setPrefs] = useState<Preferences>(defaults);
   const [panelOpen, setPanelOpen] = useState(false);
   const [activePanel, setActivePanel] = useState<PanelKey>("reading");
@@ -72,7 +94,7 @@ export function ChapterOneExperience({ paragraphs, images }: { paragraphs: strin
   const [savedPlace, setSavedPlace] = useState(0);
   const [resumeVisible, setResumeVisible] = useState(false);
   const [activeParagraph, setActiveParagraph] = useState(0);
-  const [activeScene, setActiveScene] = useState<SceneKey>("paradise");
+  const [activeScene, setActiveScene] = useState<SceneKey>(chapterScenes[0]?.key ?? "opening");
   const [lensTerm, setLensTerm] = useState<string | null>(null);
   const [heldPassages, setHeldPassages] = useState<number[]>([]);
   const [relicUnlocked, setRelicUnlocked] = useState(false);
@@ -86,14 +108,14 @@ export function ChapterOneExperience({ paragraphs, images }: { paragraphs: strin
     try {
       const raw = window.localStorage.getItem(PREFS_KEY);
       if (raw) setPrefs({ ...defaults, ...JSON.parse(raw) });
-      const place = Number(window.localStorage.getItem(PLACE_KEY) ?? 0);
+      const place = Number(window.localStorage.getItem(placeKey) ?? 0);
       if (place > 4 && place < 95) {
         setSavedPlace(place);
         setResumeVisible(true);
       }
       const held = JSON.parse(window.localStorage.getItem(SAVED_KEY) ?? "[]");
       if (Array.isArray(held)) setHeldPassages(held.filter((value) => Number.isInteger(value)));
-      setRelicUnlocked(window.localStorage.getItem(RELIC_KEY) === "unlocked");
+      setRelicUnlocked(window.localStorage.getItem(relicKey) === "unlocked");
       setSecondGaze(window.localStorage.getItem(SECOND_GAZE_KEY) === "on");
     } catch {}
     setHydrated(true);
@@ -109,10 +131,10 @@ export function ChapterOneExperience({ paragraphs, images }: { paragraphs: strin
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const next = max > 0 ? Math.min(100, Math.max(0, (window.scrollY / max) * 100)) : 0;
       setProgress(next);
-      try { window.localStorage.setItem(PLACE_KEY, next.toFixed(2)); } catch {}
+      try { window.localStorage.setItem(placeKey, next.toFixed(2)); } catch {}
       if (next > 92) {
         setRelicUnlocked(true);
-        try { window.localStorage.setItem(RELIC_KEY, "unlocked"); } catch {}
+        try { window.localStorage.setItem(relicKey, "unlocked"); } catch {}
       }
     };
     updateProgress();
@@ -128,7 +150,7 @@ export function ChapterOneExperience({ paragraphs, images }: { paragraphs: strin
     const markers = Array.from(document.querySelectorAll<HTMLElement>("[data-afom-paragraph][data-afom-scene]"));
     const updateScene = () => {
       const threshold = window.innerHeight * 0.42;
-      let current: SceneKey = "paradise";
+      let current: SceneKey = chapterScenes[0]?.key ?? "opening";
       for (const marker of markers) {
         if (marker.getBoundingClientRect().top <= threshold) current = marker.dataset.afomScene as SceneKey;
         else break;
@@ -142,7 +164,7 @@ export function ChapterOneExperience({ paragraphs, images }: { paragraphs: strin
       window.removeEventListener("scroll", updateScene);
       window.removeEventListener("resize", updateScene);
     };
-  }, []);
+  }, [chapterScenes]);
 
   useEffect(() => {
     if (!prefs.focus) return;
@@ -226,7 +248,7 @@ export function ChapterOneExperience({ paragraphs, images }: { paragraphs: strin
     });
   }
 
-  const activeSceneData = scenes.find((scene) => scene.key === activeScene) ?? scenes[0]!;
+  const activeSceneData = chapterScenes.find((scene) => scene.key === activeScene) ?? chapterScenes[0]!;
   const lens = lensTerm ? glossary[lensTerm] : null;
   const knownProgress = Math.max(progress, savedPlace);
 
@@ -244,41 +266,41 @@ export function ChapterOneExperience({ paragraphs, images }: { paragraphs: strin
       <div className="afom-scene-aura" aria-hidden="true" />
       <div className="afom-reading-progress" aria-hidden="true">
         <span style={{ width: `${progress}%` }} />
-        <div className="afom-progress-stars">{scenes.map((scene) => <i key={scene.key} className={scenes.indexOf(scene) / (scenes.length - 1) * 100 <= progress ? "is-passed" : ""} style={{ left: `${scenes.indexOf(scene) / (scenes.length - 1) * 100}%` }} />)}</div>
+        <div className="afom-progress-stars">{chapterScenes.map((scene) => <i key={scene.key} className={chapterScenes.indexOf(scene) / Math.max(1, chapterScenes.length - 1) * 100 <= progress ? "is-passed" : ""} style={{ left: `${chapterScenes.indexOf(scene) / Math.max(1, chapterScenes.length - 1) * 100}%` }} />)}</div>
       </div>
       <header className="afom-reader-bar">
         <Link href="/novels/a-family-of-mortals" className="afom-reader-back"><span aria-hidden="true">←</span> A Family of Mortals</Link>
-        <span className="afom-reader-progress">Chapter 1 of 77 · {Math.round(progress)}%</span>
+        <span className="afom-reader-progress">Chapter {chapterNumber} of 77 · {Math.round(progress)}%</span>
       </header>
 
       <div className="afom-scene-whisper" aria-live="polite"><span>{activeSceneData.label}</span><p>{activeSceneData.invitation}</p></div>
 
       <section className="afom-chapter-hero" aria-labelledby="chapter-title">
         {prefs.motion ? (
-          <video ref={videoRef} className="afom-chapter-video" autoPlay muted loop playsInline preload="metadata" poster="/novels/a-family-of-mortals/chapter-1/marok-floating-over-foxnip.png" aria-hidden="true">
-            <source src="/novels/a-family-of-mortals/chapter-1/hero.mp4" type="video/mp4" />
+          <video ref={videoRef} className="afom-chapter-video" autoPlay muted loop playsInline preload="metadata" poster={config?.poster ?? "/novels/a-family-of-mortals/chapter-1/marok-floating-over-foxnip.png"} aria-hidden="true">
+            <source src={config?.video ?? "/novels/a-family-of-mortals/chapter-1/hero.mp4"} type="video/mp4" />
           </video>
-        ) : <div className="afom-chapter-still" aria-hidden="true" />}
+        ) : <div className="afom-chapter-still" style={{ backgroundImage: `url('${config?.poster ?? "/novels/a-family-of-mortals/chapter-1/marok-floating-over-foxnip.png"}')` }} aria-hidden="true" />}
         <div className="afom-chapter-veil" aria-hidden="true" />
         <div className="afom-chapter-titleblock">
-          <p>A Family of Mortals</p><span>Chapter One</span><h1 id="chapter-title">Marok</h1>
+          <p>A Family of Mortals</p><span>Chapter {numberWord(chapterNumber)}</span><h1 id="chapter-title">{chapterTitle}</h1>
           <div className="afom-chapter-sigil" aria-hidden="true">◆</div>
-          <p className="afom-chapter-invitation">The Judgment begins in Paradise.</p>
+          <p className="afom-chapter-invitation">{config?.invitation ?? "The Judgment begins in Paradise."}</p>
         </div>
       </section>
 
       {resumeVisible ? (
         <aside className="afom-resume" aria-label="Saved reading place">
-          <div><span>The Glass kept your place</span><strong>{Math.round(savedPlace)}% through Chapter One</strong></div>
+          <div><span>The Glass kept your place</span><strong>{Math.round(savedPlace)}% through Chapter {numberWord(chapterNumber)}</strong></div>
           <button type="button" onClick={resumeReading}>Return</button>
           <button type="button" aria-label="Dismiss saved place" onClick={() => setResumeVisible(false)}>Not now</button>
         </aside>
       ) : null}
 
-      <article className="afom-prose" aria-label="Chapter 1: Marok">
+      <article className="afom-prose" aria-label={`Chapter ${chapterNumber}: ${chapterTitle}`}>
         {paragraphs.map((paragraph, index) => {
           const image = imagesByParagraph.get(index);
-          const scene = scenes.find((item) => item.start === index);
+          const scene = chapterScenes.find((item) => item.start === index);
           const isDivine = index === 22 || index === 23 || index === 53;
           const isWar = index === 15 || index === 18 || index === 20;
           return (
@@ -305,14 +327,14 @@ export function ChapterOneExperience({ paragraphs, images }: { paragraphs: strin
       </article>
 
       <section className={`afom-chapter-relic${relicUnlocked ? " is-unlocked" : ""}`} aria-labelledby="afom-relic-title">
-        <span>Chapter Relic · 01</span><h2 id="afom-relic-title">The Indifference of Gods</h2>
-        <blockquote>“They didn’t know how indifferent gods are to mortals.”</blockquote>
+        <span>Chapter Relic · {String(chapterNumber).padStart(2, "0")}</span><h2 id="afom-relic-title">{config?.relicTitle ?? "The Indifference of Gods"}</h2>
+        <blockquote>{config?.relicQuote ?? "“They didn’t know how indifferent gods are to mortals.”"}</blockquote>
         <p>{relicUnlocked ? "The first record has entered your Sacred Archive." : "Complete the chapter to unseal this record."}</p>
         <button type="button" disabled={!relicUnlocked} onClick={() => openPanel("archive")}>{relicUnlocked ? "Open the Sacred Archive" : "Relic Sealed"}</button>
       </section>
 
       <footer className="afom-chapter-end">
-        <span aria-hidden="true">✦</span><p>End of Chapter One</p>
+        <span aria-hidden="true">✦</span><p>End of Chapter {numberWord(chapterNumber)}</p>
         <button type="button" disabled>Chapter Two · Coming to the pilot</button>
         <Link href="/novels/a-family-of-mortals">Return to the sealed account</Link>
       </footer>
@@ -371,7 +393,7 @@ export function ChapterOneExperience({ paragraphs, images }: { paragraphs: strin
               <div className="afom-voice-chamber">
                 <span>Narrated by Gaze Glass</span><h3>The voice is being summoned.</h3>
                 <p>Your cloned narration will live here as one uninterrupted performance, with scene-level “listen from here” witnessing throughout the prose.</p>
-                <div className="afom-audio-preview" aria-disabled="true"><button type="button" disabled>Play</button><div><strong>Chapter One · Marok</strong><span>Master narration not yet connected</span></div><time>—:—</time></div>
+                <div className="afom-audio-preview" aria-disabled="true"><button type="button" disabled>Play</button><div><strong>Chapter {numberWord(chapterNumber)} · {chapterTitle}</strong><span>Master narration not yet connected</span></div><time>—:—</time></div>
               </div>
             ) : null}
 
@@ -379,9 +401,9 @@ export function ChapterOneExperience({ paragraphs, images }: { paragraphs: strin
               <div className="afom-archive">
                 <div className="afom-archive-heading"><span>The Sacred Archive</span><h3>What the Glass has revealed.</h3><p>Records appear only after the story permits them to be known.</p></div>
                 <div className="afom-archive-grid">
-                  <article><span>Spirit</span><strong>Marok</strong><p>Divine fox. Judgment designer. Newly appointed servant of War and Beauty.</p></article>
+                  <article><span>{config?.focusKind ?? "Spirit"}</span><strong>{config?.focusName ?? "Marok"}</strong><p>{config?.focusDescription ?? "Divine fox. Judgment designer. Newly appointed servant of War and Beauty."}</p></article>
                   <article className={knownProgress > 18 ? "" : "is-sealed"}><span>Cardinal Gods</span><strong>{knownProgress > 18 ? "War & Beauty" : "Unwitnessed deities"}</strong><p>{knownProgress > 18 ? "Consorts whose love survives every form—and whose attention may destroy what it touches." : "Continue reading to reveal this record."}</p></article>
-                  <article className={relicUnlocked ? "" : "is-sealed"}><span>Chapter Relic</span><strong>{relicUnlocked ? "The Indifference of Gods" : "Sealed until completion"}</strong><p>{relicUnlocked ? "A prayer can be answered without mercy." : "Continue witnessing Chapter One."}</p></article>
+                  <article className={relicUnlocked ? "" : "is-sealed"}><span>Chapter Relic</span><strong>{relicUnlocked ? (config?.relicTitle ?? "The Indifference of Gods") : "Sealed until completion"}</strong><p>{relicUnlocked ? (config?.relicMeaning ?? "A prayer can be answered without mercy.") : `Continue witnessing Chapter ${numberWord(chapterNumber)}.`}</p></article>
                 </div>
                 <section className="afom-held-records"><h4>Held passages</h4>{heldPassages.length ? heldPassages.map((index) => <blockquote key={index}>{paragraphs[index]}</blockquote>) : <p>No passages held yet. Look for “Hold this passage in the Glass” as you read.</p>}</section>
                 <label className={`afom-switch-row${relicUnlocked ? "" : " is-locked"}`}><span><strong>Second Gaze</strong><small>{relicUnlocked ? "Reveal deeper connections during a return reading." : "Complete the chapter to awaken a deeper reading."}</small></span><input type="checkbox" disabled={!relicUnlocked} checked={secondGaze} onChange={(event) => { setSecondGaze(event.target.checked); try { window.localStorage.setItem(SECOND_GAZE_KEY, event.target.checked ? "on" : "off"); } catch {} }} /></label>
