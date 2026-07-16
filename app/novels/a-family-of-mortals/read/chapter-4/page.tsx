@@ -12,6 +12,11 @@ export const metadata: Metadata = {
 
 const images = [
   {
+    after: 1,
+    src: "/novels/a-family-of-mortals/chapter-4/marok-realm-of-dead.png",
+    alt: "Marok curls upon a dark cloud above the frozen mountains and distant waterways of the Realm of the Dead.",
+  },
+  {
     after: 22,
     src: "/novels/a-family-of-mortals/chapter-4/chotu-banana.png",
     alt: "Chotu stretches for a banana while Rashid steadies the calf and Jermaine watches beside the merchant's hanging scale.",
