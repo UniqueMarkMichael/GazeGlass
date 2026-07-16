@@ -30,7 +30,7 @@ const menuItems = [
   {
     label: "Big Scale Betrayal",
     href: "/big-scale-betrayal",
-    detail: "Witness the mortal prequel before A Family of Mortals.",
+    detail: "Witness The Prequel To A Family of Mortals",
     action: "Open Big Scale Betrayal",
   },
   {

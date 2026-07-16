@@ -16,14 +16,14 @@ function previewPassword() {
 
 export function isCorrectAfomPassword(candidate: string) {
   const expected = Buffer.from(previewPassword());
-  const received = Buffer.from(candidate);
+  const received = Buffer.from(candidate.trim());
 
   return expected.length === received.length && timingSafeEqual(expected, received);
 }
 
 export function afomAccessToken() {
   return createHmac("sha256", previewPassword())
-    .update("gaze-glass:afom-preview:v3")
+    .update("gaze-glass:afom-preview:v4")
     .digest("hex");
 }
 

@@ -16,7 +16,7 @@ export function AfomPasswordGate() {
       const response = await fetch("/api/afom-preview/unlock", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password: password.trim() }),
       });
 
       if (!response.ok) {
@@ -55,7 +55,7 @@ export function AfomPasswordGate() {
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              autoComplete="current-password"
+              autoComplete="off"
               autoCapitalize="none"
               spellCheck={false}
               required
