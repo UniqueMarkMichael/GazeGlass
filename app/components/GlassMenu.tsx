@@ -34,6 +34,12 @@ const menuItems = [
     action: "Open Big Scale Betrayal",
   },
   {
+    label: "A Family of Mortals",
+    href: "/novels/a-family-of-mortals",
+    detail: "Unseal the private preview of the first Gaze Glass novel.",
+    action: "Open A Family of Mortals",
+  },
+  {
     label: "Celestial Codex",
     href: "/celestial-codex",
     detail: "Discover the seven laws beneath the seen world.",

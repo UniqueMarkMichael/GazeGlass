@@ -400,6 +400,28 @@
   border-top: 1px solid rgba(236, 228, 210, 0.16);
 }
 
+.afom-sample-list li > a {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: 3.5rem 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  min-height: 5.5rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.afom-sample-list li.is-available {
+  position: relative;
+  transition: border-color 180ms ease, background 180ms ease;
+}
+
+.afom-sample-list li.is-available:hover,
+.afom-sample-list li.is-available:focus-within {
+  border-color: rgba(224, 180, 87, 0.48);
+  background: linear-gradient(90deg, rgba(224, 180, 87, 0.09), transparent 76%);
+}
+
 .afom-sample-list li:last-child {
   border-bottom: 1px solid rgba(236, 228, 210, 0.16);
 }
@@ -422,6 +444,31 @@
   color: rgba(236, 228, 210, 0.48);
   font-style: normal;
   text-align: right;
+}
+
+.afom-sample-list em small {
+  display: block;
+  margin-top: 0.25rem;
+  color: rgba(236, 228, 210, 0.38);
+  font-size: 0.55rem;
+  font-style: normal;
+  letter-spacing: 0.13em;
+}
+
+.afom-sample-list li.is-available em small {
+  color: var(--afom-gold);
+}
+
+.afom-sample-list li.is-available strong,
+.afom-sample-list li.is-available em {
+  transition: color 180ms ease;
+}
+
+.afom-sample-list li.is-available:hover strong,
+.afom-sample-list li.is-available:focus-within strong,
+.afom-sample-list li.is-available:hover em,
+.afom-sample-list li.is-available:focus-within em {
+  color: var(--afom-gold);
 }
 
 .afom-text-action {
@@ -529,6 +576,11 @@
   .afom-sample-list li {
     grid-template-columns: 2.5rem 1fr;
     padding: 1rem 0;
+  }
+
+  .afom-sample-list li > a {
+    grid-template-columns: 2.5rem 1fr;
+    min-height: 4.5rem;
   }
 
   .afom-sample-list em {
@@ -5899,6 +5951,139 @@ h2 {
 
 .court-promo .muted-link {
   color: rgba(237, 227, 204, 0.68);
+}
+
+.afom-home-promo {
+  background:
+    radial-gradient(circle at 74% 22%, rgba(224, 180, 87, 0.17), transparent 21rem),
+    radial-gradient(circle at 18% 78%, rgba(132, 48, 50, 0.14), transparent 18rem),
+    linear-gradient(135deg, rgba(5, 7, 14, 0.96), rgba(27, 16, 30, 0.78));
+}
+
+.afom-home-promo-art {
+  grid-column: 1 / -1;
+  min-height: auto;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  border-right: 0;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.16);
+}
+
+.afom-home-promo-art picture,
+.afom-home-promo-art img {
+  width: 100%;
+  height: 100%;
+}
+
+.afom-home-promo-art img {
+  max-height: none;
+  object-fit: cover;
+  filter: saturate(0.9) contrast(1.04) brightness(0.82);
+}
+
+.afom-home-promo .court-promo-copy {
+  grid-column: 1 / -1;
+}
+
+.afom-gate {
+  position: relative;
+  display: grid;
+  min-height: 100svh;
+  overflow: hidden;
+  place-items: center;
+  padding: clamp(6rem, 10vw, 9rem) 1.25rem 3rem;
+  color: #eee6d7;
+  background: #07060d;
+}
+
+.afom-gate-art,
+.afom-gate-veil {
+  position: absolute;
+  inset: 0;
+}
+
+.afom-gate-art {
+  background: url('/novels/a-family-of-mortals/hero.png') 62% center / cover no-repeat;
+  transform: scale(1.025);
+  filter: saturate(0.78) brightness(0.5);
+}
+
+.afom-gate-veil {
+  background:
+    radial-gradient(circle at 50% 45%, transparent 0, rgba(5, 4, 10, 0.24) 28rem, rgba(5, 4, 10, 0.72) 70rem),
+    linear-gradient(90deg, rgba(5, 4, 10, 0.86), rgba(5, 4, 10, 0.26) 48%, rgba(5, 4, 10, 0.72));
+  backdrop-filter: blur(2px);
+}
+
+.afom-gate-brand {
+  position: absolute;
+  z-index: 2;
+  top: 1.5rem;
+  left: clamp(1.25rem, 4vw, 4rem);
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  color: #f3e7ce;
+  font: 500 0.75rem/1 "Mulish", sans-serif;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.afom-gate-brand img { width: 2.25rem; height: 2.25rem; }
+
+.afom-gate-chamber {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 38rem);
+  padding: clamp(2rem, 6vw, 4.5rem);
+  border: 1px solid rgba(224, 180, 87, 0.38);
+  border-radius: 1.5rem;
+  text-align: center;
+  background: linear-gradient(145deg, rgba(12, 10, 21, 0.88), rgba(20, 14, 26, 0.72));
+  box-shadow: 0 2rem 8rem rgba(0, 0, 0, 0.72), inset 0 1px rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(24px) saturate(1.15);
+}
+
+.afom-gate-eyebrow,
+.afom-gate-chamber label,
+.afom-gate-note,
+.afom-gate-error {
+  font-family: "Mulish", sans-serif;
+}
+
+.afom-gate-eyebrow {
+  margin: 0;
+  color: #e0b457;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.afom-gate-sigil { margin: 1.35rem 0; color: #e0b457; font-size: 1.35rem; text-shadow: 0 0 24px rgba(224, 180, 87, 0.7); }
+.afom-gate-chamber h1 { margin: 0; color: #fff2d9; font: 500 clamp(2.7rem, 8vw, 5.2rem)/0.9 "Playfair Display", Georgia, serif; }
+.afom-gate-chamber > p:not(.afom-gate-eyebrow) { max-width: 30rem; margin: 1.5rem auto 0; color: rgba(238, 230, 215, 0.72); font: 400 1.15rem/1.55 "EB Garamond", Georgia, serif; }
+.afom-gate-chamber form { margin-top: 2rem; text-align: left; }
+.afom-gate-chamber label { display: block; margin: 0 0 0.6rem 0.2rem; color: rgba(238, 230, 215, 0.64); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+.afom-gate-input-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.65rem; }
+.afom-gate-input-row input,
+.afom-gate-input-row button { min-height: 52px; border-radius: 999px; }
+.afom-gate-input-row input { min-width: 0; padding: 0 1.25rem; border: 1px solid rgba(224, 180, 87, 0.3); outline: none; background: rgba(4, 3, 10, 0.58); color: #fff4de; font: 500 1rem/1 "Mulish", sans-serif; }
+.afom-gate-input-row input:focus { border-color: #e0b457; box-shadow: 0 0 0 3px rgba(224, 180, 87, 0.14); }
+.afom-gate-input-row button { padding: 0 1.45rem; border: 1px solid #e0b457; background: #e0b457; color: #160f0b; font: 800 0.68rem/1 "Mulish", sans-serif; letter-spacing: 0.13em; text-transform: uppercase; cursor: pointer; }
+.afom-gate-input-row button:disabled { opacity: 0.65; cursor: wait; }
+.afom-gate-note,
+.afom-gate-error { margin: 0.75rem 0 0 0.25rem; font-size: 0.72rem; line-height: 1.4; }
+.afom-gate-note { color: rgba(238, 230, 215, 0.48); }
+.afom-gate-error { color: #f4a8a8; }
+
+@media (max-width: 600px) {
+  .afom-gate-art { background-image: url('/novels/a-family-of-mortals/cover.png'); background-position: center 22%; }
+  .afom-gate-veil { background: linear-gradient(180deg, rgba(5,4,10,0.58), rgba(5,4,10,0.92)); }
+  .afom-gate-chamber { padding: 2rem 1.25rem; }
+  .afom-gate-input-row { grid-template-columns: 1fr; }
+  .afom-gate-input-row button { width: 100%; }
 }
 
 .mortal-observation small {

@@ -17,7 +17,15 @@ export const metadata: Metadata = {
   },
 };
 
-const sampleContents = ["Synopsis", "Prologue", "Chapters 1–5"];
+const sampleContents = [
+  { marker: "SYN", title: "Synopsis", detail: "Open" },
+  { marker: "PRO", title: "Prologue", detail: "Open" },
+  { marker: "01", title: "Chapter One", detail: "Marok", href: "/novels/a-family-of-mortals/read/chapter-1" },
+  { marker: "02", title: "Chapter Two", detail: "Sahil", status: "In production" },
+  { marker: "03", title: "Chapter Three", detail: "Rashid", status: "In production" },
+  { marker: "04", title: "Chapter Four", detail: "Rashid", status: "In production" },
+  { marker: "05", title: "Chapter Five", detail: "Jermaine", status: "In production" },
+];
 
 export default function FamilyOfMortalsPreviewPage() {
   return (
@@ -99,17 +107,24 @@ export default function FamilyOfMortalsPreviewPage() {
           </p>
         </div>
         <ol className="afom-sample-list">
-          {sampleContents.map((item, index) => (
-            <li key={item}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <strong>{item}</strong>
-              <em>{index === 2 ? "Marok · Sahil · Rashid · Rashid · Jermaine" : "Open"}</em>
+          {sampleContents.map((item) => (
+            <li key={item.title} className={item.href ? "is-available" : undefined}>
+              {item.href ? (
+                <a href={item.href} aria-label={`Enter ${item.title}: ${item.detail}`}>
+                  <span>{item.marker}</span>
+                  <strong>{item.title}</strong>
+                  <em>{item.detail}<small>Enter chapter</small></em>
+                </a>
+              ) : (
+                <>
+                  <span>{item.marker}</span>
+                  <strong>{item.title}</strong>
+                  <em>{item.detail}{item.status ? <small>{item.status}</small> : null}</em>
+                </>
+              )}
             </li>
           ))}
         </ol>
-        <a className="afom-text-action" href="/novels/a-family-of-mortals/read/chapter-1">
-          Enter Chapter One
-        </a>
       </section>
 
       <section className="afom-promise" aria-labelledby="afom-promise-title">

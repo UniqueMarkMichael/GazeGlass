@@ -438,6 +438,30 @@ export default function Home() {
             </div>
           </div>
         </article>
+        <article className="court-promo afom-home-promo" aria-labelledby="home-afom-promo-title">
+          <figure className="court-promo-art afom-home-promo-art">
+            <picture>
+              <source media="(max-width: 760px)" srcSet="/novels/a-family-of-mortals/cover.png" />
+              <img
+                src="/novels/a-family-of-mortals/hero.png"
+                alt="A Family of Mortals, showing the Shah family beneath a celestial mechanism"
+              />
+            </picture>
+          </figure>
+          <div className="court-promo-copy">
+            <p className="eyebrow">The First Gaze Glass Novel</p>
+            <h3 id="home-afom-promo-title">When gods judge a world, they begin with a family.</h3>
+            <p>
+              The Shah family has been chosen to decide whether humanity deserves to survive.
+              Their account is open now as a private, password-sealed preview.
+            </p>
+            <div className="court-promo-actions">
+              <a className="text-link" href="/novels/a-family-of-mortals">
+                Approach the sealed account
+              </a>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section className="section seer reveal" id="behind-the-glass">
