@@ -12,6 +12,11 @@ export const metadata: Metadata = {
 
 const images = [
   {
+    after: 1,
+    src: "/novels/a-family-of-mortals/chapter-5/marok-above-the-storm.png",
+    alt: "Marok bounds gleefully through moonlit storm clouds above the four Shah siblings, Jermaine, and the rescued calf far below in the jungle.",
+  },
+  {
     after: 3,
     src: "/novels/a-family-of-mortals/chapter-5/meet-priya-and-sonam.png",
     alt: "Priya and Sonam Shah emerge beneath a storm-darkened banyan tree in matching emerald dresses, with the rescued calf between them.",

@@ -63,13 +63,13 @@ const defaults: Preferences = {
 };
 
 function numberWord(number: number) {
-  return ["Zero", "One", "Two", "Three", "Four", "Five", "Six"][number] ?? String(number);
+  return ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven"][number] ?? String(number);
 }
 
 type ChapterConfig = {
   number: number;
   title: string;
-  video: string;
+  video?: string;
   poster: string;
   invitation?: string;
   scenes?: Array<{ key: SceneKey; start: number; label: string; invitation: string }>;
@@ -276,9 +276,9 @@ export function ChapterOneExperience({ paragraphs, images, config }: { paragraph
       <div className="afom-scene-whisper" aria-live="polite"><span>{activeSceneData.label}</span><p>{activeSceneData.invitation}</p></div>
 
       <section className="afom-chapter-hero" aria-labelledby="chapter-title">
-        {prefs.motion ? (
+        {prefs.motion && config?.video ? (
           <video ref={videoRef} className="afom-chapter-video" autoPlay muted loop playsInline preload="metadata" poster={config?.poster ?? "/novels/a-family-of-mortals/chapter-1/marok-floating-over-foxnip.png"} aria-hidden="true">
-            <source src={config?.video ?? "/novels/a-family-of-mortals/chapter-1/hero.mp4"} type="video/mp4" />
+            <source src={config.video} type="video/mp4" />
           </video>
         ) : <div className="afom-chapter-still" style={{ backgroundImage: `url('${config?.poster ?? "/novels/a-family-of-mortals/chapter-1/marok-floating-over-foxnip.png"}')` }} aria-hidden="true" />}
         <div className="afom-chapter-veil" aria-hidden="true" />
@@ -335,12 +335,12 @@ export function ChapterOneExperience({ paragraphs, images, config }: { paragraph
 
       <footer className="afom-chapter-end">
         <span aria-hidden="true">✦</span><p>End of Chapter {numberWord(chapterNumber)}</p>
-        {chapterNumber < 5 ? (
+        {chapterNumber < 6 ? (
           <Link className="afom-next-chapter" href={`/novels/a-family-of-mortals/read/chapter-${chapterNumber + 1}`}>
             Enter Chapter {numberWord(chapterNumber + 1)}
           </Link>
         ) : (
-          <button type="button" disabled>Chapter Six · In production</button>
+          <button type="button" disabled>Chapter Seven · In production</button>
         )}
         <Link href="/novels/a-family-of-mortals">Return to the sealed account</Link>
       </footer>
