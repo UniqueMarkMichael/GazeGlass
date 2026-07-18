@@ -16,6 +16,21 @@ const images = [
     src: "/novels/a-family-of-mortals/chapter-5/meet-priya-and-sonam.png",
     alt: "Priya and Sonam Shah emerge beneath a storm-darkened banyan tree in matching emerald dresses, with the rescued calf between them.",
   },
+  {
+    after: 4,
+    src: "/novels/a-family-of-mortals/chapter-5/jermaine-fruit-drops.png",
+    alt: "Jermaine recoils from a mosquito on his nose as his fruit drops spill beside Priya, Sonam, Rashid, and the rescued calf beneath the storm-darkened banyan trees.",
+  },
+  {
+    after: 21,
+    src: "/novels/a-family-of-mortals/chapter-5/sonam-confronts-rashid.png",
+    alt: "Sonam confronts Rashid beneath lightning and driving rain while Jermaine and Priya watch the siblings' argument turn dangerous.",
+  },
+  {
+    after: 36,
+    src: "/novels/a-family-of-mortals/chapter-5/priya-intervenes.png",
+    alt: "Priya steps between Sonam and Rashid beneath the lightning, raising a protective hand as Jermaine holds Rashid close and the rescued calf shelters beside them.",
+  },
 ];
 
 const config = {
