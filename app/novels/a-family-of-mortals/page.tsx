@@ -20,8 +20,8 @@ export const metadata: Metadata = {
 };
 
 const sampleContents = [
-  { marker: "SYN", title: "Synopsis", detail: "Open" },
-  { marker: "PRO", title: "Prologue", detail: "Open" },
+  { marker: "SYN", title: "Synopsis", detail: "Open", href: "/novels/a-family-of-mortals/read/synopsis" },
+  { marker: "PRO", title: "Prologue", detail: "Open", href: "/novels/a-family-of-mortals/read/prologue" },
   { marker: "01", title: "Chapter One", detail: "Marok", href: "/novels/a-family-of-mortals/read/chapter-1" },
   { marker: "02", title: "Chapter Two", detail: "Sahil", href: "/novels/a-family-of-mortals/read/chapter-2" },
   { marker: "03", title: "Chapter Three", detail: "Rashid", href: "/novels/a-family-of-mortals/read/chapter-3" },

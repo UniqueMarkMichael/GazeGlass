@@ -2,6 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
+import {
+  getBrowserStorageItem,
+  removeBrowserStorageItem,
+  setBrowserStorageItem,
+} from "./browserStorage";
 import { playGlassSound } from "./glassSound";
 import {
   GLASS_SCROLL_OMEN_EVENT,
@@ -204,7 +209,7 @@ const codexLaws = [
 
 function readMemory() {
   try {
-    const stored = window.localStorage.getItem(GLASS_MEMORY_KEY);
+    const stored = getBrowserStorageItem(GLASS_MEMORY_KEY);
     if (!stored) {
       return [];
     }
@@ -250,7 +255,7 @@ function isGlassScrollOmen(value: unknown): value is GlassScrollOmen {
 
 function readScrollOmen() {
   try {
-    const raw = window.localStorage.getItem(GLASS_SCROLL_OMEN_KEY);
+    const raw = getBrowserStorageItem(GLASS_SCROLL_OMEN_KEY);
     const parsed = raw ? JSON.parse(raw) : null;
     return isGlassScrollOmen(parsed) ? parsed : null;
   } catch {
@@ -260,7 +265,7 @@ function readScrollOmen() {
 
 function readNamedMatch(): NamedMatch | null {
   try {
-    const raw = window.localStorage.getItem(NAMING_RESULT_KEY);
+    const raw = getBrowserStorageItem(NAMING_RESULT_KEY);
     const parsed = raw ? JSON.parse(raw) : null;
     const godKey = parsed?.godKey;
     const spiritKey = parsed?.spiritKey;
@@ -284,7 +289,7 @@ function readNamedMatch(): NamedMatch | null {
 
 function readWitnessSummary(): WitnessSummary | null {
   try {
-    const raw = window.localStorage.getItem(COF_WITNESS_CHOICES_KEY);
+    const raw = getBrowserStorageItem(COF_WITNESS_CHOICES_KEY);
     const parsed = raw ? JSON.parse(raw) : null;
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
       return null;
@@ -333,7 +338,7 @@ function readRememberedSignals(): RememberedSignals {
 }
 
 function writeMemory(entries: GlassMemoryEntry[]) {
-  window.localStorage.setItem(GLASS_MEMORY_KEY, JSON.stringify(entries));
+  setBrowserStorageItem(GLASS_MEMORY_KEY, JSON.stringify(entries));
   window.dispatchEvent(new CustomEvent("gaze-glass:memory-update", { detail: entries }));
 }
 
@@ -645,7 +650,7 @@ function useGlassMemory() {
   }, []);
 
   function clearMemory() {
-    window.localStorage.removeItem(GLASS_MEMORY_KEY);
+    removeBrowserStorageItem(GLASS_MEMORY_KEY);
     window.dispatchEvent(new CustomEvent("gaze-glass:memory-update", { detail: [] }));
     setEntries([]);
     playGlassSound("close");

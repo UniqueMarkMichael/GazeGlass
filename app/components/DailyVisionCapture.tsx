@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { getBrowserStorageItem, setBrowserStorageItem } from "./browserStorage";
 import { GLASS_MEMORY_KEY, type GlassMemoryEntry } from "./GlassMemory";
 import { playGlassSound } from "./glassSound";
 import {
@@ -207,7 +208,7 @@ function readNamingResult() {
   }
 
   try {
-    const raw = window.localStorage.getItem(NAMING_RESULT_KEY);
+    const raw = getBrowserStorageItem(NAMING_RESULT_KEY);
     const parsed = raw ? JSON.parse(raw) : null;
 
     if (isGodKey(parsed?.godKey) && isSpiritKey(parsed?.spiritKey)) {
@@ -257,7 +258,7 @@ function rememberDailyVision(vision: DailyVision, dayKey: string) {
   const now = Date.now();
 
   try {
-    const stored = window.localStorage.getItem(GLASS_MEMORY_KEY);
+    const stored = getBrowserStorageItem(GLASS_MEMORY_KEY);
     const parsed = stored ? JSON.parse(stored) : [];
     const entries = Array.isArray(parsed) ? (parsed as GlassMemoryEntry[]) : [];
     const id = `daily-vision-${dayKey}`;
@@ -274,7 +275,7 @@ function rememberDailyVision(vision: DailyVision, dayKey: string) {
       .sort((a, b) => b.lastSeenAt - a.lastSeenAt)
       .slice(0, 18);
 
-    window.localStorage.setItem(GLASS_MEMORY_KEY, JSON.stringify(nextEntries));
+    setBrowserStorageItem(GLASS_MEMORY_KEY, JSON.stringify(nextEntries));
     window.dispatchEvent(new CustomEvent("gaze-glass:memory-update", { detail: nextEntries }));
   } catch {
     return;
@@ -307,8 +308,8 @@ export function DailyVisionCapture() {
       return () => window.removeEventListener(EMAIL_CAPTURED_EVENT, hideForSubscriber);
     }
 
-    const dismissedUntil = Number(window.localStorage.getItem(DAILY_VISION_DISMISSED_UNTIL_KEY) || 0);
-    const lastShownDay = window.localStorage.getItem(DAILY_VISION_LAST_SHOWN_KEY);
+    const dismissedUntil = Number(getBrowserStorageItem(DAILY_VISION_DISMISSED_UNTIL_KEY) || 0);
+    const lastShownDay = getBrowserStorageItem(DAILY_VISION_LAST_SHOWN_KEY);
 
     if (!isPreview && (dismissedUntil > Date.now() || lastShownDay === dayKey)) {
       return () => window.removeEventListener(EMAIL_CAPTURED_EVENT, hideForSubscriber);
@@ -320,7 +321,7 @@ export function DailyVisionCapture() {
       }
 
       if (!isPreview) {
-        window.localStorage.setItem(DAILY_VISION_LAST_SHOWN_KEY, dayKey);
+        setBrowserStorageItem(DAILY_VISION_LAST_SHOWN_KEY, dayKey);
       }
 
       setIsVisible(true);
@@ -406,7 +407,7 @@ export function DailyVisionCapture() {
   }, [isVisible]);
 
   function dismissForToday() {
-    window.localStorage.setItem(DAILY_VISION_DISMISSED_UNTIL_KEY, String(getTomorrowStart()));
+    setBrowserStorageItem(DAILY_VISION_DISMISSED_UNTIL_KEY, String(getTomorrowStart()));
     setIsVisible(false);
     playGlassSound("close");
   }

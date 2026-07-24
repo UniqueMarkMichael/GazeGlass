@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { getBrowserStorageItem } from "./browserStorage";
 import { GLASS_MEMORY_KEY, type GlassMemoryEntry } from "./GlassMemory";
 import { playGlassSound } from "./glassSound";
 
@@ -71,7 +72,7 @@ function isSamePath(href: string) {
 
 function readRecordedEntries() {
   try {
-    const stored = window.localStorage.getItem(GLASS_MEMORY_KEY);
+    const stored = getBrowserStorageItem(GLASS_MEMORY_KEY);
     const parsed = stored ? JSON.parse(stored) : [];
     return Array.isArray(parsed) ? (parsed as GlassMemoryEntry[]) : [];
   } catch {

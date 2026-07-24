@@ -1,6 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import {
+  getBrowserStorageItem,
+  removeBrowserStorageItem,
+  setBrowserStorageItem,
+} from "../components/browserStorage";
 import { GLASS_MEMORY_KEY, type GlassMemoryEntry } from "../components/GlassMemory";
 import { playGlassSound } from "../components/glassSound";
 
@@ -632,7 +637,7 @@ function calculateResult(answers: Record<string, string>): ResultKeys {
 
 function readStoredResult() {
   try {
-    const raw = window.localStorage.getItem(NAMING_RESULT_KEY);
+    const raw = getBrowserStorageItem(NAMING_RESULT_KEY);
     const parsed = raw ? JSON.parse(raw) : null;
 
     if (isGodKey(parsed?.godKey ?? null) && isSpiritKey(parsed?.spiritKey ?? null)) {
@@ -646,7 +651,7 @@ function readStoredResult() {
 }
 
 function writeStoredResult(result: ResultKeys) {
-  window.localStorage.setItem(NAMING_RESULT_KEY, JSON.stringify(result));
+  setBrowserStorageItem(NAMING_RESULT_KEY, JSON.stringify(result));
 }
 
 function updateResultUrl(result: ResultKeys | null) {
@@ -681,7 +686,7 @@ function rememberNamedResult(result: ResultKeys) {
   const href = `/the-glass-names-you?god=${result.godKey}&spirit=${result.spiritKey}`;
 
   try {
-    const stored = window.localStorage.getItem(GLASS_MEMORY_KEY);
+    const stored = getBrowserStorageItem(GLASS_MEMORY_KEY);
     const parsed = stored ? JSON.parse(stored) : [];
     const entries = Array.isArray(parsed) ? (parsed as GlassMemoryEntry[]) : [];
     const id = `glass-naming-${result.godKey}-${result.spiritKey}`;
@@ -698,7 +703,7 @@ function rememberNamedResult(result: ResultKeys) {
       .sort((a, b) => b.lastSeenAt - a.lastSeenAt)
       .slice(0, 18);
 
-    window.localStorage.setItem(GLASS_MEMORY_KEY, JSON.stringify(nextEntries));
+    setBrowserStorageItem(GLASS_MEMORY_KEY, JSON.stringify(nextEntries));
     window.dispatchEvent(new CustomEvent("gaze-glass:memory-update", { detail: nextEntries }));
   } catch {
     return;
@@ -795,7 +800,7 @@ export function GlassNamingQuiz() {
     setResult(null);
     setHasStarted(true);
     setCopied(false);
-    window.localStorage.removeItem(NAMING_RESULT_KEY);
+    removeBrowserStorageItem(NAMING_RESULT_KEY);
     updateResultUrl(null);
     playGlassSound("open");
   }

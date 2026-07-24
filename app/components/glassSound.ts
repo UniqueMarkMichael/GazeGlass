@@ -1,5 +1,7 @@
 "use client";
 
+import { getBrowserStorageItem, setBrowserStorageItem } from "./browserStorage";
+
 export type GlassSound =
   | "open"
   | "close"
@@ -32,7 +34,7 @@ export function isGlassSoundEnabled() {
     return false;
   }
 
-  return window.localStorage.getItem(GLASS_SOUND_KEY) !== "off";
+  return getBrowserStorageItem(GLASS_SOUND_KEY) !== "off";
 }
 
 export function setGlassSoundEnabled(enabled: boolean) {
@@ -40,7 +42,7 @@ export function setGlassSoundEnabled(enabled: boolean) {
     return;
   }
 
-  window.localStorage.setItem(GLASS_SOUND_KEY, enabled ? "on" : "off");
+  setBrowserStorageItem(GLASS_SOUND_KEY, enabled ? "on" : "off");
   if (!enabled) {
     pauseGlassMusic();
   }

@@ -1,3 +1,5 @@
+import { getBrowserStorageItem, setBrowserStorageItem } from "./browserStorage";
+
 export const EMAIL_SUBMITTED_KEY = "gaze-glass.email-submitted.v1";
 export const SUBSCRIBED_EMAIL_KEY = "gaze-glass.subscribed-email.v1";
 export const SUBSCRIBED_AT_KEY = "gaze-glass.subscribed-at.v1";
@@ -13,8 +15,8 @@ export function hasSubmittedEmail() {
   }
 
   return (
-    window.localStorage.getItem(EMAIL_SUBMITTED_KEY) === "true" ||
-    Boolean(window.localStorage.getItem(SUBSCRIBED_EMAIL_KEY))
+    getBrowserStorageItem(EMAIL_SUBMITTED_KEY) === "true" ||
+    Boolean(getBrowserStorageItem(SUBSCRIBED_EMAIL_KEY))
   );
 }
 
@@ -23,8 +25,8 @@ export function rememberSubscribedEmail(email: string) {
     return;
   }
 
-  window.localStorage.setItem(EMAIL_SUBMITTED_KEY, "true");
-  window.localStorage.setItem(SUBSCRIBED_EMAIL_KEY, email);
-  window.localStorage.setItem(SUBSCRIBED_AT_KEY, String(Date.now()));
+  setBrowserStorageItem(EMAIL_SUBMITTED_KEY, "true");
+  setBrowserStorageItem(SUBSCRIBED_EMAIL_KEY, email);
+  setBrowserStorageItem(SUBSCRIBED_AT_KEY, String(Date.now()));
   window.dispatchEvent(new CustomEvent(EMAIL_CAPTURED_EVENT, { detail: { email } }));
 }
